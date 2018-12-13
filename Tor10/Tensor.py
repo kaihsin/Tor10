@@ -7,7 +7,7 @@ from .Bond import *
 
 class UniTensor():
 
-    def __init__(self,D_IN,D_OUT, label=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None):
+    def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True):
         """
             @description: This is the initialization of the UniTensor.
             @param      : D_IN  [require]: The in-bonds , it should be an list with len(list) is the # of in-bond, and each element describe the dimension of each bond.  
@@ -19,24 +19,31 @@ class UniTensor():
                                                   ** Developer **
                                                   > The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in D_IN, D_OUT.      
         """
-        self.D_IN = copy.copy(D_IN)
-        self.D_OUT = copy.copy(D_OUT)
-            
 
+        self.bonds = np.array(bonds)
+                    
         
-        if label is None:
-            self.label = np.arange(len(D_IN)+len(D_OUT))
+        if labels is None:
+            self.labels = np.arange(len(self.bonds))
         else:
-            self.label = copy.copy(label)
-            ## Checking:
-            if not len(self.label) == (len(D_IN) + len(D_OUT)):
-                raise Exception("UniTensor.__init__","label size is not consistence with the rank")
-            if not len(np.unique(self.label)) == len(self.label):
-                raise Exception("UniTensor.__init__","label contain duplicate element.")
+            self.labels = np.array(labels)
+        
+        ## Checking:
+        if check:
+            if not len(self.labels) == (len(self.bonds)):
+                raise Exception("UniTensor.__init__","labels size is not consistence with the rank")
+            if not len(np.unique(self.labels)) == len(self.labels):
+                raise Exception("UniTensor.__init__","labels contain duplicate element.")
 
+
+            ## sort all BD_IN on first and BD_OUT on last:
+            #lambda x: 1 if x.bondType is BD_OUT else 0
+            maper = np.argsort([ (x.bondType is BD_OUT) for x in self.bonds])
+            self.bonds = self.bonds[maper]
+            self.labels = self.labels[maper]
 
         if torch_tensor is None:
-            DALL = D_IN + D_OUT
+            DALL = [self.bonds[i].dim for i in range(len(self.bonds))]
             self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
             del DALL
         else:
@@ -57,33 +64,37 @@ class UniTensor():
                                 D_IN=[1,2], D_OUT=[3,6], label=[0,5,3,11]
 
                                      -----------
-                                1  --| 0     3 |-- 3
+                                0  --| 1     3 |-- 3
                                      |         |
-                                2  --| 5    11 |-- 6
+                                5  --| 2     6 |-- 11
                                      -----------
 
         """
-        print("tensor Rank : %d"%(len(self.label)))
+        print("tensor Rank : %d"%(len(self.labels)))
         print("on device   : %s"%(self.Storage.device))        
         print("")        
-        if len(self.D_IN) > len(self.D_OUT):
-            vl = len(self.D_IN)
+        
+        Nin = len([ 1 for i in range(len(self.labels)) if self.bonds[i].bondType is BD_IN])
+        Nout = len(self.labels) - Nin    
+    
+        if Nin > Nout:
+            vl = Nin
         else:
-            vl = len(self.D_OUT)
+            vl = Nout
 
         print(vl)
         print("       ---------------     ")
         for i in range(vl):
             print("       |             |     ")
-            if(i<len(self.D_IN)):
-                l = "%3d--"%(self.D_IN[i])
-                llbl = "%-3d"%(self.label[i]) 
+            if(i<Nin):
+                l = "%3d--"%(self.labels[i])
+                llbl = "%-3d"%(self.bonds[i].dim) 
             else:
                 l = "     "
                 llbl = "   "
-            if(i<len(self.D_OUT)):
-                r = "--%-3d"%(self.D_OUT[i])
-                rlbl = "%3d"%(self.label[len(self.D_IN)+i])
+            if(i<Nout):
+                r = "--%-3d"%(self.labels[Nin+i])
+                rlbl = "%3d"%(self.bonds[Nin+i].dim)
             else:
                 r = "     "
                 rlbl = "   "
@@ -120,39 +131,40 @@ class UniTensor():
     ## Math ::
     def __add__(self,other):
         if isinstance(other, self.__class__):
-            return UniTensor(D_IN = self.D_IN,\
-                             D_OUT=self.D_OUT,\
-                             label=self.label,\
-                             torch_tensor=self.Storage + other.Storage)
+            return UniTensor(bonds = self.bonds,\
+                             labels= self.labels,\
+                             torch_tensor=self.Storage + other.Storage,\
+                             check=False)
         else :
-            return UniTensor(D_IN=self.D_IN,
-                             D_OUT=self.D_OUT,\
-                             label=self.label,\
-                             torch_tensor=self.Storage + other)
+            return UniTensor(bonds = self.bonds,\
+                             labels= self.labels,\
+                             torch_tensor=self.Storage + other,\
+                             check=False)
 
     def __sub__(self,other):
         if isinstance(other, self.__class__):
-            return UniTensor(D_IN=self.D_IN,\
-                             D_OUT=self.D_OUT,\
-                             label=self.label,\
-                             torch_tensor=self.Storage - other.Storage)
+            return UniTensor(bonds = self.bonds,\
+                             labels= self.labels,\
+                             torch_tensor=self.Storage - other.Storage,\
+                             check=False)
         else :
-            return UniTensor(D_IN=self.D_IN,\
-                             D_OUT=self.D_OUT,\
-                             label=self.label,\
-                             torch_tensor=self.Storage - other)
+            return UniTensor(bonds = self.bonds,\
+                             labels= self.labels,\
+                             torch_tensor=self.Storage - other,\
+                             check=False)
 
     def __mul__(self,other):
         if isinstance(other, self.__class__):
-            return UniTensor(D_IN=self.D_IN,\
-                             D_OUT=self.D_OUT,\
-                             label=self.label,\
-                             torch_tensor=self.Storage * other.Storage)
+            return UniTensor(bonds = self.bonds,\
+                             labels= self.labels,\
+                             torch_tensor=self.Storage * other.Storage,\
+                             check=False)
         else :
-            return UniTensor(D_IN=self.D_IN,\
-                             D_OUT=self.D_OUT,\
-                             label=self.label,\
-                             torch_tensor=self.Storage * other)
+            return UniTensor(bonds = self.bonds,\
+                             labels= self.labels,\
+                             torch_tensor=self.Storage * other,\
+                             check=False)
+
     """
     def __truediv__(self,other):
         if isinstance(other, self.__class__):
@@ -200,23 +212,27 @@ class UniTensor():
 def Contract(a,b):
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
         ## get same vector:
-        same = list(set(a.label).intersection(b.label)) 
+        same = list(set(a.labels).intersection(b.labels)) 
         if(len(same)):
             print("Dev")    
 
 
         else:
             ## direct product
-            new_D_IN = a.D_IN + a.D_OUT
-            new_D_OUT = b.D_IN + b.D_OUT
-            new_label = a.label + b.label
-            DALL = new_D_IN + new_D_OUT
-            maper = np.concatenate([np.arange(len(a.D_IN)), len(a.label) + np.arange(len(b.D_IN)), len(a.D_IN) + np.arange(len(a.D_OUT)), len(a.label) + len(b.D_IN) + np.arange(len(b.D_OUT))] ).tolist()
+            Nin_a = len([1 for i in range(len(a.labels)) if a.bonds[i].bondType is BD_IN])
+            Nin_b = len([1 for i in range(len(b.labels)) if b.bonds[i].bondType is BD_IN])
+            Nout_a = len(a.labels) - Nin_a
+            Nout_b = len(b.labels) - Nin_b
 
-            return UniTensor(D_IN=a.D_IN + b.D_IN,\
-                            D_OUT=a.D_OUT + b.D_OUT,\
-                            label=a.label[:len(a.D_IN)] + b.label[:len(b.D_IN)] + a.label[len(a.D_IN):] + b.label[len(b.D_IN):],\
-                            torch_tensor=torch.ger(a.Storage.view(-1),b.Storage.view(-1)).reshape(DALL).permute(maper))
+            new_label = np.concatenate([a.labels, b.labels])
+            DALL = [a.bonds[i].dim for i in range(len(a.bonds))] + [b.bonds[i].dim for i in range(len(b.bonds))]
+
+            maper = np.concatenate([np.arange(Nin_a), len(a.labels) + np.arange(Nin_b), np.arange(Nout_a) + Nin_a, len(a.labels) + Nin_b + np.arange(Nout_b)])
+
+            return UniTensor(bonds=np.concatenate([a.bonds[:Nin_a],b.bonds[:Nin_b],a.bonds[Nin_a:],b.bonds[Nin_b:]]),\
+                            labels=np.concatenate([a.labels[:Nin_a], b.labels[:Nin_b], a.labels[Nin_a:], b.labels[Nin_b:]]),\
+                            torch_tensor=torch.ger(a.Storage.view(-1),b.Storage.view(-1)).reshape(DALL).permute(maper.tolist()),\
+                            check=False)
             
     else:
         raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
