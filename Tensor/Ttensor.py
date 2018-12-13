@@ -2,12 +2,77 @@ import torch
 import copy
 import numpy as np
 
+
+##### Constants #######
+class BD_IN:
+    pass
+class BD_OUT:
+    pass
+
+#######################
+
+
+
 class Bond():
-    def __init__(self, dim, bd_type):
-        self.dim = dim
-        self.bd_type = bd_type
+    
+    #
+    # [0] bondType
+    # [x] vector<Qnums> Qnums;
+    # [x] vector<int> Qdegs;
+    # [x] vector<int> offsets;
+    # [x] bool withSymm
+
+    def __init__(self, bondType, dim):
+        #declare variable:
+        self.bondType = None
+        self.dim      = None
+
+        #call :
+        self.assign(bondType,dim)
+ 
+    def assign(self,bondType, dim):
+        #checking:
+        #try:
+            if dim < 1: 
+                raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
+            if not bondType is BD_IN and not bondType is BD_OUT:
+                raise Exception("Bond.assign()","[ERROR] bondType can only be BD_IN or BD_OUT")       
+
+        #except Exception as inst:
+        #    for i in inst.args:  
+        #        print(i)
+        #    exit(1)
+
+        ## fill the members:
+            self.bondType = bondType
+            self.dim      = dim
+
+    ## 
+    def __print(self):
+
+        if(self.bondType is BD_IN):
+            print("IN : ")
+        else:
+            print("OUT : ")
+
+        print("Dim = %d"%(self.dim))
 
 
+    def __str__(self):
+        self.__print()    
+        return ""
+    
+    def __repr__(self):
+        self.__print()
+        return ""
+
+    ## Mischellnous:
+    def __eq__(self,rhs):
+        if isinstance(rhs,self.__class__):
+            return (self.dim == rhs.dim) and (self.bondType == rhs.bondType)
+        else:
+            raise ValueError("Bond.__eq__","[ERROR] invalid comparison between Bond object and other type class.")
+                
 
 
 class UniTensor():
@@ -269,7 +334,19 @@ def _svd(a):
         The function performs the svd by merging all the in-bonds and out-bonds to singule bond repectivly.
         The return will be a two Unitary tensors with singular values represented as 1-rank UniTensor.
     """
+    try:
+        if isinstance(a,UniTensor):
+            # u, s, v = torch.svd(a)
+            return torch.svd(a)
+        else:
+            raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
+    except Exception as inst:
+        print(inst.args[0])
+        if(len(inst.args)>1):
+            print(inst.args[1])
+        exit(1)
 
+# def _qr(a):
 
 
 
