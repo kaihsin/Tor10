@@ -1,4 +1,5 @@
-import Ttensor as Tt
+import Tor10 as Tt
+
 import numpy as np 
 import torch as tor
 import copy
