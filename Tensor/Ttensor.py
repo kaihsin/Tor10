@@ -32,22 +32,48 @@ class Bond():
  
     def assign(self,bondType, dim):
         #checking:
-        #try:
-            if dim < 1: 
-                raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
-            if not bondType is BD_IN and not bondType is BD_OUT:
-                raise Exception("Bond.assign()","[ERROR] bondType can only be BD_IN or BD_OUT")       
-
-        #except Exception as inst:
-        #    for i in inst.args:  
-        #        print(i)
-        #    exit(1)
+        if dim < 1: 
+            raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
+        if not bondType is BD_IN and not bondType is BD_OUT:
+            raise Exception("Bond.assign()","[ERROR] bondType can only be BD_IN or BD_OUT")       
 
         ## fill the members:
-            self.bondType = bondType
-            self.dim      = dim
+        self.bondType = bondType
+        self.dim      = dim
 
-    ## 
+    """ 
+       this is the dummy_change as uni10_2.0
+       Since there is no Qnum & Symm right now, so we only need dummy_change
+       This is the inplace change
+    """
+    def change(self,new_bondType):
+        if(self.bondType is not new_bondType):
+            self.bondType = new_bondType
+
+    """
+        This is the inplace combine without Qnum & Symm.
+    """
+    def combine(bds,new_type=None):
+        
+        ## if bds is Bond class 
+        if isinstance(bds,self.__class__):
+            self.dim *= bds.dim
+        else:
+            for i in range(len(bds)):
+                if not isinstance(bds[i],self.__class__):
+                    raise TypeError("Bond.combine(bds)","bds[%d] is not Bond class"%(i))
+                else:
+                   self.dim *= bds[i].dim
+        
+        ## checking change type
+        if not new_type is None:
+            if not new_type is BD_IN and not new_type is BD_OUT:
+                raise Exception("Bond.combine(bds,new_type)","[ERROR] new_type can only be BD_IN or BD_OUT")       
+            else:
+                self.change(new_type)
+
+
+    ## Print layout
     def __print(self):
 
         if(self.bondType is BD_IN):
@@ -57,7 +83,6 @@ class Bond():
 
         print("Dim = %d"%(self.dim))
 
-
     def __str__(self):
         self.__print()    
         return ""
@@ -66,7 +91,7 @@ class Bond():
         self.__print()
         return ""
 
-    ## Mischellnous:
+    ## Arithmic:
     def __eq__(self,rhs):
         if isinstance(rhs,self.__class__):
             return (self.dim == rhs.dim) and (self.bondType == rhs.bondType)
@@ -74,10 +99,7 @@ class Bond():
             raise ValueError("Bond.__eq__","[ERROR] invalid comparison between Bond object and other type class.")
                 
 
-
 class UniTensor():
-
-    
 
     def __init__(self,D_IN,D_OUT, label=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None):
         """
@@ -91,36 +113,29 @@ class UniTensor():
                                                   ** Developer **
                                                   > The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in D_IN, D_OUT.      
         """
-        try :
-            self.D_IN = copy.copy(D_IN)
-            self.D_OUT = copy.copy(D_OUT)
+        self.D_IN = copy.copy(D_IN)
+        self.D_OUT = copy.copy(D_OUT)
             
 
         
-            if label is None:
-                self.label = np.arange(len(D_IN)+len(D_OUT))
-            else:
-                self.label = copy.copy(label)
-                ## Checking:
-                if not len(self.label) == (len(D_IN) + len(D_OUT)):
-                    raise Exception("UniTensor.__init__","label size is not consistence with the rank")
-                if not len(np.unique(self.label)) == len(self.label):
-                    raise Exception("UniTensor.__init__","label contain duplicate element.")
+        if label is None:
+            self.label = np.arange(len(D_IN)+len(D_OUT))
+        else:
+            self.label = copy.copy(label)
+            ## Checking:
+            if not len(self.label) == (len(D_IN) + len(D_OUT)):
+                raise Exception("UniTensor.__init__","label size is not consistence with the rank")
+            if not len(np.unique(self.label)) == len(self.label):
+                raise Exception("UniTensor.__init__","label contain duplicate element.")
 
 
-            if torch_tensor is None:
-                DALL = copy.copy(D_IN)
-                DALL.extend(D_OUT)
-                self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
-                del DALL
-            else:
-                self.Storage = torch_tensor
+        if torch_tensor is None:
+            DALL = D_IN + D_OUT
+            self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
+            del DALL
+        else:
+            self.Storage = torch_tensor
     
-        except Exception as inst:
-            print(inst.args[0]) 
-            if(len(inst.args)>1): 
-                print(inst.args[1])
-            exit(1)
 
     ## print layout:
     def Print_diagram(self):
@@ -277,37 +292,28 @@ class UniTensor():
 #
 ##############################################################
 def Contract(a,b):
-    try:
-        if isinstance(a,UniTensor) and isinstance(b,UniTensor):
-            ## get same vector:
-            same = list(set(a.label).intersection(b.label)) 
-            if(len(same)):
-                print("Dev")    
+    if isinstance(a,UniTensor) and isinstance(b,UniTensor):
+        ## get same vector:
+        same = list(set(a.label).intersection(b.label)) 
+        if(len(same)):
+            print("Dev")    
 
 
-            else:
-                ## direct product
-                new_D_IN = a.D_IN + a.D_OUT
-                new_D_OUT = b.D_IN + b.D_OUT
-                new_label = a.label + b.label
-                DALL = new_D_IN + new_D_OUT
-                maper = np.concatenate([np.arange(len(a.D_IN)), len(a.label) + np.arange(len(b.D_IN)), len(a.D_IN) + np.arange(len(a.D_OUT)), len(a.label) + len(b.D_IN) + np.arange(len(b.D_OUT))] ).tolist()
-
-                return UniTensor(D_IN=a.D_IN + b.D_IN,\
-                                 D_OUT=a.D_OUT + b.D_OUT,\
-                                 label=a.label[:len(a.D_IN)] + b.label[:len(b.D_IN)] + a.label[len(a.D_IN):] + b.label[len(b.D_IN):],\
-                                 torch_tensor=torch.ger(a.Storage.view(-1),b.Storage.view(-1)).reshape(DALL).permute(maper))
-            
         else:
-            raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
+            ## direct product
+            new_D_IN = a.D_IN + a.D_OUT
+            new_D_OUT = b.D_IN + b.D_OUT
+            new_label = a.label + b.label
+            DALL = new_D_IN + new_D_OUT
+            maper = np.concatenate([np.arange(len(a.D_IN)), len(a.label) + np.arange(len(b.D_IN)), len(a.D_IN) + np.arange(len(a.D_OUT)), len(a.label) + len(b.D_IN) + np.arange(len(b.D_OUT))] ).tolist()
 
-
-
-    except Exception as inst:
-        print(inst.args[0])
-        if(len(inst.args)>1):
-            print(inst.args[1])
-        exit(1)
+            return UniTensor(D_IN=a.D_IN + b.D_IN,\
+                            D_OUT=a.D_OUT + b.D_OUT,\
+                            label=a.label[:len(a.D_IN)] + b.label[:len(b.D_IN)] + a.label[len(a.D_IN):] + b.label[len(b.D_IN):],\
+                            torch_tensor=torch.ger(a.Storage.view(-1),b.Storage.view(-1)).reshape(DALL).permute(maper))
+            
+    else:
+        raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
 
 
 
@@ -317,16 +323,10 @@ def _Randomize(a):
     """
         This is the private function [action fucntion] for Randomize a UniTensor.
     """
-    try:
-        if isinstance(a,UniTensor):
-            a.Storage = torch.rand(a.Storage.shape, dtype=a.Storage.dtype, device=a.Storage.device)
-        else:
-            raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
-    except Exception as inst:
-        print(inst.args[0])
-        if(len(inst.args)>1):
-            print(inst.args[1])
-        exit(1)
+    if isinstance(a,UniTensor):
+        a.Storage = torch.rand(a.Storage.shape, dtype=a.Storage.dtype, device=a.Storage.device)
+    else:
+        raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
 def _svd(a):
     """
@@ -334,17 +334,13 @@ def _svd(a):
         The function performs the svd by merging all the in-bonds and out-bonds to singule bond repectivly.
         The return will be a two Unitary tensors with singular values represented as 1-rank UniTensor.
     """
-    try:
-        if isinstance(a,UniTensor):
-            # u, s, v = torch.svd(a)
-            return torch.svd(a)
-        else:
-            raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
-    except Exception as inst:
-        print(inst.args[0])
-        if(len(inst.args)>1):
-            print(inst.args[1])
+    if isinstance(a,UniTensor):
+        # u, s, v = torch.svd(a)
+        print("developing.")
         exit(1)
+        #return torch.svd(a)
+    else:
+        raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
 # def _qr(a):
 
