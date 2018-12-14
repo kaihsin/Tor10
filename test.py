@@ -53,7 +53,14 @@ c.Print_diagram()
 print(c.shape())
 print(c.labels)
 
+c.CombineBonds([1,4])
+c.Print_diagram()
+c.CombineBonds([5,2])
+c.Print_diagram()
 
-
+u,s,v = c.Svd()
+u.Print_diagram()
+s.Print_diagram()
+v.Print_diagram()
 
 

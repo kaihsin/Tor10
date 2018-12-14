@@ -20,13 +20,13 @@ class UniTensor():
                                                   > The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in D_IN, D_OUT.      
         """
 
-        self.bonds = np.array(bonds)
+        self.bonds = np.array(copy.deepcopy(bonds))
                     
         
         if labels is None:
             self.labels = np.arange(len(self.bonds))
         else:
-            self.labels = np.array(labels)
+            self.labels = np.array(copy.copy(labels))
         
         ## Checking:
         if check:
@@ -106,24 +106,24 @@ class UniTensor():
             vl = Nout
 
         print(vl)
-        print("       ---------------     ")
+        print("        ---------------     ")
         for i in range(vl):
-            print("       |             |     ")
+            print("        |             |     ")
             if(i<Nin):
-                l = "%3d--"%(self.labels[i])
+                l = "%3d __"%(self.labels[i])
                 llbl = "%-3d"%(self.bonds[i].dim) 
             else:
-                l = "     "
+                l = "      "
                 llbl = "   "
             if(i<Nout):
-                r = "--%-3d"%(self.labels[Nin+i])
+                r = "__ %-3d"%(self.labels[Nin+i])
                 rlbl = "%3d"%(self.bonds[Nin+i].dim)
             else:
-                r = "     "
+                r = "      "
                 rlbl = "   "
             print("  %s| %s     %s |%s"%(l,llbl,rlbl,r))
-        print("       |             |     ")
-        print("       ---------------     ")
+        print("        |             |     ")
+        print("        ---------------     ")
         
         print("")
 
@@ -200,7 +200,10 @@ class UniTensor():
                              self.Storage / other)
     """
 
+    def Svd(self):
+        return _svd(self)
 
+    
     ## Extended Assignment:
     def __iadd__(self,other):
         if isinstance(other, self.__class__):
@@ -281,17 +284,23 @@ def _CombineBonds(a,label):
             raise Exception("_CombineBonds","[ERROR], label_to_combine doesn't exists in the UniTensor")
         
         idx_no_combine = np.setdiff1d(np.arange(len(a.labels)),x_ind)
-        maper = np.concatenate([idx_no_combine,x_ind])
         old_shape = np.array(a.Storage.shape)
 
         combined_dim = old_shape[x_ind]
         combined_dim = np.prod(combined_dim)
         no_combine_dims = old_shape[idx_no_combine]
 
-        a.bonds = np.append(a.bonds[idx_no_combine],Bond(BD_OUT,combined_dim))
-        a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
-        a.Storage = a.Storage.permute(maper.tolist()).reshape(np.append(no_combine_dims,combined_dim).tolist())
-        
+        ## check if the combined bond will be in-bond or out-bond
+        if a.bonds[x_ind[0]].bondType is BD_OUT:        
+            maper = np.concatenate([idx_no_combine,x_ind])
+            a.bonds = np.append(a.bonds[idx_no_combine],Bond(BD_OUT,combined_dim))
+            a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
+            a.Storage = a.Storage.permute(maper.tolist()).reshape(np.append(no_combine_dims,combined_dim).tolist())
+        else:
+            maper = np.concatenate([x_ind,idx_no_combine])
+            a.bonds = np.append(Bond(BD_IN,combined_dim),a.bonds[idx_no_combine])
+            a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
+            a.Storage = a.Storage.permute(maper.tolist()).reshape(np.append(combined_dim,no_combine_dims).tolist())
 
 
 
@@ -317,12 +326,32 @@ def _svd(a):
         The return will be a two Unitary tensors with singular values represented as 1-rank UniTensor.
     """
     if isinstance(a,UniTensor):
-        # u, s, v = torch.svd(a)
-        print("developing.")
-        exit(1)
-        #return torch.svd(a)
+        if not len(a.labels) == 2:
+            raise Exception("_svd","[ERROR] _svd can only accept UniTensor with rank 2")
+
+        u, s, v = torch.svd(a.Storage)
+
+        tmp = np.argwhere(a.labels<0)
+        if len(tmp) == 0:
+            tmp = 0
+        else:
+            tmp = np.min(tmp)
+
+        u = UniTensor(bonds =[a.bonds[0],Bond(BD_OUT,u.shape[1])],\
+                      labels=[a.labels[0],tmp-1],\
+                      torch_tensor=u,\
+                      check=False)
+        v = UniTensor(bonds =[Bond(BD_IN,v.shape[0]),a.bonds[1]],\
+                      labels=[tmp-2,a.labels[1]],\
+                      torch_tensor=v,\
+                      check=False)
+        s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
+                      labels =[u.labels[1],v.labels[0]],\
+                      torch_tensor=torch.diag(s),\
+                      check=False)   
+        return u,s,v
     else:
-        raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
+        raise Exception("_svd(UniTensor)","[ERROR] _svd can only accept UniTensor")
 
 # def _qr(a):
 
