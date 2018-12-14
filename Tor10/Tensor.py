@@ -50,6 +50,29 @@ class UniTensor():
             self.Storage = torch_tensor
     
 
+
+    def SetLabel(self, newLabel, idx):
+        if not type(newLabel) is int or not type(idx) is int:
+            raise TypeError("UniTensor.SetLabel","newLabel and idx must be int.")
+        
+        if not idx < len(self.labels):
+            raise ValueError("UniTensor.SetLabel","idx exceed the number of bonds.")
+        
+        if newLabel in self.labels:
+            raise ValueError("UniTensor.SetLabel","newLabel [%d] already exists in the current UniTensor."%(newLabel))
+        
+        self.labels[idx] = newLabel
+    
+    def SetLabels(self,newlabels):
+        if not len(newlabels) == len(self.labels):
+            raise ValueError("UniTensor.SetLabels","the length of newlabels not match with the rank of UniTensor")
+        
+        if np.unique(newlabels) != len(newlabels):
+            raise ValueError("UniTensor.SetLabels","the newlabels contain duplicated elementes.")
+
+        self.labels = copy.copy(newlabels)
+
+
     ## print layout:
     def Print_diagram(self):
         """
@@ -201,6 +224,8 @@ class UniTensor():
         _Randomize(self)
 
 
+    def CombineBonds(self,labels_to_combine):
+        _CombineBonds(self,labels_to_combine)
 
 
 
@@ -241,6 +266,41 @@ def Contract(a,b):
 
 
 ## This is the private function 
+
+
+def _CombineBonds(a,label):    
+    if isinstance(a,UniTensor):
+        if len(label) > len(a.labels):
+            raise ValueError("_CombineBonds","[ERROR] the # of label_to_combine should be <= rank of UniTensor")
+        # checking :
+        same_lbls, x_ind, y_ind = np.intersect1d(a.labels,label,return_indices=True)
+        #print(x_ind)
+        #print(y_ind)
+        #print(same_lbls)
+        if not len(same_lbls) == len(label):
+            raise Exception("_CombineBonds","[ERROR], label_to_combine doesn't exists in the UniTensor")
+        
+        idx_no_combine = np.setdiff1d(np.arange(len(a.labels)),x_ind)
+        maper = np.concatenate([idx_no_combine,x_ind])
+        old_shape = np.array(a.Storage.shape)
+
+        combined_dim = old_shape[x_ind]
+        combined_dim = np.prod(combined_dim)
+        no_combine_dims = old_shape[idx_no_combine]
+
+        a.bonds = np.append(a.bonds[idx_no_combine],Bond(BD_OUT,combined_dim))
+        a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
+        a.Storage = a.Storage.permute(maper.tolist()).reshape(np.append(no_combine_dims,combined_dim).tolist())
+        
+
+
+
+
+
+    else :
+        raise Exception("_CombineBonds(UniTensor,int_arr)","[ERROR] )CombineBonds can only accept UniTensor")
+
+
 def _Randomize(a):
     """
         This is the private function [action fucntion] for Randomize a UniTensor.

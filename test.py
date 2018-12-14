@@ -39,17 +39,21 @@ c.Print_diagram()
 c.Rand()
 print(c)
 
-print(x)
-print(y)
-
 y[1,2] = 1
 x[0,1] = 4
-
-print(y)
-
 y *= 2
-
-print(x)
 print(y)
+
+print("===========")
+c.Print_diagram()
+print(c.shape())
+print(c.labels)
+c.CombineBonds([2,3])
+c.Print_diagram()
+print(c.shape())
+print(c.labels)
+
+
+
 
 
