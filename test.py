@@ -63,4 +63,7 @@ u.Print_diagram()
 s.Print_diagram()
 v.Print_diagram()
 
+out = Tt.Chain_matmul(u,s,v)
+print(out - c) # this should be all zeros.
+
 

@@ -266,6 +266,21 @@ def Contract(a,b):
         raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
 
 
+def Chain_matmul(*args):
+    isUT = all( isinstance(UT,UniTensor) for UT in args)    
+    
+    tmp_args = [args[i].Storage for i in range(len(args))] 
+    
+    if isUT:
+        return UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
+                         labels=[args[0].labels[0],args[-1].labels[1]],\
+                         torch_tensor=torch.chain_matmul(*tmp_args),\
+                         check=False)
+
+    else:
+        raise TypeError("_Chain_matmul(*args)", "[ERROR] _Chain_matmul can only accept UniTensors for all elements in args")
+
+
 
 
 ## This is the private function 
@@ -309,6 +324,19 @@ def _CombineBonds(a,label):
     else :
         raise Exception("_CombineBonds(UniTensor,int_arr)","[ERROR] )CombineBonds can only accept UniTensor")
 
+def _Matmul(a,b):
+    if isinstance(a,UniTensor) and isinstance(b,UniTensor):
+
+        ## no need to check if a,b are both rank 2. Rely on torch to do error handling! 
+        return UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
+                         labels=[a.labels[0],b.labels[1]],\
+                         torch_tensor=torch.matmul(a.Storage,b.Storage),\
+                         check=False)
+
+
+    else:
+        raise TypeError("_Matmul(a,b)", "[ERROR] _Matmul can only accept UniTensors for both a & b")
+
 
 def _Randomize(a):
     """
@@ -329,7 +357,7 @@ def _svd(a):
         if not len(a.labels) == 2:
             raise Exception("_svd","[ERROR] _svd can only accept UniTensor with rank 2")
 
-        u, s, v = torch.svd(a.Storage)
+        u, s, v = torch.svd(a.Storage,some=True)
 
         tmp = np.argwhere(a.labels<0)
         if len(tmp) == 0:
@@ -337,13 +365,13 @@ def _svd(a):
         else:
             tmp = np.min(tmp)
 
-        u = UniTensor(bonds =[a.bonds[0],Bond(BD_OUT,u.shape[1])],\
+        u = UniTensor(bonds =[Bond(BD_IN,u.shape[0]),Bond(BD_OUT,u.shape[1])],\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=u,\
                       check=False)
-        v = UniTensor(bonds =[Bond(BD_IN,v.shape[0]),a.bonds[1]],\
+        v = UniTensor(bonds =[Bond(BD_IN,v.shape[1]),Bond(BD_OUT,v.shape[0])],\
                       labels=[tmp-2,a.labels[1]],\
-                      torch_tensor=v,\
+                      torch_tensor=v.transpose(0,1),\
                       check=False)
         s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
                       labels =[u.labels[1],v.labels[0]],\
