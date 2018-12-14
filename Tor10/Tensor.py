@@ -274,6 +274,17 @@ def Contract(a,b):
 
 
 def Chain_matmul(*args):
+    """
+        @description: This function performs matrix multiplication on all the UniTensors. Note that all the UniTensors should be rank-2 with 1-inbond 1-outbond
+
+        @params     : The UniTensors that will be matrix-multiply
+
+        @return     : UniTensor,rank-2, 1 inbond 1 outbond. The label of inbond = the label of inbond of first UniTensor. The label of outbond = the label of outbond of the last UniTensor.
+        @exampe     : 
+                        f = Chain_matmul(a,b,c,d,e)
+                        Mathmatically equivalent as : f = a \cdot b \cdot c \cdot d \cdot e
+
+    """
     isUT = all( isinstance(UT,UniTensor) for UT in args)    
     
     tmp_args = [args[i].Storage for i in range(len(args))] 
@@ -296,6 +307,7 @@ def Chain_matmul(*args):
         raise TypeError("_Chain_matmul(*args)", "[ERROR] _Chain_matmul can only accept UniTensors for all elements in args")
 
 def Matmul(a,b):
+    
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
         ## no need to check if a,b are both rank 2. Rely on torch to do error handling! 
@@ -312,9 +324,13 @@ def Matmul(a,b):
 
 def Svd(a):
     """
-        This is the private function [action function] for Svd a UniTensor. 
-        The function performs the svd by merging all the in-bonds and out-bonds to singule bond repectivly.
-        The return will be a two Unitary tensors with singular values represented as 1-rank UniTensor.
+        @description : The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
+                       Mathmatically, a = u \cdot s \cdot vt
+        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
+        @return      :  u , s , vt 
+                        u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+                        s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
+                        vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
     """
     if isinstance(a,UniTensor):
         if not len(a.labels) == 2:
@@ -351,6 +367,15 @@ def Svd(a):
 ## The functions that start with "_" are the private functions
 
 def _CombineBonds(a,label):    
+    """
+        @description : <Private function> This function combines the bonds in input UniTensor [a] by the specified labels [label]. The bondType of the combined bonds will always follows the same bondType of bond in [a] with label of the first element in [label] 
+        @param       : 
+                        a    : UniTensor
+                        label: the labels that is being combined.
+
+        @return      : N/A
+
+    """
     if isinstance(a,UniTensor):
         if len(label) > len(a.labels):
             raise ValueError("_CombineBonds","[ERROR] the # of label_to_combine should be <= rank of UniTensor")
@@ -390,7 +415,11 @@ def _CombineBonds(a,label):
 
 def _Randomize(a):
     """
-        This is the private function [action fucntion] for Randomize a UniTensor.
+        @description: <private function> This function randomize a UniTensor.
+        @params     : 
+                      a : UniTensor
+        @return     : N/A 
+                    
     """
     if isinstance(a,UniTensor):
         a.Storage = torch.rand(a.Storage.shape, dtype=a.Storage.dtype, device=a.Storage.device)
