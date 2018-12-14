@@ -200,8 +200,12 @@ class UniTensor():
                              self.Storage / other)
     """
 
+    ## This is the same function that behaves as the memberfunction.
     def Svd(self):
-        return _svd(self)
+        return Svd(self)
+
+    def Matmul(self,b):
+        return Matmul(self,b)
 
     
     ## Extended Assignment:
@@ -270,7 +274,15 @@ def Chain_matmul(*args):
     isUT = all( isinstance(UT,UniTensor) for UT in args)    
     
     tmp_args = [args[i].Storage for i in range(len(args))] 
-    
+
+    ## Checking performance:
+    """  
+    for i in range(len(tmp_args)):
+        if not tmp_args[i] is args[i].Storage:
+           print("Fatal performance")
+           exit(1) 
+    """
+
     if isUT:
         return UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
                          labels=[args[0].labels[0],args[-1].labels[1]],\
@@ -280,11 +292,60 @@ def Chain_matmul(*args):
     else:
         raise TypeError("_Chain_matmul(*args)", "[ERROR] _Chain_matmul can only accept UniTensors for all elements in args")
 
+def Matmul(a,b):
+    if isinstance(a,UniTensor) and isinstance(b,UniTensor):
+
+        ## no need to check if a,b are both rank 2. Rely on torch to do error handling! 
+        return UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
+                         labels=[a.labels[0],b.labels[1]],\
+                         torch_tensor=torch.matmul(a.Storage,b.Storage),\
+                         check=False)
+
+
+    else:
+        raise TypeError("_Matmul(a,b)", "[ERROR] _Matmul can only accept UniTensors for both a & b")
 
 
 
-## This is the private function 
+def Svd(a):
+    """
+        This is the private function [action function] for Svd a UniTensor. 
+        The function performs the svd by merging all the in-bonds and out-bonds to singule bond repectivly.
+        The return will be a two Unitary tensors with singular values represented as 1-rank UniTensor.
+    """
+    if isinstance(a,UniTensor):
+        if not len(a.labels) == 2:
+            raise Exception("_svd","[ERROR] _svd can only accept UniTensor with rank 2")
 
+        u, s, v = torch.svd(a.Storage,some=True)
+
+        tmp = np.argwhere(a.labels<0)
+        if len(tmp) == 0:
+            tmp = 0
+        else:
+            tmp = np.min(tmp)
+
+        u = UniTensor(bonds =[Bond(BD_IN,u.shape[0]),Bond(BD_OUT,u.shape[1])],\
+                      labels=[a.labels[0],tmp-1],\
+                      torch_tensor=u,\
+                      check=False)
+        v = UniTensor(bonds =[Bond(BD_IN,v.shape[1]),Bond(BD_OUT,v.shape[0])],\
+                      labels=[tmp-2,a.labels[1]],\
+                      torch_tensor=v.transpose(0,1),\
+                      check=False)
+        s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
+                      labels =[u.labels[1],v.labels[0]],\
+                      torch_tensor=torch.diag(s),\
+                      check=False)   
+        return u,s,v
+    else:
+        raise Exception("_svd(UniTensor)","[ERROR] _svd can only accept UniTensor")
+
+
+
+
+
+## The functions that start with "_" are the private functions
 
 def _CombineBonds(a,label):    
     if isinstance(a,UniTensor):
@@ -324,20 +385,6 @@ def _CombineBonds(a,label):
     else :
         raise Exception("_CombineBonds(UniTensor,int_arr)","[ERROR] )CombineBonds can only accept UniTensor")
 
-def _Matmul(a,b):
-    if isinstance(a,UniTensor) and isinstance(b,UniTensor):
-
-        ## no need to check if a,b are both rank 2. Rely on torch to do error handling! 
-        return UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
-                         labels=[a.labels[0],b.labels[1]],\
-                         torch_tensor=torch.matmul(a.Storage,b.Storage),\
-                         check=False)
-
-
-    else:
-        raise TypeError("_Matmul(a,b)", "[ERROR] _Matmul can only accept UniTensors for both a & b")
-
-
 def _Randomize(a):
     """
         This is the private function [action fucntion] for Randomize a UniTensor.
@@ -347,41 +394,7 @@ def _Randomize(a):
     else:
         raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
-def _svd(a):
-    """
-        This is the private function [action function] for Svd a UniTensor. 
-        The function performs the svd by merging all the in-bonds and out-bonds to singule bond repectivly.
-        The return will be a two Unitary tensors with singular values represented as 1-rank UniTensor.
-    """
-    if isinstance(a,UniTensor):
-        if not len(a.labels) == 2:
-            raise Exception("_svd","[ERROR] _svd can only accept UniTensor with rank 2")
 
-        u, s, v = torch.svd(a.Storage,some=True)
-
-        tmp = np.argwhere(a.labels<0)
-        if len(tmp) == 0:
-            tmp = 0
-        else:
-            tmp = np.min(tmp)
-
-        u = UniTensor(bonds =[Bond(BD_IN,u.shape[0]),Bond(BD_OUT,u.shape[1])],\
-                      labels=[a.labels[0],tmp-1],\
-                      torch_tensor=u,\
-                      check=False)
-        v = UniTensor(bonds =[Bond(BD_IN,v.shape[1]),Bond(BD_OUT,v.shape[0])],\
-                      labels=[tmp-2,a.labels[1]],\
-                      torch_tensor=v.transpose(0,1),\
-                      check=False)
-        s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
-                      labels =[u.labels[1],v.labels[0]],\
-                      torch_tensor=torch.diag(s),\
-                      check=False)   
-        return u,s,v
-    else:
-        raise Exception("_svd(UniTensor)","[ERROR] _svd can only accept UniTensor")
-
-# def _qr(a):
 
 
 
