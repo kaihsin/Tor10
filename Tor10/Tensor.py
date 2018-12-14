@@ -1,7 +1,7 @@
 import torch 
-import copy
+import copy,os
 import numpy as np
-
+import pickle as pkl
 from .Bond import *
 
 
@@ -128,6 +128,8 @@ class UniTensor():
         print("")
 
 
+        
+
     def __str__(self):
         print(self.Storage)
         return ""
@@ -138,6 +140,22 @@ class UniTensor():
 
     def __len__(self):
         return len(self.Storage)
+
+    def __eq__(self,rhs):
+        """
+            Note that this is only compare the shape of Storage. Not the content of torch tensor.
+        """
+        if isinstance(rhs,self.__class__):
+            iss = (self.Storage.shape == rhs.Storage.shape) and (len(self.bonds) == len(rhs.bonds))
+            if not iss:
+                return False
+            
+            iss = iss and all(self.bonds[i]==rhs.bonds[i] for i in range(len(self.bonds))) and all(self.labels[i]==rhs.labels[i] for i in range(len(self.labels)))
+            return iss
+                
+        else:
+            raise ValueError("Bond.__eq__","[ERROR] invalid comparison between Bond object and other type class.")
+
 
     def shape(self):
         return self.Storage.shape
@@ -225,7 +243,6 @@ class UniTensor():
         return self
 
 
-
     ## Miscellaneous
     def Rand(self):
         _Randomize(self)
@@ -244,6 +261,28 @@ class UniTensor():
 # Action function 
 #
 ##############################################################
+def Save(a,filename):
+    if not isinstance(filename,str):
+        raise TypeError("Save","[ERROR] Invalid filename.")
+    if not isinstance(a,UniTensor):
+        raise TypeError("Save","[ERROR] input must be the UniTensor")
+    f = open(filename,"wb")
+    pkl.dump(a,f)
+    f.close()
+
+def Load(filename):
+    if not isinstance(filename,str):
+        raise TypeError("UniTensor.Save","[ERROR] Invalid filename.")
+    if not os.path.exists(filename):
+        raise Exception("UniTensor.Load","[ERROR] file not exists")
+
+    f = open(filename,'rb')
+    tmp = pkl.load(f)
+    f.close()
+    if not isinstance(tmp,UniTensor):
+        raise TypeError("Load","[ERROR] loaded object is not the UniTensor")
+    
+    return tmp
 def Contract(a,b):
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
         ## get same vector:

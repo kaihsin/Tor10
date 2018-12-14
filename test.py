@@ -69,3 +69,10 @@ print(out - c) # this should be all zeros.
 out.Contiguous()
 print(out.is_contiguous()) #this should be true
 
+Tt.Save(out,"test.uni10")
+out2 = Tt.Load("test.uni10")
+
+print(out2)
+
+print(out==out2)
+
