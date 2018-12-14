@@ -66,4 +66,6 @@ v.Print_diagram()
 out = Tt.Chain_matmul(u,s,v)
 print(out - c) # this should be all zeros.
 
+out.Contiguous()
+print(out.is_contiguous()) #this should be true
 

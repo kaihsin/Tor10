@@ -230,11 +230,14 @@ class UniTensor():
     def Rand(self):
         _Randomize(self)
 
-
     def CombineBonds(self,labels_to_combine):
         _CombineBonds(self,labels_to_combine)
 
+    def Contiguous(self):
+        self.Storage = self.Storage.contiguous()
 
+    def is_contiguous(self):
+        return self.Storage.is_contiguous()        
 
 ###############################################################
 #
