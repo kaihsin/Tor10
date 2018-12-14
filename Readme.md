@@ -22,4 +22,5 @@
         A.Contiguous()
         
 
+    See test.py for further detail application functions.
 
