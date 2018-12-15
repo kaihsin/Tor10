@@ -21,8 +21,8 @@ print(bd_x==bd_y) ## This should be false
 #device = tor.device("cuda:0")
 bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
 bds_y = [Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,3)]
-x = Tt.UniTensor(bonds=bds_x, labels=[4,2,5],dtype=tor.float64,device=tor.device("cpu"))
-y = Tt.UniTensor(bonds=bds_y, labels=[1,3]  ,dtype=tor.float64,device=tor.device("cpu"))
+x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5],dtype=tor.float64,device=tor.device("cpu"))
+y = Tt.UniTensor(bonds=bds_y, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
 
 #print(len(x))
 print(x.shape())
@@ -44,35 +44,53 @@ x[0,1] = 4
 y *= 2
 print(y)
 
+
+
 print("===========")
 c.Print_diagram()
 print(c.shape())
 print(c.labels)
-c.CombineBonds([2,3])
-c.Print_diagram()
-print(c.shape())
-print(c.labels)
 
-c.CombineBonds([1,4])
-c.Print_diagram()
-c.CombineBonds([5,2])
-c.Print_diagram()
+exit(1)
+#c.CombineBonds([2,3])
+#c.Print_diagram()
+#print(c.shape())
+#print(c.labels)
 
+#c.CombineBonds([1,4])
+#c.Print_diagram()
+#c.CombineBonds([5,2])
+#c.Print_diagram()
+
+"""
+## Test Svd:
+## ------------------------
 u,s,v = c.Svd()
 u.Print_diagram()
 s.Print_diagram()
 v.Print_diagram()
 
+## Test chain_matmul , derive from pytorch
+## -----------------------
 out = Tt.Chain_matmul(u,s,v)
 print(out - c) # this should be all zeros.
 
+## Test contiguous
+## -----------------------
 out.Contiguous()
 print(out.is_contiguous()) #this should be true
 
+
+## Test I/O
+## ----------------------
 Tt.Save(out,"test.uni10")
 out2 = Tt.Load("test.uni10")
 
 print(out2)
 
 print(out==out2)
+"""
+
+
+
 

@@ -261,6 +261,7 @@ class UniTensor():
 # Action function 
 #
 ##############################################################
+## I/O
 def Save(a,filename):
     if not isinstance(filename,str):
         raise TypeError("Save","[ERROR] Invalid filename.")
@@ -283,13 +284,30 @@ def Load(filename):
         raise TypeError("Load","[ERROR] loaded object is not the UniTensor")
     
     return tmp
+
+
 def Contract(a,b):
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
         ## get same vector:
-        same = list(set(a.labels).intersection(b.labels)) 
-        if(len(same)):
-            print("Dev")    
+        same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
+        if(len(same)):
+            aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
+            bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
+            
+            maper_a = np.concatenate([aind_no_combine,a_ind])
+            maper_b = np.concatenate([b_ind,bind_no_combine])
+
+            old_shape = np.array(a.Storage.shape)
+            combined_dim = np.prod(old_shape[a_ind])
+
+            tmp = torch.matmul(a.Storage.permute(maper_a.tolist()).reshape(-1,combined_dim),\
+                               b.Storage.permute(maper_b.tolist()).reshape(combined_dim,-1))
+            new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]
+            return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\
+                             labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\
+                             torch_tensor=tmp.reshape(new_shape),\
+                             check=False)
 
         else:
             ## direct product
