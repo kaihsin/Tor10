@@ -105,7 +105,7 @@ class UniTensor():
         else:
             vl = Nout
 
-        print(vl)
+        #print(vl)
         print("        ---------------     ")
         for i in range(vl):
             print("        |             |     ")
@@ -261,6 +261,8 @@ class UniTensor():
         if not isinstance(maper,list):
             raise TypeError("UniTensor.Permute","[ERROR] maper should be an python list.")            
 
+
+        ## We don't need this. pytorch will handle the dimesion mismatch error.
         #if not len(maper) == len(self.labels):
         #    raise ValueError("UniTensor.Permute", "[ERROR] len of maper should be the same as the rank of the UniTensor.")
 
@@ -273,6 +275,19 @@ class UniTensor():
                 self.bonds[i].change(BD_IN)
             else:
                 self.bonds[i].change(BD_OUT)
+
+
+    def Reshape(self,dimer,new_labels,N_inbond):
+        if not isinstance(dimer,list):
+            raise TypeError("UniTensor.Permute","[ERROR] maper should be an python list.")            
+
+        ## This is not contiguous
+        self.Storage = self.Storage.view(dimer)
+        self.labels  = np.array(new_labels)
+
+        f = lambda i,Nid,dim : Bond(BD_IN,dim) if i<Nid else Bond(BD_OUT,dim)
+        self.bonds  = np.array([f(i,N_inbond,dimer[i]) for i in range(len(dimer))])
+
 
 ###############################################################
 #

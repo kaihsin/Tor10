@@ -42,20 +42,27 @@ print(c)
 y[1,2] = 1
 x[0,1] = 4
 y *= 2
-print(y)
+
+
+## example for reshape
+## Note that reshape on a non-contiguous tensor will have warning. This is the same as pytorch.
+x.Print_diagram()
+x.Reshape([5,3,5],new_labels=[1,2,3],N_inbond=2)
+x.Print_diagram()
 
 
 
+## example of permute:
 print("===========")
 c.Print_diagram()
 print(c.shape())
 print(c.labels)
-
-
-## example of permute:
 c.Permute([0,2,1],1)
 print(c.is_contiguous()) ## This should be false. The virtual permute is taking action.
 c.Print_diagram()
+
+
+
 
 
 ""
