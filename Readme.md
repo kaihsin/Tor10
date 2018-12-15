@@ -20,6 +20,7 @@
         * Use Contiguous() when needed.
 
         A.Contiguous()
+
         
 
     See test.py for further detail application functions.
