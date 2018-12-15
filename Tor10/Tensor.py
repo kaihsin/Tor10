@@ -256,6 +256,24 @@ class UniTensor():
     def is_contiguous(self):
         return self.Storage.is_contiguous()        
 
+
+    def Permute(self,maper,N_inbond):
+        if not isinstance(maper,list):
+            raise TypeError("UniTensor.Permute","[ERROR] maper should be an python list.")            
+
+        #if not len(maper) == len(self.labels):
+        #    raise ValueError("UniTensor.Permute", "[ERROR] len of maper should be the same as the rank of the UniTensor.")
+
+        self.Storage = self.Storage.permute(maper)
+        self.labels = self.labels[maper]
+        self.bonds = self.bonds[maper]
+
+        for i in range(len(self.bonds)):
+            if i < N_inbond:
+                self.bonds[i].change(BD_IN)
+            else:
+                self.bonds[i].change(BD_OUT)
+
 ###############################################################
 #
 # Action function 
@@ -306,7 +324,7 @@ def Contract(a,b):
             new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]
             return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\
                              labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\
-                             torch_tensor=tmp.reshape(new_shape),\
+                             torch_tensor=tmp.view(new_shape),\
                              check=False)
 
         else:
@@ -456,12 +474,12 @@ def _CombineBonds(a,label):
             maper = np.concatenate([idx_no_combine,x_ind])
             a.bonds = np.append(a.bonds[idx_no_combine],Bond(BD_OUT,combined_dim))
             a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
-            a.Storage = a.Storage.permute(maper.tolist()).reshape(np.append(no_combine_dims,combined_dim).tolist())
+            a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
         else:
             maper = np.concatenate([x_ind,idx_no_combine])
             a.bonds = np.append(Bond(BD_IN,combined_dim),a.bonds[idx_no_combine])
             a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
-            a.Storage = a.Storage.permute(maper.tolist()).reshape(np.append(combined_dim,no_combine_dims).tolist())
+            a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
 
 
 

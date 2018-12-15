@@ -51,16 +51,23 @@ c.Print_diagram()
 print(c.shape())
 print(c.labels)
 
-exit(1)
-#c.CombineBonds([2,3])
-#c.Print_diagram()
-#print(c.shape())
-#print(c.labels)
 
-#c.CombineBonds([1,4])
-#c.Print_diagram()
-#c.CombineBonds([5,2])
-#c.Print_diagram()
+## example of permute:
+c.Permute([0,2,1],1)
+print(c.is_contiguous()) ## This should be false. The virtual permute is taking action.
+c.Print_diagram()
+
+
+""
+#c.Contiguous()
+c.CombineBonds([1,3])
+c.Print_diagram()
+print(c.shape())
+print(c.labels)
+""
+
+
+
 
 """
 ## Test Svd:
