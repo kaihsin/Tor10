@@ -59,8 +59,7 @@ c.Print_diagram()
 
 
 ""
-#c.Contiguous()
-c.CombineBonds([1,3])
+c.CombineBonds([1,3]) ## The CombineBonds implicitly have contiguous only at the last stage when moving memory is needed. 
 c.Print_diagram()
 print(c.shape())
 print(c.labels)
@@ -69,7 +68,7 @@ print(c.labels)
 
 
 
-"""
+""
 ## Test Svd:
 ## ------------------------
 u,s,v = c.Svd()
@@ -87,7 +86,7 @@ print(out - c) # this should be all zeros.
 out.Contiguous()
 print(out.is_contiguous()) #this should be true
 
-
+"""
 ## Test I/O
 ## ----------------------
 Tt.Save(out,"test.uni10")
