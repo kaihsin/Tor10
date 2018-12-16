@@ -67,27 +67,27 @@ class UniTensor():
         if not len(newlabels) == len(self.labels):
             raise ValueError("UniTensor.SetLabels","the length of newlabels not match with the rank of UniTensor")
         
-        if np.unique(newlabels) != len(newlabels):
+        if len(np.unique(newlabels)) != len(newlabels):
             raise ValueError("UniTensor.SetLabels","the newlabels contain duplicated elementes.")
 
         self.labels = copy.copy(newlabels)
 
     def SetElem(self, elem):
         """
-        @Description: Given 1D array of elements, set the elements stored in tensor as the same as the given ones.
-        """
-        if isinstance(elem, list):
-            elem = np.array(elem)
+        @Description: Given 1D array of elements, set the elements stored in tensor as the same as the given ones. Note that elem can only be python-list or numpy 
         
-        bdi_dim = 1
-        for bd in self.bonds:
-            if bd.bondType == BD_IN:
-                bdi_dim *= bd.dim
-            else:
-                break
-        elem = elem.reshape([bdi_dim, -1])
-        self.Storage = torch.Tensor(elem)
-
+        """
+        if not isinstance(elem,list) and not isinstance(elem,np.ndarray):
+            raise TypeError("UniTensor.SetElem","[ERROR]  elem can only be python-list or numpy")
+        
+        if not len(elem) == self.Storage.numel():
+            raise ValueError("UniTensor.SetElem","[ERROR] number of elem is not equal to the # of elem in the tensor.")
+        
+        my_type = self.Storage.dtype
+        my_shape = self.Storage.shape
+        my_device = self.Storage.device
+        self.Storage = torch.from_numpy(np.array(elem)).type(my_type).reshape(my_shape).to(my_device)
+        
 
     ## print layout:
     def Print_diagram(self):
