@@ -7,7 +7,7 @@ from .Bond import *
 
 class UniTensor():
 
-    def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True):
+    def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, name=""):
         """
             @description: This is the initialization of the UniTensor.
             @param      : D_IN  [require]: The in-bonds , it should be an list with len(list) is the # of in-bond, and each element describe the dimension of each bond.  
@@ -19,8 +19,8 @@ class UniTensor():
                                                   ** Developer **
                                                   > The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in D_IN, D_OUT.      
         """
-
         self.bonds = np.array(copy.deepcopy(bonds))
+        self.name = name
                     
         
         if labels is None:
@@ -71,6 +71,22 @@ class UniTensor():
             raise ValueError("UniTensor.SetLabels","the newlabels contain duplicated elementes.")
 
         self.labels = copy.copy(newlabels)
+
+    def SetElem(self, elem):
+        """
+        @Description: Given 1D array of elements, set the elements stored in tensor as the same as the given ones.
+        """
+        if isinstance(elem, list):
+            elem = np.array(elem)
+        
+        bdi_dim = 1
+        for bd in self.bonds:
+            if bd.bondType == BD_IN:
+                bdi_dim *= bd.dim
+            else:
+                break
+        elem = elem.reshape([bdi_dim, -1])
+        self.Storage = torch.Tensor(elem)
 
 
     ## print layout:
@@ -131,10 +147,12 @@ class UniTensor():
         
 
     def __str__(self):
+        print("Tensor name: ", self.name)
         print(self.Storage)
         return ""
 
     def __repr__(self):
+        print(self.name)
         print(self.Storage)
         return ""
 
