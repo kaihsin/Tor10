@@ -479,7 +479,7 @@ def ExpH(a):
     if isinstance(a,UniTensor):
 
         ## version-1, only real, not sure if it can extend to complex
-        e , u = torch.symeig(a.Storage,eigenvectors=True)
+        s , u = torch.symeig(a.Storage,eigenvectors=True)
         s     = torch.exp(s)
         torch.matmul(u*s,u.transpose(0,1),out=u)
         del s
