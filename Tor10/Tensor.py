@@ -466,7 +466,32 @@ def Svd(a):
                       check=False)   
         return u,s,v
     else:
-        raise Exception("_svd(UniTensor)","[ERROR] _svd can only accept UniTensor")
+        raise Exception("Svd(UniTensor)","[ERROR] Svd can only accept UniTensor")
+
+
+def ExpH(a):
+    """
+        @description : This function performs the exp^{H} where H is the hermitian matrix. Intricate compute svd first and exp the singular matrix.
+        @params      : a : UniTensor, rank-2
+        @return      : UniTensor, 2-rank, same bonds and labels at the original H
+    """
+
+    if isinstance(a,UniTensor):
+
+        ## version-1, only real, not sure if it can extend to complex
+        e , u = torch.symeig(a.Storage,eigenvectors=True)
+        s     = torch.exp(s)
+        torch.matmul(u*s,u.transpose(0,1),out=u)
+        del s
+
+        return UniTensor(bonds=a.bonds,\
+                         labels=a.labels,\
+                         torch_tensor=u,\
+                         check=False)
+                
+
+    else:
+        raise Exception("ExpH(UniTensor)","[ERROR] ExpH can only accept UniTensor")
 
 
 
