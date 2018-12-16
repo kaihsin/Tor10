@@ -10,14 +10,16 @@ class UniTensor():
     def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, name=""):
         """
             @description: This is the initialization of the UniTensor.
-            @param      : D_IN  [require]: The in-bonds , it should be an list with len(list) is the # of in-bond, and each element describe the dimension of each bond.  
-                          D_OUT [require]: The out-bonds, it should be an list with len(list) is the # of in-bond, and each element describe the dimension of each bond.
+            @param      : bonds [require]: The list of bonds. it should be an list or np.ndarray with len(list) is the # of bonds.  
                           label [option ]: The customize label. the number of elements should be the same as the total rank of the tensor, and contain on duplicated elements.
                           device[option ]: This should be a [torch.device]. When provided, the tensor will be put on the device ("cpu", "cuda", "cuda:x" with x is the GPU-id. See torch.device for further information.)
                           dtype [option ]: This should be a [torch.dtype ]. The default type is float with either float32 or float64 which follows the same internal rule of pytorch. For further information, see pytorch documentation. 
                           torch_tensor [private]: This is the internal arguments in current version. It should not be directly use, otherwise may cause inconsistence with Bonds and memory layout. 
                                                   ** Developer **
-                                                  > The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in D_IN, D_OUT.      
+                                                  > The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in bond in self.bonds.
+                          check [private]: This is the internal arguments. It should not be directly use. If False, all the checking across bonds/labels/Storage.shape will be ignore. 
+                          is_diag [option]: This states the current UniTensor is a diagonal matrix or not. If True, the Storage will only store diagonal elements. 
+                          name [option]: This states the name of current UniTensor.      
         """
         self.bonds = np.array(copy.deepcopy(bonds))
         self.name = name
