@@ -17,7 +17,6 @@ print(bd_x==bd_y) ## This should be false
 
 
 
-
 #device = tor.device("cuda:0")
 bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
 bds_y = [Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,3)]
@@ -31,7 +30,6 @@ x.Print_diagram()
 print(x.labels)
 y.Print_diagram()
 print(y.labels)
-
 
 c = Tt.Contract(x,y)
 print(c)

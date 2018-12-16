@@ -7,7 +7,7 @@ from .Bond import *
 
 class UniTensor():
 
-    def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, name=""):
+    def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, name=""):
         """
             @description: This is the initialization of the UniTensor.
             @param      : D_IN  [require]: The in-bonds , it should be an list with len(list) is the # of in-bond, and each element describe the dimension of each bond.  
@@ -21,7 +21,7 @@ class UniTensor():
         """
         self.bonds = np.array(copy.deepcopy(bonds))
         self.name = name
-                    
+        self.is_diag = is_diag        
         
         if labels is None:
             self.labels = np.arange(len(self.bonds))
@@ -34,6 +34,11 @@ class UniTensor():
                 raise Exception("UniTensor.__init__","labels size is not consistence with the rank")
             if not len(np.unique(self.labels)) == len(self.labels):
                 raise Exception("UniTensor.__init__","labels contain duplicate element.")
+            if is_diag:
+                if not len(self.labels) == 2:
+                    raise TypeError("UniTensor.__init__","is_diag=True require Tensor rank==2")
+                if not self.bonds[0].dim == self.bonds[1].dim:
+                    raise TypeError("UniTensor.__init__","is_diag=True require Tensor to be square rank-2")
 
 
             ## sort all BD_IN on first and BD_OUT on last:
@@ -41,11 +46,18 @@ class UniTensor():
             maper = np.argsort([ (x.bondType is BD_OUT) for x in self.bonds])
             self.bonds = self.bonds[maper]
             self.labels = self.labels[maper]
+            
+            
+
 
         if torch_tensor is None:
-            DALL = [self.bonds[i].dim for i in range(len(self.bonds))]
-            self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
-            del DALL
+            if self.is_diag:
+                self.Storage = torch.zeros(self.bonds[0].dim,device=device,dtype=dtype)                
+            else:
+                DALL = [self.bonds[i].dim for i in range(len(self.bonds))]
+                self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
+                del DALL
+
         else:
             self.Storage = torch_tensor
     
@@ -88,6 +100,10 @@ class UniTensor():
         my_device = self.Storage.device
         self.Storage = torch.from_numpy(np.array(elem)).type(my_type).reshape(my_shape).to(my_device)
         
+    def Todense(self):
+        if self.is_diag==True:
+            self.Storage = torch.diag(self.Storage) 
+        
 
     ## print layout:
     def Print_diagram(self):
@@ -109,9 +125,10 @@ class UniTensor():
                                      -----------
 
         """
+        print("tensor Name : %s"%(self.name))
         print("tensor Rank : %d"%(len(self.labels)))
         print("on device   : %s"%(self.Storage.device))        
-        print("")        
+        print("is_diag     : %s"%("True" if self.is_diag else "False"))        
         
         Nin = len([ 1 for i in range(len(self.labels)) if self.bonds[i].bondType is BD_IN])
         Nout = len(self.labels) - Nin    
@@ -147,12 +164,14 @@ class UniTensor():
         
 
     def __str__(self):
-        print("Tensor name: ", self.name)
+        print("Tensor name: %s"%( self.name))
+        print("is_diag    : %s"%("True" if self.is_diag else "False"))
         print(self.Storage)
         return ""
 
     def __repr__(self):
-        print(self.name)
+        print("Tensor name: %s"%( self.name))
+        print("is_diag    : %s"%("True" if self.is_diag else "False"))
         print(self.Storage)
         return ""
 
@@ -176,7 +195,10 @@ class UniTensor():
 
 
     def shape(self):
-        return self.Storage.shape
+        if self.is_diag:
+            return torch.Size([self.bonds.dim[0],self.bonds.dim[0]])
+        else:
+            return self.Storage.shape
     
     ## Fill :
     def __getitem__(self,key):
@@ -190,11 +212,31 @@ class UniTensor():
     ## Math ::
     def __add__(self,other):
         if isinstance(other, self.__class__):
-            return UniTensor(bonds = self.bonds,\
-                             labels= self.labels,\
-                             torch_tensor=self.Storage + other.Storage,\
-                             check=False)
-        else :
+            if self.is_diag and other.is_diag:
+                tmp = UniTensor(bonds = self.bonds,\
+                                labels= self.labels,\
+                                torch_tensor=self.Storage + other.Storage,\
+                                check=False,\
+                                is_diag=True)
+
+            elif self.is_diag==False and other.is_diag==False:
+                tmp = UniTensor(bonds = self.bonds,\
+                                labels= self.labels,\
+                                torch_tensor=self.Storage + other.Storage,\
+                                check=False)
+            else:
+                if self.is_diag:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    torch_tensor=torch.diag(self.Storage) + other.Storage,\
+                                    check=False)
+                else:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    torch_tensor=self.Storage + torch.diag(other.Storage),\
+                                    check=False)
+            return tmp
+        else:
             return UniTensor(bonds = self.bonds,\
                              labels= self.labels,\
                              torch_tensor=self.Storage + other,\
@@ -202,10 +244,30 @@ class UniTensor():
 
     def __sub__(self,other):
         if isinstance(other, self.__class__):
-            return UniTensor(bonds = self.bonds,\
-                             labels= self.labels,\
-                             torch_tensor=self.Storage - other.Storage,\
-                             check=False)
+            if self.is_diag and other.is_diag:
+                tmp = UniTensor(bonds = self.bonds,\
+                                labels= self.labels,\
+                                torch_tensor=self.Storage - other.Storage,\
+                                check=False,\
+                                is_diag=True)
+
+            elif self.is_diag==False and other.is_diag==False:
+                tmp = UniTensor(bonds = self.bonds,\
+                                 labels= self.labels,\
+                                 torch_tensor=self.Storage - other.Storage,\
+                                 check=False)
+            else:
+                if self.is_diag:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    torch_tensor=torch.diag(self.Storage) - other.Storage,\
+                                    check=False)
+                else:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    torch_tensor=self.Storage - torch.diag(other.Storage),\
+                                    check=False)
+            return tmp
         else :
             return UniTensor(bonds = self.bonds,\
                              labels= self.labels,\
@@ -214,15 +276,37 @@ class UniTensor():
 
     def __mul__(self,other):
         if isinstance(other, self.__class__):
-            return UniTensor(bonds = self.bonds,\
-                             labels= self.labels,\
-                             torch_tensor=self.Storage * other.Storage,\
-                             check=False)
-        else :
-            return UniTensor(bonds = self.bonds,\
-                             labels= self.labels,\
-                             torch_tensor=self.Storage * other,\
-                             check=False)
+            if self.is_diag and other.is_diag:
+                tmp = UniTensor(bonds = self.bonds,\
+                                labels= self.labels,\
+                                torch_tensor=self.Storage * other.Storage,\
+                                check=False,\
+                                is_diag=True)
+
+            elif self.is_diag==False and other.is_diag==False:
+                tmp = UniTensor(bonds = self.bonds,\
+                                 labels= self.labels,\
+                                 torch_tensor=self.Storage * other.Storage,\
+                                 check=False)
+            else:
+                if self.is_diag:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    torch_tensor=torch.diag(self.Storage) * other.Storage,\
+                                    check=False)
+                else:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    torch_tensor=self.Storage * torch.diag(other.Storage),\
+                                    check=False)
+            return tmp
+
+    def __pow__(self,other):
+        return UniTensor(bonds=self.bonds,\
+                         labels=self.labels,\
+                         torch_tensor=self.Storage**other,\
+                         check=False,\
+                         is_diag=self.is_diag)
 
     """
     def __truediv__(self,other):
@@ -247,14 +331,45 @@ class UniTensor():
     ## Extended Assignment:
     def __iadd__(self,other):
         if isinstance(other, self.__class__):
-            self.Storage += other.Storage
+            if self.is_diag == other.is_diag:            
+                self.Storage += other.Storage
+            else:
+                if self.is_diag:
+                    self.Storage = torch.diag(self.Storage) + other.Storage
+                    self.is_diag=False
+                else:
+                    self.Storage += torch.diag(other.Storage)
+
         else :
             self.Storage += other
         return self
 
+    def __isub__(self,other):
+        if isinstance(other, self.__class__):
+            if self.is_diag == other.is_diag:            
+                self.Storage -= other.Storage
+            else:
+                if self.is_diag:
+                    self.Storage = torch.diag(self.Storage) + other.Storage
+                    self.is_diag=False
+                else:
+                    self.Storage -= torch.diag(other.Storage)
+
+        else :
+            self.Storage -= other
+        return self
+
+
     def __imul__(self,other):
         if isinstance(other, self.__class__):
-            self.Storage *= other.Storage
+            if self.is_diag == other.is_diag:            
+                self.Storage *= other.Storage
+            else:
+                if self.is_diag:
+                    self.Storage = torch.diag(self.Storage) * other.Storage
+                    self.is_diag=False
+                else:
+                    self.Storage *= torch.diag(other.Storage)
         else :
             self.Storage *= other
     
@@ -275,18 +390,33 @@ class UniTensor():
         return self.Storage.is_contiguous()        
 
 
-    def Permute(self,maper,N_inbond):
+    def Permute(self,maper,N_inbond,by_label=False):
+        if self.is_diag:
+            raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True cannot be permuted.\n"+
+                                                "[Suggest] Call UniTensor.Todense()")
         if not isinstance(maper,list):
             raise TypeError("UniTensor.Permute","[ERROR] maper should be an python list.")            
+ 
+       
+        if by_label:
+            ## check all label
+            if not all(lbl in self.labels for lbl in maper):
+                raise Exception("UniTensor.Permute","[ERROR] by_label=True but maper contain invalid labels not appear in the UniTensor label")
 
+            DD = dict(zip(self.labels,np.arange(len(self.labels))))
+            new_maper=[ DD[x] for x in maper]
+            self.Storage = self.Storage.permute(new_maper)
+            self.labels = np.array(maper)
+            self.bonds = self.bonds[new_maper]
 
-        ## We don't need this. pytorch will handle the dimesion mismatch error.
-        #if not len(maper) == len(self.labels):
-        #    raise ValueError("UniTensor.Permute", "[ERROR] len of maper should be the same as the rank of the UniTensor.")
+        else:
+            ## We don't need this. pytorch will handle the dimesion mismatch error.
+            #if not len(maper) == len(self.labels):
+            #    raise ValueError("UniTensor.Permute", "[ERROR] len of maper should be the same as the rank of the UniTensor.")
 
-        self.Storage = self.Storage.permute(maper)
-        self.labels = self.labels[maper]
-        self.bonds = self.bonds[maper]
+            self.Storage = self.Storage.permute(maper)
+            self.labels = self.labels[maper]
+            self.bonds = self.bonds[maper]
 
         for i in range(len(self.bonds)):
             if i < N_inbond:
@@ -295,13 +425,19 @@ class UniTensor():
                 self.bonds[i].change(BD_OUT)
 
 
-    def Reshape(self,dimer,new_labels,N_inbond):
+    def Reshape(self,dimer,N_inbond,new_labels=None):
+        if self.is_diag:
+            raise Exception("UniTensor.Reshape","[ERROR] UniTensor.is_diag=True cannot be Reshape.\n"+
+                                                "[Suggest] Call UniTensor.Todense()")
         if not isinstance(dimer,list):
-            raise TypeError("UniTensor.Permute","[ERROR] maper should be an python list.")            
+            raise TypeError("UniTensor.Reshape","[ERROR] maper should be an python list.")            
 
         ## This is not contiguous
         self.Storage = self.Storage.view(dimer)
-        self.labels  = np.array(new_labels)
+        if new_labels is None:
+            self.labels = np.arange(len(dimer))
+        else:
+            self.labels  = np.array(new_labels)
 
         f = lambda i,Nid,dim : Bond(BD_IN,dim) if i<Nid else Bond(BD_OUT,dim)
         self.bonds  = np.array([f(i,N_inbond,dimer[i]) for i in range(len(dimer))])
@@ -352,8 +488,19 @@ def Contract(a,b):
             old_shape = np.array(a.Storage.shape)
             combined_dim = np.prod(old_shape[a_ind])
 
-            tmp = torch.matmul(a.Storage.permute(maper_a.tolist()).reshape(-1,combined_dim),\
-                               b.Storage.permute(maper_b.tolist()).reshape(combined_dim,-1))
+            if a.is_diag :
+                tmpa = torch.diag(a)
+            else:   
+                tmpa = a
+            
+            if b.is_diag :
+                tmpb = torch.diag(b)
+            else:   
+                tmpb = b
+
+
+            tmp = torch.matmul(tmpa.Storage.permute(maper_a.tolist()).reshape(-1,combined_dim),\
+                               tmpb.Storage.permute(maper_b.tolist()).reshape(combined_dim,-1))
             new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]
             return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\
                              labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\
@@ -372,9 +519,20 @@ def Contract(a,b):
 
             maper = np.concatenate([np.arange(Nin_a), len(a.labels) + np.arange(Nin_b), np.arange(Nout_a) + Nin_a, len(a.labels) + Nin_b + np.arange(Nout_b)])
 
+            if a.is_diag :
+                tmpa = torch.diag(a)
+            else:   
+                tmpa = a
+            
+            if b.is_diag :
+                tmpb = torch.diag(b)
+            else:   
+                tmpb = b
+
+
             return UniTensor(bonds=np.concatenate([a.bonds[:Nin_a],b.bonds[:Nin_b],a.bonds[Nin_a:],b.bonds[Nin_b:]]),\
                             labels=np.concatenate([a.labels[:Nin_a], b.labels[:Nin_b], a.labels[Nin_a:], b.labels[Nin_b:]]),\
-                            torch_tensor=torch.ger(a.Storage.view(-1),b.Storage.view(-1)).reshape(DALL).permute(maper.tolist()),\
+                            torch_tensor=torch.ger(tmpa.Storage.view(-1),tmpb.Storage.view(-1)).reshape(DALL).permute(maper.tolist()),\
                             check=False)
             
     else:
@@ -393,9 +551,10 @@ def Chain_matmul(*args):
                         Mathmatically equivalent as : f = a \cdot b \cdot c \cdot d \cdot e
 
     """
+    f = lambda x,idiag: torch.diag(x) if idiag else x 
     isUT = all( isinstance(UT,UniTensor) for UT in args)    
     
-    tmp_args = [args[i].Storage for i in range(len(args))] 
+    tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))] 
 
     ## Checking performance:
     """  
@@ -419,11 +578,26 @@ def Matmul(a,b):
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
         ## no need to check if a,b are both rank 2. Rely on torch to do error handling! 
-        return UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
-                         labels=[a.labels[0],b.labels[1]],\
-                         torch_tensor=torch.matmul(a.Storage,b.Storage),\
-                         check=False)
 
+        if a.is_diag == b.is_diag:
+            tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
+                            labels=[a.labels[0],b.labels[1]],\
+                            torch_tensor=torch.matmul(a.Storage,b.Storage),\
+                            check=False,\
+                            is_diag=a.is_diag)
+        else:
+            if a.is_diag:
+                tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
+                                labels=[a.labels[0],b.labels[1]],\
+                                torch_tensor=torch.matmul(torch.diag(a.Storage),b.Storage),\
+                                check=False)
+            if b.is_diag:
+                tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
+                                labels=[a.labels[0],b.labels[1]],\
+                                torch_tensor=torch.matmul(a.Storage,torch.diag(b.Storage)),\
+                                check=False)
+
+        return tmp
 
     else:
         raise TypeError("_Matmul(a,b)", "[ERROR] _Matmul can only accept UniTensors for both a & b")
@@ -462,8 +636,9 @@ def Svd(a):
                       check=False)
         s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
                       labels =[u.labels[1],v.labels[0]],\
-                      torch_tensor=torch.diag(s),\
-                      check=False)   
+                      torch_tensor=s,\
+                      check=False,\
+                      is_diag=True)   
         return u,s,v
     else:
         raise Exception("Svd(UniTensor)","[ERROR] Svd can only accept UniTensor")
@@ -510,6 +685,8 @@ def _CombineBonds(a,label):
 
     """
     if isinstance(a,UniTensor):
+        if a.is_diag:
+            raise TypeError("_CombineBonds","[ERROR] CombineBonds doesn't support diagonal matrix.")
         if len(label) > len(a.labels):
             raise ValueError("_CombineBonds","[ERROR] the # of label_to_combine should be <= rank of UniTensor")
         # checking :
