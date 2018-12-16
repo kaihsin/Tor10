@@ -240,7 +240,8 @@ class UniTensor():
             return UniTensor(bonds = self.bonds,\
                              labels= self.labels,\
                              torch_tensor=self.Storage + other,\
-                             check=False)
+                             check=False,
+                             is_diag=self.is_diag)
 
     def __sub__(self,other):
         if isinstance(other, self.__class__):
@@ -272,7 +273,8 @@ class UniTensor():
             return UniTensor(bonds = self.bonds,\
                              labels= self.labels,\
                              torch_tensor=self.Storage - other,\
-                             check=False)
+                             check=False,
+                             is_diag=self.is_diag)
 
     def __mul__(self,other):
         if isinstance(other, self.__class__):
@@ -299,7 +301,13 @@ class UniTensor():
                                     labels= self.labels,\
                                     torch_tensor=self.Storage * torch.diag(other.Storage),\
                                     check=False)
-            return tmp
+        else:
+            tmp = UniTensor(bonds = self.bonds,\
+                            labels= self.labels,\
+                            torch_tensor=self.Storage * other,\
+                            check=False,\
+                            is_diag=self.is_diag)
+        return tmp
 
     def __pow__(self,other):
         return UniTensor(bonds=self.bonds,\
@@ -485,22 +493,22 @@ def Contract(a,b):
             maper_a = np.concatenate([aind_no_combine,a_ind])
             maper_b = np.concatenate([b_ind,bind_no_combine])
 
-            old_shape = np.array(a.Storage.shape)
+            old_shape = np.array(a.Storage.shape) if a.is_diag==False else np.array([a.Storage.shape[0],a.Storage.shape[0]])
             combined_dim = np.prod(old_shape[a_ind])
 
             if a.is_diag :
-                tmpa = torch.diag(a)
+                tmpa = torch.diag(a.Storage)
             else:   
-                tmpa = a
+                tmpa = a.Storage
             
             if b.is_diag :
-                tmpb = torch.diag(b)
+                tmpb = torch.diag(b.Storage)
             else:   
-                tmpb = b
+                tmpb = b.Storage
 
 
-            tmp = torch.matmul(tmpa.Storage.permute(maper_a.tolist()).reshape(-1,combined_dim),\
-                               tmpb.Storage.permute(maper_b.tolist()).reshape(combined_dim,-1))
+            tmp = torch.matmul(tmpa.permute(maper_a.tolist()).reshape(-1,combined_dim),\
+                               tmpb.permute(maper_b.tolist()).reshape(combined_dim,-1))
             new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]
             return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\
                              labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\
@@ -520,19 +528,19 @@ def Contract(a,b):
             maper = np.concatenate([np.arange(Nin_a), len(a.labels) + np.arange(Nin_b), np.arange(Nout_a) + Nin_a, len(a.labels) + Nin_b + np.arange(Nout_b)])
 
             if a.is_diag :
-                tmpa = torch.diag(a)
+                tmpa = torch.diag(a.Storage)
             else:   
-                tmpa = a
+                tmpa = a.Storage
             
             if b.is_diag :
-                tmpb = torch.diag(b)
+                tmpb = torch.diag(b.Storage)
             else:   
-                tmpb = b
+                tmpb = b.Storage
 
 
             return UniTensor(bonds=np.concatenate([a.bonds[:Nin_a],b.bonds[:Nin_b],a.bonds[Nin_a:],b.bonds[Nin_b:]]),\
                             labels=np.concatenate([a.labels[:Nin_a], b.labels[:Nin_b], a.labels[Nin_a:], b.labels[Nin_b:]]),\
-                            torch_tensor=torch.ger(tmpa.Storage.view(-1),tmpb.Storage.view(-1)).reshape(DALL).permute(maper.tolist()),\
+                            torch_tensor=torch.ger(tmpa.view(-1),tmpb.view(-1)).reshape(DALL).permute(maper.tolist()),\
                             check=False)
             
     else:
