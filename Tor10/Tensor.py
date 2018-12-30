@@ -78,6 +78,9 @@ class UniTensor():
         self.labels[idx] = newLabel
     
     def SetLabels(self,newlabels):
+        if isinstance(newlabels,list):
+            newlabels = np.array(newlabels)
+
         if not len(newlabels) == len(self.labels):
             raise ValueError("UniTensor.SetLabels","the length of newlabels not match with the rank of UniTensor")
         
@@ -333,6 +336,15 @@ class UniTensor():
     ## This is the same function that behaves as the memberfunction.
     def Svd(self):
         return Svd(self)
+
+    def Svd_truncate(self):
+        return Svd_truncate(self)
+
+    def Norm(self):
+        return Norm(self)
+
+    def Det(self):
+        return Det(self)
 
     def Matmul(self,b):
         return Matmul(self,b)
@@ -666,7 +678,9 @@ def ExpH(a):
         ## version-1, only real, not sure if it can extend to complex
         s , u = torch.symeig(a.Storage,eigenvectors=True)
         s     = torch.exp(s)
-        torch.matmul(u*s,u.transpose(0,1),out=u)
+
+        # torch.matmul(u*s,u.transpose(0,1),out=u)
+        u = torch.matmul(u*s,u.transpose(0,1))
         del s
 
         return UniTensor(bonds=a.bonds,\
@@ -747,9 +761,188 @@ def _Randomize(a):
         raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
 
+def Qr(a):
+    """
+        @description : The function performs the qr to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
+                       Mathmatically, a = q \cdot r
+        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
+        @return      :  q , r  
+                        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+                        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
+    """
+    if isinstance(a,UniTensor):
+        if not len(a.labels) == 2:
+            raise Exception("_qr","[ERROR] _qr can only accept UniTensor with rank 2")
+
+        q, r = torch.qr(a.Storage)
+
+        tmp = np.argwhere(a.labels<0)
+        if len(tmp) == 0:
+            tmp = 0
+        else:
+            tmp = np.min(tmp)
+
+        q = UniTensor(bonds =[Bond(BD_IN,q.shape[0]),Bond(BD_OUT,q.shape[1])],\
+                      labels=[a.labels[0],tmp-1],\
+                      torch_tensor=q,\
+                      check=False)
+        r = UniTensor(bonds =[Bond(BD_IN,r.shape[0]),Bond(BD_OUT,r.shape[1])],\
+                      labels=[q.labels[1],a.labels[1]],\
+                      torch_tensor=r,\
+                      check=False)
+        return q,r
+    else:
+        raise Exception("Qr(UniTensor)","[ERROR] Qr can only accept UniTensor")
 
 
+def Qdr(a):
+    """
+        @description : The function performs the qr to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
+                       Mathmatically, a = q \cdot r
+        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
+        @return      :  q , r  
+                        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+                        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
+    """
+    if isinstance(a,UniTensor):
+        if not len(a.labels) == 2:
+            raise Exception("_qdr","[ERROR] _qdr can only accept UniTensor with rank 2")
+
+        q, r = torch.qr(a.Storage)
+        d = r.diag()
+        r = (r.t()/d).t()
+
+        tmp = np.argwhere(a.labels<0)
+        if len(tmp) == 0:
+            tmp = 0
+        else:
+            tmp = np.min(tmp)
+
+        q = UniTensor(bonds =[Bond(BD_IN,q.shape[0]),Bond(BD_OUT,q.shape[1])],\
+                      labels=[a.labels[0],tmp-1],\
+                      torch_tensor=q,\
+                      check=False)
+        d = UniTensor(bonds =[Bond(BD_IN,d.shape[0]),Bond(BD_OUT,d.shape[0])],\
+                      labels=[tmp-1,tmp-2],\
+                      torch_tensor=d,\
+                      is_diag=True,
+                      check=False)
+        r = UniTensor(bonds =[Bond(BD_IN,r.shape[0]),Bond(BD_OUT,r.shape[1])],\
+                      labels=[d.labels[1],a.labels[1]],\
+                      torch_tensor=r,\
+                      check=False)
+        return q,d,r
+    else:
+        raise Exception("Qdr(UniTensor)","[ERROR] Qdr can only accept UniTensor")
 
 
+def Svd_truncate(a, truncate=None):
+    """
+        @description : The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
+                       Mathmatically, a = u \cdot s \cdot vt
+        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
+        @return      :  u , s , vt 
+                        u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+                        s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
+                        vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
+    """
+    if isinstance(a,UniTensor):
+        if not len(a.labels) == 2:
+            raise Exception("_svd","[ERROR] _svd can only accept UniTensor with rank 2")
 
- 
+        u, s, v = torch.svd(a.Storage,some=True)
+
+        tmp = np.argwhere(a.labels<0)
+        if len(tmp) == 0:
+            tmp = 0
+        else:
+            tmp = np.min(tmp)
+
+        if truncate is not None:
+            if truncate < 0 or truncate > s.shape[0]:
+                raise Exception("_svd_truncate", "[ERROR] the truncate dimension is invalid")
+            u = u[:, :truncate]
+            s = s[:truncate]
+            v = v[:, :truncate]
+
+        u = UniTensor(bonds =[Bond(BD_IN,u.shape[0]),Bond(BD_OUT,u.shape[1])],\
+                      labels=[a.labels[0],tmp-1],\
+                      torch_tensor=u,\
+                      check=False)
+        v = UniTensor(bonds =[Bond(BD_IN,v.shape[1]),Bond(BD_OUT,v.shape[0])],\
+                      labels=[tmp-2,a.labels[1]],\
+                      torch_tensor=v.transpose(0,1),\
+                      check=False)
+        s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
+                      labels =[u.labels[1],v.labels[0]],\
+                      torch_tensor=s,\
+                      check=False,\
+                      is_diag=True)   
+        return u,s,v
+    else:
+        raise Exception("Svd(UniTensor)","[ERROR] Svd can only accept UniTensor")
+
+
+def Inverse(a):
+    """
+        @description: This function returns the inverse of a rank-2 tensor.
+        @params     : 
+                      a : UniTensor
+        @return     : Unitensor
+                    
+    """
+    if isinstance(a,UniTensor):
+        if not len(a.labels) == 2:
+            raise Exception("Inverse","[ERROR] Inverse can only accept UniTensor with rank 2")
+        
+        if a.is_diag:
+            a_inv = UniTensor(bonds = a.bonds,
+                          labels=a.labels,
+                          torch_tensor=1./a.Storage,
+                          is_diag=True,
+                          check=False)
+        else:
+            a_inv = UniTensor(bonds = a.bonds,
+                          labels=a.labels,
+                          torch_tensor=torch.inverse(a.Storage),
+                          check=False)
+        return a_inv
+    else:
+        raise Exception("Inverse(UniTensor)","[ERROR] Inverse can only accept UniTensor")
+
+
+def Det(a):
+    """
+        @description: This function returns the determinant a rank-2 tensor.
+        @params     : 
+                      a : rank-2 UniTensor
+        @return     : a 0-dimension tensor contains the determinant of input
+                    
+    """
+    if isinstance(a,UniTensor):
+        if not len(a.labels) == 2:
+            raise Exception("Det","[ERROR] Det can only accept UniTensor with rank 2")
+
+        if a.is_diag:
+            d = 1
+            for i in a.Storage:
+                d *= i
+            return d
+        else:
+            return torch.det(a.Storage)
+    else:
+        raise Exception("Det(UniTensor)","[ERROR] Det can only accept UniTensor")
+
+def Norm(a):
+    """
+        @description: This function returns the frobinieus 2-norm of a tensor.
+        @params     : 
+                      a : UniTensor
+        @return     : a 0-dimension tensor contains the 2-norm of input
+                    
+    """
+
+    if isinstance(a,UniTensor):
+        return torch.norm(a.Storage)
+    else:
+        raise Exception("Norm(UniTensor)","[ERROR] Norm can only accept UniTensor")

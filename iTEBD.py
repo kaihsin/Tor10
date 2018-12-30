@@ -9,8 +9,6 @@ chi = 4
 Hx  = 2.5
 J   = -1.
 
-
-
 ## Create onsite-Op.
 Sz = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,2)],dtype=tor.float64,device=tor.device("cpu"))
 Sx = copy.deepcopy(Sz)
@@ -28,10 +26,12 @@ Sz2 = copy.deepcopy(Sz)
 Sx.SetLabels([2,3]) 
 Sx = Sx*Hx
 I.SetLabels([4,5])
+
+
 print(Sx)
 print(I)
 TFterm = Tt.Contract(Sx,I) + Tt.Contract(I,Sx)
-del Sx, I
+# del Sx, I
 
 Sz2.SetLabels([2,3])
 ZZterm = Tt.Contract(Sz,Sz2)
@@ -65,17 +65,64 @@ la =  Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,chi),Tt.Bond(Tt.BD_OUT,chi)],
 lb = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,chi),Tt.Bond(Tt.BD_OUT,chi)],
               labels=[-4,-5],is_diag=True)
 
+lb.Rand()
+la.Rand()
 
 ## Evov:
- 
-X = Tt.Contract(Tt.Contract(A,la),Tt.Contract(B,lb))
-X = Tt.Contract(X,eH)
-lb.SetLabel(-1,idx=1)
-X = Tt.Contract(lb,X)
-X.Permute([-4,2,3,-5],N_inbond=2,by_label=True)
-X.Contiguous()
-X.Reshape([chi*2,chi*2],N_inbond=1)
-A,la,B = Tt.Svd(X)
+
+for i in range(100):
+	A.SetLabels([-1,0,-2])
+	B.SetLabels([-3,1,-4])
+	la.SetLabels([-2,-3])
+	lb.SetLabels([-4,-5])
+
+	X = Tt.Contract(Tt.Contract(A,la),Tt.Contract(B,lb))
+	lb.SetLabel(-1,idx=1)
+	X = Tt.Contract(lb,X)
+
+	## X =
+	#           (0)  (1)
+	#            |    |     
+	#  (-4) --lb-A-la-B-lb-- (-5) 
+	#
+	
+	XNorm = Tt.Contract(X, X)
+	XH = Tt.Contract(X, H)
+	XH.SetLabels([-4,0,1,-5])
+	XHX = Tt.Contract(X, XH)
+	XeH = Tt.Contract(X,eH)
+	
+	# measurements
+	E = (XHX.Storage / XNorm.Storage).item()
+	print("Energy = {:.6f}".format(E))
+
+	XeH.Permute([-4,2,3,-5],N_inbond=2,by_label=True)
+	XeH.Contiguous()
+	XeH.Reshape([chi*2,chi*2],N_inbond=1)
+
+	A,la,B = Tt.Svd_truncate(XeH,chi)
+
+	la *= 1./la.Norm()
+
+	A.Reshape([chi,2,chi], new_labels=[-1,0,-2], N_inbond=1)
+	B.Reshape([chi,2,chi], new_labels=[-3,1,-4], N_inbond=1)
+
+	# de-contract the lb tensor , so it returns to 
+	#             
+	#            |     |     
+	#       --lb-A'-la-B'-lb-- 
+	#
+	# again, but A' and B' are updated 
+	
+
+	lb_inv = Tt.Inverse(lb)
+	A = Tt.Contract(lb_inv, A)
+	B = Tt.Contract(B, lb_inv)
+
+	# translation symmetry, exchange A and B site
+	A,B = B,A
+	la,lb = lb,la 
+
 del X
 
 
