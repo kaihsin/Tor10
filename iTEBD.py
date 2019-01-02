@@ -140,17 +140,17 @@ for i in range(100000):
     A = Tt.Contract(lb_inv, A)
     B = Tt.Contract(B, lb_inv)
 
-    ## Trainsion save:
-    #Tt.Save(A,"A")
-    #Tt.Save(B,"B")  
-    #Tt.Save(la,"la")
-    #Tt.Save(lb,"lb")
 
     # translation symmetry, exchange A and B site
     A,B = B,A
     la,lb = lb,la 
 
 del X
+## Trainsion save:
+#Tt.Save(A,"A")
+#Tt.Save(B,"B")  
+#Tt.Save(la,"la")
+#Tt.Save(lb,"lb")
 print("[Done]")
 
 
