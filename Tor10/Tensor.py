@@ -637,8 +637,8 @@ def Svd(a):
                         vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
     """
     if isinstance(a,UniTensor):
-        if not len(a.labels) == 2:
-            raise Exception("_svd","[ERROR] _svd can only accept UniTensor with rank 2")
+        if a.is_diag:
+            raise Exception("svd(a)","[Abort] svd currently don't support diagonal tensor.")
 
         u, s, v = torch.svd(a.Storage,some=True)
 
@@ -675,20 +675,28 @@ def ExpH(a):
 
     if isinstance(a,UniTensor):
 
-        ## version-1, only real, not sure if it can extend to complex
-        s , u = torch.symeig(a.Storage,eigenvectors=True)
-        s     = torch.exp(s)
 
-        # torch.matmul(u*s,u.transpose(0,1),out=u)
-        u = torch.matmul(u*s,u.transpose(0,1))
-        del s
+        if a.is_diag:
+            u = torch.exp(a.Storage)
+            return UniTensor(bonds=a.bonds,\
+                             labels=a.labels,\
+                             torch_tensor=u,\
+                             is_diag=True,\
+                             check=False)
+        else:
+            ## version-1, only real, not sure if it can extend to complex
+            s , u = torch.symeig(a.Storage,eigenvectors=True)
+            s     = torch.exp(s)
 
-        return UniTensor(bonds=a.bonds,\
-                         labels=a.labels,\
-                         torch_tensor=u,\
-                         check=False)
+            # torch.matmul(u*s,u.transpose(0,1),out=u)
+            u = torch.matmul(u*s,u.transpose(0,1))
+            del s
+
+            return UniTensor(bonds=a.bonds,\
+                            labels=a.labels,\
+                            torch_tensor=u,\
+                            check=False)
                 
-
     else:
         raise Exception("ExpH(UniTensor)","[ERROR] ExpH can only accept UniTensor")
 
@@ -771,9 +779,9 @@ def Qr(a):
                         r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
     """
     if isinstance(a,UniTensor):
-        if not len(a.labels) == 2:
-            raise Exception("_qr","[ERROR] _qr can only accept UniTensor with rank 2")
-
+        if a.is_diag:
+            raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
+        
         q, r = torch.qr(a.Storage)
 
         tmp = np.argwhere(a.labels<0)
@@ -805,8 +813,8 @@ def Qdr(a):
                         r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
     """
     if isinstance(a,UniTensor):
-        if not len(a.labels) == 2:
-            raise Exception("_qdr","[ERROR] _qdr can only accept UniTensor with rank 2")
+        if a.is_diag:
+            raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
 
         q, r = torch.qr(a.Storage)
         d = r.diag()
@@ -847,8 +855,8 @@ def Svd_truncate(a, truncate=None):
                         vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
     """
     if isinstance(a,UniTensor):
-        if not len(a.labels) == 2:
-            raise Exception("_svd","[ERROR] _svd can only accept UniTensor with rank 2")
+        if a.is_diag:
+            raise Exception("svd(a)","[Abort] svd currently don't support diagonal tensor.")
 
         u, s, v = torch.svd(a.Storage,some=True)
 
@@ -859,8 +867,8 @@ def Svd_truncate(a, truncate=None):
             tmp = np.min(tmp)
 
         if truncate is not None:
-            if truncate < 0 or truncate > s.shape[0]:
-                raise Exception("_svd_truncate", "[ERROR] the truncate dimension is invalid")
+            if truncate < 0 or truncate > len(s):
+                raise ValueError("Svd_truncate", "[ERROR] the truncate dimension is invalid")
             u = u[:, :truncate]
             s = s[:truncate]
             v = v[:, :truncate]
@@ -892,20 +900,18 @@ def Inverse(a):
                     
     """
     if isinstance(a,UniTensor):
-        if not len(a.labels) == 2:
-            raise Exception("Inverse","[ERROR] Inverse can only accept UniTensor with rank 2")
         
         if a.is_diag:
             a_inv = UniTensor(bonds = a.bonds,
                           labels=a.labels,
-                          torch_tensor=1./a.Storage,
+                          torch_tensor=a.Storage**-1,
                           is_diag=True,
                           check=False)
         else:
             a_inv = UniTensor(bonds = a.bonds,
-                          labels=a.labels,
-                          torch_tensor=torch.inverse(a.Storage),
-                          check=False)
+                              labels=a.labels,
+                              torch_tensor=torch.inverse(a.Storage),
+                              check=False)
         return a_inv
     else:
         raise Exception("Inverse(UniTensor)","[ERROR] Inverse can only accept UniTensor")
@@ -920,14 +926,9 @@ def Det(a):
                     
     """
     if isinstance(a,UniTensor):
-        if not len(a.labels) == 2:
-            raise Exception("Det","[ERROR] Det can only accept UniTensor with rank 2")
 
         if a.is_diag:
-            d = 1
-            for i in a.Storage:
-                d *= i
-            return d
+            return torch.prod(a.Storage)
         else:
             return torch.det(a.Storage)
     else:

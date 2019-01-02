@@ -99,17 +99,20 @@ for i in range(100000):
     #            |    |     
     #  (-4) --lb-A-la-B-lb-- (-5) 
     #
-    
+    #X.Print_diagram()
     XNorm = Tt.Contract(X, X)
     XH = Tt.Contract(X, H)
-    XH.SetLabels([-4,0,1,-5])
+    #XH.Print_diagram()
+    XH.SetLabels([-4,-5,0,1]) ## JJ, this is your bug.
     XHX = Tt.Contract(X, XH)
     XeH = Tt.Contract(X,eH)
     
     # measurements
     E = (XHX.Storage / XNorm.Storage).item()
     if np.abs(E - Elast) < CvgCrit:
+        print("[Converged!]")
         break
+
     Elast = E
     print("Energy = {:.6f}".format(E))
 
@@ -133,6 +136,7 @@ for i in range(100000):
 	
 
     lb_inv = Tt.Inverse(lb)
+    #lb_inv.Print_diagram()
     A = Tt.Contract(lb_inv, A)
     B = Tt.Contract(B, lb_inv)
 
@@ -147,7 +151,7 @@ for i in range(100000):
     la,lb = lb,la 
 
 del X
-
+print("[Done]")
 
 
 
