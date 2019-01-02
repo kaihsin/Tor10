@@ -108,7 +108,12 @@ class UniTensor():
     def Todense(self):
         if self.is_diag==True:
             self.Storage = torch.diag(self.Storage) 
-        
+            self.is_diag=False
+
+    def to(self,device):
+        if not isinstance(device,torch.device):
+            raise TypeError("[ERROR] UniTensor.to()","only support device argument in this version as torch.device")
+        self.Storage = self.Storage.to(device)         
 
     ## print layout:
     def Print_diagram(self):
@@ -511,12 +516,12 @@ def Contract(a,b):
             combined_dim = np.prod(old_shape[a_ind])
 
             if a.is_diag :
-                tmpa = torch.diag(a.Storage)
+                tmpa = torch.diag(a.Storage).to(a.Storage.device)
             else:   
                 tmpa = a.Storage
             
             if b.is_diag :
-                tmpb = torch.diag(b.Storage)
+                tmpb = torch.diag(b.Storage).to(b.Storage.device)
             else:   
                 tmpb = b.Storage
 
