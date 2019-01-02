@@ -24,4 +24,9 @@
         
 
     See test.py for further detail application functions.
+## Developers:
 
+    * Kai-Hsin Wu  (Kay)     
+      kaihsinwu@gmail.com
+    * Jing-Jer Yen (Johnson) 
+    * Yen-Hsin Wu  (Kelly)
