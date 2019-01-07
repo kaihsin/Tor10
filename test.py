@@ -17,12 +17,12 @@ print(bd_x==bd_y) ## This should be false
 
 
 
-#device = tor.device("cuda:0")
+device = tor.device("cuda:0")
 bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
 bds_y = [Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,3)]
 x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5],dtype=tor.float64,device=tor.device("cpu"))
 y = Tt.UniTensor(bonds=bds_y, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
-
+exit(1)
 #print(len(x))
 print(x.shape())
 print(x)

@@ -1,4 +1,4 @@
-![alt text](./Tor10.png)
+![alt text](./Tor10_icon.png)
 
 ## Requirements
     pytorch>=1.0
@@ -28,7 +28,6 @@
     See test.py for further detail application functions.
 ## Developers:
 
-    * Kai-Hsin Wu  (Kay)     
-      kaihsinwu@gmail.com
-    * Jing-Jer Yen (Johnson) 
-    * Yen-Hsin Wu  (Kelly)
+    * Kai-Hsin Wu     kaihsinwu@gmail.com
+    * Jing-Jer Yen 
+    * Yen-Hsin Wu 
