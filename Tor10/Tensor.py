@@ -112,10 +112,9 @@ class UniTensor():
         if not len(elem) == self.Storage.numel():
             raise ValueError("UniTensor.SetElem","[ERROR] number of elem is not equal to the # of elem in the tensor.")
         
-
         ## Qnum_ipoint
         if self.bonds[0].qnums is not None:
-            raise Exception("UniTensor.SetElem","[Abort] the TN that has symm is under developing.")
+            raise Exception("UniTensor.SetElem","[ERROR] the TN that has symm should use PutBlock, and is under developing.")
         
         my_type = self.Storage.dtype
         my_shape = self.Storage.shape
