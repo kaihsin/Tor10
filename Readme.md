@@ -26,6 +26,13 @@
         
 
     See test.py for further detail application functions.
+
+## Example:
+
+    See iTEBD.py for an simple example of using iTEBD algo. to calculate the 1D-transverse field Ising model 
+    See iTEBD_gpu.py for an simple example of the same algo accelerated with GPU. 
+
+
 ## Developers:
 
     * Kai-Hsin Wu     kaihsinwu@gmail.com
