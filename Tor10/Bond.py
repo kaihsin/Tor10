@@ -23,14 +23,14 @@ class Bond():
     ## Develop note:
     ## khw: 1. The qnums should be integer.
 
-    def __init__(self, bondType, dim):
+    def __init__(self, bondType, dim,qnums=None):
         #declare variable:
         self.bondType = None
         self.dim      = None
         self.qnums    = None
 
         #call :
-        self.assign(bondType,dim)
+        self.assign(bondType,dim,qnums)
  
     def assign(self,bondType, dim,qnums=None):
         #checking:
