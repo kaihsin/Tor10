@@ -89,21 +89,21 @@ class Bond():
 
     ## Print layout
     def __print(self):
+        print("Dim = %d |"%(self.dim),end="")
 
         if(self.bondType is BD_IN):
             print("IN :",end='')
             if not self.qnums is None:
                 for q in self.qnums:
-                    print(" %d",end='')
+                    print(" %d"%(q),end='')
             print("\n",end="")
         else:
             print("OUT :",end='')
             if not self.qnums is None:
                 for q in self.qnums:
-                    print(" %d",end='')
+                    print(" %d"%(q),end='')
             print("\n",end="")
 
-        print("Dim = %d"%(self.dim))
 
     def __str__(self):
         self.__print()    
