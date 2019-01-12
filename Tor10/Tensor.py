@@ -5,6 +5,16 @@ import pickle as pkl
 from .Bond import *
 
 
+## Developer Note:
+# [KHW]
+# Currently trying to add the Symm. 
+# A temporary Abort is use to prevent the user to call the un-support operations on a Symmetry tensor. 
+#
+#  Find "Qnum_ipoint" keyword for the part that need to be modify accrodingly when considering the Qnums feature. 
+#
+
+
+
 class UniTensor():
 
     def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, name=""):
@@ -24,6 +34,7 @@ class UniTensor():
         self.bonds = np.array(copy.deepcopy(bonds))
         self.name = name
         self.is_diag = is_diag        
+
         
         if labels is None:
             self.labels = np.arange(len(self.bonds))
@@ -41,7 +52,8 @@ class UniTensor():
                     raise TypeError("UniTensor.__init__","is_diag=True require Tensor rank==2")
                 if not self.bonds[0].dim == self.bonds[1].dim:
                     raise TypeError("UniTensor.__init__","is_diag=True require Tensor to be square rank-2")
-
+            if len(np.unique([ (bd.qnums is None) for bd in self.bonds])) != 1:
+                raise TypeError("UniTensor.__init__","the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).")
 
             ## sort all BD_IN on first and BD_OUT on last:
             #lambda x: 1 if x.bondType is BD_OUT else 0
@@ -99,6 +111,11 @@ class UniTensor():
         
         if not len(elem) == self.Storage.numel():
             raise ValueError("UniTensor.SetElem","[ERROR] number of elem is not equal to the # of elem in the tensor.")
+        
+
+        ## Qnum_ipoint
+        if self.bonds[0].qnums is not None:
+            raise Exception("UniTensor.SetElem","[Abort] the TN that has symm is under developing.")
         
         my_type = self.Storage.dtype
         my_shape = self.Storage.shape
@@ -168,7 +185,9 @@ class UniTensor():
         print("        |             |     ")
         print("        ---------------     ")
         
-        print("")
+        for bd in range(len(self.bonds)):
+            print("lbl: %d"%(self.labels[i]),end="")
+            print(self.bonds[i])
 
 
         
@@ -339,10 +358,12 @@ class UniTensor():
     """
 
     ## This is the same function that behaves as the memberfunction.
-    def Svd(self):
+    def Svd(self): 
+
         return Svd(self)
 
     def Svd_truncate(self):
+        
         return Svd_truncate(self)
 
     def Norm(self):
@@ -352,6 +373,7 @@ class UniTensor():
         return Det(self)
 
     def Matmul(self,b):
+        
         return Matmul(self,b)
 
     
@@ -405,6 +427,9 @@ class UniTensor():
 
     ## Miscellaneous
     def Rand(self):
+        ## Qnum_ipoint
+        if self.bonds[0].qnums is not None:
+            raise Exception("[Abort] UniTensor.Rand for symm TN is under developing")
         _Randomize(self)
 
     def CombineBonds(self,labels_to_combine):
@@ -459,6 +484,11 @@ class UniTensor():
         if not isinstance(dimer,list):
             raise TypeError("UniTensor.Reshape","[ERROR] maper should be an python list.")            
 
+        ## Qnum_ipoint
+        if self.bonds[0].qnums is not None:
+            raise Exception("UniTensor.Reshape","[Abort] UniTensor with symm cannot be Reshape.\n")
+
+
         ## This is not contiguous
         self.Storage = self.Storage.view(dimer)
         if new_labels is None:
@@ -502,6 +532,11 @@ def Load(filename):
 
 def Contract(a,b):
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
+        ## Qnum_ipoint
+        if a.bonds[0].qnums is not None or b.bonds[0].qnums is not None:
+           raise Exception("Contract(a,b)","[Abort] contract Symm TN is under developing.")
+
+
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
@@ -581,6 +616,7 @@ def Chain_matmul(*args):
     f = lambda x,idiag: torch.diag(x) if idiag else x 
     isUT = all( isinstance(UT,UniTensor) for UT in args)    
     
+    
     tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))] 
 
     ## Checking performance:
@@ -592,6 +628,11 @@ def Chain_matmul(*args):
     """
 
     if isUT:
+        ## Qnum_ipoint
+        if not all( (UT.bonds[0].qnums is None) for UT in args):
+            raise Exception("Chain_matmul(*args)","[Abort] Chain multiplication for symm tensor(s) are under developing.")
+
+
         return UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
                          labels=[args[0].labels[0],args[-1].labels[1]],\
                          torch_tensor=torch.chain_matmul(*tmp_args),\
@@ -604,7 +645,11 @@ def Matmul(a,b):
     
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
-        ## no need to check if a,b are both rank 2. Rely on torch to do error handling! 
+        ## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling! 
+
+        ## Qnum_ipoint
+        if a.bonds[0].qnums is not None or b.bonds[0].qnums is not None:
+            raise Exception("Matmul(a,b)","[Abort] Matmul for sym TN is under developing.")
 
         if a.is_diag == b.is_diag:
             tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
@@ -642,6 +687,12 @@ def Svd(a):
                         vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
     """
     if isinstance(a,UniTensor):
+
+        ## Qnum_ipoint
+        if a.bonds[0].qnums is not None:
+            raise Exception("svd(a)","[Abort] svd curretly don't support symm tensor.")
+
+
         if a.is_diag:
             raise Exception("svd(a)","[Abort] svd currently don't support diagonal tensor.")
 
@@ -679,7 +730,9 @@ def ExpH(a):
     """
 
     if isinstance(a,UniTensor):
-
+        ## Qnum_ipoint
+        if a.bonds[0].qnums is not None:
+            raise Exception("ExpH(a)","[Abort] curretly don't support symm tensor.")
 
         if a.is_diag:
             u = torch.exp(a.Storage)
@@ -744,12 +797,16 @@ def _CombineBonds(a,label):
         ## check if the combined bond will be in-bond or out-bond
         if a.bonds[x_ind[0]].bondType is BD_OUT:        
             maper = np.concatenate([idx_no_combine,x_ind])
-            a.bonds = np.append(a.bonds[idx_no_combine],Bond(BD_OUT,combined_dim))
+            for i in range(len(x_ind)-1):
+                a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
+            a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[x_ind[0]])
             a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
             a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
         else:
             maper = np.concatenate([x_ind,idx_no_combine])
-            a.bonds = np.append(Bond(BD_IN,combined_dim),a.bonds[idx_no_combine])
+            for i in range(len(x_ind)-1):
+                a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
+            a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
             a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
             a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
 
@@ -768,8 +825,11 @@ def _Randomize(a):
         @return     : N/A 
                     
     """
+
     if isinstance(a,UniTensor):
         a.Storage = torch.rand(a.Storage.shape, dtype=a.Storage.dtype, device=a.Storage.device)
+    
+        
     else:
         raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
@@ -784,6 +844,11 @@ def Qr(a):
                         r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
     """
     if isinstance(a,UniTensor):
+
+        ## Qnum_ipoint
+        if a.bonds[0].qnums is not None:
+            raise Exception("Qr(a)","[Abort] curretly don't support symm tensor.")
+
         if a.is_diag:
             raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
         
@@ -818,6 +883,11 @@ def Qdr(a):
                         r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
     """
     if isinstance(a,UniTensor):
+
+        ## Qnum_ipoint
+        if a.bonds[0].qnums is not None:
+            raise Exception("Qdr(a)","[Abort] curretly don't support symm tensor.")
+
         if a.is_diag:
             raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
 
@@ -860,6 +930,11 @@ def Svd_truncate(a, truncate=None):
                         vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
     """
     if isinstance(a,UniTensor):
+
+        ## Qnum_ipoint
+        if a.bonds[0].qnums is not None:
+            raise Exception("Qdr(a)","[Abort] curretly don't support symm tensor.")
+
         if a.is_diag:
             raise Exception("svd(a)","[Abort] svd currently don't support diagonal tensor.")
 

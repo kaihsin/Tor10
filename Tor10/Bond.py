@@ -15,27 +15,37 @@ class Bond():
     
     #
     # [0] bondType
-    # [x] vector<Qnums> Qnums;
+    # [/] vector<Qnums> Qnums;
     # [x] vector<int> Qdegs;
     # [x] vector<int> offsets;
     # [x] bool withSymm
+
+    ## Develop note:
+    ## khw: 1. The qnums should be integer.
 
     def __init__(self, bondType, dim):
         #declare variable:
         self.bondType = None
         self.dim      = None
+        self.qnums    = None
 
         #call :
         self.assign(bondType,dim)
  
-    def assign(self,bondType, dim):
+    def assign(self,bondType, dim,qnums=None):
         #checking:
         if dim < 1: 
             raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
         if not bondType is BD_IN and not bondType is BD_OUT:
             raise Exception("Bond.assign()","[ERROR] bondType can only be BD_IN or BD_OUT")       
 
-        ## fill the members:
+        if not qnums is None:
+            if len(qnums) != dim:
+                raise ValueError("Bond.assign()","[ERROR] qnums must have the same elements as the dim")        
+            
+            self.qnums    = np.array(qnums).astype(np.int)
+ 
+       ## fill the members:
         self.bondType = bondType
         self.dim      = dim
 
@@ -56,13 +66,19 @@ class Bond():
         ## if bds is Bond class 
         if isinstance(bds,self.__class__):
             self.dim *= bds.dim
+            if not self.qnums is None:
+                self.qnums = (self.qnums.reshape(1,-1)+self.qnums.reshape(-1,1)).flatten()
+                
         else:
             for i in range(len(bds)):
                 if not isinstance(bds[i],self.__class__):
                     raise TypeError("Bond.combine(bds)","bds[%d] is not Bond class"%(i))
                 else:
-                   self.dim *= bds[i].dim
-        
+                    self.dim *= bds[i].dim
+                    if not self.qnums is None:
+                        self.qnums = (self.qnums.reshape(1,-1)+self.qnums.reshape(-1,1)).flatten()
+
+
         ## checking change type
         if not new_type is None:
             if not new_type is BD_IN and not new_type is BD_OUT:
@@ -75,9 +91,17 @@ class Bond():
     def __print(self):
 
         if(self.bondType is BD_IN):
-            print("IN : ")
+            print("IN :",end='')
+            if not self.qnums is None:
+                for q in self.qnums:
+                    print(" %d",end='')
+            print("\n",end="")
         else:
-            print("OUT : ")
+            print("OUT :",end='')
+            if not self.qnums is None:
+                for q in self.qnums:
+                    print(" %d",end='')
+            print("\n",end="")
 
         print("Dim = %d"%(self.dim))
 
@@ -92,7 +116,7 @@ class Bond():
     ## Arithmic:
     def __eq__(self,rhs):
         if isinstance(rhs,self.__class__):
-            return (self.dim == rhs.dim) and (self.bondType == rhs.bondType)
+            return (self.dim == rhs.dim) and (self.bondType == rhs.bondType) and (self.qnums == rhs.qnums)
         else:
             raise ValueError("Bond.__eq__","[ERROR] invalid comparison between Bond object and other type class.")
 
