@@ -20,6 +20,12 @@ bd_sym_y = Tt.Bond(Tt.BD_OUT,4,qnums=[-1,2,0,2])
 print(bd_sym_x)
 print(bd_sym_y)
 
+sym_T = Tt.UniTensor(bonds=[bd_sym_x,bd_sym_y],labels=[10,11],dtype=tor.float64)
+sym_T.Print_diagram()
+print(sym_T)
+print(sym_T.GetBlock(2))
+exit(1)
+
 
 device = tor.device("cuda:0")
 bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]

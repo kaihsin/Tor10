@@ -39,7 +39,7 @@ class UniTensor():
         if labels is None:
             self.labels = np.arange(len(self.bonds))
         else:
-            self.labels = np.array(copy.copy(labels))
+            self.labels = np.array(copy.deepcopy(labels))
         
         ## Checking:
         if check:
@@ -185,8 +185,8 @@ class UniTensor():
         print("        |             |     ")
         print("        ---------------     ")
         
-        for bd in range(len(self.bonds)):
-            print("lbl: %d"%(self.labels[i]),end="")
+        for i in range(len(self.bonds)):
+            print("lbl:%d "%(self.labels[i]),end="")
             print(self.bonds[i])
 
 
@@ -430,6 +430,7 @@ class UniTensor():
         ## Qnum_ipoint
         if self.bonds[0].qnums is not None:
             raise Exception("[Abort] UniTensor.Rand for symm TN is under developing")
+
         _Randomize(self)
 
     def CombineBonds(self,labels_to_combine):
@@ -498,6 +499,29 @@ class UniTensor():
 
         f = lambda i,Nid,dim : Bond(BD_IN,dim) if i<Nid else Bond(BD_OUT,dim)
         self.bonds  = np.array([f(i,N_inbond,dimer[i]) for i in range(len(dimer))])
+
+
+    ## Symmetric Tensor function
+    def GetBlock(self,qnum=None):
+        if qnum is not None:
+            ## check if symm:
+            if self.bonds[0].qnums is None:
+                raise TypeError("UniTensor.GetBlock","[ERROR] Trying to get a block on a non-symm tensor.")
+
+            if self.is_diag:
+                raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
+
+            picker = [np.argwhere(self.bonds[i].qnums==qnum).flatten() for i in range(len(self.bonds))]
+            #print(picker)
+            
+            return UniTensor(bonds=[Bond(self.bonds[i].bondType,dim=len(picker[i])) for i in range(len(self.bonds))],\
+                             labels=self.labels,\
+                             torch_tensor=self.Storage[np.ix_(*picker)],\
+                             check=False)
+        else:
+            print("[Warning] GetBlock a non-symmetry TN will return self.")
+            return self
+
 
 
 ###############################################################
@@ -827,6 +851,7 @@ def _Randomize(a):
     """
 
     if isinstance(a,UniTensor):
+    
         a.Storage = torch.rand(a.Storage.shape, dtype=a.Storage.dtype, device=a.Storage.device)
     
         
