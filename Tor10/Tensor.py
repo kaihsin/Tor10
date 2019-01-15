@@ -55,13 +55,15 @@ class UniTensor():
             if len(np.unique([ (bd.qnums is None) for bd in self.bonds])) != 1:
                 raise TypeError("UniTensor.__init__","the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).")
 
+            
+
             ## sort all BD_IN on first and BD_OUT on last:
             #lambda x: 1 if x.bondType is BD_OUT else 0
             maper = np.argsort([ (x.bondType is BD_OUT) for x in self.bonds])
             self.bonds = self.bonds[maper]
             self.labels = self.labels[maper]
             
-            
+             
 
 
         if torch_tensor is None:

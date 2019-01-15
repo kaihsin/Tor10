@@ -33,6 +33,15 @@
     See iTEBD_gpu.py for an simple example of the same algo accelerated with GPU. 
 
 
+## Note:
+    
+    1. UniTensor: 
+        a. When created, regardless of the Bond sequences in the Bond list that pass into the argument, All the IN-bond will be force to the smaller index. 
+            Ex: bonds = [Bond(BD_IN,3), Bond(BD_OUT,5),Bond(BD_IN,2),Bond(BD_OUT,4)]
+                the UniTensor instance that created will have shape (3,2,5,4); 
+                with enforeced property bonds=[Bond(BD_IN,3), Bond(BD_IN,2), Bond(BD_OUT,5),Bond(BD_OUT,4)]
+
+
 ## Developers:
 
     * Kai-Hsin Wu     kaihsinwu@gmail.com
