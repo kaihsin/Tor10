@@ -15,8 +15,8 @@ class Bond():
     
     #
     # [0] bondType
-    # [/] vector<Qnums> Qnums;
-    # [x] vector<int> Qdegs;
+    # [/] vector<Qnums> Qnums; ## This is multiple Q1
+    # [x] vector<int> Qdegs;   
     # [x] vector<int> offsets;
     # [x] bool withSymm
 
@@ -33,6 +33,24 @@ class Bond():
         self.assign(bondType,dim,qnums)
  
     def assign(self,bondType, dim,qnums=None):
+        """
+            @description:
+            @params: 
+                    bondType: The bond type, can be either BD_IN or BD_OUT
+                    dim     : The dimension of the bond.
+                    qnums   : an array, with shape (# of dim, # of symmetry type)
+            @example:
+                    for a in-bond with dim=4, U1 x U1 x Z2; there are 3 types of symmetry.
+                    The Bond should be initialize as :
+                    assign(BD_IN,3,qnums=[[ 0, 1, 1],\
+                                          [-1, 2, 0],\
+                                          [ 0, 1,-1],\
+                                          [ 2, 0, 0]])
+                                            ^  ^  ^
+                                            U1 U1 Z2
+
+        """
+
         #checking:
         if dim < 1: 
             raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
@@ -68,23 +86,37 @@ class Bond():
     """
         This is the inplace combine without Qnum & Symm.
     """
-    def combine(bds,new_type=None):
+    def combine(self,bds,new_type=None):
         ## if bds is Bond class 
         if isinstance(bds,self.__class__):
             self.dim *= bds.dim
-            if not self.qnums is None:
-                raise Exception("[Under developement]")
-                self.qnums = (self.qnums.reshape(1,-1)+self.qnums.reshape(-1,1)).flatten()
+            nsym = None
+            if self.qnums is not None:
+                nsym = len(self.qnums[0])
+            if (nsym is None) != (bds.qnums is None):
+                raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with symm and non-symm")
+            if nsym is not None:
+                if nsym != len(bds.qnums[0]):
+                    raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of type of symm.")
+                self.qnums = (self.qnums.reshape(len(self.qnums),1,nsym)+bds.qnums.reshape(1,len(bds.qnums),nsym)).reshape(-1,nsym)
+
                 
         else:
+            nsym = None
+            if not self.qnums is None:
+                nsym = len(self.qnums[0])
+            
             for i in range(len(bds)):
                 if not isinstance(bds[i],self.__class__):
                     raise TypeError("Bond.combine(bds)","bds[%d] is not Bond class"%(i))
                 else:
                     self.dim *= bds[i].dim
-                    if not self.qnums is None:
-                        raise Exception("[Under developement]")
-                        self.qnums = (self.qnums.reshape(1,-1)+self.qnums.reshape(-1,1)).flatten()
+                    if (nsym is None) != (bds[i].qnums is None):
+                        raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with symm and non-symm")
+                    if nsym is not None: 
+                        if nsym != len(bds[i].qnums[0]):
+                            raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of type of symm.")
+                        self.qnums = (self.qnums.reshape(len(self.qnums),1,nsym)+bds[i].qnums.reshape(1,len(bds[i]),nsym)).reshape(-1,nsym)
 
 
         ## checking change type
