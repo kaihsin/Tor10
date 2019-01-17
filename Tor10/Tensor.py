@@ -45,25 +45,28 @@ class UniTensor():
         if check:
             if not len(self.labels) == (len(self.bonds)):
                 raise Exception("UniTensor.__init__","labels size is not consistence with the rank")
+
             if not len(np.unique(self.labels)) == len(self.labels):
                 raise Exception("UniTensor.__init__","labels contain duplicate element.")
+
             if is_diag:
                 if not len(self.labels) == 2:
                     raise TypeError("UniTensor.__init__","is_diag=True require Tensor rank==2")
                 if not self.bonds[0].dim == self.bonds[1].dim:
                     raise TypeError("UniTensor.__init__","is_diag=True require Tensor to be square rank-2")
+
             if len(np.unique([ (bd.qnums is None) for bd in self.bonds])) != 1:
                 raise TypeError("UniTensor.__init__","the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).")
 
-            
+            if self.bonds[0].qnums is not None:
+                if len(np.unique([ bd.nsym for bd in self.bonds])) != 1:
+                    raise TypeError("UniTensor.__init__","the number of symmetry type for symmetry bonds doesn't match.")
 
             ## sort all BD_IN on first and BD_OUT on last:
             #lambda x: 1 if x.bondType is BD_OUT else 0
-            maper = np.argsort([ (x.bondType is BD_OUT) for x in self.bonds])
-            self.bonds = self.bonds[maper]
-            self.labels = self.labels[maper]
-            
-             
+            #maper = np.argsort([ (x.bondType is BD_OUT) for x in self.bonds])
+            #self.bonds = self.bonds[maper]
+            #self.labels = self.labels[maper]
 
 
         if torch_tensor is None:
@@ -502,26 +505,97 @@ class UniTensor():
         self.bonds  = np.array([f(i,N_inbond,dimer[i]) for i in range(len(dimer))])
 
 
+
     ## Symmetric Tensor function
-    def GetBlock(self,qnum=None):
-        if qnum is not None:
-            ## check if symm:
-            if self.bonds[0].qnums is None:
-                raise TypeError("UniTensor.GetBlock","[ERROR] Trying to get a block on a non-symm tensor.")
+    def GetTotalQnums(self):
+        if self.bonds[0].qnums is None:
+            raise TypeError("UniTensor.GetTotalQnums","[ERROR] GetTotal Qnums from a non-symm tensor")
+        tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
+        maper = np.argsort(tmp)
+        tmp_bonds = self.bonds[maper]
+        tmp_labels = self.labels[maper]
+        Nin = len(tmp[tmp==False])
+
+        if (Nin==0) or (Nin==len(self.bonds)):
+            raise Exception("UniTensor.GetTotalQnums","[ERROR] The TN symmetry structure is incorrect, without either any in-bond or any-outbond")
+
+        #virtual_cb-in
+        cb_inbonds = copy.deepcopy(tmp_bonds[0])
+        cb_inbonds.combine(tmp_bonds[1:Nin])
+
+        cb_outbonds = copy.deepcopy(tmp_bonds[Nin])
+        cb_outbonds.combine(tmp_bonds[Nin+1:])
+
+        return cb_inbonds,cb_outbonds
+    
+    def GetBlock(self,*qnum):
+        if self.bonds[0].qnums is None:
 
             if self.is_diag:
                 raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
-
-            picker = [np.argwhere(self.bonds[i].qnums==qnum).flatten() for i in range(len(self.bonds))]
-            #print(picker)
             
-            return UniTensor(bonds=[Bond(self.bonds[i].bondType,dim=len(picker[i])) for i in range(len(self.bonds))],\
-                             labels=self.labels,\
-                             torch_tensor=self.Storage[np.ix_(*picker)],\
-                             check=False)
-        else:
-            print("[Warning] GetBlock a non-symmetry TN will return self.")
+            print("[Warning] GetBlock a non-symmetry TN will return self regardless of qnum parameter pass in.")
             return self
+
+        else:
+            if len(qnum) != self.bonds[0].nsym :
+                raise ValueError("UniTensor.GetBlock","[ERROR] The qnumtum numbers not match the number of type.")
+
+            if self.is_diag:
+                raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
+           
+            
+    
+            #######
+            ## create a copy of bonds and labels information that has all the BD_IN on first.            
+            # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
+            tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
+            maper = np.argsort(tmp)
+            tmp_bonds = self.bonds[maper]
+            tmp_labels = self.labels[maper]
+            Nin = len(tmp[tmp==False])
+            if (Nin==0) or (Nin==len(self.bonds)):
+                raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a block on a TN without either any in-bond or any out-bond")
+
+            #virtual_cb-in
+            cb_inbonds = copy.deepcopy(tmp_bonds[0])
+            cb_inbonds.combine(tmp_bonds[1:Nin])
+            i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
+            for n in np.arange(1,self.bonds[0].nsym,1):
+                i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
+            if len(i_in) == 0:
+                raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
+
+            #virtual_cb_out            
+            cb_outbonds = copy.deepcopy(tmp_bonds[Nin])
+            cb_outbonds.combine(tmp_bonds[Nin+1:])
+            i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
+            for n in np.arange(1,self.bonds[0].nsym,1):
+                i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
+            if len(i_out) == 0:
+                raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
+            
+            ## virtual permute:
+            rev_maper = np.argsort(maper) 
+            self.Storage = self.Storage.permute(*maper)
+            ori_shape = self.Storage.shape
+
+            ## this will copy a new tensor
+            out = self.Storage.reshape(np.prod(ori_shape[:Nin]),-1)[np.ix_(i_in,i_out)]
+            
+            self.Storage = self.Storage.permute(*rev_maper)
+
+            print(out)
+            
+            return UniTensor(bonds =[Bond(BD_IN,dim=out.shape[0]),Bond(BD_OUT,dim=out.shape[1])],\
+                             labels=[1,2],\
+                             torch_tensor=out,\
+                             check=False)
+            
+
+        
+
+
 
 
 

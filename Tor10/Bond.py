@@ -28,6 +28,7 @@ class Bond():
         self.bondType = None
         self.dim      = None
         self.qnums    = None
+        self.nsym     = 0
 
         #call :
         self.assign(bondType,dim,qnums)
@@ -63,12 +64,12 @@ class Bond():
             if len(sp) != 2:
                 raise TypeError("Bond.assign()","[ERROR] qnums must be list of list.")
             xdim = np.unique([len(qnums[x]) for x in range(len(qnums))]).flatten()
-            if len(xdim) > 1:
+            if len(xdim) != 1:
                 raise TypeError("Bond.assign()","[ERROR] the number of multiple symm must be the same for each dim.")
             if len(qnums) != dim:
                 raise ValueError("Bond.assign()","[ERROR] qnums must have the same elements as the dim")        
-            
-            self.qnums    = np.array(qnums).astype(np.int)
+            self.nsym = xdim[0]
+            self.qnums = np.array(qnums).astype(np.int)
  
        ## fill the members:
         self.bondType = bondType
@@ -90,33 +91,27 @@ class Bond():
         ## if bds is Bond class 
         if isinstance(bds,self.__class__):
             self.dim *= bds.dim
-            nsym = None
-            if self.qnums is not None:
-                nsym = len(self.qnums[0])
-            if (nsym is None) != (bds.qnums is None):
+            if (self.qnums is None) != (bds.qnums is None):
                 raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with symm and non-symm")
-            if nsym is not None:
-                if nsym != len(bds.qnums[0]):
+            if self.qnums is not None:
+                if self.nsym != len(bds.qnums[0]):
                     raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of type of symm.")
-                self.qnums = (self.qnums.reshape(len(self.qnums),1,nsym)+bds.qnums.reshape(1,len(bds.qnums),nsym)).reshape(-1,nsym)
+                self.qnums = (self.qnums.reshape(len(self.qnums),1,self.nsym)+bds.qnums.reshape(1,len(bds.qnums),self.nsym)).reshape(-1,self.nsym)
 
                 
         else:
-            nsym = None
-            if not self.qnums is None:
-                nsym = len(self.qnums[0])
             
             for i in range(len(bds)):
                 if not isinstance(bds[i],self.__class__):
                     raise TypeError("Bond.combine(bds)","bds[%d] is not Bond class"%(i))
                 else:
                     self.dim *= bds[i].dim
-                    if (nsym is None) != (bds[i].qnums is None):
+                    if (self.qnums is None) != (bds[i].qnums is None):
                         raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with symm and non-symm")
-                    if nsym is not None: 
-                        if nsym != len(bds[i].qnums[0]):
+                    if self.qnums is not None: 
+                        if self.nsym != len(bds[i].qnums[0]):
                             raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of type of symm.")
-                        self.qnums = (self.qnums.reshape(len(self.qnums),1,nsym)+bds[i].qnums.reshape(1,len(bds[i]),nsym)).reshape(-1,nsym)
+                        self.qnums = (self.qnums.reshape(len(self.qnums),1,self.nsym)+bds[i].qnums.reshape(1,len(bds[i].qnums),self.nsym)).reshape(-1,self.nsym)
 
 
         ## checking change type
@@ -134,17 +129,17 @@ class Bond():
         if(self.bondType is BD_IN):
             print("IN :",end='')
             if not self.qnums is None:
-                for nsym in range(len(self.qnums[0])):
+                for n in range(self.nsym):
                     for idim in range(len(self.qnums)):
-                         print(" %+d"%(self.qnums[idim,nsym]),end='')
+                         print(" %+d"%(self.qnums[idim,n]),end='')
                     print("\n    ",end='')
             print("\n",end="")
         else:
             print("OUT :",end='')
             if not self.qnums is None:
-                for nsym in range(len(self.qnums[0])):
+                for n in range(self.nsym):
                     for idim in range(len(self.qnums)):
-                         print(" %+d"%(self.qnums[idim,nsym]),end='')
+                         print(" %+d"%(self.qnums[idim,n]),end='')
                     print("\n    ",end='')
             print("\n",end="")
 
