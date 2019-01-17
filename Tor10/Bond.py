@@ -36,10 +36,17 @@ class Bond():
         #checking:
         if dim < 1: 
             raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
+
         if not bondType is BD_IN and not bondType is BD_OUT:
             raise Exception("Bond.assign()","[ERROR] bondType can only be BD_IN or BD_OUT")       
 
         if not qnums is None:
+            sp = np.shape(qnums)
+            if len(sp) != 2:
+                raise TypeError("Bond.assign()","[ERROR] qnums must be list of list.")
+            xdim = np.unique([len(qnums[x]) for x in range(len(qnums))]).flatten()
+            if len(xdim) > 1:
+                raise TypeError("Bond.assign()","[ERROR] the number of multiple symm must be the same for each dim.")
             if len(qnums) != dim:
                 raise ValueError("Bond.assign()","[ERROR] qnums must have the same elements as the dim")        
             
@@ -62,11 +69,11 @@ class Bond():
         This is the inplace combine without Qnum & Symm.
     """
     def combine(bds,new_type=None):
-        
         ## if bds is Bond class 
         if isinstance(bds,self.__class__):
             self.dim *= bds.dim
             if not self.qnums is None:
+                raise Exception("[Under developement]")
                 self.qnums = (self.qnums.reshape(1,-1)+self.qnums.reshape(-1,1)).flatten()
                 
         else:
@@ -76,6 +83,7 @@ class Bond():
                 else:
                     self.dim *= bds[i].dim
                     if not self.qnums is None:
+                        raise Exception("[Under developement]")
                         self.qnums = (self.qnums.reshape(1,-1)+self.qnums.reshape(-1,1)).flatten()
 
 
@@ -89,19 +97,23 @@ class Bond():
 
     ## Print layout
     def __print(self):
-        print("Dim = %d |"%(self.dim),end="")
+        print("Dim = %d |"%(self.dim),end="\n")
 
         if(self.bondType is BD_IN):
             print("IN :",end='')
             if not self.qnums is None:
-                for q in self.qnums:
-                    print(" %d"%(q),end='')
+                for nsym in range(len(self.qnums[0])):
+                    for idim in range(len(self.qnums)):
+                         print(" %+d"%(self.qnums[idim,nsym]),end='')
+                    print("\n    ",end='')
             print("\n",end="")
         else:
             print("OUT :",end='')
             if not self.qnums is None:
-                for q in self.qnums:
-                    print(" %d"%(q),end='')
+                for nsym in range(len(self.qnums[0])):
+                    for idim in range(len(self.qnums)):
+                         print(" %+d"%(self.qnums[idim,nsym]),end='')
+                    print("\n    ",end='')
             print("\n",end="")
 
 
