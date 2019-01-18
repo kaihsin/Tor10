@@ -13,10 +13,12 @@ sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[10,11,12],dtype=
 sym_T.Print_diagram()
 print(sym_T.GetBlock(2))
 
+
 block_qnum_2 = np.arange(3).reshape(3,1)
 sym_T.PutBlock(block_qnum_2,2)
-
 print(sym_T)
+print(sym_T.GetBlock(2))
+
 
 ## multiple Qnum:
 ## U1 x U1 x Z2 x Z4

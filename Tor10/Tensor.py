@@ -117,9 +117,9 @@ class UniTensor():
         if not len(elem) == self.Storage.numel():
             raise ValueError("UniTensor.SetElem","[ERROR] number of elem is not equal to the # of elem in the tensor.")
         
-        ## Qnum_ipoint
+        ## Qnum_ipoint [OK]
         if self.bonds[0].qnums is not None:
-            raise Exception("UniTensor.SetElem","[ERROR] the TN that has symm should use PutBlock, and is under developing.")
+            raise Exception("UniTensor.SetElem","[ERROR] the TN that has symm should use PutBlock.")
         
         my_type = self.Storage.dtype
         my_shape = self.Storage.shape
@@ -431,11 +431,12 @@ class UniTensor():
 
     ## Miscellaneous
     def Rand(self):
-        ## Qnum_ipoint
-        if self.bonds[0].qnums is not None:
+        if self.bonds[0].qnums is None:
+            _Randomize(self)
+        else:
+            ## Qnum_ipoint
             raise Exception("[Abort] UniTensor.Rand for symm TN is under developing")
 
-        _Randomize(self)
 
     def CombineBonds(self,labels_to_combine):
         _CombineBonds(self,labels_to_combine)
@@ -548,7 +549,7 @@ class UniTensor():
             tmp_labels = self.labels[maper]
             Nin = len(tmp[tmp==False])
             if (Nin==0) or (Nin==len(self.bonds)):
-                raise Exception("UniTensor.GetBlock","[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond")
+                raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond")
 
             #virtual_cb-in
             cb_inbonds = copy.deepcopy(tmp_bonds[0])
@@ -557,7 +558,7 @@ class UniTensor():
             for n in np.arange(1,self.bonds[0].nsym,1):
                 i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
             if len(i_in) == 0:
-                raise Exception("UniTensor.GetBlock","[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
+                raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
 
             #virtual_cb_out            
             cb_outbonds = copy.deepcopy(tmp_bonds[Nin])
@@ -566,7 +567,7 @@ class UniTensor():
             for n in np.arange(1,self.bonds[0].nsym,1):
                 i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
             if len(i_out) == 0:
-                raise Exception("UniTensor.GetBlock","[ERROR] Trying to put a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
+                raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
             
             rev_maper = np.argsort(maper) 
             self.Storage = self.Storage.permute(*maper)
@@ -643,7 +644,7 @@ class UniTensor():
             
             self.Storage = self.Storage.permute(*rev_maper)
 
-            print(out)
+            #print(out)
             
             return UniTensor(bonds =[Bond(BD_IN,dim=out.shape[0]),Bond(BD_OUT,dim=out.shape[1])],\
                              labels=[1,2],\
