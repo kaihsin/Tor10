@@ -527,6 +527,64 @@ class UniTensor():
         cb_outbonds.combine(tmp_bonds[Nin+1:])
 
         return cb_inbonds,cb_outbonds
+
+
+    def PutBlock(self,block,*qnum):
+        ## Note, block should be a numpy array.
+        if self.bonds[0].qnums is None: 
+            raise Exception("[Warning] PutBlock cannot be use for non-symmetry TN. Use SetElem instead.")
+        else:
+            if len(qnum) != self.bonds[0].nsym :
+                raise ValueError("UniTensor.PutBlock","[ERROR] The qnumtum numbers not match the number of type.")
+
+            if self.is_diag:
+                raise TypeError("UniTensor.PutBlock","[ERROR] Cannot put block on a diagonal tensor (is_diag=True)")
+
+            ## create a copy of bonds and labels information that has all the BD_IN on first.            
+            # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
+            tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
+            maper = np.argsort(tmp)
+            tmp_bonds = self.bonds[maper]
+            tmp_labels = self.labels[maper]
+            Nin = len(tmp[tmp==False])
+            if (Nin==0) or (Nin==len(self.bonds)):
+                raise Exception("UniTensor.GetBlock","[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond")
+
+            #virtual_cb-in
+            cb_inbonds = copy.deepcopy(tmp_bonds[0])
+            cb_inbonds.combine(tmp_bonds[1:Nin])
+            i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
+            for n in np.arange(1,self.bonds[0].nsym,1):
+                i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
+            if len(i_in) == 0:
+                raise Exception("UniTensor.GetBlock","[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
+
+            #virtual_cb_out            
+            cb_outbonds = copy.deepcopy(tmp_bonds[Nin])
+            cb_outbonds.combine(tmp_bonds[Nin+1:])
+            i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
+            for n in np.arange(1,self.bonds[0].nsym,1):
+                i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
+            if len(i_out) == 0:
+                raise Exception("UniTensor.GetBlock","[ERROR] Trying to put a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
+            
+            rev_maper = np.argsort(maper) 
+            self.Storage = self.Storage.permute(*maper)
+            ori_shape = self.Storage.shape
+            print(self.Storage.shape)
+            ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
+            self.Storage = self.Storage.reshape(np.prod(ori_shape[:Nin]),-1)
+            print(self.Storage.shape)
+            ## no need to check if the size match. if the size doesn't match, let torch handle the error.
+            if isinstance(block,np.ndarray):
+                self.Storage[np.ix_(i_in,i_out)] = torch.from_numpy(block).to(torch.float64)
+            elif isinstance(block,self.Storage.__class__):
+                self.Storage[np.ix_(i_in,i_out)] = block
+            else:
+                raise TypeError("UniTensor.PutBlock","[ERROR] the block can only be an np.array or a %s"%(self.Storage.__class__))
+            
+            self.Storage = self.Storage.reshape(*ori_shape).permute(*rev_maper)
+
     
     def GetBlock(self,*qnum):
         if self.bonds[0].qnums is None:
@@ -580,7 +638,7 @@ class UniTensor():
             self.Storage = self.Storage.permute(*maper)
             ori_shape = self.Storage.shape
 
-            ## this will copy a new tensor
+            ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
             out = self.Storage.reshape(np.prod(ori_shape[:Nin]),-1)[np.ix_(i_in,i_out)]
             
             self.Storage = self.Storage.permute(*rev_maper)

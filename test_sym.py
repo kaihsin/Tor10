@@ -11,8 +11,12 @@ bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1],[2],[0],[2]])
 bd_sym_3 = Tt.Bond(Tt.BD_OUT,5,qnums=[[4],[2],[-1],[5],[1]])
 sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[10,11,12],dtype=tor.float64)
 sym_T.Print_diagram()
-print(sym_T.GetBlock(1))
+print(sym_T.GetBlock(2))
 
+block_qnum_2 = np.arange(3).reshape(3,1)
+sym_T.PutBlock(block_qnum_2,2)
+
+print(sym_T)
 
 ## multiple Qnum:
 ## U1 x U1 x Z2 x Z4
