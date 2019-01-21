@@ -12,7 +12,7 @@
     1. Create Tensor:
         * support multiple precisions.        
         * support devices (cpu and gpu are trivial)
-        * preserve the same api for Bond (currently no Qnum and Symm)
+        * preserve the similar api for Bond 
         
         bds = [ Bond(BD_IN,3), Bond(BD_OUT,4)]
         A = UniTensor(bds,label=[2,4],dtype=torch.float64,device=torch.device("cpu"))
@@ -26,7 +26,7 @@
     3. Multiple Symmetries:
         * Support arbitrary number of symmetry. 
         * see test_sym.py for how to use them. 
-        
+         
 
     See test.py for further detail application functions.
 
