@@ -698,13 +698,19 @@ def Contract(a,b):
 
 
         if(len(same)):
+            ## check dim:
+            for i in range(len(a_ind)):
+                if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:
+                    raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has different dim.")
+
+
             ## Qnum_ipoint
             if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):
                 raise Exception("Contract(a,b)","[ERROR] contract Symm TN with non-sym tensor")
 
             if(a.bonds[0].qnums is not None):
                 for i in range(len(a_ind)):
-                    if a.bonds[a_ind[i]].qnums != b.bonds[b_ind[i]].qnums:
+                    if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
                         raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
 
             aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)

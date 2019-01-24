@@ -44,6 +44,18 @@ print(tqin,tqout)
 print(sym_T.GetBlock(1,1,-2,3))
 
 
+
+## Test contract.
+sym_T2 = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[0,2,4],dtype=tor.float64)
+Tout = Tt.Contract(sym_T,sym_T2)
+Tout.Print_diagram()
+
+
+## Test mismatch:
+sym_T3 =  Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[2,0,4],dtype=tor.float64)
+Terr = Tt.Contract(sym_T,sym_T3)
+
+
 exit(1)
 
 
