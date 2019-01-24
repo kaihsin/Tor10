@@ -690,15 +690,23 @@ def Load(filename):
 
 def Contract(a,b):
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
-        ## Qnum_ipoint
-        if a.bonds[0].qnums is not None or b.bonds[0].qnums is not None:
-           raise Exception("Contract(a,b)","[Abort] contract Symm TN is under developing.")
 
 
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
+
+
         if(len(same)):
+            ## Qnum_ipoint
+            if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):
+                raise Exception("Contract(a,b)","[ERROR] contract Symm TN with non-sym tensor")
+
+            if(a.bonds[0].qnums is not None):
+                for i in range(len(a_ind)):
+                    if a.bonds[a_ind[i]].qnums != b.bonds[b_ind[i]].qnums:
+                        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
+
             aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
             bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
             
