@@ -699,9 +699,9 @@ def Contract(a,b):
 
         if(len(same)):
             ## check dim:
-            for i in range(len(a_ind)):
-                if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:
-                    raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has different dim.")
+            #for i in range(len(a_ind)):
+            #    if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:
+            #        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has different dim.")
 
 
             ## Qnum_ipoint
