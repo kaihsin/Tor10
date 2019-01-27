@@ -5,7 +5,6 @@ import torch as tor
 import copy
 import numpy as np 
 
-
 if len(sys.argv) < 5:
     print(".py <J> <Hx> <chi> <converge>")
     exit(1)
