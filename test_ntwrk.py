@@ -5,5 +5,21 @@ import torch as tor
 import copy
 
 ntwrk = Tt.Network()
-ntwrk.fromfile("test.net")
+ntwrk.Fromfile("test.net")
+print(ntwrk)
+
+A = Tt.UniTensor([Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_IN,4),Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,4)]).Rand()
+B = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,4)]).Rand()
+C = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,4),Tt.Bond(Tt.BD_OUT,4)]).Rand()
+
+
+ntwrk.Put("A",A)
+print(ntwrk)
+ntwrk.Put("C",C)
+print(ntwrk)
+ntwrk.Put("B",B)
+
+TOUT = ntwrk.Launch()
+
+
 

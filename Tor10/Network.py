@@ -11,9 +11,13 @@ class Network():
         if nwfile is not None:
             self.fromfile(nwfile,delimiter)
 
-    def fromfile(self,ntwrk_file,delimiter=None):
+        self.instances = None
+
+        
+    def Fromfile(self,ntwrk_file,delimiter=None):
         self.tensors = None
         self.TOUT = None
+        self.instances = None
 
         f = open(ntwrk_file,'r')
         lines = f.readlines()
@@ -32,11 +36,11 @@ class Network():
             Name = tmp[0].strip()
             tmp = tmp[1].split(';')
             if delimiter is None:
-                Inbonds = tmp[0].strip().split()
-                Outbonds= tmp[1].strip().split()
+                Inbonds = np.array(tmp[0].strip().split(),dtype=np.int)
+                Outbonds= np.array(tmp[1].strip().split(),dtype=np.int)
             else:
-                Inbonds = tmp[0].strip().split(delimiter)
-                Outbonds= tmp[1].strip().split(delimiter)
+                Inbonds = np.array(tmp[0].strip().split(delimiter),dtype=np.int)
+                Outbonds= np.array(tmp[1].strip().split(delimiter),dtype=np.int)
             tn_shell = [Inbonds,Outbonds]
             if Name == 'TOUT':
                 self.TOUT = tn_shell
@@ -55,10 +59,81 @@ class Network():
         if self.tensors is None:
             raise TypeError("Network.fromfile","[ERROR] network file have no input elements exist.")
 
-        print(self.tensors)
-        print(self.TOUT)
-    def draw():
-        pass 
+        #print(self.tensors)
+        #print(self.TOUT)
 
 
+    def __repr__(self):
+        self.__draw()
+        return ""
+    def __str__(self):
+        self.__draw()
+        return ""
+    def __draw(self):
+        print("==== Network ====")
+        if self.tensors is None:
+            print("      Empty      ")
+        else:
+            for key, val in self.tensors.items():
+                status = "x"
+                if self.instances is not None:
+                    if key in self.instances:
+                        status = "o"
 
+                print("[%s] %s : "%(status,key),end="")
+                for i in val[0]:
+                    print("%d "%(i),end="")
+                print("; ",end="")
+                for i in val[1]:
+                    print("%d "%(i),end="")
+                print("")
+
+            print("TOUT : ",end="")
+            for i in self.TOUT[0]:
+                print("%d "%(i),end="")
+            print("; ",end="")
+            for i in self.TOUT[1]:
+                print("%d "%(i),end="")
+            print("")
+        print("=================")
+
+
+    def Put(self,name,tensor):
+        ## check if the Network is set.
+        if self.tensors is None:
+            raise ValueError("Network.put","[ERROR] Network hasn't been constructed. Construct a Netwrok before put the tensors.")
+
+        ## checking tensor is UniTensor
+        if not isinstance(tensor,UniTensor):
+            raise TypeError("Network.put","[ERROR] Network can only accept UniTensor")
+
+        ## check if the name in the Network
+        ## remaining thing: how to deal with in, out bond?
+        if name in self.tensors:
+            ##checking:
+            if len(tensor.shape()) != len(self.tensors[name][0]) + len(self.tensors[name][1]):
+                raise TypeError("Network.put","[ERROR] Trying to put tensor %s that has different rank"%(name))
+            if self.instances is None:
+                self.instances = {name:tensor}
+            else:
+                self.instances[name] = tensor
+        else:
+            raise ValueError("Network.put","[ERROR] Network does not contain the tensor with name [%s]"%(name)) 
+    
+
+
+    def Launch(self):
+        if self.tensors is None:
+            raise Exception("Network","[ERROR] No in-put tensors for the Network")
+        if self.TOUT is None:
+            raise Exception("Network","[ERROR] No TOUT tensor for the Network")
+        if self.instances is None:
+            raise Exception("Network","[ERROR] No UniTensor is put in the Network")
+
+        for key in self.tensors.keys():
+            if not key in self.instances:
+                raise Exception("Network","[ERROR] The [%s] tensor is not put in the Network"%(key))
+        ## this is temporary, not finished!!!
+        print("Network.Launch is currently under developing.")
+        return None
+    

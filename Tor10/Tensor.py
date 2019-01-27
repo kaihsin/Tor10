@@ -81,7 +81,6 @@ class UniTensor():
             self.Storage = torch_tensor
     
 
-
     def SetLabel(self, newLabel, idx):
         if not type(newLabel) is int or not type(idx) is int:
             raise TypeError("UniTensor.SetLabel","newLabel and idx must be int.")
@@ -436,7 +435,7 @@ class UniTensor():
         else:
             ## Qnum_ipoint
             raise Exception("[Abort] UniTensor.Rand for symm TN is under developing")
-
+        return self
 
     def CombineBonds(self,labels_to_combine):
         _CombineBonds(self,labels_to_combine)
