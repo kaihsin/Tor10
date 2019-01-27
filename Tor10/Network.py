@@ -2,6 +2,7 @@ import torch
 import copy,os
 import numpy as np
 import pickle as pkl
+import re
 from .Tensor import *
 
 class Network():
@@ -12,12 +13,13 @@ class Network():
             self.fromfile(nwfile,delimiter)
 
         self.instances = None
-
+        self.Order = None
         
     def Fromfile(self,ntwrk_file,delimiter=None):
         self.tensors = None
         self.TOUT = None
         self.instances = None
+        self.Order = None
 
         f = open(ntwrk_file,'r')
         lines = f.readlines()
@@ -134,10 +136,25 @@ class Network():
             if not key in self.instances:
                 raise Exception("Network","[ERROR] The [%s] tensor is not put in the Network"%(key))
 
+        out = None
+        if self.Order is None:
+            for key,value in self.instances.items():
+                if out is None:
+                    
+                    out = copy.deepcopy(value)
+                    out.labels = np.array(self.tensors[key][0].tolist() + self.tensors[key][1].tolist())
+                else:
+                    old_labels = copy.copy(value.labels)
+                    value.labels = np.array(self.tensors[key][0].tolist() + self.tensors[key][1].tolist())
+                    out = Contract(out,value)
+                    value.labels = old_labels
+
+        per_lbl = self.TOUT[0].tolist() + self.TOUT[1].tolist()
+        out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
         ## this is temporary, not finished!!!
-        print("Network.Launch is currently under developing.")
+        #print("Network.Launch is currently under developing.")
 
 
 
-        return None
+        return out
     

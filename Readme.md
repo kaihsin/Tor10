@@ -15,23 +15,31 @@
         * preserve the similar api for Bond 
         
 ```python
+       ## create a rank-2 Tensor 
        bds = [ Bond(BD_IN,3), Bond(BD_OUT,4)]
        A = UniTensor(bds,label=[2,4],dtype=torch.float64,device=torch.device("cpu"))
+
+       ## Moving to GPU:
+       A.to(torch.device("cuda:0"))
 ```
 
     2. Tensor :
-        * vitual swap and reshape/permute are avaliable implicitly.
-        * Use Contiguous() when needed.
+        * vitual swap and permute. All the permute and swap will not change the underlying memory
+        * Use Contiguous() when needed to actual moving the memory layout.
 
 ```python
         A.Contiguous()
-
 ```
 
     3. Multiple Symmetries:
         * Support arbitrary number of symmetry. 
         * see test_sym.py for how to use them. 
         
+    4. Network :
+        * See test_ntwrk.py for how to use network.
+        * See test.net for how to defined a Network file.
+        * [Note] This version is the straight forward version. The Network will contract accroding to which tensor is defined in the Network file first. 
+
 
 
     See test.py for further detail application functions.
