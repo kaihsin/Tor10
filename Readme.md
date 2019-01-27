@@ -15,17 +15,18 @@
         * preserve the similar api for Bond 
         
 ```python
-   bds = [ Bond(BD_IN,3), Bond(BD_OUT,4)]
-   A = UniTensor(bds,label=[2,4],dtype=torch.float64,device=torch.device("cpu"))
+       bds = [ Bond(BD_IN,3), Bond(BD_OUT,4)]
+       A = UniTensor(bds,label=[2,4],dtype=torch.float64,device=torch.device("cpu"))
 ```
 
     2. Tensor :
         * vitual swap and reshape/permute are avaliable implicitly.
         * Use Contiguous() when needed.
 
-        ```python
+```python
         A.Contiguous()
-        ```
+
+```
 
     3. Multiple Symmetries:
         * Support arbitrary number of symmetry. 
