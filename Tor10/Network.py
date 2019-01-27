@@ -133,7 +133,11 @@ class Network():
         for key in self.tensors.keys():
             if not key in self.instances:
                 raise Exception("Network","[ERROR] The [%s] tensor is not put in the Network"%(key))
+
         ## this is temporary, not finished!!!
         print("Network.Launch is currently under developing.")
+
+
+
         return None
     
