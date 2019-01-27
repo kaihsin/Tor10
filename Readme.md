@@ -14,19 +14,20 @@
         * support devices (cpu and gpu are trivial)
         * preserve the similar api for Bond 
         
+        ```
         bds = [ Bond(BD_IN,3), Bond(BD_OUT,4)]
         A = UniTensor(bds,label=[2,4],dtype=torch.float64,device=torch.device("cpu"))
-
+        ```
     2. Tensor :
         * vitual swap and reshape/permute are avaliable implicitly.
         * Use Contiguous() when needed.
-
+        ```
         A.Contiguous()
-
+        ```
     3. Multiple Symmetries:
         * Support arbitrary number of symmetry. 
         * see test_sym.py for how to use them. 
-         
+        
 
     See test.py for further detail application functions.
 
