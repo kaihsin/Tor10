@@ -36,23 +36,38 @@ class Network():
             if len(tmp) != 2:
                 raise TypeError("Network.fromfile","[ERROR] The network file have wrong format at line [%d]"%(i))
             Name = tmp[0].strip()
-            tmp = tmp[1].split(';')
-            if delimiter is None:
-                Inbonds = np.array(tmp[0].strip().split(),dtype=np.int)
-                Outbonds= np.array(tmp[1].strip().split(),dtype=np.int)
+            if Name == 'Order':
+                if self.Order is not None:
+                    raise TypeError("Network.fromfile","[ERROR] The network file have multiple line of [Order]")
+                tmp = tmp[1].strip()
+
+                ## check if the parenthese are matching.
+                if not self.__is_matched(tmp):
+                    raise TypeError("Network.fromfile","[ERROR] The parentheses mismatch happend for the [Order] at line [%d]"%(i))
+                
+                self.Order = tmp                
+                
             else:
-                Inbonds = np.array(tmp[0].strip().split(delimiter),dtype=np.int)
-                Outbonds= np.array(tmp[1].strip().split(delimiter),dtype=np.int)
-            tn_shell = [Inbonds,Outbonds]
-            if Name == 'TOUT':
-                self.TOUT = tn_shell
-            else:
-                if self.tensors is None:
-                    self.tensors = {Name:tn_shell}
+                tmp = tmp[1].split(';')
+                if delimiter is None:
+                    Inbonds = np.array(tmp[0].strip().split(),dtype=np.int)
+                    Outbonds= np.array(tmp[1].strip().split(),dtype=np.int)
                 else:
-                    if Name in self.tensors:
-                        raise ValueError("Network.fromfile","[ERROR] network file contain duplicate tensor names [%s] at line [%d]"%(Name,i))
-                    self.tensors[Name] = tn_shell
+                    Inbonds = np.array(tmp[0].strip().split(delimiter),dtype=np.int)
+                    Outbonds= np.array(tmp[1].strip().split(delimiter),dtype=np.int)
+                tn_shell = [Inbonds,Outbonds]
+                if Name == 'TOUT':
+                    if self.TOUT is not None:
+                        raise TypeError("Network.fromfile","[ERROR] The network file have multiple line of [TOUT]")
+
+                    self.TOUT = tn_shell
+                else:
+                    if self.tensors is None:
+                        self.tensors = {Name:tn_shell}
+                    else:
+                        if Name in self.tensors:
+                            raise ValueError("Network.fromfile","[ERROR] network file contain duplicate tensor names [%s] at line [%d]"%(Name,i))
+                        self.tensors[Name] = tn_shell
             
         ## final checking:
         if self.TOUT is None:
@@ -71,6 +86,8 @@ class Network():
     def __str__(self):
         self.__draw()
         return ""
+
+    ## This is the private function 
     def __draw(self):
         print("==== Network ====")
         if self.tensors is None:
@@ -98,7 +115,17 @@ class Network():
                 print("%d "%(i),end="")
             print("")
         print("=================")
+    
+    def __is_matched(expression):
+        queue = []
 
+        for letter in expression:
+            if letter == '(':
+                queue.append(')')
+            elif letter == ')':
+                if not queue or letter != queue.pop():
+                    return False
+        return not queue
 
     def Put(self,name,tensor):
         ## check if the Network is set.
@@ -148,7 +175,11 @@ class Network():
                     value.labels = np.array(self.tensors[key][0].tolist() + self.tensors[key][1].tolist())
                     out = Contract(out,value)
                     value.labels = old_labels
-
+        else :
+            ##Unfin
+            print("Order is under developing")
+            exit(1)
+    
         per_lbl = self.TOUT[0].tolist() + self.TOUT[1].tolist()
         out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
         ## this is temporary, not finished!!!
