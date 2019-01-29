@@ -196,7 +196,7 @@ class Network():
             elif len(re.findall("\W+",token)) > 0:
                 raise ValueError("String Contain invalid symbol [%s]"%(token))
             else:
-                print(token)
+                #print(token)
                 values.append(self.instances[token])
 
         while peek(operators) is not None:
