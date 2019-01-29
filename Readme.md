@@ -38,7 +38,6 @@
     4. Network :
         * See test_ntwrk.py for how to use network.
         * See test.net for how to defined a Network file.
-        * [Note] This version is the straight forward version. The Network will contract accroding to which tensor is defined in the Network file first. 
 
 
 
