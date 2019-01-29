@@ -116,7 +116,8 @@ class Network():
             print("")
         print("=================")
     
-    def __is_matched(expression):
+    ## private function
+    def __is_matched(self,expression):
         queue = []
 
         for letter in expression:
@@ -150,6 +151,53 @@ class Network():
             raise ValueError("Network.put","[ERROR] Network does not contain the tensor with name [%s]"%(name)) 
     
 
+    def __launch_by_order(self):
+        ## lambda function
+        peek = lambda stack: stack[-1] if stack else None
+
+        tokens = re.findall("[(,)]|\w+", self.Order) 
+        ##[Note] self.Order exists should be check before calling this function
+        values = []
+        operators = []
+        for token in tokens:
+        
+            if token == '(':
+                operators.append(token)
+            elif token == ')':
+                top = peek(operators)
+                while top is not None and top != '(':
+                    operators.pop()
+                    # apply contract
+                    left = values.pop()
+                    right = values.pop()
+                    values.append(Contract(left,right))
+                    top = peek(operators)
+                operators.pop() # Discard the '('
+            elif token == ',':
+                # Operator
+                top = peek(operators)
+                while top is not None and top not in "()":
+                    operators.pop()
+                    # apply contract
+                    left = values.pop()
+                    right = values.pop()
+                    values.append(Contract(left,right))
+                    top = peek(operators)
+                operators.append(token)
+            elif len(re.findall("\W+",token)) > 0:
+                raise ValueError("String Contain invalid symbol [%s]"%(token))
+            else:
+                print(token)
+                values.append(self.instances[token])
+
+        while peek(operators) is not None:
+            operators.pop()
+            # apply contract
+            left = values.pop()
+            right = values.pop()
+            values.append(Contract(left,right))
+ 
+        return values[0]
 
     def Launch(self):
         if self.tensors is None:
@@ -177,9 +225,10 @@ class Network():
                     value.labels = old_labels
         else :
             ##Unfin
-            print("Order is under developing")
-            exit(1)
-    
+            out = self.__launch_by_order()            
+
+
+ 
         per_lbl = self.TOUT[0].tolist() + self.TOUT[1].tolist()
         out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
         ## this is temporary, not finished!!!
