@@ -694,7 +694,8 @@ def Contract(a,b):
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
-
+        ## -v
+        #print(a_ind,b_ind)
 
         if(len(same)):
             ## check dim:
@@ -714,6 +715,8 @@ def Contract(a,b):
 
             aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
             bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
+
+            #print(aind_no_combine,bind_no_combine)
             
             maper_a = np.concatenate([aind_no_combine,a_ind])
             maper_b = np.concatenate([b_ind,bind_no_combine])

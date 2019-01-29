@@ -158,7 +158,15 @@ class Network():
         tokens = re.findall("[(,)]|\w+", self.Order) 
         ##[Note] self.Order exists should be check before calling this function
         values = []
+
+        old_labels = dict()
+        for key in self.tensors.keys():
+            old_labels[key] = copy.copy(self.instances[key].labels)
+            self.instances[key].labels =  np.array(self.tensors[key][0].tolist() + self.tensors[key][1].tolist())
+        
+
         operators = []
+        first = True
         for token in tokens:
         
             if token == '(':
@@ -167,7 +175,7 @@ class Network():
                 top = peek(operators)
                 while top is not None and top != '(':
                     operators.pop()
-                    # apply contract
+                    # apply contract                        
                     left = values.pop()
                     right = values.pop()
                     values.append(Contract(left,right))
@@ -182,6 +190,7 @@ class Network():
                     left = values.pop()
                     right = values.pop()
                     values.append(Contract(left,right))
+                    
                     top = peek(operators)
                 operators.append(token)
             elif len(re.findall("\W+",token)) > 0:
@@ -196,6 +205,10 @@ class Network():
             left = values.pop()
             right = values.pop()
             values.append(Contract(left,right))
+
+        for key in self.tensors.keys():
+            self.instances[key].labels = old_labels[key]
+
  
         return values[0]
 
