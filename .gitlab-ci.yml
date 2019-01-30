@@ -1,0 +1,15 @@
+image: alpine
+
+pages:
+  script:
+  - apk --no-cache add py3-pip python-dev
+  - pip3 install sphinx
+  - apk --no-cache add make
+
+  - mv docs/build/html/ public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+
