@@ -1,4 +1,4 @@
-Tor10.Bond
+Tor10.Network
 ============
 .. automodule:: Tor10.Network
     :members:
