@@ -193,8 +193,8 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 todo_include_todos = True
 
 
-html_theme = "bizstyle"
-#html_theme= "sphinx_rtd_theme"
+#html_theme = "bizstyle"
+html_theme= "sphinx_rtd_theme"
 #html_theme_options = {
 #    "rightsidebar": "true",
 #    "relbarbgcolor": "black"
