@@ -1,34 +1,7 @@
 import Tor10 as Tt
-
 import numpy as np 
 import torch as tor
 import copy
-
-
-## Example for Bond:
-bd_x = Tt.Bond(Tt.BD_IN,3)
-bd_y = Tt.Bond(Tt.BD_OUT,4)
-bd_z = Tt.Bond(Tt.BD_IN,3)
-print(bd_x)
-print(bd_y)
-print(bd_x==bd_z) ## This should be true
-print(bd_x is bd_z) ## This should be false
-print(bd_x==bd_y) ## This should be false
-
-bd_sym_x = Tt.Bond(Tt.BD_IN,3,qnums=[[0,-3],[1,-4],[2,5]])
-bd_sym_y = Tt.Bond(Tt.BD_OUT,4,qnums=[[-1,0],[2,1],[0,1],[2,1]])
-print(bd_sym_x)
-print(bd_sym_y)
-
-bd_sym_x.combine(bd_sym_y)
-
-print(bd_sym_x)
-
-#sym_T = Tt.UniTensor(bonds=[bd_sym_x,bd_sym_y],labels=[10,11],dtype=tor.float64)
-#sym_T.Print_diagram()
-#print(sym_T)
-#print(sym_T.GetBlock(2))
-exit(1)
 
 
 device = tor.device("cuda:0")
@@ -36,6 +9,14 @@ bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
 bds_y = [Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,3)]
 x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5],dtype=tor.float64,device=tor.device("cpu"))
 y = Tt.UniTensor(bonds=bds_y, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
+
+
+u,s,v = Tt.linalg.Svd(y)
+print(u)
+print(s)
+print(v)
+exit(1)
+
 #print(len(x))
 print(x.shape())
 print(x)

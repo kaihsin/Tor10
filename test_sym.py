@@ -52,8 +52,8 @@ Tout.Print_diagram()
 
 
 ## Test mismatch:
-sym_T3 =  Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[2,0,4],dtype=tor.float64)
-Terr = Tt.Contract(sym_T,sym_T3)
+#sym_T3 =  Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[2,0,4],dtype=tor.float64)
+#Terr = Tt.Contract(sym_T,sym_T3)
 
 
 exit(1)

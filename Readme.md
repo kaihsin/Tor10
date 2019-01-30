@@ -2,7 +2,8 @@
 
 ## Requirements
     pytorch>=1.0
-    numpy>=1.15
+    numpy  >=1.15
+    sphinx >=1.8.2
 
 ## Code naming principle:
     1) the functions start with "_" are the private function that should not be call directly by user.

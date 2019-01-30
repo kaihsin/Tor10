@@ -3,7 +3,7 @@ import copy,os
 import numpy as np
 import pickle as pkl
 import re
-from .Tensor import *
+from .UniTensor import *
 
 class Network():
     def __init__(self,nwfile=None,delimiter=None):
