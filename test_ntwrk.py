@@ -12,7 +12,6 @@ A = Tt.UniTensor([Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_IN,4),Tt.Bond(Tt.BD_OUT,3),T
 B = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,2)]).Rand()
 C = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,4),Tt.Bond(Tt.BD_OUT,4)]).Rand()
 
-
 ntwrk.Put("A",A)
 print(ntwrk)
 ntwrk.Put("C",C)

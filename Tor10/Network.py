@@ -7,8 +7,9 @@ from .Tensor import *
 
 class Network():
     def __init__(self,nwfile=None,delimiter=None):
-        self.tensors = None
-        self.TOUT = None
+        
+        self.tensors = None # This is the nested list of new labels
+        self.TOUT = None    # This is nested list for the labels of out label
         if nwfile is not None:
             self.fromfile(nwfile,delimiter)
 
@@ -150,8 +151,14 @@ class Network():
         else:
             raise ValueError("Network.put","[ERROR] Network does not contain the tensor with name [%s]"%(name)) 
     
-
+    
     def __launch_by_order(self):
+        
+        # [Developer note]
+        # This is using a variance of of Shunting-yard Algo. to evaluate the "Order" string and contract accrodinly.
+        
+
+
         ## lambda function
         peek = lambda stack: stack[-1] if stack else None
 
@@ -237,7 +244,6 @@ class Network():
                     out = Contract(out,value)
                     value.labels = old_labels
         else :
-            ##Unfin
             out = self.__launch_by_order()            
 
 
