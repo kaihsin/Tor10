@@ -1,0 +1,238 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Tor10.Bond &#8212; Tor10 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Tor10 Documentation" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Tor10 Documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Tor10 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Tor10 Documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Bond.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Tor10.Bond">
+<span id="tor10-bond"></span><h1>Tor10.Bond<a class="headerlink" href="#module-Tor10.Bond" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Tor10.Bond.Bond">
+<em class="property">class </em><code class="descclassname">Tor10.Bond.</code><code class="descname">Bond</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Tor10.Bond.Bond.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor of the Bond, it calls the member function Bond.assign().</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>bondType:</dt>
+<dd>The type of the bond. 
+It can only be either BD_IN or BD_OUT</dd>
+<dt>dim:</dt>
+<dd>The dimension of the bond. 
+It should be larger than 0 (&gt;0)</dd>
+<dt>qnums:</dt>
+<dd>The quantum number(s) specify to the bond. 
+The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.</dd>
+</dl>
+</div></blockquote>
+<p>Example:</p>
+<blockquote>
+<div><p>Create an non-symmetry in-bond with dimension=3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_in</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create an symmetry out-bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_out_sym</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>Create an symmetry out-bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with 
+1st dimension quantum number = [-1,-1,0,-1],
+2nd dimension quantum number = [1 ,-1,0, 0],
+3rd dimension quantum number = [0 , 0,1, 0].</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_out_mulsym</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                 <span class="p">[</span><span class="mi">1</span> <span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                                 <span class="p">[</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span> 
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.Bond.Bond.assign">
+<code class="descname">assign</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.assign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a new property for the Bond.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>bondType:</dt>
+<dd>The type of the bond. 
+It can only be either BD_IN or BD_OUT</dd>
+<dt>dim:</dt>
+<dd>The dimension of the bond. 
+It should be larger than 0 (&gt;0)</dd>
+<dt>qnums:</dt>
+<dd>The quantum number(s) specify to the bond. 
+The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.</dd>
+</dl>
+</div></blockquote>
+<p>Example:</p>
+<blockquote>
+<div><p>For a in-bond with dim=4, U1 x U1 x Z2; there are 3 types of symmetry.
+The Bond should be initialize as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># create instance</span>
+<span class="n">a</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+                          <span class="o">^</span>  <span class="o">^</span>  <span class="o">^</span>
+                         <span class="n">U1</span> <span class="n">U1</span> <span class="n">Z2</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.Bond.Bond.change">
+<code class="descname">change</code><span class="sig-paren">(</span><em>new_bondType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the type of the bond</p>
+<p>Args:</p>
+<blockquote>
+<div>new_bondType: The new bond type to be changed.</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.Bond.Bond.combine">
+<code class="descname">combine</code><span class="sig-paren">(</span><em>bds</em>, <em>new_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine self with the bond that specified.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>bds: </dt>
+<dd>the bond that is going to be combine with self.
+1. A non-symmetry bond cannot combine with a symmetry bond, and vice versa.
+2. two symmetry bonds can only be combined when both of the No. of symmetry are the same.</dd>
+<dt>new_type:</dt>
+<dd>the type of the new combined bond, it can only be either BD_IN or BD_OUT. If not specify, the bond Type will remains the same.</dd>
+</dl>
+</div></blockquote>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span> 
+<span class="n">e</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Combine two non-symmetry bonds:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">Dim = 12 |</span>
+<span class="go">IN :</span>
+</pre></div>
+</div>
+</dd>
+<dt>Combine two symmetry bonds:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">Dim = 4 |</span>
+<span class="go">OUT : +1 +1 -2</span>
+<span class="go">      +1 +1 -1</span>
+<span class="go">      +2 +1 -1</span>
+<span class="go">      +2 +1 +0</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Tor10 Documentation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Tor10 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Kai-Hsin Wu.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>

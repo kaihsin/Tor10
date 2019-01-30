@@ -1,0 +1,342 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Tor10.Bond &#8212; Tor10 0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tor10 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for Tor10.Bond</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span><span class="o">,</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># Find &quot;DevNote&quot; for the note attach on each functions that should be awared of for all the developer.</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+
+
+<span class="c1">##### Constants #######</span>
+<span class="k">class</span> <span class="nc">BD_IN</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="k">class</span> <span class="nc">BD_OUT</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1">#######################</span>
+
+
+<div class="viewcode-block" id="Bond"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond">[docs]</a><span class="k">class</span> <span class="nc">Bond</span><span class="p">():</span>
+    
+    <span class="c1">#</span>
+    <span class="c1"># [0] bondType</span>
+    <span class="c1"># [/] vector&lt;Qnums&gt; Qnums; ## This is multiple Q1</span>
+    <span class="c1"># [x] vector&lt;int&gt; Qdegs;   </span>
+    <span class="c1"># [x] vector&lt;int&gt; offsets;</span>
+    <span class="c1"># [x] bool withSymm</span>
+
+    <span class="c1">## [DevNote]:The qnums should be integer.</span>
+
+<div class="viewcode-block" id="Bond.__init__"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bondType</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor of the Bond, it calls the member function Bond.assign().</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            bondType:</span>
+<span class="sd">                The type of the bond. </span>
+<span class="sd">                It can only be either BD_IN or BD_OUT </span>
+<span class="sd">            dim:</span>
+<span class="sd">                The dimension of the bond. </span>
+<span class="sd">                It should be larger than 0 (&gt;0)</span>
+<span class="sd">            qnums:</span>
+<span class="sd">                The quantum number(s) specify to the bond. </span>
+<span class="sd">                The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary. </span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            Create an non-symmetry in-bond with dimension=3:</span>
+<span class="sd">            ::</span>
+<span class="sd">                bd_in = Tor10.Bond(Tor10.BD_IN, 3)</span>
+<span class="sd">    </span>
+<span class="sd">            Create an symmetry out-bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:</span>
+<span class="sd">            ::</span>
+<span class="sd">                bd_out_sym = Tor10.Bond(Tor10.BD_OUT,3,qnums=[[-1],[0],[1]])</span>
+<span class="sd">    </span>
+<span class="sd">            Create an symmetry out-bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with </span>
+<span class="sd">            1st dimension quantum number = [-1,-1,0,-1],</span>
+<span class="sd">            2nd dimension quantum number = [1 ,-1,0, 0],</span>
+<span class="sd">            3rd dimension quantum number = [0 , 0,1, 0].</span>
+<span class="sd">            ::</span>
+<span class="sd">                bd_out_mulsym = Tor10.Bond(Tor10.BD_OUT,3,qnums=[[-1,-1,0,-1],</span>
+<span class="sd">                                                                 [1 ,-1,0, 0],</span>
+<span class="sd">                                                                 [0 , 0,1, 0]]) </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#declare variable:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>      <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span>    <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nsym</span>     <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#call :</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">bondType</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">qnums</span><span class="p">)</span></div>
+ 
+<div class="viewcode-block" id="Bond.assign"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond.assign">[docs]</a>    <span class="k">def</span> <span class="nf">assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bondType</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign a new property for the Bond.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            bondType:</span>
+<span class="sd">                The type of the bond. </span>
+<span class="sd">                It can only be either BD_IN or BD_OUT </span>
+<span class="sd">            dim:</span>
+<span class="sd">                The dimension of the bond. </span>
+<span class="sd">                It should be larger than 0 (&gt;0)</span>
+<span class="sd">            qnums:</span>
+<span class="sd">                The quantum number(s) specify to the bond. </span>
+<span class="sd">                The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary. </span>
+<span class="sd">        </span>
+<span class="sd">        Example:</span>
+
+<span class="sd">            For a in-bond with dim=4, U1 x U1 x Z2; there are 3 types of symmetry.</span>
+<span class="sd">            The Bond should be initialize as:</span>
+<span class="sd">            ::</span>
+<span class="sd">                a = Tor10.Bond(Tor10.BD_OUT,4) # create instance</span>
+<span class="sd">                a.assign(BD_IN,4,qnums=[[ 0, 1, 1],</span>
+<span class="sd">                                        [-1, 2, 0],</span>
+<span class="sd">                                        [ 0, 1,-1],</span>
+<span class="sd">                                        [ 2, 0, 0]])</span>
+<span class="sd">             </span>
+<span class="sd">                                          ^  ^  ^</span>
+<span class="sd">                                         U1 U1 Z2</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1">#checking:</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span> 
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Bond.assign()&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Bond dimension must &gt; 0&quot;</span><span class="p">)</span> 
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_IN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_OUT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Bond.assign()&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] bondType can only be BD_IN or BD_OUT&quot;</span><span class="p">)</span>       
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">qnums</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.assign()&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] qnums must be list of list.&quot;</span><span class="p">)</span>
+            <span class="n">xdim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">qnums</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">qnums</span><span class="p">))])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xdim</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.assign()&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] the number of multiple symm must be the same for each dim.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">qnums</span><span class="p">)</span> <span class="o">!=</span> <span class="n">dim</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Bond.assign()&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] qnums must have the same elements as the dim&quot;</span><span class="p">)</span>        
+            <span class="bp">self</span><span class="o">.</span><span class="n">nsym</span> <span class="o">=</span> <span class="n">xdim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">qnums</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+ 
+       <span class="c1">## fill the members:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">bondType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>      <span class="o">=</span> <span class="n">dim</span></div>
+
+    
+    <span class="c1">#[DevNote]this is the dummy_change as uni10_2.0</span>
+    <span class="c1">#[DevNote]This is the inplace change</span>
+<div class="viewcode-block" id="Bond.change"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond.change">[docs]</a>    <span class="k">def</span> <span class="nf">change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">new_bondType</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Change the type of the bond</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            new_bondType: The new bond type to be changed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">new_bondType</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">new_bondType</span></div>
+
+    
+    <span class="c1">#[DevNote] This is the inplace combine.</span>
+<div class="viewcode-block" id="Bond.combine"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond.combine">[docs]</a>    <span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">bds</span><span class="p">,</span><span class="n">new_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Combine self with the bond that specified.</span>
+
+<span class="sd">        Args:</span>
+
+<span class="sd">            bds: </span>
+<span class="sd">                the bond that is going to be combine with self.</span>
+<span class="sd">                1. A non-symmetry bond cannot combine with a symmetry bond, and vice versa.</span>
+<span class="sd">                2. two symmetry bonds can only be combined when both of the No. of symmetry are the same.</span>
+
+<span class="sd">            new_type:</span>
+<span class="sd">                the type of the new combined bond, it can only be either BD_IN or BD_OUT. If not specify, the bond Type will remains the same.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">        ::</span>
+<span class="sd">            a = Tor10.Bond(BD_IN,3)</span>
+<span class="sd">            b = Tor10.Bond(BD_OUT,4)</span>
+<span class="sd">            c = Tor10.Bond(BD_OUT,2,qnums=[[0,1,-1],[1,1,0]])</span>
+<span class="sd">            d = Tor10.Bond(BD_OUT,2,qnums=[[1,0,-1],[1,0,0]]) </span>
+<span class="sd">            e = Tor10.Bond(BD_OUT,2,qnums=[[1,0],[1,0]])</span>
+
+<span class="sd">        Combine two non-symmetry bonds:</span>
+<span class="sd">            &gt;&gt;&gt; a.combine(b)</span>
+<span class="sd">            &gt;&gt;&gt; print(a)</span>
+<span class="sd">            Dim = 12 |</span>
+<span class="sd">            IN :</span>
+<span class="sd">            </span>
+<span class="sd">        Combine two symmetry bonds:</span>
+<span class="sd">            &gt;&gt;&gt; c.combine(d)</span>
+<span class="sd">            &gt;&gt;&gt; print(c)</span>
+<span class="sd">            Dim = 4 |</span>
+<span class="sd">            OUT : +1 +1 -2</span>
+<span class="sd">                  +1 +1 -1</span>
+<span class="sd">                  +2 +1 -1</span>
+<span class="sd">                  +2 +1 +0</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">## if bds is Bond class </span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bds</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">*=</span> <span class="n">bds</span><span class="o">.</span><span class="n">dim</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">bds</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.combine&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to combine bonds with symm and non-symm&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsym</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.combine&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to combine bonds with different number of type of symm.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">)</span><span class="o">+</span><span class="n">bds</span><span class="o">.</span><span class="n">qnums</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">bds</span><span class="o">.</span><span class="n">qnums</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">)</span>
+
+                
+        <span class="k">else</span><span class="p">:</span>
+            
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bds</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.combine(bds)&quot;</span><span class="p">,</span><span class="s2">&quot;bds[</span><span class="si">%d</span><span class="s2">] is not Bond class&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">*=</span> <span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.combine&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to combine bonds with symm and non-symm&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> 
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsym</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.combine&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to combine bonds with different number of type of symm.&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">)</span><span class="o">+</span><span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">)</span>
+
+
+        <span class="c1">## checking change type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">new_type</span> <span class="ow">is</span> <span class="n">BD_IN</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">new_type</span> <span class="ow">is</span> <span class="n">BD_OUT</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Bond.combine(bds,new_type)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] new_type can only be BD_IN or BD_OUT&quot;</span><span class="p">)</span>       
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">change</span><span class="p">(</span><span class="n">new_type</span><span class="p">)</span></div>
+
+
+    <span class="c1">## Print layout</span>
+    <span class="k">def</span> <span class="nf">__print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dim = </span><span class="si">%d</span><span class="s2"> |&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_IN</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IN :&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">idim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">):</span>
+                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">%+d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">[</span><span class="n">idim</span><span class="p">,</span><span class="n">n</span><span class="p">]),</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">     &quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OUT :&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">idim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsym</span><span class="p">):</span>
+                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">%+d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">[</span><span class="n">idim</span><span class="p">,</span><span class="n">n</span><span class="p">]),</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">     &quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__print</span><span class="p">()</span>    
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__print</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1">## Arithmic:</span>
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rhs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">bondType</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">qnums</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Bond.__eq__&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] invalid comparison between Bond object and other type class.&quot;</span><span class="p">)</span></div>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tor10 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Kai-Hsin Wu.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+    </div>
+  </body>
+</html>
