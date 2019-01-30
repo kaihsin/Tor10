@@ -571,16 +571,24 @@ class UniTensor():
         return self
 
     def CombineBonds(self,labels_to_combine):
+        """
+        """
         _CombineBonds(self,labels_to_combine)
 
     def Contiguous(self):
+        """
+        """
         self.Storage = self.Storage.contiguous()
 
     def is_contiguous(self):
+        """
+        """
         return self.Storage.is_contiguous()        
 
 
     def Permute(self,maper,N_inbond,by_label=False):
+        """
+        """
         if self.is_diag:
             raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True cannot be permuted.\n"+
                                                 "[Suggest] Call UniTensor.Todense()")
@@ -616,6 +624,8 @@ class UniTensor():
 
 
     def Reshape(self,dimer,N_inbond,new_labels=None):
+        """
+        """
         if self.is_diag:
             raise Exception("UniTensor.Reshape","[ERROR] UniTensor.is_diag=True cannot be Reshape.\n"+
                                                 "[Suggest] Call UniTensor.Todense()")
@@ -641,6 +651,8 @@ class UniTensor():
 
     ## Symmetric Tensor function
     def GetTotalQnums(self):
+        """
+        """
         if self.bonds[0].qnums is None:
             raise TypeError("UniTensor.GetTotalQnums","[ERROR] GetTotal Qnums from a non-symm tensor")
         tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
@@ -663,6 +675,8 @@ class UniTensor():
 
 
     def PutBlock(self,block,*qnum):
+        """
+        """
         ## Note, block should be a numpy array.
         if self.bonds[0].qnums is None: 
             raise Exception("[Warning] PutBlock cannot be use for non-symmetry TN. Use SetElem instead.")
@@ -720,6 +734,8 @@ class UniTensor():
 
     
     def GetBlock(self,*qnum):
+        """
+        """
         if self.bonds[0].qnums is None:
 
             if self.is_diag:
@@ -797,6 +813,8 @@ class UniTensor():
 ##############################################################
 ## I/O
 def Save(a,filename):
+    """
+    """
     if not isinstance(filename,str):
         raise TypeError("Save","[ERROR] Invalid filename.")
     if not isinstance(a,UniTensor):
@@ -806,6 +824,8 @@ def Save(a,filename):
     f.close()
 
 def Load(filename):
+    """
+    """
     if not isinstance(filename,str):
         raise TypeError("UniTensor.Save","[ERROR] Invalid filename.")
     if not os.path.exists(filename):
@@ -821,6 +841,8 @@ def Load(filename):
 
 
 def Contract(a,b):
+    """
+    """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
 

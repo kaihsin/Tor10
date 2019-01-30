@@ -7,7 +7,8 @@ from .UniTensor import *
 
 class Network():
     def __init__(self,nwfile=None,delimiter=None):
-        
+        """
+        """        
         self.tensors = None # This is the nested list of new labels
         self.TOUT = None    # This is nested list for the labels of out label
         if nwfile is not None:
@@ -17,6 +18,8 @@ class Network():
         self.Order = None
         
     def Fromfile(self,ntwrk_file,delimiter=None):
+        """
+        """
         self.tensors = None
         self.TOUT = None
         self.instances = None
@@ -130,6 +133,8 @@ class Network():
         return not queue
 
     def Put(self,name,tensor):
+        """
+        """
         ## check if the Network is set.
         if self.tensors is None:
             raise ValueError("Network.put","[ERROR] Network hasn't been constructed. Construct a Netwrok before put the tensors.")
@@ -220,6 +225,8 @@ class Network():
         return values[0]
 
     def Launch(self):
+        """
+        """
         if self.tensors is None:
             raise Exception("Network","[ERROR] No in-put tensors for the Network")
         if self.TOUT is None:

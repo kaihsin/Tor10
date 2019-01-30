@@ -52,12 +52,22 @@ def ExpH(a):
 
 def Qr(a):
     """
-        @description : The function performs the qr to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
-                       Mathmatically, a = q \cdot r
-        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
-        @return      :  q , r  
-                        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-                        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
+    The function performs the qr to input UniTensor. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
+
+        a = q \cdot r
+    
+    Args:
+
+        a : UniTensor, it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.
+
+    Return:
+        
+        q , r  
+        
+        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+        
+        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
+
     """
     if isinstance(a,UniTensor):
 
@@ -285,12 +295,12 @@ def Chain_matmul(*args):
     tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))] 
 
     ## Checking performance:
-    """  
-    for i in range(len(tmp_args)):
-        if not tmp_args[i] is args[i].Storage:
-           print("Fatal performance")
-           exit(1) 
-    """
+    #"""  
+    #for i in range(len(tmp_args)):
+    #    if not tmp_args[i] is args[i].Storage:
+    #       print("Fatal performance")
+    #       exit(1) 
+    #"""
 
     if isUT:
         ## Qnum_ipoint

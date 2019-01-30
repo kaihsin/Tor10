@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tor10.UniTensor &mdash; Tor10 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tor10.Bond" href="Network.html" />
+    <link rel="prev" title="Tor10.Bond" href="Bond.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Tor10
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Bond.html">Tor10.Bond</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Network.html">Tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">Tor10.linalg</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tor10</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tor10.UniTensor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/UniTensor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tor10-unitensor">
+<h1>Tor10.UniTensor<a class="headerlink" href="#tor10-unitensor" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-Tor10.UniTensor"></span><dl class="function">
+<dt id="Tor10.UniTensor.Contract">
+<code class="descclassname">Tor10.UniTensor.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Contract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Tor10.UniTensor.Load">
+<code class="descclassname">Tor10.UniTensor.</code><code class="descname">Load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Tor10.UniTensor.Save">
+<code class="descclassname">Tor10.UniTensor.</code><code class="descname">Save</code><span class="sig-paren">(</span><em>a</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="Tor10.UniTensor.UniTensor">
+<em class="property">class </em><code class="descclassname">Tor10.UniTensor.</code><code class="descname">UniTensor</code><span class="sig-paren">(</span><em>bonds</em>, <em>labels=None</em>, <em>device=device(type='cpu')</em>, <em>dtype=torch.float64</em>, <em>torch_tensor=None</em>, <em>check=True</em>, <em>is_diag=False</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>bonds</em>, <em>labels=None</em>, <em>device=device(type='cpu')</em>, <em>dtype=torch.float64</em>, <em>torch_tensor=None</em>, <em>check=True</em>, <em>is_diag=False</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the constructor of the UniTensor.</p>
+<p>Public Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>bonds: </dt>
+<dd>The list of bonds. it should be an list or np.ndarray with len(list) is the # of bonds.</dd>
+<dt>labels: </dt>
+<dd>The label of each bond. 
+1. the number of elements should be the same as the total rank of the tensor, contain no duplicated elements.
+2. all the label should be integer. if the label is specify as floating point, it will be rounded as integer.</dd>
+<dt>device: </dt>
+<dd>This should be a [torch.device]. When provided, the tensor will be put on the device (“cpu”, “cuda”, “cuda:x” with x is the GPU-id. See torch.device for further information.)</dd>
+<dt>dtype <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>This should be a [ torch.dtype ]. 
+<a href="#id1"><span class="problematic" id="id2">*</span></a>The default type is float with either float32 or float64 which follows the same internal rule of pytorch. For further information, see pytorch documentation.</dd>
+<dt>is_diag: </dt>
+<dd>This states if the current UniTensor is a diagonal matrix or not. If True, the Storage will only store diagonal elements.
+Note that if is_diag=True, then the UniTensor is strictly required to be a square 2-rank tensor.</dd>
+<dt>name: </dt>
+<dd>This states the name of current UniTensor.</dd>
+</dl>
+</div></blockquote>
+<p>Private Args:</p>
+<blockquote>
+<div><p>color{red}{[Warning] Private Args should not be call directly}</p>
+<dl class="docutils">
+<dt>torch_tensor <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd><dl class="first last docutils">
+<dt>This is the internal arguments in current version. It should not be directly use, otherwise may cause inconsistence with Bonds and memory layout. </dt>
+<dd><dl class="first last docutils">
+<dt><a href="#id3"><span class="problematic" id="id4">*</span></a>For Developer:</dt>
+<dd>&gt; The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in bond in self.bonds.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>check <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>This is the internal arguments. It should not be directly use. If False, all the checking across bonds/labels/Storage.shape will be ignore.</dd>
+</dl>
+</div></blockquote>
+<p>Example for how to create a UniTensor:</p>
+<blockquote>
+<div><ul class="simple">
+<li>create a 2-rank UniTensor (matrix) with shape (3,4):</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>create a 3-rank UniTensor with shape (3,4,5) and set labels [-3,4,1] for each bond:</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">5</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>create a 2-rank UniTensor with shape (3,4) on GPU-0:</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)],</span><span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>create a diagonal 6x6 2-rank tensor(matrix):</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">6</span><span class="p">)],</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that when is_diag is set to True, the UniTensor should be a square matrix.</p>
+<ul class="simple">
+<li>crate a 3-rank UniTensor with single precision:</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">5</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare two UniTensor.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>where a &amp; b are UniTensors.</p>
+<p>Note that this will only compare the shape of Storage. Not the content of torch tensor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.CombineBonds">
+<code class="descname">CombineBonds</code><span class="sig-paren">(</span><em>labels_to_combine</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.CombineBonds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.CombineBonds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Contiguous">
+<code class="descname">Contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Contiguous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Det">
+<code class="descname">Det</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Det"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Det" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Det, see Tor10.linalg.Det()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.GetBlock">
+<code class="descname">GetBlock</code><span class="sig-paren">(</span><em>*qnum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.GetBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.GetBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.GetTotalQnums">
+<code class="descname">GetTotalQnums</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.GetTotalQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.GetTotalQnums" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Matmul">
+<code class="descname">Matmul</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Matmul" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Matmul, see Tor10.linalg.Matmul()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Norm">
+<code class="descname">Norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Norm, see Tor10.linalg.Norm()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Permute">
+<code class="descname">Permute</code><span class="sig-paren">(</span><em>maper</em>, <em>N_inbond</em>, <em>by_label=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Permute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Permute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Print_diagram">
+<code class="descname">Print_diagram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Print_diagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Print_diagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the beauty print of the tensor diagram. Including the information for the placeing device</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span><span class="n">The</span> <span class="n">left</span> <span class="n">hand</span> <span class="n">side</span> <span class="ow">is</span> <span class="n">always</span> <span class="n">the</span> <span class="n">In</span><span class="o">-</span><span class="n">bond</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">right</span> <span class="n">hand</span> <span class="n">side</span> <span class="ow">is</span> <span class="n">always</span> <span class="n">the</span> <span class="n">Out</span><span class="o">-</span><span class="n">bond</span><span class="o">.</span> 
+<span class="mf">2.</span><span class="n">The</span> <span class="n">number</span> <span class="n">attach</span> <span class="n">to</span> <span class="n">the</span> <span class="n">out</span><span class="o">-</span><span class="n">side</span> <span class="n">of</span> <span class="n">each</span> <span class="n">leg</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">Bond</span><span class="o">-</span><span class="n">dimension</span><span class="o">.</span> 
+<span class="mf">3.</span><span class="n">The</span> <span class="n">number</span> <span class="n">attach</span> <span class="n">to</span> <span class="n">the</span> <span class="ow">in</span><span class="o">-</span><span class="n">side</span> <span class="n">of</span> <span class="n">each</span> <span class="n">leg</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">label</span><span class="o">.</span> 
+<span class="mf">4.</span><span class="n">The</span> <span class="n">real</span> <span class="n">memory</span> <span class="n">layout</span> <span class="n">are</span> <span class="n">follow</span> <span class="n">clock</span><span class="o">-</span><span class="n">wise</span> <span class="kn">from</span> <span class="nn">upper</span><span class="o">-</span><span class="n">right</span> <span class="n">to</span> <span class="n">upper</span><span class="o">-</span><span class="n">left</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>::</dt>
+<dd><p class="first">[ex:] Rank = 4. 
+shape: (1,2,3,6) 
+D_IN=[1,2], D_OUT=[3,6], labels=[0,5,3,11]</p>
+<blockquote class="last">
+<div><blockquote>
+<div></div></blockquote>
+<dl class="docutils">
+<dt>0  –| 1     3 <a href="#id5"><span class="problematic" id="id6">|</span></a>– 3</dt>
+<dd><div class="first last line-block">
+<div class="line"><a href="#id7"><span class="problematic" id="id8">|</span></a></div>
+</div>
+</dd>
+<dt>5  –| 2     6 <a href="#id9"><span class="problematic" id="id10">|</span></a>– 11</dt>
+<dd></dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.PutBlock">
+<code class="descname">PutBlock</code><span class="sig-paren">(</span><em>block</em>, <em>*qnum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.PutBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.PutBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Rand">
+<code class="descname">Rand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Rand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Rand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Randomize the UniTensor.</p>
+<blockquote>
+<div>Note that in current version, only a UniTensor without symmetry quantum numbers can be randomized.</div></blockquote>
+<p>Return:</p>
+<blockquote>
+<div>self</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Reshape">
+<code class="descname">Reshape</code><span class="sig-paren">(</span><em>dimer</em>, <em>N_inbond</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Reshape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Reshape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.SetElem">
+<code class="descname">SetElem</code><span class="sig-paren">(</span><em>elem</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetElem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetElem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given 1D array of elements, set the elements stored in tensor as the same as the given ones. Note that elem can only be python-list or numpy</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>elem: </dt>
+<dd>The elements to be replace the content of the current UniTensor. It should be a 1D array.
+<strong>Note</strong> if the UniTensor is a symmetric tensor, one should use UniTensor.PutBlock to set the elements.</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.SetLabel">
+<code class="descname">SetLabel</code><span class="sig-paren">(</span><em>newLabel</em>, <em>idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a new label for the bond local at specify index.</p>
+<p>Args:</p>
+<blockquote>
+<div><p>newLabel: The new label, it should be an integer.</p>
+<p>idx     : The index of the bond. when specified, the label of the bond at this index will be changed.</p>
+</div></blockquote>
+<p>Example:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">labels</span>
+<span class="go">[5 6]</span>
+</pre></div>
+</div>
+<p>Set “-1” to replace the original label “6” at index 1
+&gt;&gt;&gt; a.SetLabel(-1,1)
+&gt;&gt;&gt; a.labels
+[5 -1]</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.SetLabels">
+<code class="descname">SetLabels</code><span class="sig-paren">(</span><em>newlabels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetLabels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetLabels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set new labels for all the bonds.</p>
+<p>Args:</p>
+<blockquote>
+<div>newLabels: The list of new label, it should be an python list or numpy array with size equal to the number of bonds of the UniTensor.</div></blockquote>
+<p>Example:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">labels</span>
+<span class="go">[5 6]</span>
+</pre></div>
+</div>
+<p>Set new_label=[-1,-2] to replace the original label [5,6].
+&gt;&gt;&gt; new_label=[-1,-2]
+&gt;&gt;&gt; a.SetLabels(new_label)
+&gt;&gt;&gt; a.labels
+[-1 -2]</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.Svd">
+<code class="descname">Svd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Svd, see Tor10.linalg.Svd()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.is_contiguous">
+<code class="descname">is_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.is_contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.is_contiguous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Tor10.UniTensor.UniTensor.shape">
+<code class="descname">shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the shape of UniTensor</p>
+<dl class="docutils">
+<dt>Return:</dt>
+<dd>torch.Size object, using np.array() or list() to convert to numpy array and python list.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Network.html" class="btn btn-neutral float-right" title="Tor10.Bond" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Bond.html" class="btn btn-neutral" title="Tor10.Bond" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Kai-Hsin Wu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

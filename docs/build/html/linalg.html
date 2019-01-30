@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tor10.linalg &mdash; Tor10 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Tor10.Bond" href="Network.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Tor10
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Bond.html">Tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">Tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Network.html">Tor10.Bond</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.linalg</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Tor10</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Tor10.linalg</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/linalg.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-Tor10.linalg">
+<span id="tor10-linalg"></span><h1>Tor10.linalg<a class="headerlink" href="#module-Tor10.linalg" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="Tor10.linalg.Chain_matmul">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Chain_matmul</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Chain_matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Chain_matmul" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;description: This function performs matrix multiplication on all the UniTensors. Note that all the UniTensors should be rank-2 with 1-inbond 1-outbond</p>
+<p>&#64;params     : The UniTensors that will be matrix-multiply</p>
+<p>&#64;return     : UniTensor,rank-2, 1 inbond 1 outbond. The label of inbond = the label of inbond of first UniTensor. The label of outbond = the label of outbond of the last UniTensor.
+&#64;exampe     :</p>
+<blockquote>
+<div>f = Chain_matmul(a,b,c,d,e)
+Mathmatically equivalent as : f = a cdot b cdot c cdot d cdot e</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.Det">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Det</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Det"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Det" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;description: This function returns the determinant a rank-2 tensor.
+&#64;params     :</p>
+<blockquote>
+<div>a : rank-2 UniTensor</div></blockquote>
+<p>&#64;return     : a 0-dimension tensor contains the determinant of input</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.ExpH">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">ExpH</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#ExpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.ExpH" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function performs the exp^{H} where H is the hermitian matrix. 
+The Intricate computation follows procedure: symeig() first and exp() the singular matrix.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, Must be a rank-2. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.</dd>
+</dl>
+</div></blockquote>
+<p>Return:</p>
+<blockquote>
+<div>UniTensor, 2-rank, same bonds and labels as the original H</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.Inverse">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Inverse</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Inverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;description: This function returns the inverse of a rank-2 tensor.
+&#64;params     :</p>
+<blockquote>
+<div>a : UniTensor</div></blockquote>
+<p>&#64;return     : Unitensor</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.Norm">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Norm</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;description: This function returns the frobinieus 2-norm of a tensor.
+&#64;params     :</p>
+<blockquote>
+<div>a : UniTensor</div></blockquote>
+<p>&#64;return     : a 0-dimension tensor contains the 2-norm of input</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.Qdr">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Qdr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Qdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Qdr" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>&#64;description <span class="classifier-delimiter">:</span> <span class="classifier">The function performs the qr to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2. </span></dt>
+<dd>Mathmatically, a = q cdot r</dd>
+</dl>
+<p>&#64;params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
+&#64;return      :  q , r</p>
+<blockquote>
+<div>q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.Qr">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Qr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Qr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Qr" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function performs the qr to input UniTensor. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2.</p>
+<blockquote>
+<div>a = q cdot r</div></blockquote>
+<p>Args:</p>
+<blockquote>
+<div>a : UniTensor, it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.</div></blockquote>
+<p>Return:</p>
+<blockquote>
+<div><p>q , r</p>
+<p>q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</p>
+<p>r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.Svd">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Svd</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Svd" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>&#64;description <span class="classifier-delimiter">:</span> <span class="classifier">The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2. </span></dt>
+<dd>Mathmatically, a = u cdot s cdot vt</dd>
+</dl>
+<p>&#64;params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
+&#64;return      :  u , s , vt</p>
+<blockquote>
+<div>u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
+vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="Tor10.linalg.Svd_truncate">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Svd_truncate</code><span class="sig-paren">(</span><em>a</em>, <em>truncate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Svd_truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Svd_truncate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>&#64;description <span class="classifier-delimiter">:</span> <span class="classifier">The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2. </span></dt>
+<dd>Mathmatically, a = u cdot s cdot vt</dd>
+</dl>
+<p>&#64;params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
+&#64;return      :  u , s , vt</p>
+<blockquote>
+<div>u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
+vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</div></blockquote>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="Network.html" class="btn btn-neutral" title="Tor10.Bond" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Kai-Hsin Wu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

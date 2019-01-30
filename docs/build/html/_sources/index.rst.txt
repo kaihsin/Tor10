@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 .. image:: Tor10_icon.png 
-    :scale: 30%
+    :scale: 40%
 
 Tor10 Documentation
 =================================
@@ -15,8 +15,9 @@ Tor10 Documentation
 
 
    Bond.rst
-
-
+   UniTensor.rst
+   Network.rst
+   linalg.rst
 
 Indices and tables
 ==================
