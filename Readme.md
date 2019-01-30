@@ -5,6 +5,10 @@
     numpy  >=1.15
     sphinx >=1.8.2
 
+## Documentation:
+
+[https://kaihsinwu.gitlab.io/tor10](https://kaihsinwu.gitlab.io/tor10)
+
 ## Code naming principle:
     1) the functions start with "_" are the private function that should not be call directly by user.
 
@@ -49,9 +53,6 @@
     See iTEBD.py for an simple example of using iTEBD algo. to calculate the 1D-transverse field Ising model 
     See iTEBD_gpu.py for an simple example of the same algo accelerated with GPU. 
 
-## Documentation:
-
-[https://kaihsinwu.gitlab.io/tor10](https://kaihsinwu.gitlab.io/tor10)
 
 ## Developers:
 
