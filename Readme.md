@@ -51,7 +51,7 @@
 
 ## Documentation:
 
-    https://kaihsinwu.gitlab.io/Tor10/
+    <https://kaihsinwu.gitlab.io/Tor10/>
 
 ## Developers:
 
