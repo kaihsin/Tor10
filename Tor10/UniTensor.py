@@ -3,7 +3,7 @@ import copy,os
 import numpy as np
 import pickle as pkl
 from .Bond import *
-
+from .linalg import *
 
 ## Developer Note:
 # [KHW]
@@ -22,6 +22,7 @@ class UniTensor():
         This is the constructor of the UniTensor.
 
         Public Args:
+
             bonds: 
                 The list of bonds. it should be an list or np.ndarray with len(list) is the # of bonds.  
 
@@ -45,6 +46,9 @@ class UniTensor():
                 This states the name of current UniTensor.      
 
         Private Args:
+
+            \color{red}{[Warning] Private Args should not be call directly}
+
             torch_tensor : 
                 This is the internal arguments in current version. It should not be directly use, otherwise may cause inconsistence with Bonds and memory layout. 
                     *For Developer:
@@ -129,11 +133,15 @@ class UniTensor():
     def SetLabel(self, newLabel, idx):
         """
         Set a new label for the bond local at specify index.
+
         Args:
+
             newLabel: The new label, it should be an integer.
+
             idx     : The index of the bond. when specified, the label of the bond at this index will be changed.
 
         Example:
+
             >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[5,6])
             >>> a.labels
             [5 6]
@@ -158,10 +166,13 @@ class UniTensor():
     def SetLabels(self,newlabels):
         """
         Set new labels for all the bonds.
+
         Args:
+
             newLabels: The list of new label, it should be an python list or numpy array with size equal to the number of bonds of the UniTensor.
                        
         Example:
+
             >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[5,6])
             >>> a.labels
             [5 6]
@@ -187,7 +198,9 @@ class UniTensor():
     def SetElem(self, elem):
         """
         Given 1D array of elements, set the elements stored in tensor as the same as the given ones. Note that elem can only be python-list or numpy 
+        
         Args:
+            
             elem: 
                 The elements to be replace the content of the current UniTensor. It should be a 1D array.
                 **Note** if the UniTensor is a symmetric tensor, one should use UniTensor.PutBlock to set the elements.
@@ -223,21 +236,23 @@ class UniTensor():
     ## print layout:
     def Print_diagram(self):
         """
-            @Description: This is the beauty print of the tensor diagram. Including the information for the placeing device 
-                          1.The left hand side is always the In-bond, and the right hand side is always the Out-bond. 
-                          2.The number attach to the out-side of each leg is the Bond-dimension. 
-                          3.The number attach to the in-side of each leg is the label. 
-                          4.The real memory layout are follow clock-wise from upper-right to upper-left.
+        This is the beauty print of the tensor diagram. Including the information for the placeing device 
+        ::
+            1.The left hand side is always the In-bond, and the right hand side is always the Out-bond. 
+            2.The number attach to the out-side of each leg is the Bond-dimension. 
+            3.The number attach to the in-side of each leg is the label. 
+            4.The real memory layout are follow clock-wise from upper-right to upper-left.
                           
-                          [ex:] Rank = 4. 
-                                torch.Tensor dimension: (1,2,3,6) 
-                                D_IN=[1,2], D_OUT=[3,6], label=[0,5,3,11]
+        ::
+            [ex:] Rank = 4. 
+            shape: (1,2,3,6) 
+            D_IN=[1,2], D_OUT=[3,6], labels=[0,5,3,11]
 
-                                     -----------
-                                0  --| 1     3 |-- 3
-                                     |         |
-                                5  --| 2     6 |-- 11
-                                     -----------
+                        -----------
+                   0  --| 1     3 |-- 3
+                        |         |
+                   5  --| 2     6 |-- 11
+                        -----------
 
         """
         print("tensor Name : %s"%(self.name))
@@ -297,7 +312,13 @@ class UniTensor():
 
     def __eq__(self,rhs):
         """
-            Note that this is only compare the shape of Storage. Not the content of torch tensor.
+            Compare two UniTensor.
+            ::
+                a == b
+
+            where a & b are UniTensors.
+
+            Note that this will only compare the shape of Storage. Not the content of torch tensor.
         """
         if isinstance(rhs,self.__class__):
             iss = (self.Storage.shape == rhs.Storage.shape) and (len(self.bonds) == len(rhs.bonds))
@@ -312,6 +333,12 @@ class UniTensor():
 
 
     def shape(self):
+        """ 
+            Return the shape of UniTensor
+
+            Return:
+                torch.Size object, using np.array() or list() to convert to numpy array and python list. 
+        """
         if self.is_diag:
             return torch.Size([self.bonds.dim[0],self.bonds.dim[0]])
         else:
@@ -447,21 +474,33 @@ class UniTensor():
 
     ## This is the same function that behaves as the memberfunction.
     def Svd(self): 
-
+        """ 
+            This is the member function of Svd, see Tor10.linalg.Svd() 
+        """
         return Svd(self)
 
-    def Svd_truncate(self):
-        
-        return Svd_truncate(self)
+    #def Svd_truncate(self):
+    #    """ 
+    #        This is the member function of Svd_truncate, see Tor10.Svd_truncate() 
+    #    """
+    #    return Svd_truncate(self)
 
     def Norm(self):
+        """ 
+            This is the member function of Norm, see Tor10.linalg.Norm() 
+        """
         return Norm(self)
 
     def Det(self):
+        """ 
+            This is the member function of Det, see Tor10.linalg.Det() 
+        """
         return Det(self)
 
     def Matmul(self,b):
-        
+        """ 
+            This is the member function of Matmul, see Tor10.linalg.Matmul() 
+        """
         return Matmul(self,b)
 
     
@@ -515,6 +554,15 @@ class UniTensor():
 
     ## Miscellaneous
     def Rand(self):
+        """
+        Randomize the UniTensor.
+
+            Note that in current version, only a UniTensor without symmetry quantum numbers can be randomized.
+
+        Return: 
+            
+            self
+        """
         if self.bonds[0].qnums is None:
             _Randomize(self)
         else:
