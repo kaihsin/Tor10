@@ -6,9 +6,17 @@ import numpy as np
 
 def ExpH(a):
     """
-        @description : This function performs the exp^{H} where H is the hermitian matrix. Intricate compute svd first and exp the singular matrix.
-        @params      : a : UniTensor, rank-2
-        @return      : UniTensor, 2-rank, same bonds and labels at the original H
+    This function performs the exp^{H} where H is the hermitian matrix. 
+    The Intricate computation follows procedure: symeig() first and exp() the singular matrix.
+
+    Args:
+        
+        a : 
+            UniTensor, Must be a rank-2. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.  
+
+    Return:
+
+        UniTensor, 2-rank, same bonds and labels as the original H
     """
 
     if isinstance(a,UniTensor):
