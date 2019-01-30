@@ -49,7 +49,9 @@
     See iTEBD.py for an simple example of using iTEBD algo. to calculate the 1D-transverse field Ising model 
     See iTEBD_gpu.py for an simple example of the same algo accelerated with GPU. 
 
+## Documentation:
 
+    https://kaihsinwu.gitlab.io/Tor10/
 
 ## Developers:
 
