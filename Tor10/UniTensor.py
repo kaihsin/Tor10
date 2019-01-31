@@ -243,11 +243,16 @@ class UniTensor():
         """
         Set the UniTensor to dense matrix. 
             Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True
+        
+        Return:
+            self
 
         """
         if self.is_diag==True:
             self.Storage = torch.diag(self.Storage) 
             self.is_diag=False
+
+        return self
 
     def to(self,device):
         """
@@ -533,19 +538,19 @@ class UniTensor():
 
     def Norm(self):
         """ 
-            This is the member function of Norm, see Tor10.linalg.Norm() 
+            This is the member function of Norm, see Tor10.linalg.Norm
         """
         return Norm(self)
 
     def Det(self):
         """ 
-            This is the member function of Det, see Tor10.linalg.Det() 
+            This is the member function of Det, see Tor10.linalg.Det
         """
         return Det(self)
 
     def Matmul(self,b):
         """ 
-            This is the member function of Matmul, see Tor10.linalg.Matmul() 
+            This is the member function of Matmul, see Tor10.linalg.Matmul
         """
         return Matmul(self,b)
 
@@ -606,7 +611,6 @@ class UniTensor():
             Note that in current version, only a UniTensor without symmetry quantum numbers can be randomized.
 
         Return: 
-            
             self
         """
         if self.bonds[0].qnums is None:
@@ -618,6 +622,67 @@ class UniTensor():
 
     def CombineBonds(self,labels_to_combine):
         """
+        This function combines the bonds in input UniTensor [a] by the specified labels [label].
+    
+        Args:
+            
+            labels_to_combine: 
+                labels that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined
+
+        Example:
+
+            1. Combine Bond for an non-symmetric tensor.
+
+            >>> bds_x = [Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,5),Tor10.Bond(Tor10.BD_OUT,3)]
+            >>> x = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
+            >>> x.Print_diagram()
+            tensor Name : 
+            tensor Rank : 3
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+               4 __ | 5         5 |__ 3  
+                    |             |     
+                    |           3 |__ 5  
+                    |             |     
+                    ---------------     
+            lbl:4 Dim = 5 |
+            IN :
+            _
+            lbl:3 Dim = 5 |
+            OUT :
+            _
+            lbl:5 Dim = 3 |
+            OUT :
+
+            >>> x.CombineBonds([4,3])
+            >>> x.Print_diagram()
+            tensor Name : 
+            tensor Rank : 2
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                    |           3 |__ 5  
+                    |             |     
+                    |          25 |__ 3  
+                    |             |     
+                    ---------------     
+            lbl:5 Dim = 3 |
+            OUT :
+            _
+            lbl:3 Dim = 25 |
+            OUT :
+            _
+
+            
+            2. Combine bonds for a Symetric tensor.
+
+                
+
+
+
         """
         _CombineBonds(self,labels_to_combine)
 
@@ -874,6 +939,11 @@ def Save(a,filename):
         filename:
             The saved file path
 
+    Example:
+    ::
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
+        Tor10.Save(a,"a.uniT")
+    
     """
     if not isinstance(filename,str):
         raise TypeError("Save","[ERROR] Invalid filename.")
@@ -893,6 +963,10 @@ def Load(filename):
 
     Return:
         UniTensor
+
+    Example:
+    ::
+        a = Tor10.Load("a.uniT")
 
     """
     if not isinstance(filename,str):
@@ -1006,12 +1080,16 @@ def Contract(a,b):
 
 def _CombineBonds(a,label):    
     """
-        @description : <Private function> This function combines the bonds in input UniTensor [a] by the specified labels [label]. The bondType of the combined bonds will always follows the same bondType of bond in [a] with label of the first element in [label] 
-        @param       : 
-                        a    : UniTensor
-                        label: the labels that is being combined.
+    This function combines the bonds in input UniTensor [a] by the specified labels [label]. The bondType of the combined bonds will always follows the same bondType of bond in [a] with label of the first element in [label] 
+    
+    Args:
+        
+        a: 
+            UniTensor
+        
+        label: 
 
-        @return      : N/A
+            labels that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined
 
     """
     if isinstance(a,UniTensor):
