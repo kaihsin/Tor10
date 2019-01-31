@@ -247,6 +247,18 @@ class UniTensor():
         Return:
             self
 
+        Example:
+
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)],is_diag=True)
+            >>> print(a.is_diag)
+            True
+        
+            
+            >>> a.Todense()
+            >>> print(a.is_diag)
+            False
+            
+
         """
         if self.is_diag==True:
             self.Storage = torch.diag(self.Storage) 
@@ -612,6 +624,7 @@ class UniTensor():
 
         Return: 
             self
+
         """
         if self.bonds[0].qnums is None:
             _Randomize(self)
@@ -688,8 +701,32 @@ class UniTensor():
 
     def Contiguous(self):
         """
+        Make the memory to be contiguous. This is the same as pytorch's contiguous(). 
+        Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called "non-contiguous" tensor.
+        When call the Contiguous(), the memory will be moved to match the shape of UniTensor. 
+        *Note* Normally, it is not nessary to call contiguous. Most of the linalg function implicity will make the UniTensor contiguous. If one calls a function that requires a contiguous tensor, the error will be issue. Then you know you have to put UniTensor.Contiguous() there.
+
+        Return:
+            self
+
+        Example:
+
+            >>> x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+            >>> print(x.is_contiguous())
+            True
+
+            >>> x.Permute([0,2,1])  
+            >>> print(x.is_contiguous())
+            False
+
+            >>> x.Contiguous()
+            >>> print(x.is_contiguous())
+            True
+            
         """
         self.Storage = self.Storage.contiguous()
+        return self
+
 
     def is_contiguous(self):
         """
@@ -704,6 +741,89 @@ class UniTensor():
 
     def Permute(self,maper,N_inbond,by_label=False):
         """
+        Permute the bonds of the UniTensor.
+
+        Args:
+            maper:
+                a python list with integer type elements that the UniTensor permute accroding to. 
+            
+            N_inbond:
+                The number of in-bond after permute.
+
+            by_label:
+                bool, when True, the maper using the labels. When False, the maper using the index.
+
+        Example:
+
+            >>> bds_x = [Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
+            >>> x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+            >>> y = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+            >>> x.Print_diagram()
+            tensor Name : 
+            tensor Rank : 3
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                4 __| 6         5 |__ 3  
+                    |             |     
+                    |           3 |__ 5  
+                    |             |     
+                    ---------------     
+            lbl:4 Dim = 6 |
+            IN :
+            _
+            lbl:3 Dim = 5 |
+            OUT :
+            _
+            lbl:5 Dim = 3 |
+            OUT :
+
+            >>> x.Permute([0,2,1],2)
+            >>> x.Print_diagram()
+            tensor Name : 
+            tensor Rank : 3
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                4 __| 6         5 |__ 3  
+                    |             |     
+                5 __| 3           |      
+                    |             |     
+                    ---------------     
+            lbl:4 Dim = 6 |
+            IN :
+            _
+            lbl:5 Dim = 3 |
+            IN :
+            _
+            lbl:3 Dim = 5 |
+            OUT :
+
+            >>> y.Permute([3,4,5],2,by_label=True)
+            >>> y.Print_diagram()
+            tensor Name : 
+            tensor Rank : 3
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                3 __| 5         3 |__ 5  
+                    |             |     
+                4 __| 6           |      
+                    |             |     
+                    ---------------     
+            lbl:3 Dim = 5 |
+            IN :
+            _
+            lbl:4 Dim = 6 |
+            IN :
+            _
+            lbl:5 Dim = 3 |
+            OUT :
+
+
         """
         if self.is_diag:
             raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True cannot be permuted.\n"+
@@ -741,6 +861,70 @@ class UniTensor():
 
     def Reshape(self,dimer,N_inbond,new_labels=None):
         """
+        Reshape the UniTensor into the shape specified as [dimer], with the first [N_inbond] Bonds as in-bond and other bonds as out-bond. 
+        
+        Args:
+
+            dimer:
+                The new shape of the UniTensor. This should be a python list. 
+
+            N_inbond:
+                The number of in-bond.
+            
+            new_labels:
+                The new labels that will be set for new bonds after reshape. 
+
+        Example:
+
+            >>> bds_x = [Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
+            >>> x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+            >>> x.Print_diagram()
+            tensor Name : 
+            tensor Rank : 3
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                4 __| 6         5 |__ 3  
+                    |             |     
+                    |           3 |__ 5  
+                    |             |     
+                    ---------------     
+            lbl:4 Dim = 6 |
+            IN :
+            _
+            lbl:3 Dim = 5 |
+            OUT :
+            _
+            lbl:5 Dim = 3 |
+            OUT :
+            
+
+            >>> x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)
+            >>> x.Print_diagram()
+            tensor Name : 
+            tensor Rank : 4
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                1 __| 2         5 |__ 3  
+                    |             |     
+                2 __| 3         3 |__ -1 
+                    |             |     
+                    ---------------     
+            lbl:1 Dim = 2 |
+            IN :
+            _
+            lbl:2 Dim = 3 |
+            IN :
+            _
+            lbl:3 Dim = 5 |
+            OUT :
+            _
+            lbl:-1 Dim = 3 |
+            OUT :
+
         """
         if self.is_diag:
             raise Exception("UniTensor.Reshape","[ERROR] UniTensor.is_diag=True cannot be Reshape.\n"+

@@ -359,7 +359,31 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.Contiguous">
 <code class="descname">Contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Contiguous" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Make the memory to be contiguous. This is the same as pytorch’s contiguous(). 
+Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called “non-contiguous” tensor.
+When call the Contiguous(), the memory will be moved to match the shape of UniTensor. 
+<em>Note</em> Normally, it is not nessary to call contiguous. Most of the linalg function implicity will make the UniTensor contiguous. If one calls a function that requires a contiguous tensor, the error will be issue. Then you know you have to put UniTensor.Contiguous() there.</p>
+<dl class="docutils">
+<dt>Return:</dt>
+<dd>self</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">is_contiguous</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">is_contiguous</span><span class="p">())</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Contiguous</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">is_contiguous</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.Det">
@@ -392,7 +416,92 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.Permute">
 <code class="descname">Permute</code><span class="sig-paren">(</span><em>maper</em>, <em>N_inbond</em>, <em>by_label=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Permute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Permute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Permute the bonds of the UniTensor.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>maper:</dt>
+<dd>a python list with integer type elements that the UniTensor permute accroding to.</dd>
+<dt>N_inbond:</dt>
+<dd>The number of in-bond after permute.</dd>
+<dt>by_label:</dt>
+<dd>bool, when True, the maper using the labels. When False, the maper using the index.</dd>
+</dl>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 6         5 |__ 3  </span>
+<span class="go">        |             |     </span>
+<span class="go">        |           3 |__ 5  </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:4 Dim = 6 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">OUT :</span>
+<span class="go">_</span>
+<span class="go">lbl:5 Dim = 3 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 6         5 |__ 3  </span>
+<span class="go">        |             |     </span>
+<span class="go">    5 __| 3           |      </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:4 Dim = 6 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:5 Dim = 3 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="mi">2</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    3 __| 5         3 |__ 5  </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 6           |      </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:4 Dim = 6 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:5 Dim = 3 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.Print_diagram">
@@ -437,7 +546,70 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.Reshape">
 <code class="descname">Reshape</code><span class="sig-paren">(</span><em>dimer</em>, <em>N_inbond</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Reshape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Reshape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reshape the UniTensor into the shape specified as [dimer], with the first [N_inbond] Bonds as in-bond and other bonds as out-bond.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>dimer:</dt>
+<dd>The new shape of the UniTensor. This should be a python list.</dd>
+<dt>N_inbond:</dt>
+<dd>The number of in-bond.</dd>
+<dt>new_labels:</dt>
+<dd>The new labels that will be set for new bonds after reshape.</dd>
+</dl>
+</div></blockquote>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 6         5 |__ 3  </span>
+<span class="go">        |             |     </span>
+<span class="go">        |           3 |__ 5  </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:4 Dim = 6 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">OUT :</span>
+<span class="go">_</span>
+<span class="go">lbl:5 Dim = 3 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Reshape</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">new_labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 4</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    1 __| 2         5 |__ 3  </span>
+<span class="go">        |             |     </span>
+<span class="go">    2 __| 3         3 |__ -1 </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:1 Dim = 2 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:2 Dim = 3 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">OUT :</span>
+<span class="go">_</span>
+<span class="go">lbl:-1 Dim = 3 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.SetElem">
@@ -532,6 +704,17 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <dt>Return:</dt>
 <dd>self</dd>
 </dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">)],</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">Todense</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">

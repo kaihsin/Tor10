@@ -28,7 +28,7 @@ print(bd_sym_x)
 #sym_T.Print_diagram()
 #print(sym_T)
 #print(sym_T.GetBlock(2))
-exit(1)
+#exit(1)
 
 
 device = tor.device("cuda:0")
@@ -54,13 +54,27 @@ y[1,2] = 1
 x[0,1] = 4
 y *= 2
 
-
+print("------------")
 ## example for reshape
 ## Note that reshape on a non-contiguous tensor will have warning. This is the same as pytorch.
+bds_x = [Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
+x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5],dtype=tor.float64,device=tor.device("cpu"))
 x.Print_diagram()
-x.Reshape([5,3,5],new_labels=[1,2,3],N_inbond=2)
+x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)
 x.Print_diagram()
 
+
+print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+bds_x = [Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
+x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+y = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+x.Print_diagram()
+x.Permute([0,2,1],2)
+x.Print_diagram()
+
+y.Permute([3,4,5],2,by_label=True)
+y.Print_diagram()
+exit(1)
 
 
 ## example of permute:
