@@ -146,7 +146,9 @@ class UniTensor():
             >>> a.labels
             [5 6]
 
+
             Set "-1" to replace the original label "6" at index 1
+
             >>> a.SetLabel(-1,1)
             >>> a.labels
             [5 -1]
@@ -178,6 +180,7 @@ class UniTensor():
             [5 6]
 
             Set new_label=[-1,-2] to replace the original label [5,6].
+
             >>> new_label=[-1,-2]
             >>> a.SetLabels(new_label)
             >>> a.labels
@@ -213,11 +216,12 @@ class UniTensor():
             Sz.SetElem([1, 0,
                         0,-1 ])
 
-            >>> print(Sz)
-            Tensor name: 
-            is_diag    : False
-            tensor([[ 1.,  0.],
-                    [ 0., -1.]], dtype=torch.float64)
+        
+        >>> print(Sz)
+        Tensor name: 
+        is_diag    : False
+        tensor([[ 1.,  0.],
+                [ 0., -1.]], dtype=torch.float64)
         
         """
         if not isinstance(elem,list) and not isinstance(elem,np.ndarray):
@@ -237,7 +241,8 @@ class UniTensor():
         
     def Todense(self):
         """
-        Set the UniTensor to dense matrix. Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True
+        Set the UniTensor to dense matrix. 
+            Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True
 
         """
         if self.is_diag==True:
@@ -258,9 +263,11 @@ class UniTensor():
         Example:
 
             Construct a tensor (default is on cpu)
+
             >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
             
             Set to GPU.
+
             >>> a.to(torch.device("cuda:0"))
 
 
@@ -621,6 +628,11 @@ class UniTensor():
 
     def is_contiguous(self):
         """
+        Return the status of memory contiguous.
+
+        Return:
+            bool, if True, then the Storage of UniTensor is contiguous. if False, then the Storage of UiTensor is non-contiguous. 
+ 
         """
         return self.Storage.is_contiguous()        
 
@@ -853,6 +865,15 @@ class UniTensor():
 ## I/O
 def Save(a,filename):
     """
+    Save a UniTensor to the file
+
+    Args:
+        a: 
+            The UniTensor that to be saved.
+        
+        filename:
+            The saved file path
+
     """
     if not isinstance(filename,str):
         raise TypeError("Save","[ERROR] Invalid filename.")
@@ -864,6 +885,15 @@ def Save(a,filename):
 
 def Load(filename):
     """
+    Load a UniTensor from the file.
+
+    Args:
+        filename: 
+            The path of the file to be loaded
+
+    Return:
+        UniTensor
+
     """
     if not isinstance(filename,str):
         raise TypeError("UniTensor.Save","[ERROR] Invalid filename.")

@@ -158,12 +158,34 @@
 <dl class="function">
 <dt id="Tor10.UniTensor.Load">
 <code class="descclassname">Tor10.UniTensor.</code><code class="descname">Load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Load" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Load a UniTensor from the file.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>filename: </dt>
+<dd>The path of the file to be loaded</dd>
+</dl>
+</dd>
+<dt>Return:</dt>
+<dd>UniTensor</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="Tor10.UniTensor.Save">
 <code class="descclassname">Tor10.UniTensor.</code><code class="descname">Save</code><span class="sig-paren">(</span><em>a</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save a UniTensor to the file</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>a: </dt>
+<dd>The UniTensor that to be saved.</dd>
+<dt>filename:</dt>
+<dd>The saved file path</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="class">
 <dt id="Tor10.UniTensor.UniTensor">
@@ -363,12 +385,13 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
                   <span class="n">device</span><span class="o">=</span><span class="n">tor</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">))</span>
 <span class="n">Sz</span><span class="o">.</span><span class="n">SetElem</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
             <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span> <span class="p">])</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">Sz</span><span class="p">)</span>
-<span class="n">Tensor</span> <span class="n">name</span><span class="p">:</span> 
-<span class="n">is_diag</span>    <span class="p">:</span> <span class="kc">False</span>
-<span class="n">tensor</span><span class="p">([[</span> <span class="mf">1.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
-        <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Sz</span><span class="p">)</span>
+<span class="go">Tensor name: </span>
+<span class="go">is_diag    : False</span>
+<span class="go">tensor([[ 1.,  0.],</span>
+<span class="go">        [ 0., -1.]], dtype=torch.float64)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -389,10 +412,12 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <span class="go">[5 6]</span>
 </pre></div>
 </div>
-<p>Set “-1” to replace the original label “6” at index 1
-&gt;&gt;&gt; a.SetLabel(-1,1)
-&gt;&gt;&gt; a.labels
-[5 -1]</p>
+<p>Set “-1” to replace the original label “6” at index 1</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">labels</span>
+<span class="go">[5 -1]</span>
+</pre></div>
+</div>
 </div></blockquote>
 </dd></dl>
 
@@ -410,11 +435,13 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <span class="go">[5 6]</span>
 </pre></div>
 </div>
-<p>Set new_label=[-1,-2] to replace the original label [5,6].
-&gt;&gt;&gt; new_label=[-1,-2]
-&gt;&gt;&gt; a.SetLabels(new_label)
-&gt;&gt;&gt; a.labels
-[-1 -2]</p>
+<p>Set new_label=[-1,-2] to replace the original label [5,6].</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_label</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">SetLabels</span><span class="p">(</span><span class="n">new_label</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">labels</span>
+<span class="go">[-1 -2]</span>
+</pre></div>
+</div>
 </div></blockquote>
 </dd></dl>
 
@@ -427,13 +454,21 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.Todense">
 <code class="descname">Todense</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Todense"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Todense" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the UniTensor to dense matrix. Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True</p>
+<dd><dl class="docutils">
+<dt>Set the UniTensor to dense matrix. </dt>
+<dd>Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.is_contiguous">
 <code class="descname">is_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.is_contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.is_contiguous" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the status of memory contiguous.</p>
+<dl class="docutils">
+<dt>Return:</dt>
+<dd>bool, if True, then the Storage of UniTensor is contiguous. if False, then the Storage of UiTensor is non-contiguous.</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.shape">
@@ -460,10 +495,14 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 </div></blockquote>
 <p>Example:</p>
 <blockquote>
-<div><p>Construct a tensor (default is on cpu)
-&gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])</p>
-<p>Set to GPU.
-&gt;&gt;&gt; a.to(torch.device(“cuda:0”))</p>
+<div><p>Construct a tensor (default is on cpu)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>Set to GPU.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
 </div></blockquote>
 </dd></dl>
 

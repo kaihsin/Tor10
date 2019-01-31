@@ -293,7 +293,9 @@
 <span class="sd">            &gt;&gt;&gt; a.labels</span>
 <span class="sd">            [5 6]</span>
 
+
 <span class="sd">            Set &quot;-1&quot; to replace the original label &quot;6&quot; at index 1</span>
+
 <span class="sd">            &gt;&gt;&gt; a.SetLabel(-1,1)</span>
 <span class="sd">            &gt;&gt;&gt; a.labels</span>
 <span class="sd">            [5 -1]</span>
@@ -325,6 +327,7 @@
 <span class="sd">            [5 6]</span>
 
 <span class="sd">            Set new_label=[-1,-2] to replace the original label [5,6].</span>
+
 <span class="sd">            &gt;&gt;&gt; new_label=[-1,-2]</span>
 <span class="sd">            &gt;&gt;&gt; a.SetLabels(new_label)</span>
 <span class="sd">            &gt;&gt;&gt; a.labels</span>
@@ -360,11 +363,12 @@
 <span class="sd">            Sz.SetElem([1, 0,</span>
 <span class="sd">                        0,-1 ])</span>
 
-<span class="sd">            &gt;&gt;&gt; print(Sz)</span>
-<span class="sd">            Tensor name: </span>
-<span class="sd">            is_diag    : False</span>
-<span class="sd">            tensor([[ 1.,  0.],</span>
-<span class="sd">                    [ 0., -1.]], dtype=torch.float64)</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; print(Sz)</span>
+<span class="sd">        Tensor name: </span>
+<span class="sd">        is_diag    : False</span>
+<span class="sd">        tensor([[ 1.,  0.],</span>
+<span class="sd">                [ 0., -1.]], dtype=torch.float64)</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -384,7 +388,8 @@
         
 <div class="viewcode-block" id="UniTensor.Todense"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Todense">[docs]</a>    <span class="k">def</span> <span class="nf">Todense</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the UniTensor to dense matrix. Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True</span>
+<span class="sd">        Set the UniTensor to dense matrix. </span>
+<span class="sd">            Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
@@ -405,9 +410,11 @@
 <span class="sd">        Example:</span>
 
 <span class="sd">            Construct a tensor (default is on cpu)</span>
+
 <span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])</span>
 <span class="sd">            </span>
 <span class="sd">            Set to GPU.</span>
+
 <span class="sd">            &gt;&gt;&gt; a.to(torch.device(&quot;cuda:0&quot;))</span>
 
 
@@ -768,6 +775,11 @@
 
 <div class="viewcode-block" id="UniTensor.is_contiguous"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.is_contiguous">[docs]</a>    <span class="k">def</span> <span class="nf">is_contiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the status of memory contiguous.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            bool, if True, then the Storage of UniTensor is contiguous. if False, then the Storage of UiTensor is non-contiguous. </span>
+<span class="sd"> </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">is_contiguous</span><span class="p">()</span>        </div>
 
@@ -1000,6 +1012,15 @@
 <span class="c1">## I/O</span>
 <div class="viewcode-block" id="Save"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Save">[docs]</a><span class="k">def</span> <span class="nf">Save</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save a UniTensor to the file</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a: </span>
+<span class="sd">            The UniTensor that to be saved.</span>
+<span class="sd">        </span>
+<span class="sd">        filename:</span>
+<span class="sd">            The saved file path</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Invalid filename.&quot;</span><span class="p">)</span>
@@ -1011,6 +1032,15 @@
 
 <div class="viewcode-block" id="Load"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Load">[docs]</a><span class="k">def</span> <span class="nf">Load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a UniTensor from the file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename: </span>
+<span class="sd">            The path of the file to be loaded</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.Save&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Invalid filename.&quot;</span><span class="p">)</span>
