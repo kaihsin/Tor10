@@ -32,6 +32,8 @@ Sx.SetElem([0, 1,\
             1, 0 ])
 I.SetElem([1, 0,\
            0, 1 ])
+#print(Sz)
+#exit(1)
 Sz = Sz*J
 Sz2 = copy.deepcopy(Sz)
 

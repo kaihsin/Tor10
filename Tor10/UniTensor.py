@@ -205,7 +205,19 @@ class UniTensor():
                 The elements to be replace the content of the current UniTensor. It should be a 1D array.
                 **Note** if the UniTensor is a symmetric tensor, one should use UniTensor.PutBlock to set the elements.
  
-            
+        Example:
+        ::
+            Sz = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,2)],
+                              dtype=tor.float64,
+                              device=tor.device("cpu"))
+            Sz.SetElem([1, 0,
+                        0,-1 ])
+
+            >>> print(Sz)
+            Tensor name: 
+            is_diag    : False
+            tensor([[ 1.,  0.],
+                    [ 0., -1.]], dtype=torch.float64)
         
         """
         if not isinstance(elem,list) and not isinstance(elem,np.ndarray):
@@ -224,11 +236,35 @@ class UniTensor():
         self.Storage = torch.from_numpy(np.array(elem)).type(my_type).reshape(my_shape).to(my_device)
         
     def Todense(self):
+        """
+        Set the UniTensor to dense matrix. Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True
+
+        """
         if self.is_diag==True:
             self.Storage = torch.diag(self.Storage) 
             self.is_diag=False
 
     def to(self,device):
+        """
+        Set the UniTensor to device
+
+        Args:
+            
+            device:
+                This should be an [torch.device] 
+                torch.device("cpu") for put the tensor on host (cpu)
+                torch.device("cuda:x") for put the tensor on GPU with index x
+
+        Example:
+
+            Construct a tensor (default is on cpu)
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
+            
+            Set to GPU.
+            >>> a.to(torch.device("cuda:0"))
+
+
+        """
         if not isinstance(device,torch.device):
             raise TypeError("[ERROR] UniTensor.to()","only support device argument in this version as torch.device")
         self.Storage = self.Storage.to(device)         
@@ -243,7 +279,7 @@ class UniTensor():
             3.The number attach to the in-side of each leg is the label. 
             4.The real memory layout are follow clock-wise from upper-right to upper-left.
                           
-        ::
+
             [ex:] Rank = 4. 
             shape: (1,2,3,6) 
             D_IN=[1,2], D_OUT=[3,6], labels=[0,5,3,11]
@@ -319,6 +355,8 @@ class UniTensor():
             where a & b are UniTensors.
 
             Note that this will only compare the shape of Storage. Not the content of torch tensor.
+
+
         """
         if isinstance(rhs,self.__class__):
             iss = (self.Storage.shape == rhs.Storage.shape) and (len(self.bonds) == len(rhs.bonds))
@@ -338,6 +376,7 @@ class UniTensor():
 
             Return:
                 torch.Size object, using np.array() or list() to convert to numpy array and python list. 
+
         """
         if self.is_diag:
             return torch.Size([self.bonds.dim[0],self.bonds.dim[0]])
@@ -460,7 +499,7 @@ class UniTensor():
                          check=False,\
                          is_diag=self.is_diag)
 
-    """
+    
     def __truediv__(self,other):
         if isinstance(other, self.__class__):
             return UniTensor(self.D_IN,self.D_OUT,\
@@ -470,7 +509,7 @@ class UniTensor():
             return UniTensor(self.D_IN,self.D_OUT,\
                              self.Label_IN,self.Label_OUT,\
                              self.Storage / other)
-    """
+    
 
     ## This is the same function that behaves as the memberfunction.
     def Svd(self): 

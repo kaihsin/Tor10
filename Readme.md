@@ -4,6 +4,7 @@
     pytorch>=1.0
     numpy  >=1.15
     sphinx >=1.8.2
+    sphinx_rtd_theme >=0.4.2 
 
 ## Documentation:
 
