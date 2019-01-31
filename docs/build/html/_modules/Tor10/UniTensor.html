@@ -352,7 +352,19 @@
 <span class="sd">                The elements to be replace the content of the current UniTensor. It should be a 1D array.</span>
 <span class="sd">                **Note** if the UniTensor is a symmetric tensor, one should use UniTensor.PutBlock to set the elements.</span>
 <span class="sd"> </span>
-<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">        ::</span>
+<span class="sd">            Sz = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,2)],</span>
+<span class="sd">                              dtype=tor.float64,</span>
+<span class="sd">                              device=tor.device(&quot;cpu&quot;))</span>
+<span class="sd">            Sz.SetElem([1, 0,</span>
+<span class="sd">                        0,-1 ])</span>
+
+<span class="sd">            &gt;&gt;&gt; print(Sz)</span>
+<span class="sd">            Tensor name: </span>
+<span class="sd">            is_diag    : False</span>
+<span class="sd">            tensor([[ 1.,  0.],</span>
+<span class="sd">                    [ 0., -1.]], dtype=torch.float64)</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -370,15 +382,39 @@
         <span class="n">my_device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elem</span><span class="p">))</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">my_type</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">my_shape</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">my_device</span><span class="p">)</span></div>
         
-    <span class="k">def</span> <span class="nf">Todense</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Todense"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Todense">[docs]</a>    <span class="k">def</span> <span class="nf">Todense</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the UniTensor to dense matrix. Currently only the diagonal matrix is stored as sparsed form. So it only has effect on UniTensor where is_diag = True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span> 
-            <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">False</span></div>
 
-    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">device</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.to"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">device</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the UniTensor to device</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            </span>
+<span class="sd">            device:</span>
+<span class="sd">                This should be an [torch.device] </span>
+<span class="sd">                torch.device(&quot;cpu&quot;) for put the tensor on host (cpu)</span>
+<span class="sd">                torch.device(&quot;cuda:x&quot;) for put the tensor on GPU with index x</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">            Construct a tensor (default is on cpu)</span>
+<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])</span>
+<span class="sd">            </span>
+<span class="sd">            Set to GPU.</span>
+<span class="sd">            &gt;&gt;&gt; a.to(torch.device(&quot;cuda:0&quot;))</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">device</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;[ERROR] UniTensor.to()&quot;</span><span class="p">,</span><span class="s2">&quot;only support device argument in this version as torch.device&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>         
+        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>         </div>
 
     <span class="c1">## print layout:</span>
 <div class="viewcode-block" id="UniTensor.Print_diagram"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Print_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">Print_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -390,7 +426,7 @@
 <span class="sd">            3.The number attach to the in-side of each leg is the label. </span>
 <span class="sd">            4.The real memory layout are follow clock-wise from upper-right to upper-left.</span>
 <span class="sd">                          </span>
-<span class="sd">        ::</span>
+
 <span class="sd">            [ex:] Rank = 4. </span>
 <span class="sd">            shape: (1,2,3,6) </span>
 <span class="sd">            D_IN=[1,2], D_OUT=[3,6], labels=[0,5,3,11]</span>
@@ -466,6 +502,8 @@
 <span class="sd">            where a &amp; b are UniTensors.</span>
 
 <span class="sd">            Note that this will only compare the shape of Storage. Not the content of torch tensor.</span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="n">iss</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">rhs</span><span class="o">.</span><span class="n">bonds</span><span class="p">))</span>
@@ -485,6 +523,7 @@
 
 <span class="sd">            Return:</span>
 <span class="sd">                torch.Size object, using np.array() or list() to convert to numpy array and python list. </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
@@ -607,17 +646,17 @@
                          <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
                          <span class="n">is_diag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    def __truediv__(self,other):</span>
-<span class="sd">        if isinstance(other, self.__class__):</span>
-<span class="sd">            return UniTensor(self.D_IN,self.D_OUT,\</span>
-<span class="sd">                             self.Label_IN,self.Label_OUT,\</span>
-<span class="sd">                             self.Storage / other.Storage)</span>
-<span class="sd">        else :</span>
-<span class="sd">            return UniTensor(self.D_IN,self.D_OUT,\</span>
-<span class="sd">                             self.Label_IN,self.Label_OUT,\</span>
-<span class="sd">                             self.Storage / other)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">D_OUT</span><span class="p">,</span>\
+                             <span class="bp">self</span><span class="o">.</span><span class="n">Label_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Label_OUT</span><span class="p">,</span>\
+                             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">D_OUT</span><span class="p">,</span>\
+                             <span class="bp">self</span><span class="o">.</span><span class="n">Label_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Label_OUT</span><span class="p">,</span>\
+                             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">other</span><span class="p">)</span>
+    
 
     <span class="c1">## This is the same function that behaves as the memberfunction.</span>
 <div class="viewcode-block" id="UniTensor.Svd"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Svd">[docs]</a>    <span class="k">def</span> <span class="nf">Svd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
