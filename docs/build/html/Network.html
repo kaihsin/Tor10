@@ -233,7 +233,91 @@
 <dl class="method">
 <dt id="Tor10.Network.Network.Put">
 <code class="descname">Put</code><span class="sig-paren">(</span><em>name</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.Put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.Put" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Put the UniTensor into the tensor named [name] in the Network.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>name: </dt>
+<dd>The name of the tensor defines in the Network to put the UniTensor.</dd>
+<dt>tensor:</dt>
+<dd>A UniTensor that is to be put into the Network.</dd>
+</dl>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ntwrk</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
+<span class="n">ntwrk</span><span class="o">.</span><span class="n">Fromfile</span><span class="p">(</span><span class="s2">&quot;test.net&quot;</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">)])</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ntwrk</span><span class="p">)</span>
+<span class="go">==== Network ====</span>
+<span class="go">[x] A : -1 -2 ; 1 2 </span>
+<span class="go">[x] B : ; 1 3 </span>
+<span class="go">[x] C : ; 2 4 </span>
+<span class="go">TOUT : -1 -2 ; 3 4 </span>
+<span class="go">=================</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ntwrk</span><span class="o">.</span><span class="n">Put</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="n">A</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ntwrk</span><span class="p">)</span>
+<span class="go">==== Network ====</span>
+<span class="go">[o] A : -1 -2 ; 1 2 </span>
+<span class="go">[x] B : ; 1 3 </span>
+<span class="go">[x] C : ; 2 4 </span>
+<span class="go">TOUT : -1 -2 ; 3 4 </span>
+<span class="go">=================</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ntwrk</span><span class="o">.</span><span class="n">Put</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="n">C</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ntwrk</span><span class="p">)</span>
+<span class="go">==== Network ====</span>
+<span class="go">[o] A : -1 -2 ; 1 2 </span>
+<span class="go">[x] B : ; 1 3 </span>
+<span class="go">[o] C : ; 2 4 </span>
+<span class="go">TOUT : -1 -2 ; 3 4 </span>
+<span class="go">=================</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ntwrk</span><span class="o">.</span><span class="n">Put</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ntwrk</span><span class="p">)</span>
+<span class="go">==== Network ====</span>
+<span class="go">[o] A : -1 -2 ; 1 2 </span>
+<span class="go">[o] B : ; 1 3 </span>
+<span class="go">[o] C : ; 2 4 </span>
+<span class="go">TOUT : -1 -2 ; 3 4 </span>
+<span class="go">=================</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TOUT</span> <span class="o">=</span> <span class="n">ntwrk</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TOUT</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 4</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">   -1 __| 3         2 |__ 3  </span>
+<span class="go">        |             |     </span>
+<span class="go">   -2 __| 4         4 |__ 4  </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:-1 Dim = 3 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:-2 Dim = 4 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 2 |</span>
+<span class="go">OUT :</span>
+<span class="go">_</span>
+<span class="go">lbl:4 Dim = 4 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </dd></dl>
 

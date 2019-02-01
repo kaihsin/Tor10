@@ -343,6 +343,90 @@
 
 <div class="viewcode-block" id="Network.Put"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.Put">[docs]</a>    <span class="k">def</span> <span class="nf">Put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">tensor</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Put the UniTensor into the tensor named [name] in the Network.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: </span>
+<span class="sd">                The name of the tensor defines in the Network to put the UniTensor.</span>
+
+<span class="sd">            tensor:</span>
+<span class="sd">                A UniTensor that is to be put into the Network.</span>
+
+<span class="sd">            </span>
+<span class="sd">        Example:</span>
+<span class="sd">        ::</span>
+<span class="sd">            ntwrk = Tt.Network()</span>
+<span class="sd">            ntwrk.Fromfile(&quot;test.net&quot;)</span>
+<span class="sd">            A = Tt.UniTensor([Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_IN,4),Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,4)])</span>
+<span class="sd">            B = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,2)])</span>
+<span class="sd">            C = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,4),Tt.Bond(Tt.BD_OUT,4)])</span>
+
+
+<span class="sd">        &gt;&gt;&gt; print(ntwrk)</span>
+<span class="sd">        ==== Network ====</span>
+<span class="sd">        [x] A : -1 -2 ; 1 2 </span>
+<span class="sd">        [x] B : ; 1 3 </span>
+<span class="sd">        [x] C : ; 2 4 </span>
+<span class="sd">        TOUT : -1 -2 ; 3 4 </span>
+<span class="sd">        =================</span>
+
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; ntwrk.Put(&quot;A&quot;,A)</span>
+<span class="sd">        &gt;&gt;&gt; print(ntwrk)</span>
+<span class="sd">        ==== Network ====</span>
+<span class="sd">        [o] A : -1 -2 ; 1 2 </span>
+<span class="sd">        [x] B : ; 1 3 </span>
+<span class="sd">        [x] C : ; 2 4 </span>
+<span class="sd">        TOUT : -1 -2 ; 3 4 </span>
+<span class="sd">        =================</span>
+
+
+<span class="sd">        &gt;&gt;&gt; ntwrk.Put(&quot;C&quot;,C)</span>
+<span class="sd">        &gt;&gt;&gt; print(ntwrk)</span>
+<span class="sd">        ==== Network ====</span>
+<span class="sd">        [o] A : -1 -2 ; 1 2 </span>
+<span class="sd">        [x] B : ; 1 3 </span>
+<span class="sd">        [o] C : ; 2 4 </span>
+<span class="sd">        TOUT : -1 -2 ; 3 4 </span>
+<span class="sd">        =================</span>
+
+
+<span class="sd">        &gt;&gt;&gt; ntwrk.Put(&quot;B&quot;,B)</span>
+<span class="sd">        &gt;&gt;&gt; print(ntwrk)</span>
+<span class="sd">        ==== Network ====</span>
+<span class="sd">        [o] A : -1 -2 ; 1 2 </span>
+<span class="sd">        [o] B : ; 1 3 </span>
+<span class="sd">        [o] C : ; 2 4 </span>
+<span class="sd">        TOUT : -1 -2 ; 3 4 </span>
+<span class="sd">        =================</span>
+
+
+<span class="sd">        &gt;&gt;&gt; TOUT = ntwrk.Launch()</span>
+<span class="sd">        &gt;&gt;&gt; TOUT.Print_diagram()</span>
+<span class="sd">        tensor Name : </span>
+<span class="sd">        tensor Rank : 4</span>
+<span class="sd">        on device   : cpu</span>
+<span class="sd">        is_diag     : False</span>
+<span class="sd">                ---------------     </span>
+<span class="sd">                |             |     </span>
+<span class="sd">           -1 __| 3         2 |__ 3  </span>
+<span class="sd">                |             |     </span>
+<span class="sd">           -2 __| 4         4 |__ 4  </span>
+<span class="sd">                |             |     </span>
+<span class="sd">                ---------------     </span>
+<span class="sd">        lbl:-1 Dim = 3 |</span>
+<span class="sd">        IN :</span>
+<span class="sd">        _</span>
+<span class="sd">        lbl:-2 Dim = 4 |</span>
+<span class="sd">        IN :</span>
+<span class="sd">        _</span>
+<span class="sd">        lbl:3 Dim = 2 |</span>
+<span class="sd">        OUT :</span>
+<span class="sd">        _</span>
+<span class="sd">        lbl:4 Dim = 4 |</span>
+<span class="sd">        OUT :</span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">## check if the Network is set.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

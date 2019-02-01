@@ -196,6 +196,90 @@ class Network():
 
     def Put(self,name,tensor):
         """
+        Put the UniTensor into the tensor named [name] in the Network.
+
+        Args:
+            name: 
+                The name of the tensor defines in the Network to put the UniTensor.
+
+            tensor:
+                A UniTensor that is to be put into the Network.
+
+            
+        Example:
+        ::
+            ntwrk = Tt.Network()
+            ntwrk.Fromfile("test.net")
+            A = Tt.UniTensor([Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_IN,4),Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,4)])
+            B = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,2)])
+            C = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,4),Tt.Bond(Tt.BD_OUT,4)])
+
+
+        >>> print(ntwrk)
+        ==== Network ====
+        [x] A : -1 -2 ; 1 2 
+        [x] B : ; 1 3 
+        [x] C : ; 2 4 
+        TOUT : -1 -2 ; 3 4 
+        =================
+
+        
+        >>> ntwrk.Put("A",A)
+        >>> print(ntwrk)
+        ==== Network ====
+        [o] A : -1 -2 ; 1 2 
+        [x] B : ; 1 3 
+        [x] C : ; 2 4 
+        TOUT : -1 -2 ; 3 4 
+        =================
+
+
+        >>> ntwrk.Put("C",C)
+        >>> print(ntwrk)
+        ==== Network ====
+        [o] A : -1 -2 ; 1 2 
+        [x] B : ; 1 3 
+        [o] C : ; 2 4 
+        TOUT : -1 -2 ; 3 4 
+        =================
+
+
+        >>> ntwrk.Put("B",B)
+        >>> print(ntwrk)
+        ==== Network ====
+        [o] A : -1 -2 ; 1 2 
+        [o] B : ; 1 3 
+        [o] C : ; 2 4 
+        TOUT : -1 -2 ; 3 4 
+        =================
+
+
+        >>> TOUT = ntwrk.Launch()
+        >>> TOUT.Print_diagram()
+        tensor Name : 
+        tensor Rank : 4
+        on device   : cpu
+        is_diag     : False
+                ---------------     
+                |             |     
+           -1 __| 3         2 |__ 3  
+                |             |     
+           -2 __| 4         4 |__ 4  
+                |             |     
+                ---------------     
+        lbl:-1 Dim = 3 |
+        IN :
+        _
+        lbl:-2 Dim = 4 |
+        IN :
+        _
+        lbl:3 Dim = 2 |
+        OUT :
+        _
+        lbl:4 Dim = 4 |
+        OUT :
+
+
         """
         ## check if the Network is set.
         if self.tensors is None:
