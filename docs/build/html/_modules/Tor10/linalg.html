@@ -499,10 +499,10 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[0,1])</span>
-<span class="sd">        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[2,3])</span>
-<span class="sd">        c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,6)],labels=[4,6])   </span>
-<span class="sd">        d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,2)],labels=[5,-1])</span>
+<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])</span>
+<span class="sd">        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,4),Tor10.Bond(Tor10.BD_OUT,5)])</span>
+<span class="sd">        c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,6)])   </span>
+<span class="sd">        d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,2)])</span>
 
 <span class="sd">    &gt;&gt;&gt; f = Tor10.Chain_matmul(a,b,c,d)</span>
 <span class="sd">    &gt;&gt;&gt; f.Print_diagram()</span>
@@ -592,7 +592,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function returns the determinant a rank-2 tensor.</span>
 <span class="sd">    </span>
-<span class="sd">    :math:`\parallel a \parallel`</span>
+<span class="sd">    :math:`\det(a)`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        a : </span>
@@ -602,10 +602,12 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],labels=[0,1])</span>
+<span class="sd">        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)])</span>
 <span class="sd">        a.SetElem([4,-3,0,</span>
 <span class="sd">                   2,-1,2,</span>
 <span class="sd">                   1, 5,7])</span>
+<span class="sd">        b = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],is_diag=True)</span>
+<span class="sd">        b.SetElem([1,2,3])</span>
 
 <span class="sd">    &gt;&gt;&gt; print(a)</span>
 <span class="sd">    Tensor name: </span>
@@ -618,18 +620,12 @@
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
 <span class="sd">    -32.0</span>
 
-
-<span class="sd">    ::</span>
-<span class="sd">        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],labels=[0,1],is_diag=True)</span>
-<span class="sd">        a.SetElem([1,2,3])</span>
-
-
-<span class="sd">    &gt;&gt;&gt; print(a)</span>
+<span class="sd">    &gt;&gt;&gt; print(b)</span>
 <span class="sd">    Tensor name: </span>
 <span class="sd">    is_diag    : True</span>
 <span class="sd">    tensor([1., 2., 3.], dtype=torch.float64)</span>
 
-<span class="sd">    &gt;&gt;&gt; out = Tor10.Det(a)</span>
+<span class="sd">    &gt;&gt;&gt; out = Tor10.Det(b)</span>
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
 <span class="sd">    6.0</span>
 
@@ -646,15 +642,21 @@
 
 <div class="viewcode-block" id="Norm"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Norm">[docs]</a><span class="k">def</span> <span class="nf">Norm</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @description: This function returns the frobinieus 2-norm of a tensor.</span>
-<span class="sd">        @params     : </span>
-<span class="sd">                      a : UniTensor</span>
-<span class="sd">        @return     : a 0-dimension tensor contains the 2-norm of input</span>
+<span class="sd">    Returns the matrix norm of the UniTensor. </span>
+
+<span class="sd">    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a : </span>
+<span class="sd">            a UniTensor.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        constant</span>
 <span class="sd">                    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Norm(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Norm can only accept UniTensor&quot;</span><span class="p">)</span></div>
 </pre></div>

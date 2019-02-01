@@ -89,10 +89,26 @@ c = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,6)],labels=[4,6])
 d = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,2)],labels=[5,-1])
 f = Tt.Chain_matmul(a,b,c,d)
 f.Print_diagram()
+
+
+print("Testing determinant==========")
+a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],labels=[0,1])
+a.SetElem([4,-3,0,\
+           2,-1,2,\
+           1, 5,7])
+print(a)
+out = Tt.Det(a)
+print(out)
+a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],labels=[0,1],is_diag=True)
+a.SetElem([1,2,3])
+print(a)
+out = Tt.Det(a)
+print(out)
+
 exit(1)
-
-
 ""
+
+
 c.CombineBonds([1,3]) ## The CombineBonds implicitly have contiguous only at the last stage when moving memory is needed. 
 c.Print_diagram()
 print(c.shape())

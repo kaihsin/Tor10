@@ -352,10 +352,10 @@ def Chain_matmul(*args):
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[0,1])
-        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[2,3])
-        c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,6)],labels=[4,6])   
-        d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,2)],labels=[5,-1])
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
+        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,4),Tor10.Bond(Tor10.BD_OUT,5)])
+        c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,6)])   
+        d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,2)])
 
     >>> f = Tor10.Chain_matmul(a,b,c,d)
     >>> f.Print_diagram()
@@ -409,10 +409,18 @@ def Chain_matmul(*args):
 
 def Inverse(a):
     """
-        @description: This function returns the inverse of a rank-2 tensor.
-        @params     : 
-                      a : UniTensor
-        @return     : Unitensor
+    This function returns the inverse of a rank-2 tensor (matrix).
+    
+        :math:`a^{-1}`
+
+    If the input UniTensor is diagonal, the return will also be a diagonal matrix.
+
+    Args:
+        a : 
+            A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued. 
+
+    Return:
+        UniTensor
                     
     """
     if isinstance(a,UniTensor):
@@ -435,31 +443,72 @@ def Inverse(a):
 
 def Det(a):
     """
-        @description: This function returns the determinant a rank-2 tensor.
-        @params     : 
-                      a : rank-2 UniTensor
-        @return     : a 0-dimension tensor contains the determinant of input
+    This function returns the determinant a rank-2 tensor.
+    
+    :math:`\det(a)`
+
+    Args:
+        a : 
+            a rank-2 UniTensor (matrix). 
+    Return:
+        constant
+
+    Example:
+    ::
+        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)])
+        a.SetElem([4,-3,0,
+                   2,-1,2,
+                   1, 5,7])
+        b = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],is_diag=True)
+        b.SetElem([1,2,3])
+
+    >>> print(a)
+    Tensor name: 
+    is_diag    : False
+    tensor([[ 4., -3.,  0.],
+            [ 2., -1.,  2.],
+            [ 1.,  5.,  7.]], dtype=torch.float64)
+
+    >>> out = Tt.Det(a)
+    >>> print(out)
+    -32.0
+
+    >>> print(b)
+    Tensor name: 
+    is_diag    : True
+    tensor([1., 2., 3.], dtype=torch.float64)
+
+    >>> out = Tor10.Det(b)
+    >>> print(out)
+    6.0
+
                     
     """
     if isinstance(a,UniTensor):
 
         if a.is_diag:
-            return torch.prod(a.Storage)
+            return torch.prod(a.Storage).item()
         else:
-            return torch.det(a.Storage)
+            return torch.det(a.Storage).item()
     else:
         raise Exception("Det(UniTensor)","[ERROR] Det can only accept UniTensor")
 
 def Norm(a):
     """
-        @description: This function returns the frobinieus 2-norm of a tensor.
-        @params     : 
-                      a : UniTensor
-        @return     : a 0-dimension tensor contains the 2-norm of input
+    Returns the matrix norm of the UniTensor. 
+
+    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension. 
+
+    Args:
+        a : 
+            a UniTensor.
+
+    Return:
+        constant
                     
     """
 
     if isinstance(a,UniTensor):
-        return torch.norm(a.Storage)
+        return torch.norm(a.Storage).item()
     else:
         raise Exception("Norm(UniTensor)","[ERROR] Norm can only accept UniTensor")
