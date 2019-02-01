@@ -556,10 +556,18 @@
 
 <div class="viewcode-block" id="Inverse"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Inverse">[docs]</a><span class="k">def</span> <span class="nf">Inverse</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @description: This function returns the inverse of a rank-2 tensor.</span>
-<span class="sd">        @params     : </span>
-<span class="sd">                      a : UniTensor</span>
-<span class="sd">        @return     : Unitensor</span>
+<span class="sd">    This function returns the inverse of a rank-2 tensor (matrix).</span>
+<span class="sd">    </span>
+<span class="sd">        :math:`a^{-1}`</span>
+
+<span class="sd">    If the input UniTensor is diagonal, the return will also be a diagonal matrix.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a : </span>
+<span class="sd">            A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued. </span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor</span>
 <span class="sd">                    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
@@ -582,18 +590,57 @@
 
 <div class="viewcode-block" id="Det"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Det">[docs]</a><span class="k">def</span> <span class="nf">Det</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @description: This function returns the determinant a rank-2 tensor.</span>
-<span class="sd">        @params     : </span>
-<span class="sd">                      a : rank-2 UniTensor</span>
-<span class="sd">        @return     : a 0-dimension tensor contains the determinant of input</span>
+<span class="sd">    This function returns the determinant a rank-2 tensor.</span>
+<span class="sd">    </span>
+<span class="sd">    :math:`\parallel a \parallel`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a : </span>
+<span class="sd">            a rank-2 UniTensor (matrix). </span>
+<span class="sd">    Return:</span>
+<span class="sd">        constant</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    ::</span>
+<span class="sd">        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],labels=[0,1])</span>
+<span class="sd">        a.SetElem([4,-3,0,</span>
+<span class="sd">                   2,-1,2,</span>
+<span class="sd">                   1, 5,7])</span>
+
+<span class="sd">    &gt;&gt;&gt; print(a)</span>
+<span class="sd">    Tensor name: </span>
+<span class="sd">    is_diag    : False</span>
+<span class="sd">    tensor([[ 4., -3.,  0.],</span>
+<span class="sd">            [ 2., -1.,  2.],</span>
+<span class="sd">            [ 1.,  5.,  7.]], dtype=torch.float64)</span>
+
+<span class="sd">    &gt;&gt;&gt; out = Tt.Det(a)</span>
+<span class="sd">    &gt;&gt;&gt; print(out)</span>
+<span class="sd">    -32.0</span>
+
+
+<span class="sd">    ::</span>
+<span class="sd">        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],labels=[0,1],is_diag=True)</span>
+<span class="sd">        a.SetElem([1,2,3])</span>
+
+
+<span class="sd">    &gt;&gt;&gt; print(a)</span>
+<span class="sd">    Tensor name: </span>
+<span class="sd">    is_diag    : True</span>
+<span class="sd">    tensor([1., 2., 3.], dtype=torch.float64)</span>
+
+<span class="sd">    &gt;&gt;&gt; out = Tor10.Det(a)</span>
+<span class="sd">    &gt;&gt;&gt; print(out)</span>
+<span class="sd">    6.0</span>
+
 <span class="sd">                    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Det(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Det can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
