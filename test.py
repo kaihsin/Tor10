@@ -74,7 +74,6 @@ x.Print_diagram()
 
 y.Permute([3,4,5],2,by_label=True)
 y.Print_diagram()
-exit(1)
 
 
 ## example of permute:
@@ -86,8 +85,15 @@ c.Permute([0,2,1],1)
 print(c.is_contiguous()) ## This should be false. The virtual permute is taking action.
 c.Print_diagram()
 
-
-
+## example of Chain_matmul
+print("pppppppppppppppppp")
+a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)],labels=[0,1])
+b = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,4),Tt.Bond(Tt.BD_OUT,5)],labels=[2,3])
+c = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,6)],labels=[4,6])   
+d = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,2)],labels=[5,-1])
+f = Tt.Chain_matmul(a,b,c,d)
+f.Print_diagram()
+exit(1)
 
 
 ""

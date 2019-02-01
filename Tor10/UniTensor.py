@@ -3,7 +3,7 @@ import copy,os
 import numpy as np
 import pickle as pkl
 from .Bond import *
-from .linalg import *
+from . import linalg 
 
 ## Developer Note:
 # [KHW]
@@ -540,7 +540,7 @@ class UniTensor():
         """ 
             This is the member function of Svd, see Tor10.linalg.Svd() 
         """
-        return Svd(self)
+        return linalg.Svd(self)
 
     #def Svd_truncate(self):
     #    """ 
@@ -552,19 +552,19 @@ class UniTensor():
         """ 
             This is the member function of Norm, see Tor10.linalg.Norm
         """
-        return Norm(self)
+        return linalg.Norm(self)
 
     def Det(self):
         """ 
             This is the member function of Det, see Tor10.linalg.Det
         """
-        return Det(self)
+        return linalg.Det(self)
 
     def Matmul(self,b):
         """ 
             This is the member function of Matmul, see Tor10.linalg.Matmul
         """
-        return Matmul(self,b)
+        return linalg.Matmul(self,b)
 
     
     ## Extended Assignment:

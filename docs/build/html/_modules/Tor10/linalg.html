@@ -149,12 +149,14 @@
 <span class="kn">import</span> <span class="nn">torch</span> 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-
-
 <div class="viewcode-block" id="ExpH"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.ExpH">[docs]</a><span class="k">def</span> <span class="nf">ExpH</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function performs the exp^{H} where H is the hermitian matrix. </span>
-<span class="sd">    The Intricate computation follows procedure: symeig() first and exp() the singular matrix.</span>
+<span class="sd">    This function performs </span>
+
+<span class="sd">            :math:`e^{H}`</span>
+
+<span class="sd">    where H is the hermitian matrix. </span>
+<span class="sd">    The Intricate computation follows procedure: symeig() -&gt; exp() the singular matrix.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        </span>
@@ -199,9 +201,12 @@
 
 <div class="viewcode-block" id="Qr"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Qr">[docs]</a><span class="k">def</span> <span class="nf">Qr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The function performs the qr to input UniTensor. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond&#39;s dim should be &gt;=2. </span>
+<span class="sd">    The function performs the qr decomposition </span>
 
-<span class="sd">        a = q \cdot r</span>
+<span class="sd">        :math:`a = q \cdot r`</span>
+
+<span class="sd">    to the input UniTensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2. </span>
+
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 
@@ -248,12 +253,24 @@
 
 <div class="viewcode-block" id="Qdr"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Qdr">[docs]</a><span class="k">def</span> <span class="nf">Qdr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @description : The function performs the qr to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond&#39;s dim should be &gt;=2. </span>
-<span class="sd">                       Mathmatically, a = q \cdot r</span>
-<span class="sd">        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.</span>
-<span class="sd">        @return      :  q , r  </span>
-<span class="sd">                        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
-<span class="sd">                        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix </span>
+<span class="sd">    The function performs the qdr decomposition </span>
+
+<span class="sd">        :math:`a = q \cdot d \cdot r`</span>
+
+<span class="sd">    to input UniTensor. The UniTensor should be rank-2 with eachbond&#39;s dim should be &gt;=2. </span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        a : </span>
+<span class="sd">            UniTensor , rank-2, 1 inbond 1 outbond.</span>
+
+<span class="sd">    Return: q , r  </span>
+<span class="sd">        q : </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
+
+<span class="sd">        d :</span>
+<span class="sd">            The diagonal matrix. It is a diagonal 2-rank UniTensor with 1 inbond 1 outbond and is_diag=True.</span>
+<span class="sd">        r : </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
@@ -293,13 +310,26 @@
 
 <div class="viewcode-block" id="Svd"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Svd">[docs]</a><span class="k">def</span> <span class="nf">Svd</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @description : The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond&#39;s dim should be &gt;=2. </span>
-<span class="sd">                       Mathmatically, a = u \cdot s \cdot vt</span>
-<span class="sd">        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.</span>
-<span class="sd">        @return      :  u , s , vt </span>
-<span class="sd">                        u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
-<span class="sd">                        s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix </span>
-<span class="sd">                        vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</span>
+<span class="sd">    The function performs the svd </span>
+
+<span class="sd">        :math:`a = u \cdot s \ cdot vt`</span>
+
+<span class="sd">    to input UniTensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a : </span>
+<span class="sd">            UniTensor, rank-2.</span>
+
+<span class="sd">    Return: u , s , vt </span>
+<span class="sd">        u : </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
+<span class="sd">                        </span>
+<span class="sd">        s : </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True</span>
+<span class="sd"> </span>
+<span class="sd">        vt: </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
@@ -340,13 +370,22 @@
 
 <div class="viewcode-block" id="Svd_truncate"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Svd_truncate">[docs]</a><span class="k">def</span> <span class="nf">Svd_truncate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @description : The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond&#39;s dim should be &gt;=2. </span>
-<span class="sd">                       Mathmatically, a = u \cdot s \cdot vt</span>
-<span class="sd">        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.</span>
-<span class="sd">        @return      :  u , s , vt </span>
-<span class="sd">                        u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
-<span class="sd">                        s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix </span>
-<span class="sd">                        vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</span>
+<span class="sd">    The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a : </span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond.</span>
+<span class="sd">    </span>
+<span class="sd">    Return: u , s , vt </span>
+<span class="sd">        u : </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)</span>
+<span class="sd">        </span>
+<span class="sd">        s : </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)</span>
+<span class="sd">                        </span>
+<span class="sd">        vt: </span>
+<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
@@ -389,8 +428,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Svd(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Svd can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">Matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
-    
+<div class="viewcode-block" id="Matmul"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Matmul">[docs]</a><span class="k">def</span> <span class="nf">Matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
         <span class="c1">## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling! </span>
@@ -420,19 +460,48 @@
         <span class="k">return</span> <span class="n">tmp</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;_Matmul(a,b)&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] _Matmul can only accept UniTensors for both a &amp; b&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;_Matmul(a,b)&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] _Matmul can only accept UniTensors for both a &amp; b&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Chain_matmul"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Chain_matmul">[docs]</a><span class="k">def</span> <span class="nf">Chain_matmul</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        @description: This function performs matrix multiplication on all the UniTensors. Note that all the UniTensors should be rank-2 with 1-inbond 1-outbond</span>
+<span class="sd">    Performs matrix multiplication on all the UniTensors. </span>
 
-<span class="sd">        @params     : The UniTensors that will be matrix-multiply</span>
+<span class="sd">        :math:`A \cdot B \cdot C \cdot D \cdots`</span>
 
-<span class="sd">        @return     : UniTensor,rank-2, 1 inbond 1 outbond. The label of inbond = the label of inbond of first UniTensor. The label of outbond = the label of outbond of the last UniTensor.</span>
-<span class="sd">        @exampe     : </span>
-<span class="sd">                        f = Chain_matmul(a,b,c,d,e)</span>
-<span class="sd">                        Mathmatically equivalent as : f = a \cdot b \cdot c \cdot d \cdot e</span>
+<span class="sd">    Note that all the UniTensors should be rank-2, and dimension should be matched. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *args: </span>
+<span class="sd">            The UniTensors that will be matrix-multiply</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor,rank-2 tensor with 1 inbond 1 outbond. </span>
+<span class="sd">        The label of inbond and outbond will be will the label of inbond of first UniTensor and the label of outbond of the last UniTensor.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    ::</span>
+<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[0,1])</span>
+<span class="sd">        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[2,3])</span>
+<span class="sd">        c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,6)],labels=[4,6])   </span>
+<span class="sd">        d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,2)],labels=[5,-1])</span>
+
+<span class="sd">    &gt;&gt;&gt; f = Tor10.Chain_matmul(a,b,c,d)</span>
+<span class="sd">    &gt;&gt;&gt; f.Print_diagram()</span>
+<span class="sd">    tensor Name : </span>
+<span class="sd">    tensor Rank : 2</span>
+<span class="sd">    on device   : cpu</span>
+<span class="sd">    is_diag     : False</span>
+<span class="sd">            ---------------     </span>
+<span class="sd">            |             |     </span>
+<span class="sd">        0 __| 3         2 |__ -1  </span>
+<span class="sd">            |             |     </span>
+<span class="sd">            ---------------     </span>
+<span class="sd">    lbl:0 Dim = 3 |</span>
+<span class="sd">    IN :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:1 Dim = 2 |</span>
+<span class="sd">    OUT :</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">idiag</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">idiag</span> <span class="k">else</span> <span class="n">x</span> 
@@ -561,6 +630,7 @@
         <script type="text/javascript" src="../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   

@@ -2,12 +2,14 @@ from .UniTensor import *
 import torch 
 import numpy as np
 
-
-
 def ExpH(a):
     """
-    This function performs the exp^{H} where H is the hermitian matrix. 
-    The Intricate computation follows procedure: symeig() first and exp() the singular matrix.
+    This function performs 
+
+            :math:`e^{H}`
+
+    where H is the hermitian matrix. 
+    The Intricate computation follows procedure: symeig() -> exp() the singular matrix.
 
     Args:
         
@@ -52,9 +54,12 @@ def ExpH(a):
 
 def Qr(a):
     """
-    The function performs the qr to input UniTensor. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
+    The function performs the qr decomposition 
 
-        a = q \cdot r
+        :math:`a = q \cdot r`
+
+    to the input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
+
     
     Args:
 
@@ -101,12 +106,24 @@ def Qr(a):
 
 def Qdr(a):
     """
-        @description : The function performs the qr to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
-                       Mathmatically, a = q \cdot r
-        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
-        @return      :  q , r  
-                        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-                        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
+    The function performs the qdr decomposition 
+
+        :math:`a = q \cdot d \cdot r`
+
+    to input UniTensor. The UniTensor should be rank-2 with eachbond's dim should be >=2. 
+    
+    Args:
+        a : 
+            UniTensor , rank-2, 1 inbond 1 outbond.
+
+    Return: q , r  
+        q : 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+
+        d :
+            The diagonal matrix. It is a diagonal 2-rank UniTensor with 1 inbond 1 outbond and is_diag=True.
+        r : 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
     """
     if isinstance(a,UniTensor):
 
@@ -146,13 +163,26 @@ def Qdr(a):
 
 def Svd(a):
     """
-        @description : The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
-                       Mathmatically, a = u \cdot s \cdot vt
-        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
-        @return      :  u , s , vt 
-                        u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-                        s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
-                        vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
+    The function performs the svd 
+
+        :math:`a = u \cdot s \ cdot vt`
+
+    to input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
+
+    Args:
+        a : 
+            UniTensor, rank-2.
+
+    Return: u , s , vt 
+        u : 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+                        
+        s : 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True
+ 
+        vt: 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
+
     """
     if isinstance(a,UniTensor):
 
@@ -193,13 +223,22 @@ def Svd(a):
 
 def Svd_truncate(a, truncate=None):
     """
-        @description : The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond's dim should be >=2. 
-                       Mathmatically, a = u \cdot s \cdot vt
-        @params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
-        @return      :  u , s , vt 
-                        u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-                        s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
-                        vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
+    The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
+
+    Args:
+        a : 
+            UniTensor, rank-2, 1 inbond 1 outbond.
+    
+    Return: u , s , vt 
+        u : 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
+        
+        s : 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)
+                        
+        vt: 
+            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
+
     """
     if isinstance(a,UniTensor):
 
@@ -243,7 +282,8 @@ def Svd_truncate(a, truncate=None):
         raise Exception("Svd(UniTensor)","[ERROR] Svd can only accept UniTensor")
 
 def Matmul(a,b):
-    
+    """
+    """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
         ## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling! 
@@ -278,14 +318,43 @@ def Matmul(a,b):
 
 def Chain_matmul(*args):
     """
-        @description: This function performs matrix multiplication on all the UniTensors. Note that all the UniTensors should be rank-2 with 1-inbond 1-outbond
+    Performs matrix multiplication on all the UniTensors. 
 
-        @params     : The UniTensors that will be matrix-multiply
+        :math:`A \cdot B \cdot C \cdot D \cdots`
 
-        @return     : UniTensor,rank-2, 1 inbond 1 outbond. The label of inbond = the label of inbond of first UniTensor. The label of outbond = the label of outbond of the last UniTensor.
-        @exampe     : 
-                        f = Chain_matmul(a,b,c,d,e)
-                        Mathmatically equivalent as : f = a \cdot b \cdot c \cdot d \cdot e
+    Note that all the UniTensors should be rank-2, and dimension should be matched. 
+
+    Args:
+        *args: 
+            The UniTensors that will be matrix-multiply
+
+    Return:
+        UniTensor,rank-2 tensor with 1 inbond 1 outbond. 
+        The label of inbond and outbond will be will the label of inbond of first UniTensor and the label of outbond of the last UniTensor.
+
+    Example:
+    ::
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[0,1])
+        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[2,3])
+        c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,6)],labels=[4,6])   
+        d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,2)],labels=[5,-1])
+
+    >>> f = Tor10.Chain_matmul(a,b,c,d)
+    >>> f.Print_diagram()
+    tensor Name : 
+    tensor Rank : 2
+    on device   : cpu
+    is_diag     : False
+            ---------------     
+            |             |     
+        0 __| 3         2 |__ -1  
+            |             |     
+            ---------------     
+    lbl:0 Dim = 3 |
+    IN :
+    _
+    lbl:1 Dim = 2 |
+    OUT :
 
     """
     f = lambda x,idiag: torch.diag(x) if idiag else x 

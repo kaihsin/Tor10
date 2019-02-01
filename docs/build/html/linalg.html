@@ -152,13 +152,46 @@
 <dl class="function">
 <dt id="Tor10.linalg.Chain_matmul">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">Chain_matmul</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Chain_matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Chain_matmul" title="Permalink to this definition">¶</a></dt>
-<dd><p>&#64;description: This function performs matrix multiplication on all the UniTensors. Note that all the UniTensors should be rank-2 with 1-inbond 1-outbond</p>
-<p>&#64;params     : The UniTensors that will be matrix-multiply</p>
-<p>&#64;return     : UniTensor,rank-2, 1 inbond 1 outbond. The label of inbond = the label of inbond of first UniTensor. The label of outbond = the label of outbond of the last UniTensor.
-&#64;exampe     :</p>
+<dd><p>Performs matrix multiplication on all the UniTensors.</p>
 <blockquote>
-<div>f = Chain_matmul(a,b,c,d,e)
-Mathmatically equivalent as : f = a cdot b cdot c cdot d cdot e</div></blockquote>
+<div><span class="math notranslate nohighlight">\(A \cdot B \cdot C \cdot D \cdots\)</span></div></blockquote>
+<p>Note that all the UniTensors should be rank-2, and dimension should be matched.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args: </dt>
+<dd>The UniTensors that will be matrix-multiply</dd>
+</dl>
+</dd>
+<dt>Return:</dt>
+<dd>UniTensor,rank-2 tensor with 1 inbond 1 outbond. 
+The label of inbond and outbond will be will the label of inbond of first UniTensor and the label of outbond of the last UniTensor.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">5</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">6</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>   
+<span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Chain_matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 2</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    0 __| 3         2 |__ -1  </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:0 Dim = 3 |</span>
+<span class="go">IN :</span>
+<span class="go">_</span>
+<span class="go">lbl:1 Dim = 2 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -174,8 +207,11 @@ Mathmatically equivalent as : f = a cdot b cdot c cdot d cdot e</div></blockquot
 <dl class="function">
 <dt id="Tor10.linalg.ExpH">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">ExpH</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#ExpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.ExpH" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function performs the exp^{H} where H is the hermitian matrix. 
-The Intricate computation follows procedure: symeig() first and exp() the singular matrix.</p>
+<dd><p>This function performs</p>
+<blockquote>
+<div><span class="math notranslate nohighlight">\(e^{H}\)</span></div></blockquote>
+<p>where H is the hermitian matrix. 
+The Intricate computation follows procedure: symeig() -&gt; exp() the singular matrix.</p>
 <p>Args:</p>
 <blockquote>
 <div><dl class="docutils">
@@ -199,6 +235,11 @@ The Intricate computation follows procedure: symeig() first and exp() the singul
 </dd></dl>
 
 <dl class="function">
+<dt id="Tor10.linalg.Matmul">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Matmul</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Matmul" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="Tor10.linalg.Norm">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">Norm</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Norm" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;description: This function returns the frobinieus 2-norm of a tensor.
@@ -211,23 +252,37 @@ The Intricate computation follows procedure: symeig() first and exp() the singul
 <dl class="function">
 <dt id="Tor10.linalg.Qdr">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">Qdr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Qdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Qdr" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>&#64;description <span class="classifier-delimiter">:</span> <span class="classifier">The function performs the qr to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2. </span></dt>
-<dd>Mathmatically, a = q cdot r</dd>
-</dl>
-<p>&#64;params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
-&#64;return      :  q , r</p>
+<dd><p>The function performs the qdr decomposition</p>
 <blockquote>
-<div>q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix</div></blockquote>
+<div><span class="math notranslate nohighlight">\(a = q \cdot d \cdot r\)</span></div></blockquote>
+<p>to input UniTensor. The UniTensor should be rank-2 with eachbond’s dim should be &gt;=2.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor , rank-2, 1 inbond 1 outbond.</dd>
+</dl>
+</dd>
+<dt>Return: q , r  </dt>
+<dd><dl class="first last docutils">
+<dt>q <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</dd>
+<dt>d :</dt>
+<dd>The diagonal matrix. It is a diagonal 2-rank UniTensor with 1 inbond 1 outbond and is_diag=True.</dd>
+<dt>r <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="Tor10.linalg.Qr">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">Qr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Qr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Qr" title="Permalink to this definition">¶</a></dt>
-<dd><p>The function performs the qr to input UniTensor. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2.</p>
+<dd><p>The function performs the qr decomposition</p>
 <blockquote>
-<div>a = q cdot r</div></blockquote>
+<div><span class="math notranslate nohighlight">\(a = q \cdot r\)</span></div></blockquote>
+<p>to the input UniTensor. The UniTensor should be rank-2. each bond’s dim should be &gt;=2.</p>
 <p>Args:</p>
 <blockquote>
 <div>a : UniTensor, it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.</div></blockquote>
@@ -242,31 +297,52 @@ r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix</div></bl
 <dl class="function">
 <dt id="Tor10.linalg.Svd">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">Svd</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Svd" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>&#64;description <span class="classifier-delimiter">:</span> <span class="classifier">The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2. </span></dt>
-<dd>Mathmatically, a = u cdot s cdot vt</dd>
-</dl>
-<p>&#64;params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
-&#64;return      :  u , s , vt</p>
+<dd><p>The function performs the svd</p>
 <blockquote>
-<div>u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
-vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</div></blockquote>
+<div><span class="math notranslate nohighlight">\(a = u \cdot s \ cdot vt\)</span></div></blockquote>
+<p>to input UniTensor. The UniTensor should be rank-2. each bond’s dim should be &gt;=2.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, rank-2.</dd>
+</dl>
+</dd>
+<dt>Return: u , s , vt </dt>
+<dd><dl class="first last docutils">
+<dt>u <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</dd>
+<dt>s <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True</dd>
+<dt>vt: </dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="Tor10.linalg.Svd_truncate">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">Svd_truncate</code><span class="sig-paren">(</span><em>a</em>, <em>truncate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Svd_truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Svd_truncate" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>&#64;description <span class="classifier-delimiter">:</span> <span class="classifier">The function performs the svd to input UniTensor [a]. The UniTensor should be rank-2 with 1-inbond 1-outbond. each inbond and outbond’s dim should be &gt;=2. </span></dt>
-<dd>Mathmatically, a = u cdot s cdot vt</dd>
+<dd><p>The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond’s dim should be &gt;=2.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond.</dd>
 </dl>
-<p>&#64;params      :  a : UniTensor, rank-2, 1 inbond 1 outbond.
-&#64;return      :  u , s , vt</p>
-<blockquote>
-<div>u : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-s : UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix 
-vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</div></blockquote>
+</dd>
+<dt>Return: u , s , vt </dt>
+<dd><dl class="first last docutils">
+<dt>u <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)</dd>
+<dt>s <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)</dd>
+<dt>vt: </dt>
+<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -314,6 +390,7 @@ vt: UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   
