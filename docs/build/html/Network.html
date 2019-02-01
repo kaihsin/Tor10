@@ -135,8 +135,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/Network.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -156,17 +154,67 @@
 <dd><dl class="method">
 <dt id="Tor10.Network.Network.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><em>nwfile=None</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Constructor of the Network</p>
+<p>The Network is an object that allow one to create a complex network from a pre-defined Network file. By putting the Tensors into the Network, the user simply call “Network.Launch()” to get the out-come.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>nwfile:</dt>
+<dd>The path of the Network file.</dd>
+<dt>delimiter:</dt>
+<dd>The delimiter that is used to parse the Network file.</dd>
+</dl>
+</dd>
+<dt>Example:</dt>
+<dd>The following is an simple example for a Network file.</dd>
+</dl>
+<dl class="docutils">
+<dt>::</dt>
+<dd>A : -1 -2; 1 2 
+B : ; 1 3
+C : ; 2 4
+TOUT: -1 -2; 3 4
+Order: (A,B),C</dd>
+</dl>
+<p>Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds.</p>
+<p>The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.</p>
+<p>[Note] that there are two preserved tensor name “TOUT” and “Order”. The “TOUT” specify the output tensor, and “Order” defineds how the Tensors in the Network will be contracted.</p>
+<p>[Note] The “Order” is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.</p>
+<p>The above Network file means:</p>
+<ol class="arabic simple">
+<li>an “A” UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]</li>
+<li>an “B” UniTensor with 0 inbonds, 2 outbonds label [1,3]</li>
+<li>an “C” UniTensor with 0 inbonds, 2 outbonds label [2,4]</li>
+<li>the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].</li>
+<li>the UniTensors in the Network will contract accroding to: “A” and “B” contract first, then contract with C to form the final output UniTensor.</li>
+</ol>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.Network.Network.Fromfile">
 <code class="descname">Fromfile</code><span class="sig-paren">(</span><em>ntwrk_file</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.Fromfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.Fromfile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read the Network file.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>nwfile:</dt>
+<dd>The path of the Network file.</dd>
+<dt>delimiter:</dt>
+<dd>The delimiter that is used to parse the Network file.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.Network.Network.Launch">
 <code class="descname">Launch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.Launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.Launch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Launch the Network. When call, it check if there is a well defined Network structure (Network file loaded), if there is “TOUT” tensor for the Network and if all the Tensors the is being defined in the strucutre are set.</p>
+<dl class="docutils">
+<dt>Return:</dt>
+<dd>UniTensor, the shape and the bonds property are the same as defined in “TOUT”</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.Network.Network.Put">
@@ -222,6 +270,7 @@
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   

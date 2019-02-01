@@ -8,6 +8,46 @@ from .UniTensor import *
 class Network():
     def __init__(self,nwfile=None,delimiter=None):
         """
+        Constructor of the Network
+
+        The Network is an object that allow one to create a complex network from a pre-defined Network file. By putting the Tensors into the Network, the user simply call "Network.Launch()" to get the out-come.
+
+        Args:
+            nwfile:
+                The path of the Network file. 
+
+            delimiter:
+                The delimiter that is used to parse the Network file.
+
+        Example:
+            The following is an simple example for a Network file.
+        ::
+            A : -1 -2; 1 2 
+            B : ; 1 3
+            C : ; 2 4
+            TOUT: -1 -2; 3 4
+            Order: (A,B),C
+            
+        Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. 
+        
+        The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.
+        
+        [Note] that there are two preserved tensor name "TOUT" and "Order". The "TOUT" specify the output tensor, and "Order" defineds how the Tensors in the Network will be contracted. 
+
+        [Note] The "Order" is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.   
+        
+        The above Network file means:
+
+        1. an "A" UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]
+
+        2. an "B" UniTensor with 0 inbonds, 2 outbonds label [1,3]
+
+        3. an "C" UniTensor with 0 inbonds, 2 outbonds label [2,4]
+    
+        4. the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].
+
+        5. the UniTensors in the Network will contract accroding to: "A" and "B" contract first, then contract with C to form the final output UniTensor.
+
         """        
         self.tensors = None # This is the nested list of new labels
         self.TOUT = None    # This is nested list for the labels of out label
@@ -19,6 +59,15 @@ class Network():
         
     def Fromfile(self,ntwrk_file,delimiter=None):
         """
+        Read the Network file.
+        
+        Args:
+            nwfile:
+                The path of the Network file. 
+
+            delimiter:
+                The delimiter that is used to parse the Network file.
+
         """
         self.tensors = None
         self.TOUT = None
@@ -226,6 +275,11 @@ class Network():
 
     def Launch(self):
         """
+        Launch the Network. When call, it check if there is a well defined Network structure (Network file loaded), if there is "TOUT" tensor for the Network and if all the Tensors the is being defined in the strucutre are set. 
+
+        Return:
+            UniTensor, the shape and the bonds property are the same as defined in "TOUT"
+
         """
         if self.tensors is None:
             raise Exception("Network","[ERROR] No in-put tensors for the Network")

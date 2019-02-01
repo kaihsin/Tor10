@@ -155,6 +155,46 @@
 <div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">():</span>
 <div class="viewcode-block" id="Network.__init__"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nwfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor of the Network</span>
+
+<span class="sd">        The Network is an object that allow one to create a complex network from a pre-defined Network file. By putting the Tensors into the Network, the user simply call &quot;Network.Launch()&quot; to get the out-come.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            nwfile:</span>
+<span class="sd">                The path of the Network file. </span>
+
+<span class="sd">            delimiter:</span>
+<span class="sd">                The delimiter that is used to parse the Network file.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            The following is an simple example for a Network file.</span>
+<span class="sd">        ::</span>
+<span class="sd">            A : -1 -2; 1 2 </span>
+<span class="sd">            B : ; 1 3</span>
+<span class="sd">            C : ; 2 4</span>
+<span class="sd">            TOUT: -1 -2; 3 4</span>
+<span class="sd">            Order: (A,B),C</span>
+<span class="sd">            </span>
+<span class="sd">        Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. </span>
+<span class="sd">        </span>
+<span class="sd">        The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.</span>
+<span class="sd">        </span>
+<span class="sd">        [Note] that there are two preserved tensor name &quot;TOUT&quot; and &quot;Order&quot;. The &quot;TOUT&quot; specify the output tensor, and &quot;Order&quot; defineds how the Tensors in the Network will be contracted. </span>
+
+<span class="sd">        [Note] The &quot;Order&quot; is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.   </span>
+<span class="sd">        </span>
+<span class="sd">        The above Network file means:</span>
+
+<span class="sd">        1. an &quot;A&quot; UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]</span>
+
+<span class="sd">        2. an &quot;B&quot; UniTensor with 0 inbonds, 2 outbonds label [1,3]</span>
+
+<span class="sd">        3. an &quot;C&quot; UniTensor with 0 inbonds, 2 outbonds label [2,4]</span>
+<span class="sd">    </span>
+<span class="sd">        4. the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].</span>
+
+<span class="sd">        5. the UniTensors in the Network will contract accroding to: &quot;A&quot; and &quot;B&quot; contract first, then contract with C to form the final output UniTensor.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">tensors</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># This is the nested list of new labels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span> <span class="o">=</span> <span class="kc">None</span>    <span class="c1"># This is nested list for the labels of out label</span>
@@ -166,6 +206,15 @@
         
 <div class="viewcode-block" id="Network.Fromfile"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.Fromfile">[docs]</a>    <span class="k">def</span> <span class="nf">Fromfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ntwrk_file</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the Network file.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            nwfile:</span>
+<span class="sd">                The path of the Network file. </span>
+
+<span class="sd">            delimiter:</span>
+<span class="sd">                The delimiter that is used to parse the Network file.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tensors</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span> <span class="o">=</span> <span class="kc">None</span>
@@ -373,6 +422,11 @@
 
 <div class="viewcode-block" id="Network.Launch"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.Launch">[docs]</a>    <span class="k">def</span> <span class="nf">Launch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Launch the Network. When call, it check if there is a well defined Network structure (Network file loaded), if there is &quot;TOUT&quot; tensor for the Network and if all the Tensors the is being defined in the strucutre are set. </span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            UniTensor, the shape and the bonds property are the same as defined in &quot;TOUT&quot;</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Network&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] No in-put tensors for the Network&quot;</span><span class="p">)</span>

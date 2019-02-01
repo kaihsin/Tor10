@@ -13,11 +13,12 @@ Tor10 Documentation
    :maxdepth: 3
    :caption: Contents:
 
-
    Bond.rst
    UniTensor.rst
    Network.rst
    linalg.rst
+
+
 
 Indices and tables
 ==================
@@ -25,3 +26,9 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+View Source Code on Github
+==========================
+
+* https://github.com/kaihsin/Tor10
+
