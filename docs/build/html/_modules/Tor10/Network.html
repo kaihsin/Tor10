@@ -167,33 +167,46 @@
 <span class="sd">                The delimiter that is used to parse the Network file.</span>
 
 <span class="sd">        Example:</span>
-<span class="sd">            The following is an simple example for a Network file.</span>
-<span class="sd">        ::</span>
-<span class="sd">            A : -1 -2; 1 2 </span>
-<span class="sd">            B : ; 1 3</span>
-<span class="sd">            C : ; 2 4</span>
-<span class="sd">            TOUT: -1 -2; 3 4</span>
-<span class="sd">            Order: (A,B),C</span>
+<span class="sd">            The following is an simple example for a Network file (&quot;test.net&quot;).</span>
+<span class="sd">            ::</span>
+<span class="sd">                A : -1 -2; 1 2 </span>
+<span class="sd">                B : ; 1 3</span>
+<span class="sd">                C : ; 2 4</span>
+<span class="sd">                TOUT: -1 -2; 3 4</span>
+<span class="sd">                Order: (A,B),C</span>
+
 <span class="sd">            </span>
-<span class="sd">        Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. </span>
+<span class="sd">            * Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. </span>
 <span class="sd">        </span>
-<span class="sd">        The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.</span>
+<span class="sd">            * The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.</span>
 <span class="sd">        </span>
-<span class="sd">        [Note] that there are two preserved tensor name &quot;TOUT&quot; and &quot;Order&quot;. The &quot;TOUT&quot; specify the output tensor, and &quot;Order&quot; defineds how the Tensors in the Network will be contracted. </span>
+<span class="sd">            [Note] that there are two preserved tensor name &quot;TOUT&quot; and &quot;Order&quot;. The &quot;TOUT&quot; specify the output tensor, and &quot;Order&quot; defineds how the Tensors in the Network will be contracted. </span>
 
-<span class="sd">        [Note] The &quot;Order&quot; is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.   </span>
+<span class="sd">            [Note] The &quot;Order&quot; is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.   </span>
 <span class="sd">        </span>
-<span class="sd">        The above Network file means:</span>
+<span class="sd">            * The above Network file means:</span>
 
-<span class="sd">        1. an &quot;A&quot; UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]</span>
+<span class="sd">            1. an &quot;A&quot; UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]</span>
 
-<span class="sd">        2. an &quot;B&quot; UniTensor with 0 inbonds, 2 outbonds label [1,3]</span>
+<span class="sd">            2. an &quot;B&quot; UniTensor with 0 inbonds, 2 outbonds label [1,3]</span>
 
-<span class="sd">        3. an &quot;C&quot; UniTensor with 0 inbonds, 2 outbonds label [2,4]</span>
+<span class="sd">            3. an &quot;C&quot; UniTensor with 0 inbonds, 2 outbonds label [2,4]</span>
 <span class="sd">    </span>
-<span class="sd">        4. the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].</span>
+<span class="sd">            4. the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].</span>
 
-<span class="sd">        5. the UniTensors in the Network will contract accroding to: &quot;A&quot; and &quot;B&quot; contract first, then contract with C to form the final output UniTensor.</span>
+<span class="sd">            5. the UniTensors in the Network will contract accroding to: &quot;A&quot; and &quot;B&quot; contract first, then contract with C to form the final output UniTensor.</span>
+
+
+<span class="sd">        &gt;&gt;&gt; Ntwk = Tor10.Network(&quot;test.net&quot;,delimiter=&quot;,&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(Ntwk)</span>
+<span class="sd">        ==== Network ====</span>
+<span class="sd">        [x] A : -1 -2 ; 1 2 </span>
+<span class="sd">        [x] B : ; 1 3 </span>
+<span class="sd">        [x] C : ; 2 4 </span>
+<span class="sd">        TOUT : -1 -2 ; 3 4 </span>
+<span class="sd">        =================</span>
+
+
 
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">tensors</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># This is the nested list of new labels</span>

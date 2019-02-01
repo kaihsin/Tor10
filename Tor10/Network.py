@@ -20,33 +20,46 @@ class Network():
                 The delimiter that is used to parse the Network file.
 
         Example:
-            The following is an simple example for a Network file.
-        ::
-            A : -1 -2; 1 2 
-            B : ; 1 3
-            C : ; 2 4
-            TOUT: -1 -2; 3 4
-            Order: (A,B),C
+            The following is an simple example for a Network file ("test.net").
+            ::
+                A : -1 -2; 1 2 
+                B : ; 1 3
+                C : ; 2 4
+                TOUT: -1 -2; 3 4
+                Order: (A,B),C
+
             
-        Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. 
+            * Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. 
         
-        The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.
+            * The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.
         
-        [Note] that there are two preserved tensor name "TOUT" and "Order". The "TOUT" specify the output tensor, and "Order" defineds how the Tensors in the Network will be contracted. 
+            [Note] that there are two preserved tensor name "TOUT" and "Order". The "TOUT" specify the output tensor, and "Order" defineds how the Tensors in the Network will be contracted. 
 
-        [Note] The "Order" is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.   
+            [Note] The "Order" is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.   
         
-        The above Network file means:
+            * The above Network file means:
 
-        1. an "A" UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]
+            1. an "A" UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]
 
-        2. an "B" UniTensor with 0 inbonds, 2 outbonds label [1,3]
+            2. an "B" UniTensor with 0 inbonds, 2 outbonds label [1,3]
 
-        3. an "C" UniTensor with 0 inbonds, 2 outbonds label [2,4]
+            3. an "C" UniTensor with 0 inbonds, 2 outbonds label [2,4]
     
-        4. the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].
+            4. the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].
 
-        5. the UniTensors in the Network will contract accroding to: "A" and "B" contract first, then contract with C to form the final output UniTensor.
+            5. the UniTensors in the Network will contract accroding to: "A" and "B" contract first, then contract with C to form the final output UniTensor.
+
+
+        >>> Ntwk = Tor10.Network("test.net",delimiter=",")
+        >>> print(Ntwk)
+        ==== Network ====
+        [x] A : -1 -2 ; 1 2 
+        [x] B : ; 1 3 
+        [x] C : ; 2 4 
+        TOUT : -1 -2 ; 3 4 
+        =================
+
+
 
         """        
         self.tensors = None # This is the nested list of new labels

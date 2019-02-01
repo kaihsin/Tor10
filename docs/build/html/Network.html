@@ -166,28 +166,42 @@
 </dl>
 </dd>
 <dt>Example:</dt>
-<dd>The following is an simple example for a Network file.</dd>
-</dl>
-<dl class="docutils">
-<dt>::</dt>
-<dd>A : -1 -2; 1 2 
-B : ; 1 3
-C : ; 2 4
-TOUT: -1 -2; 3 4
-Order: (A,B),C</dd>
-</dl>
-<p>Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds.</p>
-<p>The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.</p>
+<dd><p class="first">The following is an simple example for a Network file (“test.net”).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">2</span> 
+<span class="n">B</span> <span class="p">:</span> <span class="p">;</span> <span class="mi">1</span> <span class="mi">3</span>
+<span class="n">C</span> <span class="p">:</span> <span class="p">;</span> <span class="mi">2</span> <span class="mi">4</span>
+<span class="n">TOUT</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">2</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">4</span>
+<span class="n">Order</span><span class="p">:</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">),</span><span class="n">C</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds.</li>
+<li>The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.</li>
+</ul>
 <p>[Note] that there are two preserved tensor name “TOUT” and “Order”. The “TOUT” specify the output tensor, and “Order” defineds how the Tensors in the Network will be contracted.</p>
 <p>[Note] The “Order” is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.</p>
-<p>The above Network file means:</p>
-<ol class="arabic simple">
+<ul class="simple">
+<li>The above Network file means:</li>
+</ul>
+<ol class="last arabic simple">
 <li>an “A” UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]</li>
 <li>an “B” UniTensor with 0 inbonds, 2 outbonds label [1,3]</li>
 <li>an “C” UniTensor with 0 inbonds, 2 outbonds label [2,4]</li>
 <li>the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].</li>
 <li>the UniTensors in the Network will contract accroding to: “A” and “B” contract first, then contract with C to form the final output UniTensor.</li>
 </ol>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Ntwk</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;test.net&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Ntwk</span><span class="p">)</span>
+<span class="go">==== Network ====</span>
+<span class="go">[x] A : -1 -2 ; 1 2 </span>
+<span class="go">[x] B : ; 1 3 </span>
+<span class="go">[x] C : ; 2 4 </span>
+<span class="go">TOUT : -1 -2 ; 3 4 </span>
+<span class="go">=================</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
