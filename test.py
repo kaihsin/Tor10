@@ -6,6 +6,7 @@ import copy
 
 
 ## Example for Bond:
+print("Testing for Bond")
 bd_x = Tt.Bond(Tt.BD_IN,3)
 bd_y = Tt.Bond(Tt.BD_OUT,4)
 bd_z = Tt.Bond(Tt.BD_IN,3)
@@ -15,20 +16,15 @@ print(bd_x==bd_z) ## This should be true
 print(bd_x is bd_z) ## This should be false
 print(bd_x==bd_y) ## This should be false
 
+print("Testing symmetry Bond")
 bd_sym_x = Tt.Bond(Tt.BD_IN,3,qnums=[[0,-3],[1,-4],[2,5]])
 bd_sym_y = Tt.Bond(Tt.BD_OUT,4,qnums=[[-1,0],[2,1],[0,1],[2,1]])
 print(bd_sym_x)
 print(bd_sym_y)
 
+print("Testing combine sym Bond")
 bd_sym_x.combine(bd_sym_y)
-
 print(bd_sym_x)
-
-#sym_T = Tt.UniTensor(bonds=[bd_sym_x,bd_sym_y],labels=[10,11],dtype=tor.float64)
-#sym_T.Print_diagram()
-#print(sym_T)
-#print(sym_T.GetBlock(2))
-#exit(1)
 
 
 device = tor.device("cuda:0")

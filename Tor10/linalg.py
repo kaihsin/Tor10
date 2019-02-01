@@ -283,6 +283,24 @@ def Svd_truncate(a, truncate=None):
 
 def Matmul(a,b):
     """
+    Performs matrix multiplication on the rank-2 UniTensors. 
+
+        :math:`A \cdot B`
+
+    Note that both the UniTensors should be rank-2, and dimension should be matched. 
+
+    If a and b are both diagonal matrix, the return will be a diagonal matrix. If one (or both) of them are non-diagonal matrix and the other is diagonal matrix, the return will be a dense matrix.
+
+    Args:
+        a: 
+            The UniTensors that will be matrix-multiply
+
+        b: 
+            The UniTensors that will be matrix-multiply
+
+    Return:
+        UniTensor,rank-2 tensor with 1 inbond 1 outbond. 
+
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
@@ -294,19 +312,16 @@ def Matmul(a,b):
 
         if a.is_diag == b.is_diag:
             tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
-                            labels=[a.labels[0],b.labels[1]],\
                             torch_tensor=torch.matmul(a.Storage,b.Storage),\
                             check=False,\
                             is_diag=a.is_diag)
         else:
             if a.is_diag:
                 tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
-                                labels=[a.labels[0],b.labels[1]],\
                                 torch_tensor=torch.matmul(torch.diag(a.Storage),b.Storage),\
                                 check=False)
             if b.is_diag:
                 tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
-                                labels=[a.labels[0],b.labels[1]],\
                                 torch_tensor=torch.matmul(a.Storage,torch.diag(b.Storage)),\
                                 check=False)
 
@@ -322,7 +337,11 @@ def Chain_matmul(*args):
 
         :math:`A \cdot B \cdot C \cdot D \cdots`
 
-    Note that all the UniTensors should be rank-2, and dimension should be matched. 
+    Note that 
+    
+    1. all the UniTensors should be rank-2, and dimension should be matched. 
+    
+    2. The input UniTensors can have some of them are diagonal matrix (is_diag=True). The return will always be a rank-2 UniTensor with is_diag=False 
 
     Args:
         *args: 
@@ -330,7 +349,6 @@ def Chain_matmul(*args):
 
     Return:
         UniTensor,rank-2 tensor with 1 inbond 1 outbond. 
-        The label of inbond and outbond will be will the label of inbond of first UniTensor and the label of outbond of the last UniTensor.
 
     Example:
     ::
@@ -347,7 +365,7 @@ def Chain_matmul(*args):
     is_diag     : False
             ---------------     
             |             |     
-        0 __| 3         2 |__ -1  
+        0 __| 3         2 |__ 1  
             |             |     
             ---------------     
     lbl:0 Dim = 3 |
@@ -378,7 +396,6 @@ def Chain_matmul(*args):
 
 
         return UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
-                         labels=[args[0].labels[0],args[-1].labels[1]],\
                          torch_tensor=torch.chain_matmul(*tmp_args),\
                          check=False)
 
