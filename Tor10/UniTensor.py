@@ -46,8 +46,10 @@ class UniTensor():
                 This states the name of current UniTensor.      
 
         Private Args:
+        
 
-            \color{red}{[Warning] Private Args should not be call directly}
+           ** [Warning] Private Args should not be call directly **
+
 
             torch_tensor : 
                 This is the internal arguments in current version. It should not be directly use, otherwise may cause inconsistence with Bonds and memory layout. 

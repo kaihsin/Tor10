@@ -224,8 +224,9 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 </div></blockquote>
 <p>Private Args:</p>
 <blockquote>
-<div><p>color{red}{[Warning] Private Args should not be call directly}</p>
-<dl class="docutils">
+<div><p>** [Warning] Private Args should not be call directly **</p>
+<blockquote>
+<div><dl class="docutils">
 <dt>torch_tensor <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
 <dd><dl class="first last docutils">
 <dt>This is the internal arguments in current version. It should not be directly use, otherwise may cause inconsistence with Bonds and memory layout. </dt>
@@ -239,6 +240,7 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <dt>check <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
 <dd>This is the internal arguments. It should not be directly use. If False, all the checking across bonds/labels/Storage.shape will be ignore.</dd>
 </dl>
+</div></blockquote>
 </div></blockquote>
 <p>Example for how to create a UniTensor:</p>
 <blockquote>
