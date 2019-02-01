@@ -170,17 +170,15 @@ class Bond():
             >>> a.combine(b)
             >>> print(a)
             Dim = 12 |
-            IN :
+            IN  :
             
         Combine two symmetry bonds:
             >>> c.combine(d)
             >>> print(c)
             Dim = 4 |
-            OUT : +1 +1 -2
-                  +1 +1 -1
-                  +2 +1 -1
-                  +2 +1 +0
-
+            OUT : +1 +1 +2 +2
+                  +1 +1 +1 +1
+                  -2 -1 -1 +0
         """
         ## if bds is Bond class 
         if isinstance(bds,self.__class__):
@@ -221,18 +219,18 @@ class Bond():
         print("Dim = %d |"%(self.dim),end="\n")
 
         if(self.bondType is BD_IN):
-            print("IN :",end='')
+            print("IN  :",end='')
             if not self.qnums is None:
-                for idim in range(len(self.qnums)):
-                    for n in range(self.nsym):
+                for n in range(self.nsym):
+                    for idim in range(len(self.qnums)):
                          print(" %+d"%(self.qnums[idim,n]),end='')
                     print("\n     ",end='')
             print("\n",end="")
         else:
             print("OUT :",end='')
             if not self.qnums is None:
-                for idim in range(len(self.qnums)):
-                    for n in range(self.nsym):
+                for n in range(self.nsym):
+                    for idim in range(len(self.qnums)):
                          print(" %+d"%(self.qnums[idim,n]),end='')
                     print("\n     ",end='')
             print("\n",end="")

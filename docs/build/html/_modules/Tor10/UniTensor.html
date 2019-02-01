@@ -1182,6 +1182,104 @@
     
 <div class="viewcode-block" id="UniTensor.GetBlock"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.GetBlock">[docs]</a>    <span class="k">def</span> <span class="nf">GetBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">qnum</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the Block specify by the quantum number(s). If the UniTensor is non-symmetry, return self. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *qnum:</span>
+<span class="sd">                The quantum number(s). Note that when get-block on a High-rank tensor, the quantum number represent the total quantum number of all the in(out)-bonds.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            * UniTensor, rank-2 (for symmetry tensor)</span>
+<span class="sd">            * self (only if the UniTensor is non-symmetry tensor)</span>
+<span class="sd">        </span>
+<span class="sd">        Example:</span>
+<span class="sd">            * Single Symmetry::</span>
+<span class="sd">                </span>
+<span class="sd">                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0],[1],[2]])</span>
+<span class="sd">                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">                bd_sym_3 = Tt.Bond(Tt.BD_OUT,5,qnums=[[4],[2],[-1],[5],[1]])</span>
+<span class="sd">                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[10,11,12],dtype=tor.float64)</span>
+<span class="sd">                </span>
+<span class="sd">            &gt;&gt;&gt; sym_T.Print_diagram()</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 3</span>
+<span class="sd">            on device   : cpu</span>
+<span class="sd">            is_diag     : False</span>
+<span class="sd">                    ---------------     </span>
+<span class="sd">                    |             |     </span>
+<span class="sd">               10 __| 3         5 |__ 12 </span>
+<span class="sd">                    |             |     </span>
+<span class="sd">               11 __| 4           |      </span>
+<span class="sd">                    |             |     </span>
+<span class="sd">                    ---------------     </span>
+<span class="sd">            lbl:10 Dim = 3 |</span>
+<span class="sd">            IN  : +0 +1 +2</span>
+<span class="sd">            _</span>
+<span class="sd">            lbl:11 Dim = 4 |</span>
+<span class="sd">            IN  : -1 +2 +0 +2</span>
+<span class="sd">            _</span>
+<span class="sd">            lbl:12 Dim = 5 |</span>
+<span class="sd">            OUT : +4 +2 -1 +5 +1</span>
+
+<span class="sd">            &gt;&gt;&gt; q_in, q_out = GetTotalQnums()</span>
+<span class="sd">            &gt;&gt;&gt; print(q_in)</span>
+<span class="sd">            Dim = 12 |</span>
+<span class="sd">            IN  : -1 +2 +0 +2 +0 +3 +1 +3 +1 +4 +2 +4</span>
+<span class="sd">            </span>
+<span class="sd">            &gt;&gt;&gt; print(q_out)</span>
+<span class="sd">            Dim = 5 |</span>
+<span class="sd">            OUT : +4 +2 -1 +5 +1</span>
+
+<span class="sd">            &gt;&gt;&gt; block_2 = sym_T.GetBlock(2)</span>
+<span class="sd">            &gt;&gt;&gt; print(block_2)</span>
+<span class="sd">            Tensor name: </span>
+<span class="sd">            is_diag    : False</span>
+<span class="sd">            tensor([[0.],</span>
+<span class="sd">                    [0.],</span>
+<span class="sd">                    [0.]], dtype=torch.float64)</span>
+
+<span class="sd">            </span>
+<span class="sd">            * Multiple Symmetry::</span>
+
+<span class="sd">                ## multiple Qnum:</span>
+<span class="sd">                ## U1 x U1 x Z2 x Z4</span>
+<span class="sd">                ## U1 = {-2,-1,0,1,2}</span>
+<span class="sd">                ## Z2 = {-1,1}</span>
+<span class="sd">                ## Z4 = {0,1,2,3}</span>
+<span class="sd">                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                                                     [1, 1,-1, 1],</span>
+<span class="sd">                                                     [2,-1, 1, 0]])</span>
+<span class="sd">                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                                                     [ 0, 0,-1, 2],</span>
+<span class="sd">                                                     [ 1, 0, 1, 0],</span>
+<span class="sd">                                                     [ 2,-2,-1, 1]])</span>
+<span class="sd">                bd_sym_3 = Tt.Bond(Tt.BD_OUT,2,qnums=[[-1,-2,-1,2],</span>
+<span class="sd">                                                      [ 1, 1, -2,3]])</span>
+
+<span class="sd">                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],dtype=tor.float64)</span>
+<span class="sd">                </span>
+<span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
+<span class="sd">            &gt;&gt;&gt; print(tqin)</span>
+<span class="sd">            Dim = 12 |</span>
+<span class="sd">            IN  : -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
+<span class="sd">                  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
+<span class="sd">                  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
+<span class="sd">                  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
+
+<span class="sd">            &gt;&gt;&gt; print(tqout)</span>
+<span class="sd">            Dim = 2 |</span>
+<span class="sd">            OUT : -1 +1</span>
+<span class="sd">                  -2 +1</span>
+<span class="sd">                  -1 -2</span>
+<span class="sd">                  +2 +3</span>
+
+<span class="sd">            &gt;&gt;&gt; block_1123 = sym_T.GetBlock(1,1,-2,3)</span>
+<span class="sd">            &gt;&gt;&gt; print(block_1123)</span>
+<span class="sd">            Tensor name: </span>
+<span class="sd">            is_diag    : False</span>
+<span class="sd">            tensor([[0.]], dtype=torch.float64)</span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 

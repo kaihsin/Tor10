@@ -1035,6 +1035,104 @@ class UniTensor():
     
     def GetBlock(self,*qnum):
         """
+        Return the Block specify by the quantum number(s). If the UniTensor is non-symmetry, return self. 
+
+        Args:
+            *qnum:
+                The quantum number(s). Note that when get-block on a High-rank tensor, the quantum number represent the total quantum number of all the in(out)-bonds.
+
+        Return:
+            * UniTensor, rank-2 (for symmetry tensor)
+            * self (only if the UniTensor is non-symmetry tensor)
+        
+        Example:
+            * Single Symmetry::
+                
+                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0],[1],[2]])
+                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1],[2],[0],[2]])
+                bd_sym_3 = Tt.Bond(Tt.BD_OUT,5,qnums=[[4],[2],[-1],[5],[1]])
+                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[10,11,12],dtype=tor.float64)
+                
+            >>> sym_T.Print_diagram()
+            tensor Name : 
+            tensor Rank : 3
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+               10 __| 3         5 |__ 12 
+                    |             |     
+               11 __| 4           |      
+                    |             |     
+                    ---------------     
+            lbl:10 Dim = 3 |
+            IN  : +0 +1 +2
+            _
+            lbl:11 Dim = 4 |
+            IN  : -1 +2 +0 +2
+            _
+            lbl:12 Dim = 5 |
+            OUT : +4 +2 -1 +5 +1
+
+            >>> q_in, q_out = GetTotalQnums()
+            >>> print(q_in)
+            Dim = 12 |
+            IN  : -1 +2 +0 +2 +0 +3 +1 +3 +1 +4 +2 +4
+            
+            >>> print(q_out)
+            Dim = 5 |
+            OUT : +4 +2 -1 +5 +1
+
+            >>> block_2 = sym_T.GetBlock(2)
+            >>> print(block_2)
+            Tensor name: 
+            is_diag    : False
+            tensor([[0.],
+                    [0.],
+                    [0.]], dtype=torch.float64)
+
+            
+            * Multiple Symmetry::
+
+                ## multiple Qnum:
+                ## U1 x U1 x Z2 x Z4
+                ## U1 = {-2,-1,0,1,2}
+                ## Z2 = {-1,1}
+                ## Z4 = {0,1,2,3}
+                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],
+                                                     [1, 1,-1, 1],
+                                                     [2,-1, 1, 0]])
+                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1, 0,-1, 3],
+                                                     [ 0, 0,-1, 2],
+                                                     [ 1, 0, 1, 0],
+                                                     [ 2,-2,-1, 1]])
+                bd_sym_3 = Tt.Bond(Tt.BD_OUT,2,qnums=[[-1,-2,-1,2],
+                                                      [ 1, 1, -2,3]])
+
+                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],dtype=tor.float64)
+                
+            >>> tqin, tqout = sym_T.GetTotalQnums()
+            >>> print(tqin)
+            Dim = 12 |
+            IN  : -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4
+                  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3
+                  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0
+                  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1
+
+            >>> print(tqout)
+            Dim = 2 |
+            OUT : -1 +1
+                  -2 +1
+                  -1 -2
+                  +2 +3
+
+            >>> block_1123 = sym_T.GetBlock(1,1,-2,3)
+            >>> print(block_1123)
+            Tensor name: 
+            is_diag    : False
+            tensor([[0.]], dtype=torch.float64)
+
+
         """
         if self.bonds[0].qnums is None:
 

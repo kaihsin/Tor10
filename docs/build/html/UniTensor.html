@@ -392,7 +392,122 @@ When call the Contiguous(), the memory will be moved to match the shape of UniTe
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.GetBlock">
 <code class="descname">GetBlock</code><span class="sig-paren">(</span><em>*qnum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.GetBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.GetBlock" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the Block specify by the quantum number(s). If the UniTensor is non-symmetry, return self.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><a href="#id5"><span class="problematic" id="id6">*</span></a>qnum:</dt>
+<dd>The quantum number(s). Note that when get-block on a High-rank tensor, the quantum number represent the total quantum number of all the in(out)-bonds.</dd>
+</dl>
+</dd>
+<dt>Return:</dt>
+<dd><ul class="first last simple">
+<li>UniTensor, rank-2 (for symmetry tensor)</li>
+<li>self (only if the UniTensor is non-symmetry tensor)</li>
+</ul>
+</dd>
+<dt>Example:</dt>
+<dd><ul class="first">
+<li><p class="first">Single Symmetry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">sym_T</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tor</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sym_T</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">   10 __| 3         5 |__ 12 </span>
+<span class="go">        |             |     </span>
+<span class="go">   11 __| 4           |      </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:10 Dim = 3 |</span>
+<span class="go">IN  : +0 +1 +2</span>
+<span class="go">_</span>
+<span class="go">lbl:11 Dim = 4 |</span>
+<span class="go">IN  : -1 +2 +0 +2</span>
+<span class="go">_</span>
+<span class="go">lbl:12 Dim = 5 |</span>
+<span class="go">OUT : +4 +2 -1 +5 +1</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q_in</span><span class="p">,</span> <span class="n">q_out</span> <span class="o">=</span> <span class="n">GetTotalQnums</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">q_in</span><span class="p">)</span>
+<span class="go">Dim = 12 |</span>
+<span class="go">IN  : -1 +2 +0 +2 +0 +3 +1 +3 +1 +4 +2 +4</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">q_out</span><span class="p">)</span>
+<span class="go">Dim = 5 |</span>
+<span class="go">OUT : +4 +2 -1 +5 +1</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_2</span> <span class="o">=</span> <span class="n">sym_T</span><span class="o">.</span><span class="n">GetBlock</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">block_2</span><span class="p">)</span>
+<span class="go">Tensor name: </span>
+<span class="go">is_diag    : False</span>
+<span class="go">tensor([[0.],</span>
+<span class="go">        [0.],</span>
+<span class="go">        [0.]], dtype=torch.float64)</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Multiple Symmetry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## multiple Qnum:</span>
+<span class="c1">## U1 x U1 x Z2 x Z4</span>
+<span class="c1">## U1 = {-2,-1,0,1,2}</span>
+<span class="c1">## Z2 = {-1,1}</span>
+<span class="c1">## Z4 = {0,1,2,3}</span>
+<span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                     <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                                     <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                                     <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                     <span class="p">[</span> <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+                                      <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
+
+<span class="n">sym_T</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tor</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tqin</span><span class="p">,</span> <span class="n">tqout</span> <span class="o">=</span> <span class="n">sym_T</span><span class="o">.</span><span class="n">GetTotalQnums</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqin</span><span class="p">)</span>
+<span class="go">Dim = 12 |</span>
+<span class="go">IN  : -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
+<span class="go">      +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
+<span class="go">      +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
+<span class="go">      +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqout</span><span class="p">)</span>
+<span class="go">Dim = 2 |</span>
+<span class="go">OUT : -1 +1</span>
+<span class="go">      -2 +1</span>
+<span class="go">      -1 -2</span>
+<span class="go">      +2 +3</span>
+</pre></div>
+</div>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_1123</span> <span class="o">=</span> <span class="n">sym_T</span><span class="o">.</span><span class="n">GetBlock</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">block_1123</span><span class="p">)</span>
+<span class="go">Tensor name: </span>
+<span class="go">is_diag    : False</span>
+<span class="go">tensor([[0.]], dtype=torch.float64)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.GetTotalQnums">
