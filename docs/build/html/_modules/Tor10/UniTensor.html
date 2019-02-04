@@ -1450,25 +1450,16 @@
     
     <span class="k">return</span> <span class="n">tmp</span></div>
 
-
-<div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Contract">[docs]</a><span class="k">def</span> <span class="nf">Contract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Contract">[docs]</a><span class="k">def</span> <span class="nf">Contract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">inbond_first</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
-
         <span class="c1">## get same vector:</span>
         <span class="n">same</span><span class="p">,</span> <span class="n">a_ind</span><span class="p">,</span> <span class="n">b_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span><span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1">## -v</span>
-        <span class="c1">#print(a_ind,b_ind)</span>
 
         <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">same</span><span class="p">)):</span>
-            <span class="c1">## check dim:</span>
-            <span class="c1">#for i in range(len(a_ind)):</span>
-            <span class="c1">#    if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:</span>
-            <span class="c1">#        raise ValueError(&quot;Contact(a,b)&quot;,&quot;[ERROR] contract Bonds that has different dim.&quot;)</span>
-
 
             <span class="c1">## Qnum_ipoint</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span><span class="o">^</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
@@ -1482,14 +1473,6 @@
             <span class="n">aind_no_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)),</span><span class="n">a_ind</span><span class="p">)</span>
             <span class="n">bind_no_combine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">)),</span><span class="n">b_ind</span><span class="p">)</span>
 
-            <span class="c1">#print(aind_no_combine,bind_no_combine)</span>
-            
-            <span class="n">maper_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">aind_no_combine</span><span class="p">,</span><span class="n">a_ind</span><span class="p">])</span>
-            <span class="n">maper_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">b_ind</span><span class="p">,</span><span class="n">bind_no_combine</span><span class="p">])</span>
-
-            <span class="n">old_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">False</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-            <span class="n">combined_dim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">old_shape</span><span class="p">[</span><span class="n">a_ind</span><span class="p">])</span>
-
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span> <span class="p">:</span>
                 <span class="n">tmpa</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>   
@@ -1500,27 +1483,27 @@
             <span class="k">else</span><span class="p">:</span>   
                 <span class="n">tmpb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">Storage</span>
 
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">tmpa</span><span class="p">,</span><span class="n">tmpb</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="n">a_ind</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">b_ind</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+            
+            <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">aind_no_combine</span><span class="p">]),</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">bind_no_combine</span><span class="p">])])</span>
+            
+            <span class="n">new_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">aind_no_combine</span><span class="p">]),</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">bind_no_combine</span><span class="p">])])</span>
+            
+            <span class="k">if</span> <span class="n">inbond_first</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_OUT</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_bonds</span><span class="p">])</span>
+                    <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                    <span class="n">new_labels</span><span class="o">=</span> <span class="n">new_labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
 
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">tmpa</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper_a</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">combined_dim</span><span class="p">),</span>\
-                               <span class="n">tmpb</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper_b</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">combined_dim</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-            <span class="n">new_shape</span> <span class="o">=</span> <span class="p">[</span> <span class="n">bd</span><span class="o">.</span><span class="n">dim</span> <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">aind_no_combine</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span> <span class="n">bd</span><span class="o">.</span><span class="n">dim</span> <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">bind_no_combine</span><span class="p">]]</span>
-            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">aind_no_combine</span><span class="p">],</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">bind_no_combine</span><span class="p">]]),</span>\
-                             <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">aind_no_combine</span><span class="p">],</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">bind_no_combine</span><span class="p">]]),</span>\
-                             <span class="n">torch_tensor</span><span class="o">=</span><span class="n">tmp</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">new_shape</span><span class="p">),</span>\
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span>\
+                             <span class="n">labels</span><span class="o">=</span><span class="n">new_labels</span><span class="p">,</span>\
+                             <span class="n">torch_tensor</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>\
                              <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="c1">## direct product</span>
-            <span class="n">Nin_a</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span> <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_IN</span><span class="p">])</span>
-            <span class="n">Nin_b</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_IN</span><span class="p">])</span>
-            <span class="n">Nout_a</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">-</span> <span class="n">Nin_a</span>
-            <span class="n">Nout_b</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">-</span> <span class="n">Nin_b</span>
-
-            <span class="n">new_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">])</span>
-            <span class="n">DALL</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">))]</span> <span class="o">+</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">))]</span>
-
-            <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">Nin_a</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">Nin_b</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">Nout_a</span><span class="p">)</span> <span class="o">+</span> <span class="n">Nin_a</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">+</span> <span class="n">Nin_b</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">Nout_b</span><span class="p">)])</span>
-
+            
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span> <span class="p">:</span>
                 <span class="n">tmpa</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>   
@@ -1531,14 +1514,113 @@
             <span class="k">else</span><span class="p">:</span>   
                 <span class="n">tmpb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">Storage</span>
 
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">tmpa</span><span class="p">,</span><span class="n">tmpb</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">),</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">)])</span>
+            <span class="n">new_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">),</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">)])</span>
 
-            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="n">Nin_a</span><span class="p">],</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="n">Nin_b</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">Nin_a</span><span class="p">:],</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">Nin_b</span><span class="p">:]]),</span>\
-                            <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[:</span><span class="n">Nin_a</span><span class="p">],</span> <span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">[:</span><span class="n">Nin_b</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">Nin_a</span><span class="p">:],</span> <span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">Nin_b</span><span class="p">:]]),</span>\
-                            <span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ger</span><span class="p">(</span><span class="n">tmpa</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">tmpb</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">DALL</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper</span><span class="o">.</span><span class="n">tolist</span><span class="p">()),</span>\
-                            <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">inbond_first</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_OUT</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_bonds</span><span class="p">])</span>
+                    <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                    <span class="n">new_labels</span><span class="o">=</span> <span class="n">new_labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span>\
+                             <span class="n">labels</span><span class="o">=</span><span class="n">new_labels</span><span class="p">,</span>\
+                             <span class="n">torch_tensor</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>\
+                             <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Contract(a,b)&#39;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] a and b both have to be UniTensor&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1">#def Contract_old(a,b):</span>
+<span class="c1">#    &quot;&quot;&quot;</span>
+<span class="c1">#    &quot;&quot;&quot;</span>
+<span class="c1">#    if isinstance(a,UniTensor) and isinstance(b,UniTensor):</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#        ## get same vector:</span>
+<span class="c1">#        same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)</span>
+<span class="c1">#</span>
+<span class="c1">#        ## -v</span>
+<span class="c1">#        #print(a_ind,b_ind)</span>
+<span class="c1">#</span>
+<span class="c1">#        if(len(same)):</span>
+<span class="c1">#            ## check dim:</span>
+<span class="c1">#            #for i in range(len(a_ind)):</span>
+<span class="c1">#            #    if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:</span>
+<span class="c1">#            #        raise ValueError(&quot;Contact(a,b)&quot;,&quot;[ERROR] contract Bonds that has different dim.&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#            ## Qnum_ipoint</span>
+<span class="c1">#            if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):</span>
+<span class="c1">#                raise Exception(&quot;Contract(a,b)&quot;,&quot;[ERROR] contract Symm TN with non-sym tensor&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#            if(a.bonds[0].qnums is not None):</span>
+<span class="c1">#                for i in range(len(a_ind)):</span>
+<span class="c1">#                    if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():</span>
+<span class="c1">#                        raise ValueError(&quot;Contact(a,b)&quot;,&quot;[ERROR] contract Bonds that has qnums mismatch.&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#            aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)</span>
+<span class="c1">#            bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)</span>
+<span class="c1">#</span>
+<span class="c1">#            #print(aind_no_combine,bind_no_combine)</span>
+<span class="c1">#            </span>
+<span class="c1">#            maper_a = np.concatenate([aind_no_combine,a_ind])</span>
+<span class="c1">#            maper_b = np.concatenate([b_ind,bind_no_combine])</span>
+<span class="c1">#</span>
+<span class="c1">#            old_shape = np.array(a.Storage.shape) if a.is_diag==False else np.array([a.Storage.shape[0],a.Storage.shape[0]])</span>
+<span class="c1">#            combined_dim = np.prod(old_shape[a_ind])</span>
+<span class="c1">#</span>
+<span class="c1">#            if a.is_diag :</span>
+<span class="c1">#                tmpa = torch.diag(a.Storage).to(a.Storage.device)</span>
+<span class="c1">#            else:   </span>
+<span class="c1">#                tmpa = a.Storage</span>
+<span class="c1">#            </span>
+<span class="c1">#            if b.is_diag :</span>
+<span class="c1">#                tmpb = torch.diag(b.Storage).to(b.Storage.device)</span>
+<span class="c1">#            else:   </span>
+<span class="c1">#                tmpb = b.Storage</span>
+<span class="c1">#</span>
+<span class="c1">#            tmp = torch.matmul(tmpa.permute(maper_a.tolist()).reshape(-1,combined_dim),\</span>
+<span class="c1">#                               tmpb.permute(maper_b.tolist()).reshape(combined_dim,-1))</span>
+<span class="c1">#            new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]</span>
+<span class="c1">#            return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\</span>
+<span class="c1">#                             labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\</span>
+<span class="c1">#                             torch_tensor=tmp.view(new_shape),\</span>
+<span class="c1">#                             check=False)</span>
+<span class="c1">#</span>
+<span class="c1">#        else:</span>
+<span class="c1">#            ## direct product</span>
+<span class="c1">#            Nin_a = len([1 for i in range(len(a.labels)) if a.bonds[i].bondType is BD_IN])</span>
+<span class="c1">#            Nin_b = len([1 for i in range(len(b.labels)) if b.bonds[i].bondType is BD_IN])</span>
+<span class="c1">#            Nout_a = len(a.labels) - Nin_a</span>
+<span class="c1">#            Nout_b = len(b.labels) - Nin_b</span>
+<span class="c1">#</span>
+<span class="c1">#            new_label = np.concatenate([a.labels, b.labels])</span>
+<span class="c1">#            DALL = [a.bonds[i].dim for i in range(len(a.bonds))] + [b.bonds[i].dim for i in range(len(b.bonds))]</span>
+<span class="c1">#</span>
+<span class="c1">#            maper = np.concatenate([np.arange(Nin_a), len(a.labels) + np.arange(Nin_b), np.arange(Nout_a) + Nin_a, len(a.labels) + Nin_b + np.arange(Nout_b)])</span>
+<span class="c1">#</span>
+<span class="c1">#            if a.is_diag :</span>
+<span class="c1">#                tmpa = torch.diag(a.Storage)</span>
+<span class="c1">#            else:   </span>
+<span class="c1">#                tmpa = a.Storage</span>
+<span class="c1">#            </span>
+<span class="c1">#            if b.is_diag :</span>
+<span class="c1">#                tmpb = torch.diag(b.Storage)</span>
+<span class="c1">#            else:   </span>
+<span class="c1">#                tmpb = b.Storage</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#            return UniTensor(bonds=np.concatenate([a.bonds[:Nin_a],b.bonds[:Nin_b],a.bonds[Nin_a:],b.bonds[Nin_b:]]),\</span>
+<span class="c1">#                            labels=np.concatenate([a.labels[:Nin_a], b.labels[:Nin_b], a.labels[Nin_a:], b.labels[Nin_b:]]),\</span>
+<span class="c1">#                            torch_tensor=torch.ger(tmpa.view(-1),tmpb.view(-1)).reshape(DALL).permute(maper.tolist()),\</span>
+<span class="c1">#                            check=False)</span>
+<span class="c1">#            </span>
+<span class="c1">#    else:</span>
+<span class="c1">#        raise Exception(&#39;Contract(a,b)&#39;, &quot;[ERROR] a and b both have to be UniTensor&quot;)</span>
 
 
 

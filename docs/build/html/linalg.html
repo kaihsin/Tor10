@@ -324,6 +324,29 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </dd></dl>
 
 <dl class="function">
+<dt id="Tor10.linalg.Otimes">
+<code class="descclassname">Tor10.linalg.</code><code class="descname">Otimes</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Otimes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Otimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform matrix product for two rank-2 tensors.</p>
+<blockquote>
+<div><span class="math notranslate nohighlight">\(a \otimes b\)</span></div></blockquote>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>a:  </dt>
+<dd>UniTensor, must be rank-2</dd>
+<dt>b:</dt>
+<dd>UUniTensor, must be rank-2</dd>
+</dl>
+</dd>
+<dt>Return:</dt>
+<dd><p class="first">UniTensor, rank-2, one in-bond one out-bond. 
+If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.</p>
+<p class="last">If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="Tor10.linalg.Qdr">
 <code class="descclassname">Tor10.linalg.</code><code class="descname">Qdr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Qdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Qdr" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function performs the qdr decomposition</p>

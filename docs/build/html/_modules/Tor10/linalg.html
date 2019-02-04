@@ -149,6 +149,60 @@
 <span class="kn">import</span> <span class="nn">torch</span> 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<div class="viewcode-block" id="Otimes"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Otimes">[docs]</a><span class="k">def</span> <span class="nf">Otimes</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform matrix product for two rank-2 tensors.</span>
+
+<span class="sd">        :math:`a \otimes b`    </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a:  </span>
+<span class="sd">            UniTensor, must be rank-2</span>
+<span class="sd">        </span>
+<span class="sd">        b:</span>
+<span class="sd">            UUniTensor, must be rank-2</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor, rank-2, one in-bond one out-bond. </span>
+<span class="sd">        If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.</span>
+
+<span class="sd">        If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
+
+                <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span>\
+                                 <span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ger</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">b</span><span class="o">.</span><span class="n">Storage</span><span class="p">),</span>\
+                                 <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
+                <span class="n">tmpa</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmpa</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span>
+
+            <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
+                <span class="n">tmpb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmpb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">Storage</span>            
+
+            <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">b</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span>\
+                             <span class="n">torch_tensor</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>\
+                             <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Otimes&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR], Otimes only accept rank-2 UniTensors as arguments.&quot;</span><span class="p">)</span>
+        
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Otimes&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR], Otimes only accept UniTensor as arguments.&quot;</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="ExpH"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.ExpH">[docs]</a><span class="k">def</span> <span class="nf">ExpH</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function performs </span>
