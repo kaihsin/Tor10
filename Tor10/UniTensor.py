@@ -1316,7 +1316,6 @@ def Contract(a,b):
             else:   
                 tmpb = b.Storage
 
-
             tmp = torch.matmul(tmpa.permute(maper_a.tolist()).reshape(-1,combined_dim),\
                                tmpb.permute(maper_b.tolist()).reshape(combined_dim,-1))
             new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]

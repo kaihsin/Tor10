@@ -16,23 +16,28 @@ print(bd_x==bd_z) ## This should be true
 print(bd_x is bd_z) ## This should be false
 print(bd_x==bd_y) ## This should be false
 
+
+## Example for Symmetry Bond:
 print("Testing symmetry Bond")
 bd_sym_x = Tt.Bond(Tt.BD_IN,3,qnums=[[0,-3],[1,-4],[2,5]])
 bd_sym_y = Tt.Bond(Tt.BD_OUT,4,qnums=[[-1,0],[2,1],[0,1],[2,1]])
 print(bd_sym_x)
 print(bd_sym_y)
 
+
+## Testing combine sym Bond:
+bd_sym_x = Tt.Bond(Tt.BD_IN,3,qnums=[[0,-3],[1,-4],[2,5]])
+bd_sym_y = Tt.Bond(Tt.BD_OUT,4,qnums=[[-1,0],[2,1],[0,1],[2,1]])
 print("Testing combine sym Bond")
 bd_sym_x.combine(bd_sym_y)
 print(bd_sym_x)
 
 
-device = tor.device("cuda:0")
+## Testing combine
 bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
 bds_y = [Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,3)]
 x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5],dtype=tor.float64,device=tor.device("cpu"))
 y = Tt.UniTensor(bonds=bds_y, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
-#print(len(x))
 print(x.shape())
 print(x)
 x.Print_diagram()
@@ -40,11 +45,34 @@ print(x.labels)
 y.Print_diagram()
 print(y.labels)
 
+
+## Testing Contract:
+bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
+bds_y = [Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,3)]
+x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5],dtype=tor.float64,device=tor.device("cpu"))
+y = Tt.UniTensor(bonds=bds_y, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
 c = Tt.Contract(x,y)
 print(c)
 c.Print_diagram()
-c.Rand()
+
+bds_x2 = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,2),Tt.Bond(Tt.BD_OUT,3)]
+bds_y2 = [Tt.Bond(Tt.BD_OUT,2),Tt.Bond(Tt.BD_OUT,3)]
+x = Tt.UniTensor(bonds=bds_x2, labels=[4,1,5],dtype=tor.float64,device=tor.device("cpu"))
+y = Tt.UniTensor(bonds=bds_y2, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
+c = Tt.Contract(x,y)
 print(c)
+c.Print_diagram()
+
+bds_x3 = [Tt.Bond(Tt.BD_OUT,2),Tt.Bond(Tt.BD_OUT,3)]
+bds_y3 = [Tt.Bond(Tt.BD_OUT,2),Tt.Bond(Tt.BD_OUT,3)]
+x = Tt.UniTensor(bonds=bds_x3, labels=[1,5],dtype=tor.float64,device=tor.device("cpu"))
+y = Tt.UniTensor(bonds=bds_y3, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
+c = Tt.Contract(x,y)
+print(c)
+#c.Print_diagram()
+
+exit(1)
+
 
 y[1,2] = 1
 x[0,1] = 4
