@@ -5,7 +5,6 @@ import torch as tor
 import copy
 import numpy as np 
 
-
 if len(sys.argv) < 5:
     print(".py <J> <Hx> <chi> <converge>")
     exit(1)
@@ -33,30 +32,22 @@ Sx.SetElem([0, 1,\
             1, 0 ])
 I.SetElem([1, 0,\
            0, 1 ])
+
 Sz = Sz*J
-Sz2 = copy.deepcopy(Sz)
 
 ## Create NN terms
 Sx.SetLabels([2,3]) 
 Sx = Sx*Hx
 I.SetLabels([4,5])
 
-
-#print(Sx)
-#print(I)
-TFterm = Tt.Contract(Sx,I) + Tt.Contract(I,Sx)
-# del Sx, I
-
-Sz2.SetLabels([2,3])
-ZZterm = Tt.Contract(Sz,Sz2)
-del Sz,Sz2
+TFterm = Tt.Otimes(Sx,I) + Tt.Otimes(I,Sx)
+ZZterm = Tt.Otimes(Sz,Sz)
+del Sz,Sx,I
 
 H = TFterm + ZZterm
 del TFterm,ZZterm
 
-H.Contiguous()
 H.Reshape([4,4],new_labels=[0,1],N_inbond=1)
-
 ## Create Evov Op.
 eH = Tt.ExpH(H*-0.1)
 eH.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2)
@@ -69,27 +60,23 @@ H.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2) # this is estimator.
 #   --A-la-B-lb-- 
 #
 A = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,chi),Tt.Bond(Tt.BD_OUT,2),Tt.Bond(Tt.BD_OUT,chi)],
-              labels=[-1,0,-2])
-B = Tt.UniTensor(bonds=A.bonds,labels=[-3,1,-4])
-A.Rand()
-B.Rand()
+                 labels=[-1,0,-2]).Rand()
+B = Tt.UniTensor(bonds=A.bonds,labels=[-3,1,-4]).Rand()
 
-la =  Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,chi),Tt.Bond(Tt.BD_OUT,chi)],
-              labels=[-2,-3],is_diag=True)
+la = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,chi),Tt.Bond(Tt.BD_OUT,chi)],
+              labels=[-2,-3],is_diag=True).Rand()
 lb = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,chi),Tt.Bond(Tt.BD_OUT,chi)],
-              labels=[-4,-5],is_diag=True)
-
-lb.Rand()
-la.Rand()
+              labels=[-4,-5],is_diag=True).Rand()
 
 
-### Move to GPU:
 H.to(tor.device("cuda:0"))
+eH.to(tor.device("cuda:0"))
 A.to(tor.device("cuda:0"))
 B.to(tor.device("cuda:0"))
 la.to(tor.device("cuda:0"))
 lb.to(tor.device("cuda:0"))
-eH.to(tor.device("cuda:0"))
+
+
 ## Evov:
 Elast = 0
 for i in range(100000):
@@ -98,7 +85,7 @@ for i in range(100000):
     la.SetLabels([-2,-3])
     lb.SetLabels([-4,-5])
 
-    X = Tt.Contract(Tt.Contract(A,la),Tt.Contract(B,lb))
+    X = Tt.Contract(Tt.Contract(A,la,inbond_first=False),Tt.Contract(B,lb,inbond_first=False))
     lb.SetLabel(-1,idx=1)
     X = Tt.Contract(lb,X)
 
@@ -108,12 +95,12 @@ for i in range(100000):
     #  (-4) --lb-A-la-B-lb-- (-5) 
     #
     #X.Print_diagram()
-    XNorm = Tt.Contract(X, X)
-    XH = Tt.Contract(X, H)
+    XNorm = Tt.Contract(X, X,inbond_first=False)
+    XH = Tt.Contract(X, H,inbond_first=False)
     #XH.Print_diagram()
     XH.SetLabels([-4,-5,0,1]) ## JJ, this is your bug.
-    XHX = Tt.Contract(X, XH)
-    XeH = Tt.Contract(X,eH)
+    XHX = Tt.Contract(X, XH,inbond_first=False)
+    XeH = Tt.Contract(X,eH,inbond_first=False)
     
     # measurements
     E = (XHX.Storage / XNorm.Storage).item()
@@ -144,9 +131,8 @@ for i in range(100000):
 	
 
     lb_inv = Tt.Inverse(lb)
-    #lb_inv.Print_diagram()
-    A = Tt.Contract(lb_inv, A)
-    B = Tt.Contract(B, lb_inv)
+    A = Tt.Contract(lb_inv, A,inbond_first=False)
+    B = Tt.Contract(B, lb_inv,inbond_first=False)
 
 
     # translation symmetry, exchange A and B site

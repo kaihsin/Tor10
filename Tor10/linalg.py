@@ -2,6 +2,60 @@ from .UniTensor import *
 import torch 
 import numpy as np
 
+def Otimes(a,b):
+    """
+    Perform matrix product for two rank-2 tensors.
+
+        :math:`a \otimes b`    
+
+    Args:
+        a:  
+            UniTensor, must be rank-2
+        
+        b:
+            UUniTensor, must be rank-2
+
+    Return:
+        UniTensor, rank-2, one in-bond one out-bond. 
+        If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.
+
+        If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.
+
+
+    """
+
+    if isinstance(a,UniTensor) and isinstance(b,UniTensor):
+        if len(a.labels)==2 and len(b.labels)==2:
+            if a.is_diag and b.is_diag:
+
+                return UniTensor(bonds=[Bond(BD_IN,out.shape[0]),Bond(BD_OUT,out.shape[0])],\
+                                 torch_tensor=torch.ger(a.Storage,b.Storage),\
+                                 is_diag=True,check=False)
+
+
+            if a.is_diag:
+                tmpa = torch.diag(a.Storage)
+            else:
+                tmpa = a.Storage
+
+            if b.is_diag:
+                tmpb = torch.diag(b.Storage)
+            else:
+                tmpb = b.Storage            
+
+            out = torch.tensordot(a.Storage,b.Storage,dims=0).permute(0,2,1,3).reshape(a.Storage.shape[0]*b.Storage.shape[0],-1)
+            return UniTensor(bonds=[Bond(BD_IN,out.shape[0]),Bond(BD_OUT,out.shape[1])],\
+                             torch_tensor=out,\
+                             check=False)
+
+        else:
+            raise TypeError("Otimes","[ERROR], Otimes only accept rank-2 UniTensors as arguments.")
+        
+    else:
+        raise TypeError("Otimes","[ERROR], Otimes only accept UniTensor as arguments.")
+
+
+
 def ExpH(a):
     """
     This function performs 

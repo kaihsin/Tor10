@@ -1303,25 +1303,16 @@ def Load(filename):
     
     return tmp
 
-
-def Contract(a,b):
+def Contract(a,b,inbond_first=True):
     """
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
-
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
-        ## -v
-        #print(a_ind,b_ind)
 
         if(len(same)):
-            ## check dim:
-            #for i in range(len(a_ind)):
-            #    if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:
-            #        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has different dim.")
-
 
             ## Qnum_ipoint
             if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):
@@ -1335,14 +1326,6 @@ def Contract(a,b):
             aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
             bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
 
-            #print(aind_no_combine,bind_no_combine)
-            
-            maper_a = np.concatenate([aind_no_combine,a_ind])
-            maper_b = np.concatenate([b_ind,bind_no_combine])
-
-            old_shape = np.array(a.Storage.shape) if a.is_diag==False else np.array([a.Storage.shape[0],a.Storage.shape[0]])
-            combined_dim = np.prod(old_shape[a_ind])
-
             if a.is_diag :
                 tmpa = torch.diag(a.Storage).to(a.Storage.device)
             else:   
@@ -1353,26 +1336,27 @@ def Contract(a,b):
             else:   
                 tmpb = b.Storage
 
-            tmp = torch.matmul(tmpa.permute(maper_a.tolist()).reshape(-1,combined_dim),\
-                               tmpb.permute(maper_b.tolist()).reshape(combined_dim,-1))
-            new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]
-            return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\
-                             labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\
-                             torch_tensor=tmp.view(new_shape),\
+            tmp = torch.tensordot(tmpa,tmpb,dims=(a_ind.tolist(),b_ind.tolist()))
+            
+            new_bonds = np.concatenate([copy.deepcopy(a.bonds[aind_no_combine]),copy.deepcopy(b.bonds[bind_no_combine])])
+            
+            new_labels = np.concatenate([copy.copy(a.labels[aind_no_combine]),copy.copy(b.labels[bind_no_combine])])
+            
+            if inbond_first:
+                if len(new_bonds)>0:
+                    maper = np.argsort([x.bondType==BD_OUT for x in new_bonds])
+                    new_bonds = new_bonds[maper]
+                    new_labels= new_labels[maper]
+                    tmp = tmp.permute(*maper)
+
+            return UniTensor(bonds =new_bonds,\
+                             labels=new_labels,\
+                             torch_tensor=tmp,\
                              check=False)
 
         else:
             ## direct product
-            Nin_a = len([1 for i in range(len(a.labels)) if a.bonds[i].bondType is BD_IN])
-            Nin_b = len([1 for i in range(len(b.labels)) if b.bonds[i].bondType is BD_IN])
-            Nout_a = len(a.labels) - Nin_a
-            Nout_b = len(b.labels) - Nin_b
-
-            new_label = np.concatenate([a.labels, b.labels])
-            DALL = [a.bonds[i].dim for i in range(len(a.bonds))] + [b.bonds[i].dim for i in range(len(b.bonds))]
-
-            maper = np.concatenate([np.arange(Nin_a), len(a.labels) + np.arange(Nin_b), np.arange(Nout_a) + Nin_a, len(a.labels) + Nin_b + np.arange(Nout_b)])
-
+            
             if a.is_diag :
                 tmpa = torch.diag(a.Storage)
             else:   
@@ -1383,14 +1367,113 @@ def Contract(a,b):
             else:   
                 tmpb = b.Storage
 
+            tmp = torch.tensordot(tmpa,tmpb,dims=0)
+            new_bonds = np.concatenate([copy.deepcopy(a.bonds),copy.deepcopy(b.bonds)])
+            new_labels = np.concatenate([copy.copy(a.labels), copy.copy(b.labels)])
 
-            return UniTensor(bonds=np.concatenate([a.bonds[:Nin_a],b.bonds[:Nin_b],a.bonds[Nin_a:],b.bonds[Nin_b:]]),\
-                            labels=np.concatenate([a.labels[:Nin_a], b.labels[:Nin_b], a.labels[Nin_a:], b.labels[Nin_b:]]),\
-                            torch_tensor=torch.ger(tmpa.view(-1),tmpb.view(-1)).reshape(DALL).permute(maper.tolist()),\
-                            check=False)
+            if inbond_first:
+                if len(new_bonds)>0:
+                    maper = np.argsort([x.bondType==BD_OUT for x in new_bonds])
+                    new_bonds = new_bonds[maper]
+                    new_labels= new_labels[maper]
+                    tmp = tmp.permute(*maper)
+
+            return UniTensor(bonds=new_bonds,\
+                             labels=new_labels,\
+                             torch_tensor=tmp,\
+                             check=False)
             
     else:
         raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
+
+
+#def Contract_old(a,b):
+#    """
+#    """
+#    if isinstance(a,UniTensor) and isinstance(b,UniTensor):
+#
+#
+#        ## get same vector:
+#        same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
+#
+#        ## -v
+#        #print(a_ind,b_ind)
+#
+#        if(len(same)):
+#            ## check dim:
+#            #for i in range(len(a_ind)):
+#            #    if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:
+#            #        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has different dim.")
+#
+#
+#            ## Qnum_ipoint
+#            if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):
+#                raise Exception("Contract(a,b)","[ERROR] contract Symm TN with non-sym tensor")
+#
+#            if(a.bonds[0].qnums is not None):
+#                for i in range(len(a_ind)):
+#                    if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
+#                        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
+#
+#            aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
+#            bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
+#
+#            #print(aind_no_combine,bind_no_combine)
+#            
+#            maper_a = np.concatenate([aind_no_combine,a_ind])
+#            maper_b = np.concatenate([b_ind,bind_no_combine])
+#
+#            old_shape = np.array(a.Storage.shape) if a.is_diag==False else np.array([a.Storage.shape[0],a.Storage.shape[0]])
+#            combined_dim = np.prod(old_shape[a_ind])
+#
+#            if a.is_diag :
+#                tmpa = torch.diag(a.Storage).to(a.Storage.device)
+#            else:   
+#                tmpa = a.Storage
+#            
+#            if b.is_diag :
+#                tmpb = torch.diag(b.Storage).to(b.Storage.device)
+#            else:   
+#                tmpb = b.Storage
+#
+#            tmp = torch.matmul(tmpa.permute(maper_a.tolist()).reshape(-1,combined_dim),\
+#                               tmpb.permute(maper_b.tolist()).reshape(combined_dim,-1))
+#            new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]
+#            return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\
+#                             labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\
+#                             torch_tensor=tmp.view(new_shape),\
+#                             check=False)
+#
+#        else:
+#            ## direct product
+#            Nin_a = len([1 for i in range(len(a.labels)) if a.bonds[i].bondType is BD_IN])
+#            Nin_b = len([1 for i in range(len(b.labels)) if b.bonds[i].bondType is BD_IN])
+#            Nout_a = len(a.labels) - Nin_a
+#            Nout_b = len(b.labels) - Nin_b
+#
+#            new_label = np.concatenate([a.labels, b.labels])
+#            DALL = [a.bonds[i].dim for i in range(len(a.bonds))] + [b.bonds[i].dim for i in range(len(b.bonds))]
+#
+#            maper = np.concatenate([np.arange(Nin_a), len(a.labels) + np.arange(Nin_b), np.arange(Nout_a) + Nin_a, len(a.labels) + Nin_b + np.arange(Nout_b)])
+#
+#            if a.is_diag :
+#                tmpa = torch.diag(a.Storage)
+#            else:   
+#                tmpa = a.Storage
+#            
+#            if b.is_diag :
+#                tmpb = torch.diag(b.Storage)
+#            else:   
+#                tmpb = b.Storage
+#
+#
+#            return UniTensor(bonds=np.concatenate([a.bonds[:Nin_a],b.bonds[:Nin_b],a.bonds[Nin_a:],b.bonds[Nin_b:]]),\
+#                            labels=np.concatenate([a.labels[:Nin_a], b.labels[:Nin_b], a.labels[Nin_a:], b.labels[Nin_b:]]),\
+#                            torch_tensor=torch.ger(tmpa.view(-1),tmpb.view(-1)).reshape(DALL).permute(maper.tolist()),\
+#                            check=False)
+#            
+#    else:
+#        raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
 
 
 
