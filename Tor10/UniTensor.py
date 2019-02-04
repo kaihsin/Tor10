@@ -6,18 +6,16 @@ from .Bond import *
 from . import linalg 
 
 ## Developer Note:
-# [KHW]
-# Currently trying to add the Symm. 
-# A temporary Abort is use to prevent the user to call the un-support operations on a Symmetry tensor. 
-#
-#  Find "Qnum_ipoint" keyword for the part that need to be modify accrodingly when considering the Qnums feature. 
-#
-
-
+## [KHW]
+## Currently trying to add the Symm. 
+## A temporary Abort is use to prevent the user to call the un-support operations on a Symmetry tensor. 
+##
+##  Find "Qnum_ipoint" keyword for the part that need to be modify accrodingly when considering the Qnums feature. 
+##
 
 class UniTensor():
 
-    def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, name=""):
+    def __init__(self, bonds, labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, requires_grad=False, name=""):
         """
         This is the constructor of the UniTensor.
 
@@ -41,7 +39,9 @@ class UniTensor():
             is_diag: 
                 This states if the current UniTensor is a diagonal matrix or not. If True, the Storage will only store diagonal elements.
                 Note that if is_diag=True, then the UniTensor is strictly required to be a square 2-rank tensor.  
-            
+            requires_grad:
+                Activate the autograd function for UniTensor. This is the same as torch.Tensor 
+                
             name: 
                 This states the name of current UniTensor.      
 
@@ -131,6 +131,9 @@ class UniTensor():
         else:
             self.Storage = torch_tensor
     
+        if requires_grad:
+            self.Storage.requires_grad = True
+
 
     def SetLabel(self, newLabel, idx):
         """
@@ -416,7 +419,41 @@ class UniTensor():
     def __setitem__(self,key,value):
         self.Storage[key] = value
          
+    def requires_grad(self,is_grad=None):
+        """ 
+        The status for the autograd property.
 
+        Args:
+            is_grad: 
+                bool, if the autograd mechanism should be activate on this UniTensor. 
+                If the argument is not set, it will return the current autograd status. 
+                
+        Return:
+            bool, return only when is_grad argument is ignored. 
+
+        Example:
+        ::
+            bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
+            x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+
+    
+        >>> print(x.requires_grad())
+        False
+
+        >>> x.requires_grad(True)
+        >>> print(x.requires_grad())
+        True
+
+        >>> x.requires_grad(False)
+        >>> print(x.requires_grad())
+        False
+
+        
+        """
+        if is_grad is None:
+            return self.Storage.requires_grad
+        else:
+            self.Storage.requires_grad = bool(is_grad)
 
     ## Math ::
     def __add__(self,other):

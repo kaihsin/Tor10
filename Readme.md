@@ -45,6 +45,10 @@
         * See test_ntwrk.py for how to use network.
         * See test.net for how to defined a Network file.
 
+    5. Autograd mechanism:
+        The Tor10 now support the autograd functionality. The Contract, Matmul etc will automatically contruct the gradient flow for UniTensor that has [requires_grad=True]
+        
+        * See documentation for further details
 
 
     See test.py for further detail application functions.
