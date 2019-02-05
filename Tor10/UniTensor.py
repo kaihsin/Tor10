@@ -1305,6 +1305,116 @@ def Load(filename):
 
 def Contract(a,b,inbond_first=True):
     """
+    Contract two tensors with the same labels. 
+
+    1. two tensors must be the same type, if "a" is a symmetry tensor, "b" must also be a symmetry tensor.
+    2. When contract two symmetry tensor, the bonds that to be contracted must have the same qnums.
+
+    Args:
+        a:
+            UniTensor
+
+        b:
+            UniTensor
+
+        inbond_first:
+            bool
+
+            * if True , the order of the bonds for the return tensor will be permuted to all the in-bond appears first, then the out-bond.
+            * If False, the order of the bonds for the return tensor will have all the remaining bonds of tensor "a" appears first, then the remaining bonds of tensor "b". 
+            * This is especially efficient in the case where the in/out bond are not important. By setting inbond_first=False, no additional permute will be perform at the last stage. 
+
+    Return:
+        UniTensor
+
+    Example:
+    ::
+        x = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,4)], labels=[4,3,5])
+        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)],labels=[1,5])
+
+
+    >>> x.Print_diagram()
+    tensor Name : 
+    tensor Rank : 3
+    on device   : cpu
+    is_diag     : False
+            ---------------     
+            |             |     
+        4 __| 5         5 |__ 3  
+            |             |     
+            |           4 |__ 5  
+            |             |     
+            ---------------     
+    lbl:4 Dim = 5 |
+    IN  :
+    _
+    lbl:3 Dim = 5 |
+    OUT :
+    _
+    lbl:5 Dim = 4 |
+    OUT :
+
+    >>> y.Print_diagram()
+    tensor Name : 
+    tensor Rank : 2
+    on device   : cpu
+    is_diag     : False
+            ---------------     
+            |             |     
+        1 __| 3         4 |__ 5  
+            |             |     
+            ---------------     
+    lbl:1 Dim = 3 |
+    IN  :
+    _
+    lbl:5 Dim = 4 |
+    OUT :
+
+    >>> c = Tt.Contract(x,y)
+    >>> c.Print_diagram()
+    tensor Name : 
+    tensor Rank : 3
+    on device   : cpu
+    is_diag     : False
+            ---------------     
+            |             |     
+        4 __| 5         5 |__ 3  
+            |             |     
+        1 __| 3           |      
+            |             |     
+            ---------------     
+    lbl:4 Dim = 5 |
+    IN  :
+    _
+    lbl:1 Dim = 3 |
+    IN  :
+    _
+    lbl:3 Dim = 5 |
+    OUT :
+
+    >>> c= Tt.Contract(x,y,inbond_first=False)
+    >>> c.Print_diagram()
+    tensor Name : 
+    tensor Rank : 3
+    on device   : cpu
+    is_diag     : False
+            ---------------     
+            |             |     
+        4 __| 5         3 |__ 1  
+            |             |     
+        3 __| 5           |      
+            |             |     
+            ---------------     
+    lbl:4 Dim = 5 |
+    IN  :
+    _
+    lbl:3 Dim = 5 |
+    OUT :
+    _
+    lbl:1 Dim = 3 |
+    IN  :
+
+
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 

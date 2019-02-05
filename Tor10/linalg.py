@@ -237,6 +237,43 @@ def Svd(a):
         vt: 
             UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
 
+
+    Example:
+    ::
+        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
+        y.SetElem([1,1,0,1,\
+                   0,0,0,1,\
+                   1,1,0,0]
+
+
+    >>> print(y)
+    Tensor name: 
+    is_diag    : False
+    tensor([[1., 1., 0., 1.],
+            [0., 0., 0., 1.],
+            [1., 1., 0., 0.]], dtype=torch.float64)
+
+    >>> u,s,v = Tt.linalg.Svd(y)
+    >>> print(u)
+    Tensor name: 
+    is_diag    : False
+    tensor([[-0.7887, -0.2113, -0.5774],
+            [-0.2113, -0.7887,  0.5774],
+            [-0.5774,  0.5774,  0.5774]], dtype=torch.float64)
+
+    >>> print(s)
+    Tensor name: 
+    is_diag    : True
+    tensor([2.1753e+00, 1.1260e+00, 1.0164e-16], dtype=torch.float64)
+
+    >>> print(v)
+    Tensor name: 
+    is_diag    : False
+    tensor([[-6.2796e-01, -6.2796e-01,  0.0000e+00, -4.5970e-01],
+            [ 3.2506e-01,  3.2506e-01,  0.0000e+00, -8.8807e-01],
+            [-7.0711e-01,  7.0711e-01,  0.0000e+00,  1.1309e-16]],
+            dtype=torch.float64)
+
     """
     if isinstance(a,UniTensor):
 
@@ -275,14 +312,19 @@ def Svd(a):
 
 
 
-def Svd_truncate(a, truncate=None):
+def Svd_truncate(a, keepdim=None):
     """
     The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
+
 
     Args:
         a : 
             UniTensor, rank-2, 1 inbond 1 outbond.
     
+        keepdim:
+            integer, the keeping dimension. When set, it will keep only the largest "keepdim" singular values and their corresponding eigenvectors.
+
+
     Return: u , s , vt 
         u : 
             UniTensor, 2-rank, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
@@ -292,6 +334,40 @@ def Svd_truncate(a, truncate=None):
                         
         vt: 
             UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
+
+
+    Example:
+    ::
+        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
+        y.SetElem([1,1,0,1,\
+                   0,0,0,1,\
+                   1,1,0,0])
+
+    >>> print(y)
+    Tensor name: 
+    is_diag    : False
+    tensor([[1., 1., 0., 1.],
+            [0., 0., 0., 1.],
+            [1., 1., 0., 0.]], dtype=torch.float64)
+
+    >>> u,s,v = Tt.linalg.Svd_truncate(y,keepdim=2)
+    >>> print(u)
+    Tensor name: 
+    is_diag    : False
+    tensor([[-0.7887, -0.2113],
+            [-0.2113, -0.7887],
+            [-0.5774,  0.5774]], dtype=torch.float64)
+ 
+    >>> print(s)
+    Tensor name: 
+    is_diag    : True
+    tensor([2.1753, 1.1260], dtype=torch.float64)
+
+    >>> print(v)
+    Tensor name: 
+    is_diag    : False
+    tensor([[-0.6280, -0.6280,  0.0000, -0.4597],
+            [ 0.3251,  0.3251,  0.0000, -0.8881]], dtype=torch.float64)
 
     """
     if isinstance(a,UniTensor):
@@ -311,12 +387,12 @@ def Svd_truncate(a, truncate=None):
         else:
             tmp = np.min(tmp)
 
-        if truncate is not None:
-            if truncate < 0 or truncate > len(s):
-                raise ValueError("Svd_truncate", "[ERROR] the truncate dimension is invalid")
-            u = u[:, :truncate]
-            s = s[:truncate]
-            v = v[:, :truncate]
+        if keepdim is not None:
+            if keepdim < 0 or keepdim > len(s):
+                raise ValueError("Svd_truncate", "[ERROR] the keepdim=%d is invalid, must larger than 0 and smaller than the total number of eigenvalues."%(keepdim))
+            u = u[:, :keepdim]
+            s = s[:keepdim]
+            v = v[:, :keepdim]
 
         u = UniTensor(bonds =[Bond(BD_IN,u.shape[0]),Bond(BD_OUT,u.shape[1])],\
                       labels=[a.labels[0],tmp-1],\
@@ -333,7 +409,7 @@ def Svd_truncate(a, truncate=None):
                       is_diag=True)   
         return u,s,v
     else:
-        raise Exception("Svd(UniTensor)","[ERROR] Svd can only accept UniTensor")
+        raise Exception("Svd_truncate(UniTensor,int)","[ERROR] Svd_truncate can only accept UniTensor")
 
 def Matmul(a,b):
     """
