@@ -991,6 +991,54 @@ class UniTensor():
     ## Symmetric Tensor function
     def GetTotalQnums(self):
         """
+        Return two combined bond objects that has the information for the total qnums at in and out bonds.
+        
+        Return:
+            qnums_inbonds, qnums_outbonds:
+
+            qnums_inbonds:
+                a Tor10.Bond, the combined in-bond
+            
+            qnums_outbonds:
+                a Tor10.Bond, the combined out-bond.
+
+                
+        Example:
+
+            * Multiple Symmetry::
+
+                ## multiple Qnum:
+                ## U1 x U1 x Z2 x Z4
+                ## U1 = {-2,-1,0,1,2}
+                ## Z2 = {-1,1}
+                ## Z4 = {0,1,2,3}
+                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],
+                                                     [1, 1,-1, 1],
+                                                     [2,-1, 1, 0]])
+                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1, 0,-1, 3],
+                                                     [ 0, 0,-1, 2],
+                                                     [ 1, 0, 1, 0],
+                                                     [ 2,-2,-1, 1]])
+                bd_sym_3 = Tt.Bond(Tt.BD_OUT,2,qnums=[[-1,-2,-1,2],
+                                                      [ 1, 1, -2,3]])
+
+                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],dtype=tor.float64)
+                
+            >>> tqin, tqout = sym_T.GetTotalQnums()
+            >>> print(tqin)
+            Dim = 12 |
+            IN  : -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4
+                  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3
+                  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0
+                  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1
+
+            >>> print(tqout)
+            Dim = 2 |
+            OUT : -1 +1
+                  -2 +1
+                  -1 -2
+                  +2 +3
+                
         """
         if self.bonds[0].qnums is None:
             raise TypeError("UniTensor.GetTotalQnums","[ERROR] GetTotal Qnums from a non-symm tensor")
