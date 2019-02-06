@@ -233,7 +233,7 @@ def Svd(a):
     """
     The function performs the svd 
 
-        :math:`a = u \cdot s \ cdot vt`
+        :math:`a = u \cdot s \cdot vt`
 
     to input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
 
@@ -595,15 +595,15 @@ def Det(a):
         a : 
             a rank-2 UniTensor (matrix). 
     Return:
-        constant
+        UniTensor, 0-rank (constant)
 
     Example:
     ::
-        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)])
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)])
         a.SetElem([4,-3,0,
                    2,-1,2,
                    1, 5,7])
-        b = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],is_diag=True)
+        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)],is_diag=True)
         b.SetElem([1,2,3])
 
     >>> print(a)
@@ -615,7 +615,9 @@ def Det(a):
 
     >>> out = Tt.Det(a)
     >>> print(out)
-    -32.0
+    Tensor name: 
+    is_diag    : False
+    tensor(-32., dtype=torch.float64)
 
     >>> print(b)
     Tensor name: 
@@ -624,16 +626,20 @@ def Det(a):
 
     >>> out = Tor10.Det(b)
     >>> print(out)
-    6.0
-
-                    
+    Tensor name: 
+    is_diag    : False
+    tensor(6., dtype=torch.float64)
+                
     """
     if isinstance(a,UniTensor):
 
         if a.is_diag:
-            return torch.prod(a.Storage).item()
+            tmp = torch.prod(a.Storage)
         else:
-            return torch.det(a.Storage).item()
+            tmp = torch.det(a.Storage)
+    
+        return UniTensor(bonds=[],labels=[],torch_tensor=tmp,check=False)
+
     else:
         raise Exception("Det(UniTensor)","[ERROR] Det can only accept UniTensor")
 
@@ -648,11 +654,11 @@ def Norm(a):
             a UniTensor.
 
     Return:
-        constant
+        UniTensor, 0-rank (constant)
                     
     """
 
     if isinstance(a,UniTensor):
-        return torch.norm(a.Storage).item()
+        return UniTensor(bonds=[],labels=[],torch_tensor=torch.norm(a.Storage),check=False)
     else:
         raise Exception("Norm(UniTensor)","[ERROR] Norm can only accept UniTensor")

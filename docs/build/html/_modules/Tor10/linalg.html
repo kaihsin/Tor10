@@ -380,7 +380,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The function performs the svd </span>
 
-<span class="sd">        :math:`a = u \cdot s \ cdot vt`</span>
+<span class="sd">        :math:`a = u \cdot s \cdot vt`</span>
 
 <span class="sd">    to input UniTensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2. </span>
 
@@ -742,15 +742,15 @@
 <span class="sd">        a : </span>
 <span class="sd">            a rank-2 UniTensor (matrix). </span>
 <span class="sd">    Return:</span>
-<span class="sd">        constant</span>
+<span class="sd">        UniTensor, 0-rank (constant)</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)])</span>
+<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)])</span>
 <span class="sd">        a.SetElem([4,-3,0,</span>
 <span class="sd">                   2,-1,2,</span>
 <span class="sd">                   1, 5,7])</span>
-<span class="sd">        b = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,3)],is_diag=True)</span>
+<span class="sd">        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)],is_diag=True)</span>
 <span class="sd">        b.SetElem([1,2,3])</span>
 
 <span class="sd">    &gt;&gt;&gt; print(a)</span>
@@ -762,7 +762,9 @@
 
 <span class="sd">    &gt;&gt;&gt; out = Tt.Det(a)</span>
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
-<span class="sd">    -32.0</span>
+<span class="sd">    Tensor name: </span>
+<span class="sd">    is_diag    : False</span>
+<span class="sd">    tensor(-32., dtype=torch.float64)</span>
 
 <span class="sd">    &gt;&gt;&gt; print(b)</span>
 <span class="sd">    Tensor name: </span>
@@ -771,16 +773,20 @@
 
 <span class="sd">    &gt;&gt;&gt; out = Tor10.Det(b)</span>
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
-<span class="sd">    6.0</span>
-
-<span class="sd">                    </span>
+<span class="sd">    Tensor name: </span>
+<span class="sd">    is_diag    : False</span>
+<span class="sd">    tensor(6., dtype=torch.float64)</span>
+<span class="sd">                </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+    
+        <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Det(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Det can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
@@ -795,12 +801,12 @@
 <span class="sd">            a UniTensor.</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        constant</span>
+<span class="sd">        UniTensor, 0-rank (constant)</span>
 <span class="sd">                    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">),</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Norm(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Norm can only accept UniTensor&quot;</span><span class="p">)</span></div>
 </pre></div>
