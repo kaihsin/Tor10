@@ -36,9 +36,7 @@ I.SetElem([1, 0,\
 Sz = Sz*J
 
 ## Create NN terms
-Sx.SetLabels([2,3]) 
 Sx = Sx*Hx
-I.SetLabels([4,5])
 
 TFterm = Tt.Otimes(Sx,I) + Tt.Otimes(I,Sx)
 ZZterm = Tt.Otimes(Sz,Sz)

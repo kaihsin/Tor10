@@ -2,6 +2,20 @@ from .UniTensor import *
 import torch 
 import numpy as np
 
+def Mean(a):
+    """
+    Calculate the mean of all elements in the input UniTensor
+
+    Args:
+        a: 
+            UniTensor
+
+    Return:
+        UniTensor, 0-rank (constant)
+
+    """
+    return UniTensor(bonds=[],labels=[],torch_tensor=torch.mean(a.Storage),check=False)
+
 def Otimes(a,b):
     """
     Perform matrix product for two rank-2 tensors.
@@ -241,8 +255,8 @@ def Svd(a):
     Example:
     ::
         y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
-        y.SetElem([1,1,0,1,\
-                   0,0,0,1,\
+        y.SetElem([1,1,0,1,
+                   0,0,0,1,
                    1,1,0,0]
 
 
@@ -339,8 +353,8 @@ def Svd_truncate(a, keepdim=None):
     Example:
     ::
         y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
-        y.SetElem([1,1,0,1,\
-                   0,0,0,1,\
+        y.SetElem([1,1,0,1,
+                   0,0,0,1,
                    1,1,0,0])
 
     >>> print(y)

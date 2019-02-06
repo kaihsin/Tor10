@@ -149,6 +149,20 @@
 <span class="kn">import</span> <span class="nn">torch</span> 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<div class="viewcode-block" id="Mean"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Mean">[docs]</a><span class="k">def</span> <span class="nf">Mean</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the mean of all elements in the input UniTensor</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a: </span>
+<span class="sd">            UniTensor</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor, 0-rank (constant)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">),</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Otimes"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Otimes">[docs]</a><span class="k">def</span> <span class="nf">Otimes</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform matrix product for two rank-2 tensors.</span>
@@ -388,8 +402,8 @@
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
 <span class="sd">        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])</span>
-<span class="sd">        y.SetElem([1,1,0,1,\</span>
-<span class="sd">                   0,0,0,1,\</span>
+<span class="sd">        y.SetElem([1,1,0,1,</span>
+<span class="sd">                   0,0,0,1,</span>
 <span class="sd">                   1,1,0,0]</span>
 
 
@@ -486,8 +500,8 @@
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
 <span class="sd">        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])</span>
-<span class="sd">        y.SetElem([1,1,0,1,\</span>
-<span class="sd">                   0,0,0,1,\</span>
+<span class="sd">        y.SetElem([1,1,0,1,</span>
+<span class="sd">                   0,0,0,1,</span>
 <span class="sd">                   1,1,0,0])</span>
 
 <span class="sd">    &gt;&gt;&gt; print(y)</span>

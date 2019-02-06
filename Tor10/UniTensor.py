@@ -132,7 +132,7 @@ class UniTensor():
             self.Storage = torch_tensor
     
         if requires_grad:
-            self.Storage.requires_grad = True
+            self.Storage.requires_grad_(True)
 
 
     def SetLabel(self, newLabel, idx):
@@ -419,41 +419,6 @@ class UniTensor():
     def __setitem__(self,key,value):
         self.Storage[key] = value
          
-    def requires_grad(self,is_grad=None):
-        """ 
-        The status for the autograd property.
-
-        Args:
-            is_grad: 
-                bool, if the autograd mechanism should be activate on this UniTensor. 
-                If the argument is not set, it will return the current autograd status. 
-                
-        Return:
-            bool, return only when is_grad argument is ignored. 
-
-        Example:
-        ::
-            bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
-            x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
-
-    
-        >>> print(x.requires_grad())
-        False
-
-        >>> x.requires_grad(True)
-        >>> print(x.requires_grad())
-        True
-
-        >>> x.requires_grad(False)
-        >>> print(x.requires_grad())
-        False
-
-        
-        """
-        if is_grad is None:
-            return self.Storage.requires_grad
-        else:
-            self.Storage.requires_grad = bool(is_grad)
 
     ## Math ::
     def __add__(self,other):
@@ -1285,9 +1250,109 @@ class UniTensor():
                              check=False)
             
 
+    ## Autograd feature: 
+    def requires_grad(self,is_grad=None):
+        """ 
+        The status for the autograd property.
+
+        Args:
+            is_grad: 
+                bool, if the autograd mechanism should be activate on this UniTensor. 
+                If the argument is not set, it will return the current autograd status. 
+                
+        Return:
+            bool, return only when is_grad argument is ignored. 
+
+        Example:
+        ::
+            bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
+            x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+
+    
+        >>> print(x.requires_grad())
+        False
+
+        >>> x.requires_grad(True)
+        >>> print(x.requires_grad())
+        True
+
+        >>> x.requires_grad(False)
+        >>> print(x.requires_grad())
+        False
+
         
+        """
+        if is_grad is None:
+            return self.Storage.requires_grad
+        else:
+            self.Storage.requires_grad_(bool(is_grad))
 
 
+    def grad(self):
+        """
+        Return the gradient tensors subject to x where x is the current UniTensor. The return is None by default and becomes a UniTensor the first time a call backward(). The future calls to backward() will accumulate (add) gradient into it.
+
+        This is the same as torch.Tensor.grad
+   
+
+        :math:`d/dx`
+
+        Return: 
+            UniTensor, the shape of the return UniTensor and it's bonds are the same as the original UniTensor, but with default labels.
+
+        Example:
+        
+            >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(BD_IN,2),Tor10.Bond(BD_OUT,2)],requires_grad=True)
+            >>> print(x)
+            Tensor name: 
+            is_diag    : False
+            tensor([[0., 0.],
+                    [0., 0.]], dtype=torch.float64, requires_grad=True)
+
+            >>> y = (x + 4)**2
+            >>> print(y)
+            Tensor name: 
+            is_diag    : False
+            tensor([[16., 16.],
+                    [16., 16.]], dtype=torch.float64, grad_fn=<PowBackward0>)
+
+            >>> out = Tor10.Mean(y)
+            >>> print(out)
+            Tensor name: 
+            is_diag    : False
+            tensor(16., dtype=torch.float64, grad_fn=<MeanBackward1>)
+
+            >>> out.backward()
+            >>> print(x.grad)
+            Tensor name: 
+            is_diag    : False
+            tensor([[2., 2.],
+                    [2., 2.]], dtype=torch.float64)
+
+        """
+        if self.Storage.grad is None:
+            return None
+        else:
+            return UniTensor(bonds=copy.deepcopy(self.bonds),\
+                             torch_tensor=self.Storage.grad,\
+                             check=False)
+    
+    def backward(self):
+        """
+        Backward the gradient flow in the contructed autograd graph. This is the same as torch.Tensor.backward
+        """
+        self.Storage.backward()
+
+
+    def detach(self):
+        """
+        Detach the current tensor from the current graph, making it a leaf. This is the same as torch.Tensor.detach_()
+
+        Return:
+            self
+        """
+        self.Storage.detach_()
+        return self
 
 
 
