@@ -1926,6 +1926,86 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;_Randomize(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] _Randomize can only accept UniTensor&quot;</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="From_torch"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.From_torch">[docs]</a><span class="k">def</span> <span class="nf">From_torch</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">,</span><span class="n">N_inbond</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Construct UniTensor from torch.Tensor. </span>
+<span class="sd">    </span>
+<span class="sd">    If the input torch_tensor belongs to a autograd graph, the contructed UniTensor will preserve the role of the input torch_tensor in the computational graph.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        torch_tensor:</span>
+<span class="sd">            Torch.Tensor</span>
+<span class="sd">    </span>
+<span class="sd">        N_inbond:</span>
+<span class="sd">            int, The number of inbond. Note that the first [N_inbond] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT</span>
+<span class="sd">        </span>
+<span class="sd">        labels:</span>
+<span class="sd">            python list or 1d numpy array, The labels for each bonds. If ignore, the constucted UniTensor will using the default labels for each bond.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; x = torch.ones(3,3)</span>
+<span class="sd">        &gt;&gt;&gt; print(x)</span>
+<span class="sd">        tensor([[1., 1., 1.],</span>
+<span class="sd">                [1., 1., 1.],</span>
+<span class="sd">                [1., 1., 1.]])</span>
+
+<span class="sd">        &gt;&gt;&gt; y = Tt.From_torch(x,N_inbond=1,labels=[4,5])</span>
+<span class="sd">        &gt;&gt;&gt; y.Print_diagram()</span>
+<span class="sd">        tensor Name : </span>
+<span class="sd">        tensor Rank : 2</span>
+<span class="sd">        on device   : cpu</span>
+<span class="sd">        is_diag     : False</span>
+<span class="sd">                ---------------     </span>
+<span class="sd">                |             |     </span>
+<span class="sd">            4 __| 3         3 |__ 5  </span>
+<span class="sd">                |             |     </span>
+<span class="sd">                ---------------     </span>
+<span class="sd">        lbl:4 Dim = 3 |</span>
+<span class="sd">        IN  :</span>
+<span class="sd">        _</span>
+<span class="sd">        lbl:5 Dim = 3 |</span>
+<span class="sd">        OUT :</span>
+
+<span class="sd">        &gt;&gt;&gt; print(y)</span>
+<span class="sd">        Tensor name: </span>
+<span class="sd">        is_diag    : False</span>
+<span class="sd">        tensor([[1., 1., 1.],</span>
+<span class="sd">                [1., 1., 1.],</span>
+<span class="sd">                [1., 1., 1.]])</span>
+
+
+<span class="sd">        &gt;&gt;&gt; x2 = torch.ones(3,4,requires_grad=True)</span>
+<span class="sd">        &gt;&gt;&gt; print(x2)</span>
+<span class="sd">        tensor([[1., 1., 1., 1.],</span>
+<span class="sd">                [1., 1., 1., 1.],</span>
+<span class="sd">                [1., 1., 1., 1.]], requires_grad=True)</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; y2 = Tt.From_torch(x2,N_inbond=1)</span>
+<span class="sd">        &gt;&gt;&gt; print(y2.requires_grad())</span>
+<span class="sd">        True</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;From_torch&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] can only accept torch.Tensor&quot;</span><span class="p">)</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">torch_tensor</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="k">if</span> <span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;From_torch&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] N_inbond exceed the rank of input torch tensor.&quot;</span><span class="p">)</span>
+
+    <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_inbond</span><span class="p">)]</span><span class="o">+</span>\
+                <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_inbond</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span><span class="mi">1</span><span class="p">)]</span>
+
+
+    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch_tensor</span><span class="p">)</span></div>
+
+
+
 
 </pre></div>
 

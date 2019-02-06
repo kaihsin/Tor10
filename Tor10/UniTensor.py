@@ -1779,4 +1779,84 @@ def _Randomize(a):
         raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
 
+def From_torch(torch_tensor,N_inbond,labels=None):
+    """ 
+    Construct UniTensor from torch.Tensor. 
+    
+    If the input torch_tensor belongs to a autograd graph, the contructed UniTensor will preserve the role of the input torch_tensor in the computational graph.
+
+    Args:
+        torch_tensor:
+            Torch.Tensor
+    
+        N_inbond:
+            int, The number of inbond. Note that the first [N_inbond] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT
+        
+        labels:
+            python list or 1d numpy array, The labels for each bonds. If ignore, the constucted UniTensor will using the default labels for each bond.
+
+    Return:
+        UniTensor
+
+    Example:
+    
+        >>> x = torch.ones(3,3)
+        >>> print(x)
+        tensor([[1., 1., 1.],
+                [1., 1., 1.],
+                [1., 1., 1.]])
+
+        >>> y = Tt.From_torch(x,N_inbond=1,labels=[4,5])
+        >>> y.Print_diagram()
+        tensor Name : 
+        tensor Rank : 2
+        on device   : cpu
+        is_diag     : False
+                ---------------     
+                |             |     
+            4 __| 3         3 |__ 5  
+                |             |     
+                ---------------     
+        lbl:4 Dim = 3 |
+        IN  :
+        _
+        lbl:5 Dim = 3 |
+        OUT :
+
+        >>> print(y)
+        Tensor name: 
+        is_diag    : False
+        tensor([[1., 1., 1.],
+                [1., 1., 1.],
+                [1., 1., 1.]])
+
+
+        >>> x2 = torch.ones(3,4,requires_grad=True)
+        >>> print(x2)
+        tensor([[1., 1., 1., 1.],
+                [1., 1., 1., 1.],
+                [1., 1., 1., 1.]], requires_grad=True)
+        
+        >>> y2 = Tt.From_torch(x2,N_inbond=1)
+        >>> print(y2.requires_grad())
+        True
+
+
+    """
+    if not isinstance(torch_tensor,torch.Tensor):
+        raise TypeError("From_torch","[ERROR] can only accept torch.Tensor")
+
+    shape = torch_tensor.shape
+    
+    if N_inbond > len(shape):
+        raise ValueError("From_torch","[ERROR] N_inbond exceed the rank of input torch tensor.")
+
+    new_bonds = [Bond(BD_IN,shape[i]) for i in range(N_inbond)]+\
+                [Bond(BD_OUT,shape[i]) for i in np.arange(N_inbond,len(shape),1)]
+
+
+    return UniTensor(bonds=new_bonds,labels=labels,torch_tensor=torch_tensor)
+
+
+
 

@@ -269,6 +269,73 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="Tor10.UniTensor.From_torch">
+<code class="descclassname">Tor10.UniTensor.</code><code class="descname">From_torch</code><span class="sig-paren">(</span><em>torch_tensor</em>, <em>N_inbond</em>, <em>labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#From_torch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.From_torch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct UniTensor from torch.Tensor.</p>
+<p>If the input torch_tensor belongs to a autograd graph, the contructed UniTensor will preserve the role of the input torch_tensor in the computational graph.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>torch_tensor:</dt>
+<dd>Torch.Tensor</dd>
+<dt>N_inbond:</dt>
+<dd>int, The number of inbond. Note that the first [N_inbond] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT</dd>
+<dt>labels:</dt>
+<dd>python list or 1d numpy array, The labels for each bonds. If ignore, the constucted UniTensor will using the default labels for each bond.</dd>
+</dl>
+</dd>
+<dt>Return:</dt>
+<dd>UniTensor</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">tensor([[1., 1., 1.],</span>
+<span class="go">        [1., 1., 1.],</span>
+<span class="go">        [1., 1., 1.]])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 2</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 3         3 |__ 5  </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:4 Dim = 3 |</span>
+<span class="go">IN  :</span>
+<span class="go">_</span>
+<span class="go">lbl:5 Dim = 3 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="go">Tensor name: </span>
+<span class="go">is_diag    : False</span>
+<span class="go">tensor([[1., 1., 1.],</span>
+<span class="go">        [1., 1., 1.],</span>
+<span class="go">        [1., 1., 1.]])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="go">tensor([[1., 1., 1., 1.],</span>
+<span class="go">        [1., 1., 1., 1.],</span>
+<span class="go">        [1., 1., 1., 1.]], requires_grad=True)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y2</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y2</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">())</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="Tor10.UniTensor.Load">
 <code class="descclassname">Tor10.UniTensor.</code><code class="descname">Load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a UniTensor from the file.</p>
