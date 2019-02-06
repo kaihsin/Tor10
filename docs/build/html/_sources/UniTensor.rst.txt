@@ -1,5 +1,5 @@
 Tor10.UniTensor
-============
+================
 .. automodule:: Tor10.UniTensor
     :members:
 

@@ -8,28 +8,44 @@ device = tor.device("cuda:0")
 bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
 bds_y = [Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,3)]
 x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5],dtype=tor.float64,device=tor.device("cpu"))
-y = Tt.UniTensor(bonds=bds_y, labels=[1,5]  ,dtype=tor.float64,device=tor.device("cpu"))
 
 
+
+
+y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
+y.SetElem([1,1,0,1,\
+           0,0,0,1,\
+           1,1,0,0])
+print(y)
 u,s,v = Tt.linalg.Svd(y)
 print(u)
 print(s)
 print(v)
-exit(1)
+print("=========================================")
+y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
+y.SetElem([1,1,0,1,\
+           0,0,0,1,\
+           1,1,0,0])
+print(y)
+u,s,v = Tt.linalg.Svd_truncate(y,keepdim=2)
+print(u)
+print(s)
+print(v)
 
-#print(len(x))
-print(x.shape())
-print(x)
+print("=========================================")
+
+x = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,4)], labels=[4,3,5])
+y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)],labels=[1,5])
+
 x.Print_diagram()
-print(x.labels)
 y.Print_diagram()
-print(y.labels)
 
 c = Tt.Contract(x,y)
-print(c)
 c.Print_diagram()
-c.Rand()
-print(c)
+
+c= Tt.Contract(x,y,inbond_first=False)
+c.Print_diagram()
+exit(1)
 
 y[1,2] = 1
 x[0,1] = 4
@@ -74,6 +90,9 @@ u,s,v = c.Svd()
 u.Print_diagram()
 s.Print_diagram()
 v.Print_diagram()
+
+
+
 
 ## Test chain_matmul , derive from pytorch
 ## -----------------------

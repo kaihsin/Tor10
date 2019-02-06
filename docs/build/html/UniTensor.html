@@ -146,12 +146,127 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="tor10-unitensor">
-<h1>Tor10.UniTensor<a class="headerlink" href="#tor10-unitensor" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-Tor10.UniTensor"></span><dl class="function">
+  <div class="section" id="module-Tor10.UniTensor">
+<span id="tor10-unitensor"></span><h1>Tor10.UniTensor<a class="headerlink" href="#module-Tor10.UniTensor" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
 <dt id="Tor10.UniTensor.Contract">
 <code class="descclassname">Tor10.UniTensor.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>a</em>, <em>b</em>, <em>inbond_first=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Contract" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Contract two tensors with the same labels.</p>
+<ol class="arabic simple">
+<li>two tensors must be the same type, if “a” is a symmetry tensor, “b” must also be a symmetry tensor.</li>
+<li>When contract two symmetry tensor, the bonds that to be contracted must have the same qnums.</li>
+</ol>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>a:</dt>
+<dd>UniTensor</dd>
+<dt>b:</dt>
+<dd>UniTensor</dd>
+<dt>inbond_first:</dt>
+<dd><p class="first">bool</p>
+<ul class="last simple">
+<li>if True , the order of the bonds for the return tensor will be permuted to all the in-bond appears first, then the out-bond.</li>
+<li>If False, the order of the bonds for the return tensor will have all the remaining bonds of tensor “a” appears first, then the remaining bonds of tensor “b”.</li>
+<li>This is especially efficient in the case where the in/out bond are not important. By setting inbond_first=False, no additional permute will be perform at the last stage.</li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Return:</dt>
+<dd>UniTensor</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 5         5 |__ 3  </span>
+<span class="go">        |             |     </span>
+<span class="go">        |           4 |__ 5  </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:4 Dim = 5 |</span>
+<span class="go">IN  :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">OUT :</span>
+<span class="go">_</span>
+<span class="go">lbl:5 Dim = 4 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 2</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    1 __| 3         4 |__ 5  </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:1 Dim = 3 |</span>
+<span class="go">IN  :</span>
+<span class="go">_</span>
+<span class="go">lbl:5 Dim = 4 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 5         5 |__ 3  </span>
+<span class="go">        |             |     </span>
+<span class="go">    1 __| 3           |      </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:4 Dim = 5 |</span>
+<span class="go">IN  :</span>
+<span class="go">_</span>
+<span class="go">lbl:1 Dim = 3 |</span>
+<span class="go">IN  :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">OUT :</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">inbond_first</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">on device   : cpu</span>
+<span class="go">is_diag     : False</span>
+<span class="go">        ---------------     </span>
+<span class="go">        |             |     </span>
+<span class="go">    4 __| 5         3 |__ 1  </span>
+<span class="go">        |             |     </span>
+<span class="go">    3 __| 5           |      </span>
+<span class="go">        |             |     </span>
+<span class="go">        ---------------     </span>
+<span class="go">lbl:4 Dim = 5 |</span>
+<span class="go">IN  :</span>
+<span class="go">_</span>
+<span class="go">lbl:3 Dim = 5 |</span>
+<span class="go">OUT :</span>
+<span class="go">_</span>
+<span class="go">lbl:1 Dim = 3 |</span>
+<span class="go">IN  :</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="function">
 <dt id="Tor10.UniTensor.Load">

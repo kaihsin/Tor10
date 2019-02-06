@@ -1500,6 +1500,116 @@
 
 <div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Contract">[docs]</a><span class="k">def</span> <span class="nf">Contract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">inbond_first</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contract two tensors with the same labels. </span>
+
+<span class="sd">    1. two tensors must be the same type, if &quot;a&quot; is a symmetry tensor, &quot;b&quot; must also be a symmetry tensor.</span>
+<span class="sd">    2. When contract two symmetry tensor, the bonds that to be contracted must have the same qnums.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a:</span>
+<span class="sd">            UniTensor</span>
+
+<span class="sd">        b:</span>
+<span class="sd">            UniTensor</span>
+
+<span class="sd">        inbond_first:</span>
+<span class="sd">            bool</span>
+
+<span class="sd">            * if True , the order of the bonds for the return tensor will be permuted to all the in-bond appears first, then the out-bond.</span>
+<span class="sd">            * If False, the order of the bonds for the return tensor will have all the remaining bonds of tensor &quot;a&quot; appears first, then the remaining bonds of tensor &quot;b&quot;. </span>
+<span class="sd">            * This is especially efficient in the case where the in/out bond are not important. By setting inbond_first=False, no additional permute will be perform at the last stage. </span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    ::</span>
+<span class="sd">        x = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,4)], labels=[4,3,5])</span>
+<span class="sd">        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)],labels=[1,5])</span>
+
+
+<span class="sd">    &gt;&gt;&gt; x.Print_diagram()</span>
+<span class="sd">    tensor Name : </span>
+<span class="sd">    tensor Rank : 3</span>
+<span class="sd">    on device   : cpu</span>
+<span class="sd">    is_diag     : False</span>
+<span class="sd">            ---------------     </span>
+<span class="sd">            |             |     </span>
+<span class="sd">        4 __| 5         5 |__ 3  </span>
+<span class="sd">            |             |     </span>
+<span class="sd">            |           4 |__ 5  </span>
+<span class="sd">            |             |     </span>
+<span class="sd">            ---------------     </span>
+<span class="sd">    lbl:4 Dim = 5 |</span>
+<span class="sd">    IN  :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:3 Dim = 5 |</span>
+<span class="sd">    OUT :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:5 Dim = 4 |</span>
+<span class="sd">    OUT :</span>
+
+<span class="sd">    &gt;&gt;&gt; y.Print_diagram()</span>
+<span class="sd">    tensor Name : </span>
+<span class="sd">    tensor Rank : 2</span>
+<span class="sd">    on device   : cpu</span>
+<span class="sd">    is_diag     : False</span>
+<span class="sd">            ---------------     </span>
+<span class="sd">            |             |     </span>
+<span class="sd">        1 __| 3         4 |__ 5  </span>
+<span class="sd">            |             |     </span>
+<span class="sd">            ---------------     </span>
+<span class="sd">    lbl:1 Dim = 3 |</span>
+<span class="sd">    IN  :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:5 Dim = 4 |</span>
+<span class="sd">    OUT :</span>
+
+<span class="sd">    &gt;&gt;&gt; c = Tt.Contract(x,y)</span>
+<span class="sd">    &gt;&gt;&gt; c.Print_diagram()</span>
+<span class="sd">    tensor Name : </span>
+<span class="sd">    tensor Rank : 3</span>
+<span class="sd">    on device   : cpu</span>
+<span class="sd">    is_diag     : False</span>
+<span class="sd">            ---------------     </span>
+<span class="sd">            |             |     </span>
+<span class="sd">        4 __| 5         5 |__ 3  </span>
+<span class="sd">            |             |     </span>
+<span class="sd">        1 __| 3           |      </span>
+<span class="sd">            |             |     </span>
+<span class="sd">            ---------------     </span>
+<span class="sd">    lbl:4 Dim = 5 |</span>
+<span class="sd">    IN  :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:1 Dim = 3 |</span>
+<span class="sd">    IN  :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:3 Dim = 5 |</span>
+<span class="sd">    OUT :</span>
+
+<span class="sd">    &gt;&gt;&gt; c= Tt.Contract(x,y,inbond_first=False)</span>
+<span class="sd">    &gt;&gt;&gt; c.Print_diagram()</span>
+<span class="sd">    tensor Name : </span>
+<span class="sd">    tensor Rank : 3</span>
+<span class="sd">    on device   : cpu</span>
+<span class="sd">    is_diag     : False</span>
+<span class="sd">            ---------------     </span>
+<span class="sd">            |             |     </span>
+<span class="sd">        4 __| 5         3 |__ 1  </span>
+<span class="sd">            |             |     </span>
+<span class="sd">        3 __| 5           |      </span>
+<span class="sd">            |             |     </span>
+<span class="sd">            ---------------     </span>
+<span class="sd">    lbl:4 Dim = 5 |</span>
+<span class="sd">    IN  :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:3 Dim = 5 |</span>
+<span class="sd">    OUT :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:1 Dim = 3 |</span>
+<span class="sd">    IN  :</span>
+
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
