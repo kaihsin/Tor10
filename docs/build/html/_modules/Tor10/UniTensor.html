@@ -896,7 +896,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            maper:</span>
-<span class="sd">                a python list with integer type elements that the UniTensor permute accroding to. </span>
+<span class="sd">                a python list or 1d numpy array with integer type elements that the UniTensor permute accroding to. </span>
 <span class="sd">            </span>
 <span class="sd">            N_inbond:</span>
 <span class="sd">                The number of in-bond after permute.</span>
@@ -979,10 +979,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Permute&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] UniTensor.is_diag=True cannot be permuted.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
                                                 <span class="s2">&quot;[Suggest] Call UniTensor.Todense()&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">maper</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.Permute&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] maper should be an python list.&quot;</span><span class="p">)</span>            
- 
-       
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">maper</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">maper</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.Permute&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] maper should be an 1d python list or numpy array.&quot;</span><span class="p">)</span>            
+
         <span class="k">if</span> <span class="n">by_label</span><span class="p">:</span>
             <span class="c1">## check all label</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">lbl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="k">for</span> <span class="n">lbl</span> <span class="ow">in</span> <span class="n">maper</span><span class="p">):</span>

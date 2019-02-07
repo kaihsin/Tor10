@@ -5,6 +5,10 @@ import torch as tor
 import copy
 
 
+print(np.shape([3,4,5]))
+print(np.shape([3,[4,5]]))
+
+
 ## Example for Bond:
 print("Testing for Bond")
 bd_x = Tt.Bond(Tt.BD_IN,3)

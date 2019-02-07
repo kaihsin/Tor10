@@ -2,6 +2,229 @@ from .UniTensor import *
 import torch 
 import numpy as np
 
+
+def Hosvd(a,order,bonds_group,by_label=False,core=True):
+    """
+    Calculate the higher-order SVD on a UniTensor
+    Args:
+        a:
+            UniTensor
+
+        order:
+            a python list or 1d numpy array, indicating how the bonds should be permute before hosvd
+
+        bonds_group:
+            a python list or 1d numpy array. This indicate how the bonds of the input UniTensor should be group to perform hosvd.
+
+        by_label:
+            bool, the element in argument "order" represents the index of bond or label of bond. If True, all the elements in "order" represent the labels.
+
+        core:
+            bool, if True, the coreTensor will be compute and returned.
+
+    Return:
+        if core is true, return 2d tuple, with structure (list of unitary tensors, coreTensor)
+
+        if core is False, return a list of unitary tensors. 
+
+    Example:
+        >>> x = Tt.From_torch(tor.arange(0.1,2.5,0.1).reshape(2,3,4).to(tor.float64),labels=[6,7,8],N_inbond=1)
+        >>> x.Print_diagram()
+        tensor Name : 
+        tensor Rank : 3
+        on device   : cpu
+        is_diag     : False
+                ---------------     
+                |             |     
+            6 __| 2         3 |__ 7  
+                |             |     
+                |           4 |__ 8  
+                |             |     
+                ---------------     
+        lbl:6 Dim = 2 |
+        IN  :
+        _
+        lbl:7 Dim = 3 |
+        OUT :
+        _
+        lbl:8 Dim = 4 |
+        OUT :
+
+        >>> print(x)
+        Tensor name: 
+        is_diag    : False
+        tensor([[[0.1000, 0.2000, 0.3000, 0.4000],
+                 [0.5000, 0.6000, 0.7000, 0.8000],
+                 [0.9000, 1.0000, 1.1000, 1.2000]],
+                _
+                [[1.3000, 1.4000, 1.5000, 1.6000],
+                 [1.7000, 1.8000, 1.9000, 2.0000],
+                 [2.1000, 2.2000, 2.3000, 2.4000]]], dtype=torch.float64)
+
+        >>> factors, core = Tt.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)
+        >>> core.Print_diagram()
+        tensor Name : 
+        tensor Rank : 2
+        on device   : cpu
+        is_diag     : False
+                ---------------     
+                |             |     
+                |           4 |__ -1 
+                |             |     
+                |           4 |__ -2 
+                |             |     
+                ---------------     
+        lbl:-1 Dim = 4 |
+        OUT :
+        _
+        lbl:-2 Dim = 4 |
+        OUT :
+
+        >>> print(len(factors))
+        2
+
+        >>> factor[0].Print_diagram()
+        tensor Name : 
+        tensor Rank : 3
+        on device   : cpu
+        is_diag     : False
+                ---------------     
+                |             |     
+            7 __| 3         4 |__ -1 
+                |             |     
+            6 __| 2           |      
+                |             |     
+                ---------------     
+        lbl:7 Dim = 3 |
+        IN  :
+        _
+        lbl:6 Dim = 2 |
+        IN  :
+        _
+        lbl:-1 Dim = 4 |
+        OUT :
+        
+        >>> factor[1].Print_diagram()
+        tensor Name : 
+        tensor Rank : 2
+        on device   : cpu
+        is_diag     : False
+                ---------------     
+                |             |     
+            8 __| 4         4 |__ -2 
+                |             |     
+                ---------------     
+        lbl:8 Dim = 4 |
+        IN  :
+        _
+        lbl:-2 Dim = 4 |
+        OUT :
+
+
+        * Checking:
+
+        >>> rep_x = core
+        >>> for f in factors:
+        >>>     rep_x = Tt.Contract(rep_x,f)
+        >>> rep_x.Permute([6,7,8],N_inbond=1,by_label=True)
+        >>> print(rep_x - x)
+        Tensor name: 
+        is_diag    : False
+        tensor([[[3.0531e-16, 6.1062e-16, 5.5511e-16, 4.9960e-16],
+                 [6.6613e-16, 8.8818e-16, 8.8818e-16, 8.8818e-16],
+                 [5.5511e-16, 4.4409e-16, 8.8818e-16, 6.6613e-16]],
+                _
+                [[6.6613e-16, 8.8818e-16, 1.1102e-15, 8.8818e-16],
+                 [1.9984e-15, 2.2204e-15, 2.6645e-15, 1.7764e-15],
+                 [1.7764e-15, 2.6645e-15, 2.6645e-15, 1.7764e-15]]],
+               dtype=torch.float64)
+
+    """
+    if not isinstance(a,UniTensor):
+        raise TypeError("Hosvd(UniTensor,*args)","[ERROR] the input should be a UniTensor")
+
+    if not (isinstance(bonds_group,list) or isinstance(bonds_group,np.array)):
+        raise TypeError("Hosvd(UniTensor,order,bonds_group,*args)","[ERROR] the bonds_group should be a python list or 1d numpy array")
+    
+    if not (isinstance(order,list) or isinstance(order,np.array)):
+        raise TypeError("Hosvd(UniTensor,order,bonds_group,*args)","[ERROR] the order should be a python list or 1d numpy array")
+
+    ## checking:
+    if len(order) != len(a.labels):
+        raise ValueError("Hosvd","[ERROR] the size of order should be equal to the rank of input UniTensor. size of order:%d; rank of UniTensor:%d"%(len(order),len(a.labels)))
+
+    ## checking:
+    if len(a.labels)<3:
+        raise Exception("Hosvd","[ERROR], Hosvd can only perform on a UniTensor with rank > 2. For a rank-2 tensor, using Svd() instead.")
+
+    ## checking:
+    if all( x<=0 for x in bonds_group):
+        
+        raise ValueError("Hosvd","[ERROR] bonds_group cannot have elements <=0")
+
+    old_labels = copy.copy(a.labels)
+    old_bonds  = copy.deepcopy(a.bonds)
+
+    if by_label:
+        maper = copy.copy(order)
+    else:
+        if not all(id<len(a.labels) for id in order):
+            raise ValueError("Hosvd","[ERROR] by_label=False but the input 'order' exceed the rank of UniTensor")
+        maper = a.labels[order]
+    
+    
+
+    factors = []
+    start_label = np.min(a.labels)
+    start_label = start_label-1 if start_label<=0 else -1
+    for bg in bonds_group:
+        a.Permute(maper,N_inbond=bg,by_label=True)
+
+        ## manipulate only the Storage, keep the shell of UniTensor unchange.
+        old_shape = a.Storage.shape
+        a.Contiguous()
+        a.Storage = a.Storage.view(np.prod(a.Storage.shape[:bg]),-1)
+        u,_,_ = torch.svd(a.Storage)
+        
+        new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(BD_OUT,u.shape[-1]))
+        new_labels= np.append(copy.copy(a.labels[:bg]),start_label)
+
+        factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),check=False) )
+
+        a.Storage = a.Storage.view(old_shape)
+        start_label -= 1 
+        maper = np.roll(maper,-bg)
+ 
+    a.Permute(old_labels,N_inbond=1,by_label=True)
+    a.bonds = old_bonds
+    
+    ## if compute core?
+
+    if not core:
+        return factors
+    else:
+        out = a    
+        for n in factors:
+            out = Contract(out,n)
+        return factors,out
+    
+
+
+def Abs(a):
+    """
+    Take the absolute value for all the elements in the UniTensor
+    Args:
+        a:
+            UniTensor
+
+    Return:
+        UniTensor, same shape as the input.
+    """
+    if not isinstance(a,UniTensor):
+        raise TypeError("Abs(UniTensor)","[ERROR] the input should be a UniTensor")
+
+    return UniTensor(bonds=copy.deepcopy(a.bonds),labels=copy.copy(a.labels),is_diag=a.is_diag,torch_tensor= torch.abs(a.Storage),check=False)
+
 def Mean(a):
     """
     Calculate the mean of all elements in the input UniTensor
@@ -14,6 +237,9 @@ def Mean(a):
         UniTensor, 0-rank (constant)
 
     """
+    if not isinstance(a,UniTensor):
+        raise TypeError("Mean(UniTensor)","[ERROR] the input should be a UniTensor")
+
     return UniTensor(bonds=[],labels=[],torch_tensor=torch.mean(a.Storage),check=False)
 
 def Otimes(a,b):

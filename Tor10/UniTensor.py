@@ -749,7 +749,7 @@ class UniTensor():
 
         Args:
             maper:
-                a python list with integer type elements that the UniTensor permute accroding to. 
+                a python list or 1d numpy array with integer type elements that the UniTensor permute accroding to. 
             
             N_inbond:
                 The number of in-bond after permute.
@@ -832,10 +832,9 @@ class UniTensor():
         if self.is_diag:
             raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True cannot be permuted.\n"+
                                                 "[Suggest] Call UniTensor.Todense()")
-        if not isinstance(maper,list):
-            raise TypeError("UniTensor.Permute","[ERROR] maper should be an python list.")            
- 
-       
+        if not (isinstance(maper,list) or isinstance(maper,np.ndarray)):
+            raise TypeError("UniTensor.Permute","[ERROR] maper should be an 1d python list or numpy array.")            
+
         if by_label:
             ## check all label
             if not all(lbl in self.labels for lbl in maper):
