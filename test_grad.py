@@ -20,7 +20,11 @@ print(x.grad())
 import torch.nn as nn
 import torch.nn.functional as F
 
-
+m = Tor10.nn.Linear(20, 30)
+iput = Tor10.From_torch(tor.randn(128, 20),N_inbond=1)
+oput = m(iput)
+print(oput.shape())
+exit(1)
         
 class Model(nn.Module):
     def __init__(self):
@@ -30,8 +34,10 @@ class Model(nn.Module):
         self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,2),Tor10.Bond(Tor10.BD_OUT,2)]))
         self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,2),Tor10.Bond(Tor10.BD_OUT,2)]))
 
+        self.P3 = Tor10.nn.Linear(2,2)
         
     def forward(self,x):
+        x2 = self.P3(x)
         y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
         return y
 

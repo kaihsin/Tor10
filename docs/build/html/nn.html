@@ -148,6 +148,88 @@
             
   <div class="section" id="module-Tor10.nn">
 <span id="tor10-nn"></span><h1>Tor10.nn<a class="headerlink" href="#module-Tor10.nn" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Tor10.nn.Linear">
+<em class="property">class </em><code class="descclassname">Tor10.nn.</code><code class="descname">Linear</code><span class="sig-paren">(</span><em>in_features</em>, <em>out_features</em>, <em>bias=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Linear" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Applies a linear transformation to the incoming data: <span class="math notranslate nohighlight">\(y = xA^T + b\)</span></p>
+<p>Note that the the input and output UniTensors will have shape:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Input: <span class="math notranslate nohighlight">\((N, *,  ext{in\_features})\)</span> where <span class="math notranslate nohighlight">\(*\)</span> means any number of
+additional dimensions</li>
+<li>Output: <span class="math notranslate nohighlight">\((N, *,         ext{out\_features})\)</span> where all but the last dimension
+are the same shape as the input.</li>
+</ul>
+</div></blockquote>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>in_features: </dt>
+<dd>uint, size of each input sample</dd>
+<dt>out_features: </dt>
+<dd>uint, size of each output sample</dd>
+<dt>bias: </dt>
+<dd>bool, If set to False, the layer will not learn an additive bias.</dd>
+</dl>
+</dd>
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>bias:   the learnable bias of the module of shape <span class="math notranslate nohighlight">\((      ext{out\_features})\)</span>.</dt>
+<dd>If <a class="reference internal" href="#Tor10.nn.Linear.bias" title="Tor10.nn.Linear.bias"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bias</span></code></a> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the values are initialized from
+<span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt{k}, \sqrt{k})\)</span> where
+:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>k =</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>rac{1}{     ext{in_features}}`</p>
+<blockquote>
+<div><p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iput</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">oput</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">iput</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">oput</span><span class="o">.</span><span class="n">shape</span><span class="p">())</span>
+<span class="go">torch.Size([128, 30])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="method">
+<dt id="Tor10.nn.Linear.bias">
+<code class="descname">bias</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Linear.bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Linear.bias" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>the learnable bias of the module of shape <span class="math notranslate nohighlight">\((      ext{out\_features})\)</span>.
+If <a class="reference internal" href="#Tor10.nn.Linear.bias" title="Tor10.nn.Linear.bias"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bias</span></code></a> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the values are initialized from
+<span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt{k}, \sqrt{k})\)</span> where
+:math:<a href="#id3"><span class="problematic" id="id4">`</span></a>k =</div></blockquote>
+<p>rac{1}{     ext{in_features}}`</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Return:</dt>
+<dd>if :attr:<a href="#id5"><span class="problematic" id="id6">`</span></a>bias`==True, return a UniTensor of bias; if False, return None</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="Tor10.nn.Linear.weight">
+<code class="descname">weight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Linear.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Linear.weight" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Return the learnable weights of the module of shape
+<span class="math notranslate nohighlight">\((        ext{out\_features},     ext{in\_features})\)</span>. The values are
+initialized from <span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt{k}, \sqrt{k})\)</span>, where
+:math:<a href="#id7"><span class="problematic" id="id8">`</span></a>k =</div></blockquote>
+<p>rac{1}{     ext{in_features}}`</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Return:</dt>
+<dd>UniTensor, 2-rank</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="Tor10.nn.Parameter">
 <code class="descclassname">Tor10.nn.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>data</em>, <em>requires_grad=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Parameter" title="Permalink to this definition">¶</a></dt>
