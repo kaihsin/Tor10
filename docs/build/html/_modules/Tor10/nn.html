@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tor10.nn &mdash; Tor10 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Tor10
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">Tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">Tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Network.html">Tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">Tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html">Tor10.nn</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Tor10</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>Tor10.nn</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for Tor10.nn</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">.UniTensor</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../nn.html#Tor10.nn.Parameter">[docs]</a><span class="k">def</span> <span class="nf">Parameter</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a UniTensor to be considered as a module parameter. </span>
+
+<span class="sd">    They have a special property when use with torch.nn.Module. When they are assigned as Module attributes, they are automatically added to the list of its parameter, and appears in Module.parameters. (This is similar as torch.nn.Parameter)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: </span>
+<span class="sd">            UniTensor, parameter tensor.</span>
+
+<span class="sd">        requires_grad:        </span>
+<span class="sd">            bool, if the parameter requires gradient. </span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        UniTensor, with Paramter property.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    ::</span>
+<span class="sd">        import torch</span>
+<span class="sd">        class Model(torch.nn.Module):</span>
+<span class="sd">            def __init__(self):</span>
+<span class="sd">                super(Model,self).__init__()</span>
+<span class="sd">                ## Customize and register the parameter.</span>
+<span class="sd">                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,2),Tor10.Bond(Tor10.BD_OUT,2)]))</span>
+<span class="sd">                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,2),Tor10.Bond(Tor10.BD_OUT,2)]))</span>
+<span class="sd"> </span>
+<span class="sd">            def forward(self,x):</span>
+<span class="sd">                y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)</span>
+<span class="sd">                return y</span>
+
+<span class="sd">    &gt;&gt;&gt; x = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,2),Tor10.Bond(Tor10.BD_OUT,2)])</span>
+<span class="sd">    &gt;&gt;&gt; md = Model()</span>
+<span class="sd">    &gt;&gt;&gt; print(list(md.parameters()))</span>
+<span class="sd">    [Parameter containing:</span>
+<span class="sd">    tensor([[0., 0.],</span>
+<span class="sd">            [0., 0.]], dtype=torch.float64, requires_grad=True), Parameter containing:</span>
+<span class="sd">    tensor([[0., 0.],</span>
+<span class="sd">            [0., 0.]], dtype=torch.float64, requires_grad=True)]</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;nn.Parameter&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] data should be an UniTensor&quot;</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">requires_grad</span><span class="o">=</span><span class="n">requires_grad</span><span class="p">)</span>
+
+
+    <span class="c1">## Get the mother instance</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">args</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">value_dict</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getargvalues</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="ow">and</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;self&#39;</span><span class="p">:</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">value_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;self&#39;</span><span class="p">,</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">instance</span><span class="o">=</span><span class="kc">None</span>
+
+
+    <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">#print(&quot;OK&quot;)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+            <span class="c1">#print(&quot;OK module&quot;)</span>
+            
+            <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+                    <span class="n">n</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">data</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+                    <span class="k">break</span>
+ 
+    <span class="k">return</span> <span class="n">data</span></div>
+        
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Kai-Hsin Wu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

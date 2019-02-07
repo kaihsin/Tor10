@@ -17,7 +17,7 @@ Tor10 Documentation
    UniTensor.rst
    Network.rst
    linalg.rst
-
+   nn.rst
 
 
 Indices and tables
