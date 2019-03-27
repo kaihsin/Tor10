@@ -1,5 +1,6 @@
 import torch, copy
 import numpy as np
+from . import Symmetry as Symm
 
 
 #
@@ -13,6 +14,9 @@ class BD_IN:
     pass
 class BD_OUT:
     pass
+
+## [For developer] Append this to extend the symmetry:
+SymmType = {'U1':Symm.U1,'Zn':Symm.Zn}
 
 #######################
 
@@ -28,7 +32,7 @@ class Bond():
 
     ## [DevNote]:The qnums should be integer.
 
-    def __init__(self, bondType, dim,qnums=None):
+    def __init__(self, bondType, dim,qnums=None,sym_types=None):
         """
         Constructor of the Bond, it calls the member function Bond.assign().
 
@@ -43,6 +47,8 @@ class Bond():
             qnums:
                 The quantum number(s) specify to the bond. 
                 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary. 
+            sym_types:
+                The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1. 
 
         Example:
 
@@ -62,17 +68,31 @@ class Bond():
                 bd_out_mulsym = Tor10.Bond(Tor10.BD_OUT,3,qnums=[[-1,-1,0,-1],
                                                                  [1 ,-1,0, 0],
                                                                  [0 , 0,1, 0]]) 
+            Create an symmetry out-bond of dimension=3 with U1 x Z2 x Z4 symmetry (here, U1 x Z2 x Z4, so the No. of symmetry = 3), with
+            1st dimension quantum number = [-2,0,0],
+            2nd dimension quantum number = [-1,1,3],
+            3rd dimension quantum number = [ 1,0,2].
+            ::
+                bd_out_mulsym = Tor10.Bond(Tor10.BD_OUT,3,qnums=[[-2,0,0],
+                                                                 [-1,1,3],
+                                                                 [ 1,0,2]],
+                                                          sym_types=[Tor10.Symmetry.U1(),
+                                                                     Tor10.Symmetry.Zn(2),
+                                                                     Tor10.Symmetry.Zn(4)]) 
+         
+
         """
         #declare variable:
         self.bondType = None
         self.dim      = None
         self.qnums    = None
         self.nsym     = 0
+        self.sym_types = None
 
         #call :
-        self.assign(bondType,dim,qnums)
+        self.assign(bondType,dim,qnums,sym_types)
  
-    def assign(self,bondType, dim,qnums=None):
+    def assign(self,bondType, dim,qnums=None,sym_types=None):
         """
         Assign a new property for the Bond.
 
@@ -87,11 +107,13 @@ class Bond():
             qnums:
                 The quantum number(s) specify to the bond. 
                 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary. 
-        
+            sym_types:
+                The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1. 
+
         Example:
 
-            For a in-bond with dim=4, U1 x U1 x Z2; there are 3 types of symmetry.
-            The Bond should be initialize as:
+            For a in-bond with dim=4, U1 x U1 x U1; there are 3 of U1 symmetry.
+            The Bond can be initialize as:
             ::
                 a = Tor10.Bond(Tor10.BD_OUT,4) # create instance
                 a.assign(BD_IN,4,qnums=[[ 0, 1, 1],
@@ -100,8 +122,20 @@ class Bond():
                                         [ 2, 0, 0]])
              
                                           ^  ^  ^
-                                         U1 U1 Z2
+                                         U1 U1 U1
 
+            For a out-bond with dim=3, U1 x Z2 x Z4; there are 3 symmetries.
+            The Bond should be initialize as :
+            ::
+                b = Tor10.Bond(Tor10.BD_OUT,3)
+                b.assign(Tor10.BD_OUT,3,sym_types=[Tor10.Symmetry.U1(),
+                                                   Tor10.Symmetry.Zn(2),
+                                                   Tor10.Symmetry.Zn(4)],
+                                        qnums=[[-2, 0, 3],
+                                               [-1, 1, 1],
+                                               [ 2, 0, 0]])
+                                                 ^  ^  ^
+                                                U1 Z2 Z4
         """
 
         #checking:
@@ -114,15 +148,42 @@ class Bond():
         if not qnums is None:
             sp = np.shape(qnums)
             if len(sp) != 2:
-                raise TypeError("Bond.assign()","[ERROR] qnums must be list of list.")
+                raise TypeError("Bond.assign()","[ERROR] qnums must be list of list (2D list).")
+
             xdim = np.unique([len(qnums[x]) for x in range(len(qnums))]).flatten()
             if len(xdim) != 1:
                 raise TypeError("Bond.assign()","[ERROR] the number of multiple symm must be the same for each dim.")
+
             if len(qnums) != dim:
                 raise ValueError("Bond.assign()","[ERROR] qnums must have the same elements as the dim")        
             self.nsym = xdim[0]
             self.qnums = np.array(qnums).astype(np.int)
- 
+
+            ## default is U1. this is to preserve the API
+            if sym_types is None:
+                self.sym_types = np.array([SymmType['U1']() for i in range(xdim[0])])
+            else:
+                if xdim[0] != len(sym_types):
+                    raise TypeError("Bond.assign()","[ERROR] the number of multiple symm types must match with qnums")
+                else:
+                    ## checking :
+                    for s in range(len(sym_types)):
+
+                        # check the sym_types is a vaild symmetry class appears in SymmType dict.
+                        if sym_types[s].__class__ not in SymmType.values():
+                            raise TypeError("Bond.assign()","[ERROR] invalid Symmetry Type.")
+
+                        # check each qnum validity subject to the symmetry.
+                        if not sym_types[s].CheckQnums(self.qnums[:,s]):
+                            raise TypeError("Bond.assign()","[ERROR] invalid qnum in Symmetry [%s] @ index: %d"%(str(sym_types[s]),s))
+                    self.sym_types = copy.deepcopy(sym_types)
+
+
+
+        else:
+            if sym_types is not None:
+                raise ValueError("Bond.assign()","[ERROR] the sym_type is assigned but no qnums is passed.")
+
        ## fill the members:
         self.bondType = bondType
         self.dim      = dim
@@ -160,11 +221,11 @@ class Bond():
 
         Example:
         ::
-            a = Tor10.Bond(BD_IN,3)
-            b = Tor10.Bond(BD_OUT,4)
-            c = Tor10.Bond(BD_OUT,2,qnums=[[0,1,-1],[1,1,0]])
-            d = Tor10.Bond(BD_OUT,2,qnums=[[1,0,-1],[1,0,0]]) 
-            e = Tor10.Bond(BD_OUT,2,qnums=[[1,0],[1,0]])
+            a = Tor10.Bond(Tor10.BD_IN,3)
+            b = Tor10.Bond(Tor10.BD_OUT,4)
+            c = Tor10.Bond(Tor10.BD_OUT,2,qnums=[[0,1,-1],[1,1,0]])
+            d = Tor10.Bond(Tor10.BD_OUT,2,qnums=[[1,0,-1],[1,0,0]]) 
+            e = Tor10.Bond(Tor10.BD_OUT,2,qnums=[[1,0],[1,0]])
 
         Combine two non-symmetry bonds:
             >>> a.combine(b)
@@ -176,9 +237,10 @@ class Bond():
             >>> c.combine(d)
             >>> print(c)
             Dim = 4 |
-            OUT : +1 +1 +2 +2
-                  +1 +1 +1 +1
-                  -2 -1 -1 +0
+            OUT :U1::  +1 +1 +2 +2
+                 U1::  +1 +1 +1 +1
+                 U1::  -2 -1 -1 +0
+
         """
         ## if bds is Bond class 
         if isinstance(bds,self.__class__):
@@ -186,13 +248,31 @@ class Bond():
             if (self.qnums is None) != (bds.qnums is None):
                 raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with symm and non-symm")
             if self.qnums is not None:
+                # check number of symmetry.
                 if self.nsym != len(bds.qnums[0]):
-                    raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of type of symm.")
-                self.qnums = (self.qnums.reshape(len(self.qnums),1,self.nsym)+bds.qnums.reshape(1,len(bds.qnums),self.nsym)).reshape(-1,self.nsym)
+                    raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of symm.")
+                
+                # check symmetry types
+                for s in range(self.nsym):
+                    if self.sym_types[s] != bds.sym_types[s]:
+                        raise TypeError("Bond.combine","[ERROR] Tryping to combine bonds with different symmetries.")
+
+
+                ## combine accroding to the rule:
+                A = self.qnums.reshape(len(self.qnums),1,self.nsym)
+                B = bds.qnums.reshape(1,len(bds.qnums),self.nsym)
+                
+                self.qnums = []
+                for s in range(self.nsym):
+                    self.qnums.append(self.sym_types[s].CombineRule(A[:,:,s],B[:,:,s]))
+                
+                self.qnums = np.array(self.qnums).reshape(self.nsym,-1).swapaxes(0,1)
+                
+                #self.qnums = (self.qnums.reshape(len(self.qnums),1,self.nsym)+bds.qnums.reshape(1,len(bds.qnums),self.nsym)).reshape(-1,self.nsym)
 
                 
         else:
-            
+            ## combine a list of bonds:
             for i in range(len(bds)):
                 if not isinstance(bds[i],self.__class__):
                     raise TypeError("Bond.combine(bds)","bds[%d] is not Bond class"%(i))
@@ -202,8 +282,22 @@ class Bond():
                         raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with symm and non-symm")
                     if self.qnums is not None: 
                         if self.nsym != len(bds[i].qnums[0]):
-                            raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of type of symm.")
-                        self.qnums = (self.qnums.reshape(len(self.qnums),1,self.nsym)+bds[i].qnums.reshape(1,len(bds[i].qnums),self.nsym)).reshape(-1,self.nsym)
+                            raise TypeError("Bond.combine","[ERROR] Trying to combine bonds with different number of symm.")
+                        for s in range(self.nsym):
+                            if self.sym_types[s] != bds[i].sym_types[s]:
+                                raise TypeError("Bond.combine","[ERROR] Tryping to combine bonds with different symmetries.")
+
+                        ## combine accroding to the rule:
+                        A = self.qnums.reshape(len(self.qnums),1,self.nsym)
+                        B = bds[i].qnums.reshape(1,len(bds[i].qnums),self.nsym)
+                        
+                        self.qnums = []
+                        for s in range(self.nsym):
+                            self.qnums.append(self.sym_types[s].CombineRule(A[:,:,s],B[:,:,s]))
+                        
+                        self.qnums = np.array(self.qnums).reshape(self.nsym,-1).swapaxes(0,1)
+                        
+                        #self.qnums = (self.qnums.reshape(len(self.qnums),1,self.nsym)+bds[i].qnums.reshape(1,len(bds[i].qnums),self.nsym)).reshape(-1,self.nsym)
 
 
         ## checking change type
@@ -222,6 +316,7 @@ class Bond():
             print("IN  :",end='')
             if not self.qnums is None:
                 for n in range(self.nsym):
+                    print("%s:: "%(str(self.sym_types[n])),end='')
                     for idim in range(len(self.qnums)):
                          print(" %+d"%(self.qnums[idim,n]),end='')
                     print("\n     ",end='')
@@ -230,6 +325,7 @@ class Bond():
             print("OUT :",end='')
             if not self.qnums is None:
                 for n in range(self.nsym):
+                    print("%s:: "%(str(self.sym_types[n])),end='')
                     for idim in range(len(self.qnums)):
                          print(" %+d"%(self.qnums[idim,n]),end='')
                     print("\n     ",end='')
@@ -247,7 +343,12 @@ class Bond():
     ## Arithmic:
     def __eq__(self,rhs):
         if isinstance(rhs,self.__class__):
-            return (self.dim == rhs.dim) and (self.bondType == rhs.bondType) and (self.qnums == rhs.qnums)
+            iSame = (self.dim == rhs.dim) and (self.bondType == rhs.bondType) and (self.qnums == rhs.qnums)            
+            if not self.qnums is None:
+                for s in range(self.nsym):
+                    iSame = iSame and (self.sym_types[s] == rhs.sym_types[s])
+
+            return iSame
         else:
             raise ValueError("Bond.__eq__","[ERROR] invalid comparison between Bond object and other type class.")
 
