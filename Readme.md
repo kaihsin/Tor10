@@ -38,7 +38,8 @@
 ```
 
     3. Multiple Symmetries:
-        * Support arbitrary number of symmetry. 
+        * Support arbitrary number of symmetry.
+        * Currently support U1 and Zn (with arbitrary n). 
         * see test_sym.py for how to use them. 
         
     4. Network :
