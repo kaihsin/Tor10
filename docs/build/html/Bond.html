@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Tor10.UniTensor" href="UniTensor.html" />
-    <link rel="prev" title="Tor10 Documentation" href="index.html" /> 
+    <link rel="prev" title="Tor10.Symmetry" href="Symmetry.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -80,6 +80,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">Tor10.Symmetry</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.Bond</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UniTensor.html">Tor10.UniTensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Network.html">Tor10.Network</a></li>
@@ -151,10 +152,10 @@
 <span id="tor10-bond"></span><h1>Tor10.Bond<a class="headerlink" href="#module-Tor10.Bond" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="Tor10.Bond.Bond">
-<em class="property">class </em><code class="descclassname">Tor10.Bond.</code><code class="descname">Bond</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">Tor10.Bond.</code><code class="descname">Bond</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="Tor10.Bond.Bond.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor of the Bond, it calls the member function Bond.assign().</p>
 <p>Args:</p>
 <blockquote>
@@ -168,6 +169,8 @@ It should be larger than 0 (&gt;0)</dd>
 <dt>qnums:</dt>
 <dd>The quantum number(s) specify to the bond. 
 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.</dd>
+<dt>sym_types:</dt>
+<dd>The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1.</dd>
 </dl>
 </div></blockquote>
 <p>Example:</p>
@@ -189,12 +192,24 @@ The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmet
                                                  <span class="p">[</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span> 
 </pre></div>
 </div>
+<p>Create an symmetry out-bond of dimension=3 with U1 x Z2 x Z4 symmetry (here, U1 x Z2 x Z4, so the No. of symmetry = 3), with
+1st dimension quantum number = [-2,0,0],
+2nd dimension quantum number = [-1,1,3],
+3rd dimension quantum number = [ 1,0,2].</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_out_mulsym</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                                 <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                                                 <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span>
+                                          <span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span>
+                                                     <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+                                                     <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span> 
+</pre></div>
+</div>
 </div></blockquote>
 </dd></dl>
 
 <dl class="method">
 <dt id="Tor10.Bond.Bond.assign">
-<code class="descname">assign</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.assign" title="Permalink to this definition">¶</a></dt>
+<code class="descname">assign</code><span class="sig-paren">(</span><em>bondType</em>, <em>dim</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.assign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign a new property for the Bond.</p>
 <p>Args:</p>
 <blockquote>
@@ -208,12 +223,14 @@ It should be larger than 0 (&gt;0)</dd>
 <dt>qnums:</dt>
 <dd>The quantum number(s) specify to the bond. 
 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.</dd>
+<dt>sym_types:</dt>
+<dd>The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1.</dd>
 </dl>
 </div></blockquote>
 <p>Example:</p>
 <blockquote>
-<div><p>For a in-bond with dim=4, U1 x U1 x Z2; there are 3 types of symmetry.
-The Bond should be initialize as:</p>
+<div><p>For a in-bond with dim=4, U1 x U1 x U1; there are 3 of U1 symmetry.
+The Bond can be initialize as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># create instance</span>
 <span class="n">a</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
                         <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
@@ -221,7 +238,20 @@ The Bond should be initialize as:</p>
                         <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
 
                           <span class="o">^</span>  <span class="o">^</span>  <span class="o">^</span>
-                         <span class="n">U1</span> <span class="n">U1</span> <span class="n">Z2</span>
+                         <span class="n">U1</span> <span class="n">U1</span> <span class="n">U1</span>
+</pre></div>
+</div>
+<p>For a out-bond with dim=3, U1 x Z2 x Z4; there are 3 symmetries.
+The Bond should be initialize as :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span>
+                                   <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+                                   <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span>
+                        <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                               <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                               <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+                                 <span class="o">^</span>  <span class="o">^</span>  <span class="o">^</span>
+                                <span class="n">U1</span> <span class="n">Z2</span> <span class="n">Z4</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -252,11 +282,11 @@ The Bond should be initialize as:</p>
 </dl>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span> 
-<span class="n">e</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span> 
+<span class="n">e</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
 </pre></div>
 </div>
 <dl class="docutils">
@@ -272,9 +302,9 @@ The Bond should be initialize as:</p>
 <dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 <span class="go">Dim = 4 |</span>
-<span class="go">OUT : +1 +1 +2 +2</span>
-<span class="go">      +1 +1 +1 +1</span>
-<span class="go">      -2 -1 -1 +0</span>
+<span class="go">OUT :U1::  +1 +1 +2 +2</span>
+<span class="go">     U1::  +1 +1 +1 +1</span>
+<span class="go">     U1::  -2 -1 -1 +0</span>
 </pre></div>
 </div>
 </dd>
@@ -296,7 +326,7 @@ The Bond should be initialize as:</p>
         <a href="UniTensor.html" class="btn btn-neutral float-right" title="Tor10.UniTensor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Tor10 Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Symmetry.html" class="btn btn-neutral" title="Tor10.Symmetry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

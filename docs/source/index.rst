@@ -13,6 +13,7 @@ Tor10 Documentation
    :maxdepth: 5
    :caption: Contents:
 
+   Symmetry.rst
    Bond.rst
    UniTensor.rst
    Network.rst

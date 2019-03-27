@@ -78,6 +78,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">Tor10.Symmetry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Bond.html">Tor10.Bond</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">Tor10.UniTensor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Network.html">Tor10.Network</a></li>
@@ -1120,10 +1121,10 @@
 <span class="sd">            * Multiple Symmetry::</span>
 
 <span class="sd">                ## multiple Qnum:</span>
-<span class="sd">                ## U1 x U1 x Z2 x Z4</span>
+<span class="sd">                ## U1 x U1 x U1 x U1</span>
 <span class="sd">                ## U1 = {-2,-1,0,1,2}</span>
-<span class="sd">                ## Z2 = {-1,1}</span>
-<span class="sd">                ## Z4 = {0,1,2,3}</span>
+<span class="sd">                ## U1 = {-1,1}</span>
+<span class="sd">                ## U1 = {0,1,2,3}</span>
 <span class="sd">                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],</span>
 <span class="sd">                                                     [1, 1,-1, 1],</span>
 <span class="sd">                                                     [2,-1, 1, 0]])</span>
@@ -1313,17 +1314,17 @@
 <span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            IN  : -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
-<span class="sd">                  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
-<span class="sd">                  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
-<span class="sd">                  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
-
+<span class="sd">            IN  :U1::  -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
+<span class="sd">                 U1::  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
+<span class="sd">                 U1::  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
+<span class="sd">                 U1::  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
+<span class="sd">     </span>
 <span class="sd">            &gt;&gt;&gt; print(tqout)</span>
 <span class="sd">            Dim = 2 |</span>
-<span class="sd">            OUT : -1 +1</span>
-<span class="sd">                  -2 +1</span>
-<span class="sd">                  -1 -2</span>
-<span class="sd">                  +2 +3</span>
+<span class="sd">            OUT :U1::  -1 +1</span>
+<span class="sd">                 U1::  -2 +1</span>
+<span class="sd">                 U1::  -1 -2</span>
+<span class="sd">                 U1::  +2 +3</span>
 
 <span class="sd">            &gt;&gt;&gt; block_1123 = sym_T.GetBlock(1,1,-2,3)</span>
 <span class="sd">            &gt;&gt;&gt; print(block_1123)</span>
