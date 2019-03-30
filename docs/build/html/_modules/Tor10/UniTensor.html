@@ -164,7 +164,7 @@
 
 <div class="viewcode-block" id="UniTensor"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor">[docs]</a><span class="k">class</span> <span class="nc">UniTensor</span><span class="p">():</span>
 
-<div class="viewcode-block" id="UniTensor.__init__"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.__init__"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">N_inbond</span> <span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the constructor of the UniTensor.</span>
 
@@ -172,6 +172,11 @@
 
 <span class="sd">            bonds: </span>
 <span class="sd">                The list of bonds. it should be an list or np.ndarray with len(list) is the # of bonds.  </span>
+
+<span class="sd">            N_inbond:</span>
+<span class="sd">                The number of in-bond, The first [N_inbond] bonds will be define as the in-bond (the BD_IN in the uni10 definition) and the other bonds will be defined as the out-bond (the BD_OUT in the uni10 definition)</span>
+<span class="sd">                When interprete the memory layout as Matrix, the combine of first N_inbond will be the row and the other bond will be column. </span>
+<span class="sd">                </span>
 
 <span class="sd">            labels: </span>
 <span class="sd">                The label of each bond. </span>
@@ -212,26 +217,28 @@
 <span class="sd">        Example for how to create a UniTensor:</span>
 <span class="sd">        </span>
 <span class="sd">            * create a 2-rank UniTensor (matrix) with shape (3,4): </span>
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])</span>
+<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)</span>
 
-<span class="sd">            * create a 3-rank UniTensor with shape (3,4,5) and set labels [-3,4,1] for each bond:</span>
-<span class="sd">            &gt;&gt;&gt; c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[-3,4,1])</span>
+<span class="sd">            * create a 3-rank UniTensor with one inbond and two outbond, shape (3,4,5) and set labels [-3,4,1] for each bond:</span>
+<span class="sd">            &gt;&gt;&gt; c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=1,labels=[-3,4,1])</span>
 
-<span class="sd">            * create a 2-rank UniTensor with shape (3,4) on GPU-0:</span>
-<span class="sd">            &gt;&gt;&gt; d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],device=torch.device(&quot;cuda:0&quot;))</span>
+<span class="sd">            * create a 2-rank UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:</span>
+<span class="sd">            &gt;&gt;&gt; d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,device=torch.device(&quot;cuda:0&quot;))</span>
 
 <span class="sd">            * create a diagonal 6x6 2-rank tensor(matrix):</span>
-<span class="sd">            &gt;&gt;&gt; e = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,6)],is_diag=True)</span>
+<span class="sd">              Note that if is_diag is True, N_inbond must be 1.</span>
+<span class="sd">            &gt;&gt;&gt; e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],N_inbond=1,is_diag=True)</span>
 <span class="sd">            </span>
 <span class="sd">            Note that when is_diag is set to True, the UniTensor should be a square matrix.</span>
 
-<span class="sd">            * crate a 3-rank UniTensor with single precision:</span>
-<span class="sd">            &gt;&gt;&gt; f = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[-3,4,1],dtype=torch.float32)</span>
+<span class="sd">            * crate a 3-rank UniTensor with two in-bond and one-outbond, and single precision:</span>
+<span class="sd">            &gt;&gt;&gt; f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=2,labels=[-3,4,1],dtype=torch.float32)</span>
 <span class="sd">            </span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">bonds</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N_inbond</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span> <span class="o">=</span> <span class="n">is_diag</span>        
 
@@ -243,6 +250,10 @@
         
         <span class="c1">## Checking:</span>
         <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">N_inbond</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;the N_inbond should be &gt;=0 and &lt; # of bonds&quot;</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;labels size is not consistence with the rank&quot;</span><span class="p">)</span>
 
@@ -252,8 +263,13 @@
             <span class="k">if</span> <span class="n">is_diag</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;is_diag=True require Tensor rank==2&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>      
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;is_diag=True require Tensor rank==2, with 1 inbond and 1 outbond (N_inbond=1)&quot;</span><span class="p">)</span>
+
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;is_diag=True require Tensor to be square rank-2&quot;</span><span class="p">)</span>
+
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span> <span class="p">(</span><span class="n">bd</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">]))</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).&quot;</span><span class="p">)</span>
@@ -261,12 +277,6 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span> <span class="n">bd</span><span class="o">.</span><span class="n">nsym</span> <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">]))</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;the number of symmetry type for symmetry bonds doesn&#39;t match.&quot;</span><span class="p">)</span>
-
-            <span class="c1">## sort all BD_IN on first and BD_OUT on last:</span>
-            <span class="c1">#lambda x: 1 if x.bondType is BD_OUT else 0</span>
-            <span class="c1">#maper = np.argsort([ (x.bondType is BD_OUT) for x in self.bonds])</span>
-            <span class="c1">#self.bonds = self.bonds[maper]</span>
-            <span class="c1">#self.labels = self.labels[maper]</span>
 
 
         <span class="k">if</span> <span class="n">torch_tensor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -296,15 +306,15 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[5,6])</span>
-<span class="sd">            &gt;&gt;&gt; a.labels</span>
+<span class="sd">            &gt;&gt;&gt; g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])</span>
+<span class="sd">            &gt;&gt;&gt; g.labels</span>
 <span class="sd">            [5 6]</span>
 
 
 <span class="sd">            Set &quot;-1&quot; to replace the original label &quot;6&quot; at index 1</span>
 
-<span class="sd">            &gt;&gt;&gt; a.SetLabel(-1,1)</span>
-<span class="sd">            &gt;&gt;&gt; a.labels</span>
+<span class="sd">            &gt;&gt;&gt; g.SetLabel(-1,1)</span>
+<span class="sd">            &gt;&gt;&gt; g.labels</span>
 <span class="sd">            [5 -1]</span>
 <span class="sd"> </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -329,15 +339,15 @@
 <span class="sd">                       </span>
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[5,6])</span>
-<span class="sd">            &gt;&gt;&gt; a.labels</span>
+<span class="sd">            &gt;&gt;&gt; g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])</span>
+<span class="sd">            &gt;&gt;&gt; g.labels</span>
 <span class="sd">            [5 6]</span>
 
 <span class="sd">            Set new_label=[-1,-2] to replace the original label [5,6].</span>
 
 <span class="sd">            &gt;&gt;&gt; new_label=[-1,-2]</span>
-<span class="sd">            &gt;&gt;&gt; a.SetLabels(new_label)</span>
-<span class="sd">            &gt;&gt;&gt; a.labels</span>
+<span class="sd">            &gt;&gt;&gt; g.SetLabels(new_label)</span>
+<span class="sd">            &gt;&gt;&gt; g.labels</span>
 <span class="sd">            [-1 -2]</span>
 <span class="sd"> </span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -364,9 +374,9 @@
 <span class="sd"> </span>
 <span class="sd">        Example:</span>
 <span class="sd">        ::</span>
-<span class="sd">            Sz = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,2)],</span>
-<span class="sd">                              dtype=tor.float64,</span>
-<span class="sd">                              device=tor.device(&quot;cpu&quot;))</span>
+<span class="sd">            Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_inbond=1,</span>
+<span class="sd">                              dtype=torch.float64,</span>
+<span class="sd">                              device=torch.device(&quot;cpu&quot;))</span>
 <span class="sd">            Sz.SetElem([1, 0,</span>
 <span class="sd">                        0,-1 ])</span>
 
@@ -403,16 +413,27 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)],is_diag=True)</span>
+<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],N_inbond=1,is_diag=True)</span>
 <span class="sd">            &gt;&gt;&gt; print(a.is_diag)</span>
 <span class="sd">            True</span>
-<span class="sd">        </span>
+<span class="sd">            </span>
+<span class="sd">            &gt;&gt;&gt; print(a)</span>
+<span class="sd">            Tensor name: </span>
+<span class="sd">            is_diag    : True</span>
+<span class="sd">            tensor([0., 0., 0.], dtype=torch.float64) </span>
 <span class="sd">            </span>
 <span class="sd">            &gt;&gt;&gt; a.Todense()</span>
 <span class="sd">            &gt;&gt;&gt; print(a.is_diag)</span>
 <span class="sd">            False</span>
-<span class="sd">            </span>
 
+<span class="sd">            &gt;&gt;&gt; print(a)</span>
+<span class="sd">            Tensor name: </span>
+<span class="sd">            is_diag    : False</span>
+<span class="sd">            tensor([[0., 0., 0.],</span>
+<span class="sd">                    [0., 0., 0.],</span>
+<span class="sd">                    [0., 0., 0.]], dtype=torch.float64)</span>
+
+<span class="sd">           </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span> 
@@ -435,7 +456,7 @@
 
 <span class="sd">            Construct a tensor (default is on cpu)</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])</span>
+<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)</span>
 <span class="sd">            </span>
 <span class="sd">            Set to GPU.</span>
 
@@ -460,7 +481,8 @@
 
 <span class="sd">            [ex:] Rank = 4. </span>
 <span class="sd">            shape: (1,2,3,6) </span>
-<span class="sd">            D_IN=[1,2], D_OUT=[3,6], labels=[0,5,3,11]</span>
+<span class="sd">            N_inbond = 2</span>
+<span class="sd">            labels=[0,5,3,11]</span>
 
 <span class="sd">                        -----------</span>
 <span class="sd">                   0  --| 1     3 |-- 3</span>
@@ -474,9 +496,10 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;on device   : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>        
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;is_diag     : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="s2">&quot;True&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span> <span class="k">else</span> <span class="s2">&quot;False&quot;</span><span class="p">))</span>        
         
-        <span class="n">Nin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_IN</span><span class="p">])</span>
-        <span class="n">Nout</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">-</span> <span class="n">Nin</span>    
-    
+        <span class="c1">#Nin = len([ 1 for i in range(len(self.labels)) if self.bonds[i].bondType is BD_IN])</span>
+        <span class="c1">#Nout = len(self.labels) - Nin    </span>
+        <span class="n">Nin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span>
+        <span class="n">Nout</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span>
         <span class="k">if</span> <span class="n">Nin</span> <span class="o">&gt;</span> <span class="n">Nout</span><span class="p">:</span>
             <span class="n">vl</span> <span class="o">=</span> <span class="n">Nin</span>
         <span class="k">else</span><span class="p">:</span>
@@ -575,6 +598,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                 <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                 <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                 <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
                                 <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -582,23 +606,27 @@
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                 <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                 <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                 <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                     <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                    <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                     <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                    <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">),</span>\
                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">tmp</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                              <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                             <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                              <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">+</span> <span class="n">other</span><span class="p">,</span>\
                              <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                              <span class="n">is_diag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
@@ -608,6 +636,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                 <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                 <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                 <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
                                 <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -615,23 +644,27 @@
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                  <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                 <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                  <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                  <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                     <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                    <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                     <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                    <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">),</span>\
                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">tmp</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                              <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                             <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                              <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">-</span> <span class="n">other</span><span class="p">,</span>\
                              <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                              <span class="n">is_diag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
@@ -641,6 +674,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                 <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                 <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                 <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
                                 <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -648,22 +682,26 @@
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                  <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                 <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                  <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                  <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                     <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                    <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                                     <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                    <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">),</span>\
                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                             <span class="n">labels</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                            <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                             <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">*</span> <span class="n">other</span><span class="p">,</span>\
                             <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
                             <span class="n">is_diag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
@@ -673,19 +711,49 @@
         <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                          <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
                          <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">**</span><span class="n">other</span><span class="p">,</span>\
+                         <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                          <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
                          <span class="n">is_diag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
 
     
     <span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">D_OUT</span><span class="p">,</span>\
-                             <span class="bp">self</span><span class="o">.</span><span class="n">Label_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Label_OUT</span><span class="p">,</span>\
-                             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
+                                     <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                     <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
+                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
+                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span>\
+                                     <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
+                                     <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                     <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
+                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
+                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
+                                     <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                     <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
+                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
+                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
+                                     <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                                     <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
+                                     <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
+                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+
         <span class="k">else</span> <span class="p">:</span>
-            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">D_OUT</span><span class="p">,</span>\
-                             <span class="bp">self</span><span class="o">.</span><span class="n">Label_IN</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Label_OUT</span><span class="p">,</span>\
-                             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
+                             <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
+                             <span class="n">N_inbond</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
+                             <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
+                             <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">/</span> <span class="n">other</span><span class="p">,</span>\
+                             <span class="n">is_diag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
     
 
     <span class="c1">## This is the same function that behaves as the memberfunction.</span>
@@ -786,7 +854,7 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[Abort] UniTensor.Rand for symm TN is under developing&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.CombineBonds"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.CombineBonds">[docs]</a>    <span class="k">def</span> <span class="nf">CombineBonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">labels_to_combine</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.CombineBonds"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.CombineBonds">[docs]</a>    <span class="k">def</span> <span class="nf">CombineBonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">labels_to_combine</span><span class="p">,</span><span class="n">is_inbond</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">new_label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function combines the bonds in input UniTensor [a] by the specified labels [label].</span>
 <span class="sd">    </span>
@@ -795,12 +863,25 @@
 <span class="sd">            labels_to_combine: </span>
 <span class="sd">                labels that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined</span>
 
+<span class="sd">            is_inbond: [default=None]</span>
+<span class="sd">                if is_inbond is set to None, the combined bond will becomes in- or out-bond accroding to the bond that has the largest INDEX.</span>
+<span class="sd">                if is_inbond is set to True, the combined bond will becomes in-bond</span>
+<span class="sd">                if is_inbond is set to False, the combined bond will becomes out-bond </span>
+
+<span class="sd">            new_label [default=None]</span>
+<span class="sd">                This should be an integer, for floating point number, it will be truncated to integer.</span>
+
+<span class="sd">                if new_label is set to None, the combined bond will have label as the bond in the to-be-combined bond that has the largest INDEX in input tensor.</span>
+<span class="sd">                if new_label is set, the combined bond will have label [new_label]</span>
+
 <span class="sd">        Example:</span>
 
 <span class="sd">            1. Combine Bond for an non-symmetric tensor.</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,5),Tor10.Bond(Tor10.BD_OUT,3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; y = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; z = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
@@ -808,21 +889,23 @@
 <span class="sd">            is_diag     : False</span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">                    |             |     </span>
-<span class="sd">               4 __ | 5         5 |__ 3  </span>
+<span class="sd">                4 __| 5         5 |__ 3  </span>
 <span class="sd">                    |             |     </span>
 <span class="sd">                    |           3 |__ 5  </span>
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:4 Dim = 5 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:3 Dim = 5 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:5 Dim = 3 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 
-<span class="sd">            &gt;&gt;&gt; x.CombineBonds([4,3])</span>
+<span class="sd">            [Note] Since is_inbond==None(default), so the combined bond will have label=3 and is an outbond, since the bond with label=3 has largest index appeard in input tensor.</span>
+
+<span class="sd">            &gt;&gt;&gt; x.CombineBonds([4,3]) </span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 2</span>
@@ -836,21 +919,57 @@
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:5 Dim = 3 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:3 Dim = 25 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
+
+<span class="sd">            [Note] Since is_inbond==True, so the combined bond will force to be in-bond, but still have label=3 since the bond with label=3 has largest index appeard in input tensor.</span>
+
+<span class="sd">            &gt;&gt;&gt; y.CombineBonds([4,3],is_inbond=True)</span>
+<span class="sd">            &gt;&gt;&gt; y.Print_diagram()</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 2</span>
+<span class="sd">            on device   : cpu</span>
+<span class="sd">            is_diag     : False</span>
+<span class="sd">                    ---------------     </span>
+<span class="sd">                    |             |     </span>
+<span class="sd">                3 __| 25        3 |__ 5  </span>
+<span class="sd">                    |             |     </span>
+<span class="sd">                    ---------------     </span>
+<span class="sd">            lbl:3 Dim = 25 |</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
+<span class="sd">            lbl:5 Dim = 3 |</span>
+<span class="sd">            REGULAR :</span>
 
-<span class="sd">            </span>
-<span class="sd">            2. Combine bonds for a Symetric tensor.</span>
+<span class="sd">            [Note] Since is_inbond==True and new_label is set, so the combined bond will force to be in-bond, and has label=8</span>
 
-<span class="sd">                </span>
+<span class="sd">            &gt;&gt;&gt; z.CombineBonds([4,3],is_inbond=True,new_label=8)</span>
+<span class="sd">            &gt;&gt;&gt; z.Print_diagram()</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 2</span>
+<span class="sd">            on device   : cpu</span>
+<span class="sd">            is_diag     : False</span>
+<span class="sd">                    ---------------     </span>
+<span class="sd">                    |             |     </span>
+<span class="sd">                8 __| 25        3 |__ 5  </span>
+<span class="sd">                    |             |     </span>
+<span class="sd">                    ---------------     </span>
+<span class="sd">            lbl:8 Dim = 25 |</span>
+<span class="sd">            REGULAR :</span>
+<span class="sd">            _</span>
+<span class="sd">            lbl:5 Dim = 3 |</span>
+<span class="sd">            REGULAR :</span>
+<span class="sd">                    </span>
 
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_CombineBonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">labels_to_combine</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_to_combine</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;CombineBonds&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] the number of bond to combine should be &gt;1&quot;</span><span class="p">)</span>
+
+        <span class="n">_CombineBonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">labels_to_combine</span><span class="p">,</span><span class="n">is_inbond</span><span class="p">,</span><span class="n">new_label</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UniTensor.Contiguous"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Contiguous">[docs]</a>    <span class="k">def</span> <span class="nf">Contiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -863,12 +982,13 @@
 <span class="sd">            self</span>
 
 <span class="sd">        Example:</span>
-
-<span class="sd">            &gt;&gt;&gt; x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])</span>
+<span class="sd">            </span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = Tt.UniTensor(bonds=bds_x,N_inbond=1, labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; print(x.is_contiguous())</span>
 <span class="sd">            True</span>
 
-<span class="sd">            &gt;&gt;&gt; x.Permute([0,2,1])  </span>
+<span class="sd">            &gt;&gt;&gt; x.Permute([0,2,1],N_inbond=1)  </span>
 <span class="sd">            &gt;&gt;&gt; print(x.is_contiguous())</span>
 <span class="sd">            False</span>
 
@@ -908,9 +1028,9 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])</span>
-<span class="sd">            &gt;&gt;&gt; y = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; y = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
@@ -924,15 +1044,16 @@
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:4 Dim = 6 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:3 Dim = 5 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:5 Dim = 3 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 
-<span class="sd">            &gt;&gt;&gt; x.Permute([0,2,1],2)</span>
+
+<span class="sd">            &gt;&gt;&gt; x.Permute([0,2,1],N_inbond=2)</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
@@ -946,15 +1067,16 @@
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:4 Dim = 6 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:5 Dim = 3 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:3 Dim = 5 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 
-<span class="sd">            &gt;&gt;&gt; y.Permute([3,4,5],2,by_label=True)</span>
+
+<span class="sd">            &gt;&gt;&gt; y.Permute([3,4,5],N_inbond=2,by_label=True)</span>
 <span class="sd">            &gt;&gt;&gt; y.Print_diagram()</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
@@ -968,19 +1090,20 @@
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:3 Dim = 5 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:4 Dim = 6 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:5 Dim = 3 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Permute&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] UniTensor.is_diag=True cannot be permuted.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
                                                 <span class="s2">&quot;[Suggest] Call UniTensor.Todense()&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">maper</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">maper</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.Permute&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] maper should be an 1d python list or numpy array.&quot;</span><span class="p">)</span>            
 
@@ -1004,12 +1127,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N_inbond</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">change</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">change</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">)</span></div>
-
+        <span class="c1">#for i in range(len(self.bonds)):</span>
+        <span class="c1">#    if i &lt; N_inbond:</span>
+        <span class="c1">#        self.bonds[i].change(BD_IN)</span>
+        <span class="c1">#    else:</span>
+        <span class="c1">#        self.bonds[i].change(BD_OUT)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">=</span> <span class="n">N_inbond</span></div>
 
 <div class="viewcode-block" id="UniTensor.Reshape"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Reshape">[docs]</a>    <span class="k">def</span> <span class="nf">Reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dimer</span><span class="p">,</span><span class="n">N_inbond</span><span class="p">,</span><span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1028,8 +1151,8 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
@@ -1043,14 +1166,14 @@
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:4 Dim = 6 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:3 Dim = 5 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:5 Dim = 3 |</span>
-<span class="sd">            OUT :</span>
-<span class="sd">            </span>
+<span class="sd">            REGULAR :</span>
+<span class="sd"> </span>
 
 <span class="sd">            &gt;&gt;&gt; x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
@@ -1066,16 +1189,18 @@
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:1 Dim = 2 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:2 Dim = 3 |</span>
-<span class="sd">            IN :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:3 Dim = 5 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:-1 Dim = 3 |</span>
-<span class="sd">            OUT :</span>
+<span class="sd">            REGULAR :</span>
+
+
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
@@ -1096,9 +1221,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">labels</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_labels</span><span class="p">)</span>
 
-        <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">,</span><span class="n">Nid</span><span class="p">,</span><span class="n">dim</span> <span class="p">:</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="n">dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">Nid</span> <span class="k">else</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="n">dim</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">N_inbond</span><span class="p">,</span><span class="n">dimer</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimer</span><span class="p">))])</span></div>
+        <span class="c1">#f = lambda i,Nid,dim : Bond(BD_IN,dim) if i&lt;Nid else Bond(BD_OUT,dim)</span>
+        <span class="c1">#self.bonds  = np.array([f(i,N_inbond,dimer[i]) for i in range(len(dimer))])</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Bond</span><span class="p">(</span><span class="n">dimer</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimer</span><span class="p">))])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">=</span><span class="n">N_inbond</span></div>
 
 
     <span class="c1">## Symmetric Tensor function</span>
@@ -1125,51 +1252,51 @@
 <span class="sd">                ## U1 = {-2,-1,0,1,2}</span>
 <span class="sd">                ## U1 = {-1,1}</span>
 <span class="sd">                ## U1 = {0,1,2,3}</span>
-<span class="sd">                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],</span>
 <span class="sd">                                                     [1, 1,-1, 1],</span>
 <span class="sd">                                                     [2,-1, 1, 0]])</span>
-<span class="sd">                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],</span>
 <span class="sd">                                                     [ 0, 0,-1, 2],</span>
 <span class="sd">                                                     [ 1, 0, 1, 0],</span>
 <span class="sd">                                                     [ 2,-2,-1, 1]])</span>
-<span class="sd">                bd_sym_3 = Tt.Bond(Tt.BD_OUT,2,qnums=[[-1,-2,-1,2],</span>
+<span class="sd">                bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],</span>
 <span class="sd">                                                      [ 1, 1, -2,3]])</span>
 
-<span class="sd">                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],dtype=tor.float64)</span>
+<span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[1,2,3],dtype=torch.float64)</span>
 <span class="sd">                </span>
 <span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            IN  : -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
-<span class="sd">                  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
-<span class="sd">                  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
-<span class="sd">                  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
+<span class="sd">            REGULAR : U1::  -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
+<span class="sd">                      U1::  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
+<span class="sd">                      U1::  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
+<span class="sd">                      U1::  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
+
 
 <span class="sd">            &gt;&gt;&gt; print(tqout)</span>
 <span class="sd">            Dim = 2 |</span>
-<span class="sd">            OUT : -1 +1</span>
-<span class="sd">                  -2 +1</span>
-<span class="sd">                  -1 -2</span>
-<span class="sd">                  +2 +3</span>
-<span class="sd">                </span>
+<span class="sd">            REGULAR : U1::  -1 +1</span>
+<span class="sd">                      U1::  -2 +1</span>
+<span class="sd">                      U1::  -1 -2</span>
+<span class="sd">                      U1::  +2 +3</span>
+<span class="sd">               </span>
+
+<span class="sd"> </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.GetTotalQnums&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] GetTotal Qnums from a non-symm tensor&quot;</span><span class="p">)</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_OUT</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">])</span>
-        <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-        <span class="n">tmp_bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-        <span class="n">tmp_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-        <span class="n">Nin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">tmp</span><span class="o">==</span><span class="kc">False</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">Nin</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Nin</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.GetTotalQnums&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] The TN symmetry structure is incorrect, without either any in-bond or any-outbond&quot;</span><span class="p">)</span>
 
         <span class="c1">#virtual_cb-in</span>
-        <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">cb_inbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">Nin</span><span class="p">])</span>
+        <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">cb_inbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">])</span>
 
-        <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="n">Nin</span><span class="p">])</span>
-        <span class="n">cb_outbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="n">Nin</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">cb_outbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
 
         <span class="k">return</span> <span class="n">cb_inbonds</span><span class="p">,</span><span class="n">cb_outbonds</span></div>
 
@@ -1189,17 +1316,20 @@
 
             <span class="c1">## create a copy of bonds and labels information that has all the BD_IN on first.            </span>
             <span class="c1"># [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_OUT</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">])</span>
-            <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-            <span class="n">tmp_bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-            <span class="n">tmp_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-            <span class="n">Nin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">tmp</span><span class="o">==</span><span class="kc">False</span><span class="p">])</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">Nin</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Nin</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
+            <span class="c1">#tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])</span>
+            <span class="c1">#maper = np.argsort(tmp)</span>
+            <span class="c1">#tmp_bonds = self.bonds[maper]</span>
+            <span class="c1">#tmp_labels = self.labels[maper]</span>
+            <span class="c1">#Nin = len(tmp[tmp==False])</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.PutBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond&quot;</span><span class="p">)</span>
 
             <span class="c1">#virtual_cb-in</span>
-            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">cb_inbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">Nin</span><span class="p">])</span>
+            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">cb_inbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">])</span>
+
             <span class="n">i_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nsym</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">i_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="n">n</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
@@ -1207,30 +1337,32 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.PutBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.&quot;</span><span class="p">)</span>
 
             <span class="c1">#virtual_cb_out            </span>
-            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="n">Nin</span><span class="p">])</span>
-            <span class="n">cb_outbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="n">Nin</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">cb_outbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+
             <span class="n">i_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nsym</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">i_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">i_out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="n">n</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_out</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.PutBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to put a qnum block that is not exists in the totoal Qnum out-bonds in current TN.&quot;</span><span class="p">)</span>
             
-            <span class="n">rev_maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">maper</span><span class="p">)</span> 
-            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
+            <span class="c1">#rev_maper = np.argsort(maper) </span>
+            <span class="c1">#self.Storage = self.Storage.permute(*maper)</span>
             <span class="n">ori_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span>
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="c1">## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ori_shape</span><span class="p">[:</span><span class="n">Nin</span><span class="p">]),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ori_shape</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">]),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="c1">## no need to check if the size match. if the size doesn&#39;t match, let torch handle the error.</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span><span class="n">i_out</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span><span class="n">i_out</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">block</span><span class="p">)</span><span class="c1">#.to(torch.float64)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span><span class="n">i_out</span><span class="p">)]</span> <span class="o">=</span> <span class="n">block</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.PutBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] the block can only be an np.array or a </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
             
-            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">ori_shape</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">rev_maper</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">ori_shape</span><span class="p">)</span><span class="c1">#.permute(*rev_maper)</span></div>
 
     
 <div class="viewcode-block" id="UniTensor.GetBlock"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.GetBlock">[docs]</a>    <span class="k">def</span> <span class="nf">GetBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">qnum</span><span class="p">):</span>
@@ -1248,13 +1380,13 @@
 <span class="sd">        Example:</span>
 <span class="sd">            * Single Symmetry::</span>
 <span class="sd">                </span>
-<span class="sd">                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0],[1],[2]])</span>
-<span class="sd">                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">                bd_sym_3 = Tt.Bond(Tt.BD_OUT,5,qnums=[[4],[2],[-1],[5],[1]])</span>
-<span class="sd">                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[10,11,12],dtype=tor.float64)</span>
+<span class="sd">                bd_sym_1 = Tor10.Bond(3,qnums=[[0],[1],[2]])</span>
+<span class="sd">                bd_sym_2 = Tor10.Bond(4,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">                bd_sym_3 = Tor10.Bond(5,qnums=[[4],[2],[-1],[5],[1]])</span>
+<span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[10,11,12],dtype=torch.float64)</span>
 <span class="sd">                </span>
 <span class="sd">            &gt;&gt;&gt; sym_T.Print_diagram()</span>
-<span class="sd">            tensor Name : </span>
+<span class="sd">            Tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
 <span class="sd">            on device   : cpu</span>
 <span class="sd">            is_diag     : False</span>
@@ -1266,22 +1398,22 @@
 <span class="sd">                    |             |     </span>
 <span class="sd">                    ---------------     </span>
 <span class="sd">            lbl:10 Dim = 3 |</span>
-<span class="sd">            IN  : +0 +1 +2</span>
+<span class="sd">            REGULAR : U1::  +0 +1 +2</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:11 Dim = 4 |</span>
-<span class="sd">            IN  : -1 +2 +0 +2</span>
+<span class="sd">            REGULAR : U1::  -1 +2 +0 +2</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:12 Dim = 5 |</span>
-<span class="sd">            OUT : +4 +2 -1 +5 +1</span>
+<span class="sd">            REGULAR : U1::  +4 +2 -1 +5 +1</span>
 
-<span class="sd">            &gt;&gt;&gt; q_in, q_out = GetTotalQnums()</span>
+<span class="sd">            &gt;&gt;&gt; q_in, q_out = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(q_in)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            IN  : -1 +2 +0 +2 +0 +3 +1 +3 +1 +4 +2 +4</span>
-<span class="sd">            </span>
+<span class="sd">            REGULAR : U1::  -1 +2 +0 +2 +0 +3 +1 +3 +1 +4 +2 +4</span>
+<span class="sd"> </span>
 <span class="sd">            &gt;&gt;&gt; print(q_out)</span>
 <span class="sd">            Dim = 5 |</span>
-<span class="sd">            OUT : +4 +2 -1 +5 +1</span>
+<span class="sd">            REGULAR : U1::  +4 +2 -1 +5 +1</span>
 
 <span class="sd">            &gt;&gt;&gt; block_2 = sym_T.GetBlock(2)</span>
 <span class="sd">            &gt;&gt;&gt; print(block_2)</span>
@@ -1295,21 +1427,21 @@
 <span class="sd">            * Multiple Symmetry::</span>
 
 <span class="sd">                ## multiple Qnum:</span>
-<span class="sd">                ## U1 x U1 x Z2 x Z4</span>
+<span class="sd">                ## U1 x U1 x U1 x U1</span>
 <span class="sd">                ## U1 = {-2,-1,0,1,2}</span>
-<span class="sd">                ## Z2 = {-1,1}</span>
-<span class="sd">                ## Z4 = {0,1,2,3}</span>
-<span class="sd">                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],</span>
-<span class="sd">                                                     [1, 1,-1, 1],</span>
-<span class="sd">                                                     [2,-1, 1, 0]])</span>
-<span class="sd">                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1, 0,-1, 3],</span>
-<span class="sd">                                                     [ 0, 0,-1, 2],</span>
-<span class="sd">                                                     [ 1, 0, 1, 0],</span>
-<span class="sd">                                                     [ 2,-2,-1, 1]])</span>
-<span class="sd">                bd_sym_3 = Tt.Bond(Tt.BD_OUT,2,qnums=[[-1,-2,-1,2],</span>
-<span class="sd">                                                      [ 1, 1, -2,3]])</span>
+<span class="sd">                ## U1 = {-1,1}</span>
+<span class="sd">                ## U1 = {0,1,2,3}</span>
+<span class="sd">                bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                                               [1, 1,-1, 1],</span>
+<span class="sd">                                               [2,-1, 1, 0]])</span>
+<span class="sd">                bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                                               [ 0, 0,-1, 2],</span>
+<span class="sd">                                               [ 1, 0, 1, 0],</span>
+<span class="sd">                                               [ 2,-2,-1, 1]])</span>
+<span class="sd">                bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],</span>
+<span class="sd">                                               [ 1, 1, -2,3]])</span>
 
-<span class="sd">                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],dtype=tor.float64)</span>
+<span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[1,2,3],dtype=torch.float64)</span>
 <span class="sd">                </span>
 <span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin)</span>
@@ -1354,17 +1486,20 @@
             <span class="c1">#######</span>
             <span class="c1">## create a copy of bonds and labels information that has all the BD_IN on first.            </span>
             <span class="c1"># [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_OUT</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">])</span>
-            <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-            <span class="n">tmp_bonds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-            <span class="n">tmp_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-            <span class="n">Nin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">tmp</span><span class="o">==</span><span class="kc">False</span><span class="p">])</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">Nin</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Nin</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
+            <span class="c1">#tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])</span>
+            <span class="c1">#maper = np.argsort(tmp)</span>
+            <span class="c1">#tmp_bonds = self.bonds[maper]</span>
+            <span class="c1">#tmp_labels = self.labels[maper]</span>
+            <span class="c1">#Nin = len(tmp[tmp==False])</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.GetBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to get a block on a TN without either any in-bond or any out-bond&quot;</span><span class="p">)</span>
 
             <span class="c1">#virtual_cb-in</span>
-            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">cb_inbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">Nin</span><span class="p">])</span>
+            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">cb_inbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">])</span>
+            
             <span class="n">i_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nsym</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">i_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="n">n</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
@@ -1372,8 +1507,10 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.GetBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to get a qnum block that is not exists in the total Qnum of in-bonds in current TN.&quot;</span><span class="p">)</span>
 
             <span class="c1">#virtual_cb_out            </span>
-            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="n">Nin</span><span class="p">])</span>
-            <span class="n">cb_outbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">tmp_bonds</span><span class="p">[</span><span class="n">Nin</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">cb_outbonds</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span>
+
             <span class="n">i_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nsym</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">i_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">i_out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="o">.</span><span class="n">qnums</span><span class="p">[:,</span><span class="n">n</span><span class="p">]</span><span class="o">==</span><span class="n">qnum</span><span class="p">[</span><span class="n">n</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
@@ -1381,18 +1518,19 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.GetBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Trying to get a qnum block that is not exists in the totoal Qnum out-bonds in current TN.&quot;</span><span class="p">)</span>
             
             <span class="c1">## virtual permute:</span>
-            <span class="n">rev_maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">maper</span><span class="p">)</span> 
-            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
+            <span class="c1">#rev_maper = np.argsort(maper) </span>
+            <span class="c1">#self.Storage = self.Storage.permute(*maper)</span>
             <span class="n">ori_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span>
 
             <span class="c1">## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ori_shape</span><span class="p">[:</span><span class="n">Nin</span><span class="p">]),</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span><span class="n">i_out</span><span class="p">)]</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">ori_shape</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">]),</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">i_in</span><span class="p">,</span><span class="n">i_out</span><span class="p">)]</span>
             
-            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">rev_maper</span><span class="p">)</span>
+            <span class="c1">#self.Storage = self.Storage.permute(*rev_maper)</span>
 
             <span class="c1">#print(out)</span>
             
-            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span>\
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span>\
+                             <span class="n">N_inbond</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>\
                              <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>\
                              <span class="n">torch_tensor</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>\
                              <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
@@ -1413,8 +1551,8 @@
 
 <span class="sd">        Example:</span>
 <span class="sd">        ::</span>
-<span class="sd">            bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]</span>
-<span class="sd">            x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])</span>
+<span class="sd">            bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]</span>
+<span class="sd">            x = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])</span>
 
 <span class="sd">    </span>
 <span class="sd">        &gt;&gt;&gt; print(x.requires_grad())</span>
@@ -1450,7 +1588,7 @@
 
 <span class="sd">        Example:</span>
 <span class="sd">        </span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=[Tor10.Bond(BD_IN,2),Tor10.Bond(BD_OUT,2)],requires_grad=True)</span>
+<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_inbond=1,requires_grad=True)</span>
 <span class="sd">            &gt;&gt;&gt; print(x)</span>
 <span class="sd">            Tensor name: </span>
 <span class="sd">            is_diag    : False</span>
@@ -1482,6 +1620,7 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">),</span>\
+                             <span class="n">N_inbond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                              <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">grad</span><span class="p">,</span>\
                              <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
     
@@ -1523,7 +1662,7 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])</span>
+<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)</span>
 <span class="sd">        Tor10.Save(a,&quot;a.uniT&quot;)</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1564,7 +1703,7 @@
     
     <span class="k">return</span> <span class="n">tmp</span></div>
 
-<div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Contract">[docs]</a><span class="k">def</span> <span class="nf">Contract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">inbond_first</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Contract">[docs]</a><span class="k">def</span> <span class="nf">Contract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Contract two tensors with the same labels. </span>
 
@@ -1578,20 +1717,14 @@
 <span class="sd">        b:</span>
 <span class="sd">            UniTensor</span>
 
-<span class="sd">        inbond_first:</span>
-<span class="sd">            bool</span>
-
-<span class="sd">            * if True , the order of the bonds for the return tensor will be permuted to all the in-bond appears first, then the out-bond.</span>
-<span class="sd">            * If False, the order of the bonds for the return tensor will have all the remaining bonds of tensor &quot;a&quot; appears first, then the remaining bonds of tensor &quot;b&quot;. </span>
-<span class="sd">            * This is especially efficient in the case where the in/out bond are not important. By setting inbond_first=False, no additional permute will be perform at the last stage. </span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        UniTensor</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        x = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,4)], labels=[4,3,5])</span>
-<span class="sd">        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)],labels=[1,5])</span>
+<span class="sd">        x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(4)], N_inbond=2,labels=[4,3,5])</span>
+<span class="sd">        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[1,5])</span>
 
 
 <span class="sd">    &gt;&gt;&gt; x.Print_diagram()</span>
@@ -1601,19 +1734,19 @@
 <span class="sd">    is_diag     : False</span>
 <span class="sd">            ---------------     </span>
 <span class="sd">            |             |     </span>
-<span class="sd">        4 __| 5         5 |__ 3  </span>
+<span class="sd">        4 __| 5         4 |__ 5  </span>
 <span class="sd">            |             |     </span>
-<span class="sd">            |           4 |__ 5  </span>
+<span class="sd">        3 __| 5           |      </span>
 <span class="sd">            |             |     </span>
 <span class="sd">            ---------------     </span>
 <span class="sd">    lbl:4 Dim = 5 |</span>
-<span class="sd">    IN  :</span>
+<span class="sd">    REGULAR :</span>
 <span class="sd">    _</span>
 <span class="sd">    lbl:3 Dim = 5 |</span>
-<span class="sd">    OUT :</span>
+<span class="sd">    REGULAR :</span>
 <span class="sd">    _</span>
 <span class="sd">    lbl:5 Dim = 4 |</span>
-<span class="sd">    OUT :</span>
+<span class="sd">    REGULAR :</span>
 
 <span class="sd">    &gt;&gt;&gt; y.Print_diagram()</span>
 <span class="sd">    tensor Name : </span>
@@ -1622,38 +1755,16 @@
 <span class="sd">    is_diag     : False</span>
 <span class="sd">            ---------------     </span>
 <span class="sd">            |             |     </span>
-<span class="sd">        1 __| 3         4 |__ 5  </span>
+<span class="sd">        5 __| 4         3 |__ 1  </span>
 <span class="sd">            |             |     </span>
 <span class="sd">            ---------------     </span>
-<span class="sd">    lbl:1 Dim = 3 |</span>
-<span class="sd">    IN  :</span>
-<span class="sd">    _</span>
 <span class="sd">    lbl:5 Dim = 4 |</span>
-<span class="sd">    OUT :</span>
+<span class="sd">    REGULAR :</span>
+<span class="sd">    _</span>
+<span class="sd">    lbl:1 Dim = 3 |</span>
+<span class="sd">    REGULAR :</span>
 
 <span class="sd">    &gt;&gt;&gt; c = Tt.Contract(x,y)</span>
-<span class="sd">    &gt;&gt;&gt; c.Print_diagram()</span>
-<span class="sd">    tensor Name : </span>
-<span class="sd">    tensor Rank : 3</span>
-<span class="sd">    on device   : cpu</span>
-<span class="sd">    is_diag     : False</span>
-<span class="sd">            ---------------     </span>
-<span class="sd">            |             |     </span>
-<span class="sd">        4 __| 5         5 |__ 3  </span>
-<span class="sd">            |             |     </span>
-<span class="sd">        1 __| 3           |      </span>
-<span class="sd">            |             |     </span>
-<span class="sd">            ---------------     </span>
-<span class="sd">    lbl:4 Dim = 5 |</span>
-<span class="sd">    IN  :</span>
-<span class="sd">    _</span>
-<span class="sd">    lbl:1 Dim = 3 |</span>
-<span class="sd">    IN  :</span>
-<span class="sd">    _</span>
-<span class="sd">    lbl:3 Dim = 5 |</span>
-<span class="sd">    OUT :</span>
-
-<span class="sd">    &gt;&gt;&gt; c= Tt.Contract(x,y,inbond_first=False)</span>
 <span class="sd">    &gt;&gt;&gt; c.Print_diagram()</span>
 <span class="sd">    tensor Name : </span>
 <span class="sd">    tensor Rank : 3</span>
@@ -1667,14 +1778,13 @@
 <span class="sd">            |             |     </span>
 <span class="sd">            ---------------     </span>
 <span class="sd">    lbl:4 Dim = 5 |</span>
-<span class="sd">    IN  :</span>
+<span class="sd">    REGULAR :</span>
 <span class="sd">    _</span>
 <span class="sd">    lbl:3 Dim = 5 |</span>
-<span class="sd">    OUT :</span>
+<span class="sd">    REGULAR :</span>
 <span class="sd">    _</span>
 <span class="sd">    lbl:1 Dim = 3 |</span>
-<span class="sd">    IN  :</span>
-
+<span class="sd">    REGULAR :</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
@@ -1710,18 +1820,20 @@
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">tmpa</span><span class="p">,</span><span class="n">tmpb</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="n">a_ind</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">b_ind</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
             
             <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">aind_no_combine</span><span class="p">]),</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">bind_no_combine</span><span class="p">])])</span>
-            
+            <span class="n">new_io</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="n">aind_no_combine</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aind_no_combine</span><span class="p">))]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">bind_no_combine</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">b</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">)</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bind_no_combine</span><span class="p">))]</span>
             <span class="n">new_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">aind_no_combine</span><span class="p">]),</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">bind_no_combine</span><span class="p">])])</span>
             
-            <span class="k">if</span> <span class="n">inbond_first</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                    <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_OUT</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_bonds</span><span class="p">])</span>
-                    <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-                    <span class="n">new_labels</span><span class="o">=</span> <span class="n">new_labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
+            <span class="n">new_io</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_io</span><span class="p">)</span>
+            <span class="c1">#print(new_io)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">new_io</span><span class="p">)</span>
+                <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                <span class="n">new_labels</span><span class="o">=</span> <span class="n">new_labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span>\
                              <span class="n">labels</span><span class="o">=</span><span class="n">new_labels</span><span class="p">,</span>\
+                             <span class="n">N_inbond</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">new_io</span><span class="o">==</span><span class="mi">0</span><span class="p">)),</span>\
                              <span class="n">torch_tensor</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>\
                              <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -1741,16 +1853,17 @@
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">tmpa</span><span class="p">,</span><span class="n">tmpb</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">),</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">)])</span>
             <span class="n">new_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">),</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">labels</span><span class="p">)])</span>
+            <span class="n">new_io</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="n">x</span><span class="o">&gt;=</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">))]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">x</span><span class="o">&gt;=</span><span class="n">b</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">)</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">))]</span>
 
-            <span class="k">if</span> <span class="n">inbond_first</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                    <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_OUT</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">new_bonds</span><span class="p">])</span>
-                    <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-                    <span class="n">new_labels</span><span class="o">=</span> <span class="n">new_labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
-                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">new_io</span><span class="p">)</span>
+                <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                <span class="n">new_labels</span><span class="o">=</span> <span class="n">new_labels</span><span class="p">[</span><span class="n">maper</span><span class="p">]</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="o">*</span><span class="n">maper</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span>\
                              <span class="n">labels</span><span class="o">=</span><span class="n">new_labels</span><span class="p">,</span>\
+                             <span class="n">N_inbond</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">+</span><span class="n">b</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                              <span class="n">torch_tensor</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>\
                              <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             
@@ -1852,9 +1965,9 @@
 
 <span class="c1">## The functions that start with &quot;_&quot; are the private functions</span>
 
-<span class="k">def</span> <span class="nf">_CombineBonds</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">label</span><span class="p">):</span>    
+<span class="k">def</span> <span class="nf">_CombineBonds</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">label</span><span class="p">,</span><span class="n">is_inbond</span><span class="p">,</span><span class="n">new_label</span><span class="p">):</span>    
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function combines the bonds in input UniTensor [a] by the specified labels [label]. The bondType of the combined bonds will always follows the same bondType of bond in [a] with label of the first element in [label] </span>
+<span class="sd">    This function combines the bonds in input UniTensor [a] by the specified labels [label]. The bondType of the combined bonds will always follows the same bondType of bond in [a] with label of the largest index element in [label] </span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        </span>
@@ -1865,6 +1978,9 @@
 
 <span class="sd">            labels that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined</span>
 
+<span class="sd">        is_inbond:</span>
+<span class="sd">            the combined bond should be an inbond or not. If set, the combined bond will be an inbond.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
@@ -1873,6 +1989,8 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;_CombineBonds&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] the # of label_to_combine should be &lt;= rank of UniTensor&quot;</span><span class="p">)</span>
         <span class="c1"># checking :</span>
         <span class="n">same_lbls</span><span class="p">,</span> <span class="n">x_ind</span><span class="p">,</span> <span class="n">y_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span><span class="n">label</span><span class="p">,</span><span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
         <span class="c1">#print(x_ind)</span>
         <span class="c1">#print(y_ind)</span>
         <span class="c1">#print(same_lbls)</span>
@@ -1886,23 +2004,54 @@
         <span class="n">combined_dim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">combined_dim</span><span class="p">)</span>
         <span class="n">no_combine_dims</span> <span class="o">=</span> <span class="n">old_shape</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">]</span>
 
+        <span class="k">if</span> <span class="n">new_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">newlbl</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_label</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">newlbl</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">]</span> <span class="ow">or</span> <span class="n">newlbl</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;_CombineBonds&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR], cannot set new_label to </span><span class="si">%d</span><span class="s2"> as there will be duplicate bond with this label after combined&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">newlbl</span><span class="p">))</span>
+
+            <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">newlbl</span>
+
+        <span class="n">new_Nin</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span>
+        <span class="c1">#print(a.N_inbond)</span>
         <span class="c1">## check if the combined bond will be in-bond or out-bond</span>
-        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_OUT</span><span class="p">:</span>        
-            <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idx_no_combine</span><span class="p">,</span><span class="n">x_ind</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">:</span>
+        <span class="c1">#if a.bonds[x_ind[0]].bondType is BD_OUT:        </span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_ind</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">i</span><span class="p">]])</span>
-            <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-            <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-            <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combine_dims</span><span class="p">,</span><span class="n">combined_dim</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="n">new_Nin</span> <span class="o">-=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">is_inbond</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">new_Nin</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># this bond</span>
+                <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x_ind</span><span class="p">,</span><span class="n">idx_no_combine</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combined_dim</span><span class="p">,</span><span class="n">no_combine_dims</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">## default</span>
+                <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idx_no_combine</span><span class="p">,</span><span class="n">x_ind</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combine_dims</span><span class="p">,</span><span class="n">combined_dim</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x_ind</span><span class="p">,</span><span class="n">idx_no_combine</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_ind</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">i</span><span class="p">]])</span>
-            <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">])</span>
-            <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">])</span>
-            <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combined_dim</span><span class="p">,</span><span class="n">no_combine_dims</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="n">new_Nin</span> <span class="o">-=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="n">is_inbond</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">new_Nin</span> <span class="o">-=</span> <span class="mi">1</span> <span class="c1"># this bond</span>
+                <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idx_no_combine</span><span class="p">,</span><span class="n">x_ind</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combine_dims</span><span class="p">,</span><span class="n">combined_dim</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">## default</span>
+                <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x_ind</span><span class="p">,</span><span class="n">idx_no_combine</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">x_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">])</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">maper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combined_dim</span><span class="p">,</span><span class="n">no_combine_dims</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 
+        <span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">=</span><span class="n">new_Nin</span>
 
 
 
@@ -1954,7 +2103,7 @@
 <span class="sd">                [1., 1., 1.],</span>
 <span class="sd">                [1., 1., 1.]])</span>
 
-<span class="sd">        &gt;&gt;&gt; y = Tt.From_torch(x,N_inbond=1,labels=[4,5])</span>
+<span class="sd">        &gt;&gt;&gt; y = Tor10.From_torch(x,N_inbond=1,labels=[4,5])</span>
 <span class="sd">        &gt;&gt;&gt; y.Print_diagram()</span>
 <span class="sd">        tensor Name : </span>
 <span class="sd">        tensor Rank : 2</span>
@@ -1966,10 +2115,11 @@
 <span class="sd">                |             |     </span>
 <span class="sd">                ---------------     </span>
 <span class="sd">        lbl:4 Dim = 3 |</span>
-<span class="sd">        IN  :</span>
+<span class="sd">        REGULAR :</span>
 <span class="sd">        _</span>
 <span class="sd">        lbl:5 Dim = 3 |</span>
-<span class="sd">        OUT :</span>
+<span class="sd">        REGULAR :</span>
+
 
 <span class="sd">        &gt;&gt;&gt; print(y)</span>
 <span class="sd">        Tensor name: </span>
@@ -1985,7 +2135,7 @@
 <span class="sd">                [1., 1., 1., 1.],</span>
 <span class="sd">                [1., 1., 1., 1.]], requires_grad=True)</span>
 <span class="sd">        </span>
-<span class="sd">        &gt;&gt;&gt; y2 = Tt.From_torch(x2,N_inbond=1)</span>
+<span class="sd">        &gt;&gt;&gt; y2 = Tor10.From_torch(x2,N_inbond=1)</span>
 <span class="sd">        &gt;&gt;&gt; print(y2.requires_grad())</span>
 <span class="sd">        True</span>
 
@@ -1999,11 +2149,11 @@
     <span class="k">if</span> <span class="n">N_inbond</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;From_torch&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] N_inbond exceed the rank of input torch tensor.&quot;</span><span class="p">)</span>
 
-    <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_inbond</span><span class="p">)]</span><span class="o">+</span>\
-                <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_OUT</span><span class="p">,</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_inbond</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_inbond</span><span class="p">)]</span><span class="o">+</span>\
+                <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_inbond</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span><span class="mi">1</span><span class="p">)]</span>
+    
 
-
-    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch_tensor</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="n">N_inbond</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">torch_tensor</span><span class="p">)</span></div>
 
 
 

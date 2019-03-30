@@ -1,6 +1,3 @@
-1. check the UniTensor's name on each overload function return, if can inherit, then pass it to the return UniTensor.
-2. Add Otimes
-3. Add GetBlocks, check the qnum flow 
 
 
 

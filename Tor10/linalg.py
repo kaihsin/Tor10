@@ -29,7 +29,7 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         if core is False, return a list of unitary tensors. 
 
     Example:
-        >>> x = Tt.From_torch(tor.arange(0.1,2.5,0.1).reshape(2,3,4).to(tor.float64),labels=[6,7,8],N_inbond=1)
+        >>> x = Tor10.From_torch(torch.arange(0.1,2.5,0.1).reshape(2,3,4).to(torch.float64),labels=[6,7,8],N_inbond=1)
         >>> x.Print_diagram()
         tensor Name : 
         tensor Rank : 3
@@ -43,13 +43,13 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
                 |             |     
                 ---------------     
         lbl:6 Dim = 2 |
-        IN  :
+        REGULAR :
         _
         lbl:7 Dim = 3 |
-        OUT :
+        REGULAR :
         _
         lbl:8 Dim = 4 |
-        OUT :
+        REGULAR :
 
         >>> print(x)
         Tensor name: 
@@ -62,7 +62,7 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
                  [1.7000, 1.8000, 1.9000, 2.0000],
                  [2.1000, 2.2000, 2.3000, 2.4000]]], dtype=torch.float64)
 
-        >>> factors, core = Tt.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)
+        >>> factors, core = Tor10.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)
         >>> core.Print_diagram()
         tensor Name : 
         tensor Rank : 2
@@ -76,10 +76,10 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
                 |             |     
                 ---------------     
         lbl:-1 Dim = 4 |
-        OUT :
+        REGULAR :
         _
         lbl:-2 Dim = 4 |
-        OUT :
+        REGULAR :
 
         >>> print(len(factors))
         2
@@ -91,20 +91,22 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         is_diag     : False
                 ---------------     
                 |             |     
-            7 __| 3         4 |__ -1 
+            7 __| 3         2 |__ 6  
                 |             |     
-            6 __| 2           |      
+                |           4 |__ -1 
                 |             |     
                 ---------------     
         lbl:7 Dim = 3 |
-        IN  :
+        REGULAR :
         _
         lbl:6 Dim = 2 |
-        IN  :
+        REGULAR :
         _
         lbl:-1 Dim = 4 |
-        OUT :
-        
+        REGULAR :
+       
+
+ 
         >>> factor[1].Print_diagram()
         tensor Name : 
         tensor Rank : 2
@@ -116,17 +118,16 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
                 |             |     
                 ---------------     
         lbl:8 Dim = 4 |
-        IN  :
+        REGULAR :
         _
         lbl:-2 Dim = 4 |
-        OUT :
-
+        REGULAR :
 
         * Checking:
 
         >>> rep_x = core
         >>> for f in factors:
-        >>>     rep_x = Tt.Contract(rep_x,f)
+        >>>     rep_x = Tor10.Contract(rep_x,f)
         >>> rep_x.Permute([6,7,8],N_inbond=1,by_label=True)
         >>> print(rep_x - x)
         Tensor name: 
@@ -174,7 +175,7 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         maper = a.labels[order]
     
     
-
+    old_Nin = a.N_inbond
     factors = []
     start_label = np.min(a.labels)
     start_label = start_label-1 if start_label<=0 else -1
@@ -187,16 +188,16 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         a.Storage = a.Storage.view(np.prod(a.Storage.shape[:bg]),-1)
         u,_,_ = torch.svd(a.Storage)
         
-        new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(BD_OUT,u.shape[-1]))
+        new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(u.shape[-1]))
         new_labels= np.append(copy.copy(a.labels[:bg]),start_label)
 
-        factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),check=False) )
+        factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),N_inbond=1,check=False) )
 
         a.Storage = a.Storage.view(old_shape)
         start_label -= 1 
         maper = np.roll(maper,-bg)
  
-    a.Permute(old_labels,N_inbond=1,by_label=True)
+    a.Permute(old_labels,N_inbond=old_Nin,by_label=True)
     a.bonds = old_bonds
     
     ## if compute core?
@@ -490,7 +491,7 @@ def Svd(a):
 
     Example:
     ::
-        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
+        y = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
         y.SetElem([1,1,0,1,
                    0,0,0,1,
                    1,1,0,0]
@@ -503,7 +504,7 @@ def Svd(a):
             [0., 0., 0., 1.],
             [1., 1., 0., 0.]], dtype=torch.float64)
 
-    >>> u,s,v = Tt.linalg.Svd(y)
+    >>> u,s,v = Tor10.linalg.Svd(y)
     >>> print(u)
     Tensor name: 
     is_diag    : False
@@ -591,7 +592,7 @@ def Svd_truncate(a, keepdim=None):
 
     Example:
     ::
-        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)])
+        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
         y.SetElem([1,1,0,1,
                    0,0,0,1,
                    1,1,0,0])
@@ -603,7 +604,7 @@ def Svd_truncate(a, keepdim=None):
             [0., 0., 0., 1.],
             [1., 1., 0., 0.]], dtype=torch.float64)
 
-    >>> u,s,v = Tt.linalg.Svd_truncate(y,keepdim=2)
+    >>> u,s,v = Tor10.linalg.Svd_truncate(y,keepdim=2)
     >>> print(u)
     Tensor name: 
     is_diag    : False
@@ -741,10 +742,10 @@ def Chain_matmul(*args):
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
-        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,4),Tor10.Bond(Tor10.BD_OUT,5)])
-        c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,5),Tor10.Bond(Tor10.BD_OUT,6)])   
-        d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,2)])
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
+        b = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(5)],N_inbond=1)
+        c = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(6)],N_inbond=1)   
+        d = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(2)],N_inbond=1)
 
     >>> f = Tor10.Chain_matmul(a,b,c,d)
     >>> f.Print_diagram()
@@ -758,10 +759,10 @@ def Chain_matmul(*args):
             |             |     
             ---------------     
     lbl:0 Dim = 3 |
-    IN :
+    REGULAR :
     _
     lbl:1 Dim = 2 |
-    OUT :
+    REGULAR :
 
     """
     f = lambda x,idiag: torch.diag(x) if idiag else x 
@@ -861,7 +862,7 @@ def Det(a):
             [ 2., -1.,  2.],
             [ 1.,  5.,  7.]], dtype=torch.float64)
 
-    >>> out = Tt.Det(a)
+    >>> out = Tor10.Det(a)
     >>> print(out)
     Tensor name: 
     is_diag    : False

@@ -68,21 +68,22 @@ class UniTensor():
         Example for how to create a UniTensor:
         
             * create a 2-rank UniTensor (matrix) with shape (3,4): 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
 
-            * create a 3-rank UniTensor with shape (3,4,5) and set labels [-3,4,1] for each bond:
-            >>> c = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[-3,4,1])
+            * create a 3-rank UniTensor with one inbond and two outbond, shape (3,4,5) and set labels [-3,4,1] for each bond:
+            >>> c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=1,labels=[-3,4,1])
 
-            * create a 2-rank UniTensor with shape (3,4) on GPU-0:
-            >>> d = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],device=torch.device("cuda:0"))
+            * create a 2-rank UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:
+            >>> d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,device=torch.device("cuda:0"))
 
             * create a diagonal 6x6 2-rank tensor(matrix):
-            >>> e = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,6),Tor10.Bond(Tor10.BD_OUT,6)],is_diag=True)
+              Note that if is_diag is True, N_inbond must be 1.
+            >>> e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],N_inbond=1,is_diag=True)
             
             Note that when is_diag is set to True, the UniTensor should be a square matrix.
 
-            * crate a 3-rank UniTensor with single precision:
-            >>> f = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4),Tor10.Bond(Tor10.BD_OUT,5)],labels=[-3,4,1],dtype=torch.float32)
+            * crate a 3-rank UniTensor with two in-bond and one-outbond, and single precision:
+            >>> f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=2,labels=[-3,4,1],dtype=torch.float32)
             
 
 
@@ -156,15 +157,15 @@ class UniTensor():
 
         Example:
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[5,6])
-            >>> a.labels
+            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])
+            >>> g.labels
             [5 6]
 
 
             Set "-1" to replace the original label "6" at index 1
 
-            >>> a.SetLabel(-1,1)
-            >>> a.labels
+            >>> g.SetLabel(-1,1)
+            >>> g.labels
             [5 -1]
  
         """
@@ -189,15 +190,15 @@ class UniTensor():
                        
         Example:
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)],labels=[5,6])
-            >>> a.labels
+            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])
+            >>> g.labels
             [5 6]
 
             Set new_label=[-1,-2] to replace the original label [5,6].
 
             >>> new_label=[-1,-2]
-            >>> a.SetLabels(new_label)
-            >>> a.labels
+            >>> g.SetLabels(new_label)
+            >>> g.labels
             [-1 -2]
  
         """
@@ -224,9 +225,9 @@ class UniTensor():
  
         Example:
         ::
-            Sz = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,2),Tt.Bond(Tt.BD_OUT,2)],
-                              dtype=tor.float64,
-                              device=tor.device("cpu"))
+            Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_inbond=1,
+                              dtype=torch.float64,
+                              device=torch.device("cpu"))
             Sz.SetElem([1, 0,
                         0,-1 ])
 
@@ -263,16 +264,27 @@ class UniTensor():
 
         Example:
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)],is_diag=True)
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],N_inbond=1,is_diag=True)
             >>> print(a.is_diag)
             True
-        
+            
+            >>> print(a)
+            Tensor name: 
+            is_diag    : True
+            tensor([0., 0., 0.], dtype=torch.float64) 
             
             >>> a.Todense()
             >>> print(a.is_diag)
             False
-            
 
+            >>> print(a)
+            Tensor name: 
+            is_diag    : False
+            tensor([[0., 0., 0.],
+                    [0., 0., 0.],
+                    [0., 0., 0.]], dtype=torch.float64)
+
+           
         """
         if self.is_diag==True:
             self.Storage = torch.diag(self.Storage) 
@@ -295,7 +307,7 @@ class UniTensor():
 
             Construct a tensor (default is on cpu)
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
             
             Set to GPU.
 
@@ -693,7 +705,7 @@ class UniTensor():
             raise Exception("[Abort] UniTensor.Rand for symm TN is under developing")
         return self
 
-    def CombineBonds(self,labels_to_combine):
+    def CombineBonds(self,labels_to_combine,is_inbond=None,new_label=None):
         """
         This function combines the bonds in input UniTensor [a] by the specified labels [label].
     
@@ -702,12 +714,25 @@ class UniTensor():
             labels_to_combine: 
                 labels that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined
 
+            is_inbond: [default=None]
+                if is_inbond is set to None, the combined bond will becomes in- or out-bond accroding to the bond that has the largest INDEX.
+                if is_inbond is set to True, the combined bond will becomes in-bond
+                if is_inbond is set to False, the combined bond will becomes out-bond 
+
+            new_label [default=None]
+                This should be an integer, for floating point number, it will be truncated to integer.
+
+                if new_label is set to None, the combined bond will have label as the bond in the to-be-combined bond that has the largest INDEX in input tensor.
+                if new_label is set, the combined bond will have label [new_label]
+
         Example:
 
             1. Combine Bond for an non-symmetric tensor.
 
             >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
             >>> x = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
+            >>> y = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
+            >>> z = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
             >>> x.Print_diagram()
             tensor Name : 
             tensor Rank : 3
@@ -715,21 +740,23 @@ class UniTensor():
             is_diag     : False
                     ---------------     
                     |             |     
-               4 __ | 5         5 |__ 3  
+                4 __| 5         5 |__ 3  
                     |             |     
                     |           3 |__ 5  
                     |             |     
                     ---------------     
             lbl:4 Dim = 5 |
-            IN :
+            REGULAR :
             _
             lbl:3 Dim = 5 |
-            OUT :
+            REGULAR :
             _
             lbl:5 Dim = 3 |
-            OUT :
+            REGULAR :
 
-            >>> x.CombineBonds([4,3])
+            [Note] Since is_inbond==None(default), so the combined bond will have label=3 and is an outbond, since the bond with label=3 has largest index appeard in input tensor.
+
+            >>> x.CombineBonds([4,3]) 
             >>> x.Print_diagram()
             tensor Name : 
             tensor Rank : 2
@@ -743,21 +770,57 @@ class UniTensor():
                     |             |     
                     ---------------     
             lbl:5 Dim = 3 |
-            OUT :
+            REGULAR :
             _
             lbl:3 Dim = 25 |
-            OUT :
+            REGULAR :
+
+            [Note] Since is_inbond==True, so the combined bond will force to be in-bond, but still have label=3 since the bond with label=3 has largest index appeard in input tensor.
+
+            >>> y.CombineBonds([4,3],is_inbond=True)
+            >>> y.Print_diagram()
+            tensor Name : 
+            tensor Rank : 2
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                3 __| 25        3 |__ 5  
+                    |             |     
+                    ---------------     
+            lbl:3 Dim = 25 |
+            REGULAR :
             _
+            lbl:5 Dim = 3 |
+            REGULAR :
 
-            
-            2. Combine bonds for a Symetric tensor.
+            [Note] Since is_inbond==True and new_label is set, so the combined bond will force to be in-bond, and has label=8
 
-                
+            >>> z.CombineBonds([4,3],is_inbond=True,new_label=8)
+            >>> z.Print_diagram()
+            tensor Name : 
+            tensor Rank : 2
+            on device   : cpu
+            is_diag     : False
+                    ---------------     
+                    |             |     
+                8 __| 25        3 |__ 5  
+                    |             |     
+                    ---------------     
+            lbl:8 Dim = 25 |
+            REGULAR :
+            _
+            lbl:5 Dim = 3 |
+            REGULAR :
+                    
 
 
 
         """
-        _CombineBonds(self,labels_to_combine)
+        if len(labels_to_combine)<2:
+            raise ValueError("CombineBonds","[ERROR] the number of bond to combine should be >1")
+
+        _CombineBonds(self,labels_to_combine,is_inbond,new_label)
 
     def Contiguous(self):
         """
@@ -770,12 +833,13 @@ class UniTensor():
             self
 
         Example:
-
-            >>> x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+            
+            >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> x = Tt.UniTensor(bonds=bds_x,N_inbond=1, labels=[4,3,5])
             >>> print(x.is_contiguous())
             True
 
-            >>> x.Permute([0,2,1])  
+            >>> x.Permute([0,2,1],N_inbond=1)  
             >>> print(x.is_contiguous())
             False
 
@@ -815,9 +879,9 @@ class UniTensor():
 
         Example:
 
-            >>> bds_x = [Tt.Bond(6),Tt.Bond(5),Tt.Bond(3)]
-            >>> x = Tt.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
-            >>> y = Tt.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
+            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
+            >>> y = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
             >>> x.Print_diagram()
             tensor Name : 
             tensor Rank : 3
@@ -831,15 +895,16 @@ class UniTensor():
                     |             |     
                     ---------------     
             lbl:4 Dim = 6 |
-            IN :
+            REGULAR :
             _
             lbl:3 Dim = 5 |
-            OUT :
+            REGULAR :
             _
             lbl:5 Dim = 3 |
-            OUT :
+            REGULAR :
 
-            >>> x.Permute([0,2,1],2)
+
+            >>> x.Permute([0,2,1],N_inbond=2)
             >>> x.Print_diagram()
             tensor Name : 
             tensor Rank : 3
@@ -853,15 +918,16 @@ class UniTensor():
                     |             |     
                     ---------------     
             lbl:4 Dim = 6 |
-            IN :
+            REGULAR :
             _
             lbl:5 Dim = 3 |
-            IN :
+            REGULAR :
             _
             lbl:3 Dim = 5 |
-            OUT :
+            REGULAR :
 
-            >>> y.Permute([3,4,5],2,by_label=True)
+
+            >>> y.Permute([3,4,5],N_inbond=2,by_label=True)
             >>> y.Print_diagram()
             tensor Name : 
             tensor Rank : 3
@@ -875,13 +941,13 @@ class UniTensor():
                     |             |     
                     ---------------     
             lbl:3 Dim = 5 |
-            IN :
+            REGULAR :
             _
             lbl:4 Dim = 6 |
-            IN :
+            REGULAR :
             _
             lbl:5 Dim = 3 |
-            OUT :
+            REGULAR :
 
 
         """
@@ -936,8 +1002,8 @@ class UniTensor():
 
         Example:
 
-            >>> bds_x = [Tt.Bond(Tt.BD_IN,6),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
-            >>> x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
             >>> x.Print_diagram()
             tensor Name : 
             tensor Rank : 3
@@ -951,14 +1017,14 @@ class UniTensor():
                     |             |     
                     ---------------     
             lbl:4 Dim = 6 |
-            IN :
+            REGULAR :
             _
             lbl:3 Dim = 5 |
-            OUT :
+            REGULAR :
             _
             lbl:5 Dim = 3 |
-            OUT :
-            
+            REGULAR :
+ 
 
             >>> x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)
             >>> x.Print_diagram()
@@ -974,16 +1040,18 @@ class UniTensor():
                     |             |     
                     ---------------     
             lbl:1 Dim = 2 |
-            IN :
+            REGULAR :
             _
             lbl:2 Dim = 3 |
-            IN :
+            REGULAR :
             _
             lbl:3 Dim = 5 |
-            OUT :
+            REGULAR :
             _
             lbl:-1 Dim = 3 |
-            OUT :
+            REGULAR :
+
+
 
         """
         if self.is_diag:
@@ -1035,33 +1103,36 @@ class UniTensor():
                 ## U1 = {-2,-1,0,1,2}
                 ## U1 = {-1,1}
                 ## U1 = {0,1,2,3}
-                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],
+                bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],
                                                      [1, 1,-1, 1],
                                                      [2,-1, 1, 0]])
-                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1, 0,-1, 3],
+                bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],
                                                      [ 0, 0,-1, 2],
                                                      [ 1, 0, 1, 0],
                                                      [ 2,-2,-1, 1]])
-                bd_sym_3 = Tt.Bond(Tt.BD_OUT,2,qnums=[[-1,-2,-1,2],
+                bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
                                                       [ 1, 1, -2,3]])
 
-                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],dtype=tor.float64)
+                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[1,2,3],dtype=torch.float64)
                 
             >>> tqin, tqout = sym_T.GetTotalQnums()
             >>> print(tqin)
             Dim = 12 |
-            IN  : -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4
-                  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3
-                  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0
-                  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1
+            REGULAR : U1::  -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4
+                      U1::  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3
+                      U1::  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0
+                      U1::  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1
+
 
             >>> print(tqout)
             Dim = 2 |
-            OUT : -1 +1
-                  -2 +1
-                  -1 -2
-                  +2 +3
-                
+            REGULAR : U1::  -1 +1
+                      U1::  -2 +1
+                      U1::  -1 -2
+                      U1::  +2 +3
+               
+
+ 
         """
         if self.bonds[0].qnums is None:
             raise TypeError("UniTensor.GetTotalQnums","[ERROR] GetTotal Qnums from a non-symm tensor")
@@ -1160,13 +1231,13 @@ class UniTensor():
         Example:
             * Single Symmetry::
                 
-                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0],[1],[2]])
-                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1],[2],[0],[2]])
-                bd_sym_3 = Tt.Bond(Tt.BD_OUT,5,qnums=[[4],[2],[-1],[5],[1]])
-                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[10,11,12],dtype=tor.float64)
+                bd_sym_1 = Tor10.Bond(3,qnums=[[0],[1],[2]])
+                bd_sym_2 = Tor10.Bond(4,qnums=[[-1],[2],[0],[2]])
+                bd_sym_3 = Tor10.Bond(5,qnums=[[4],[2],[-1],[5],[1]])
+                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[10,11,12],dtype=torch.float64)
                 
             >>> sym_T.Print_diagram()
-            tensor Name : 
+            Tensor Name : 
             tensor Rank : 3
             on device   : cpu
             is_diag     : False
@@ -1178,22 +1249,22 @@ class UniTensor():
                     |             |     
                     ---------------     
             lbl:10 Dim = 3 |
-            IN  : +0 +1 +2
+            REGULAR : U1::  +0 +1 +2
             _
             lbl:11 Dim = 4 |
-            IN  : -1 +2 +0 +2
+            REGULAR : U1::  -1 +2 +0 +2
             _
             lbl:12 Dim = 5 |
-            OUT : +4 +2 -1 +5 +1
+            REGULAR : U1::  +4 +2 -1 +5 +1
 
-            >>> q_in, q_out = GetTotalQnums()
+            >>> q_in, q_out = sym_T.GetTotalQnums()
             >>> print(q_in)
             Dim = 12 |
-            IN  : -1 +2 +0 +2 +0 +3 +1 +3 +1 +4 +2 +4
-            
+            REGULAR : U1::  -1 +2 +0 +2 +0 +3 +1 +3 +1 +4 +2 +4
+ 
             >>> print(q_out)
             Dim = 5 |
-            OUT : +4 +2 -1 +5 +1
+            REGULAR : U1::  +4 +2 -1 +5 +1
 
             >>> block_2 = sym_T.GetBlock(2)
             >>> print(block_2)
@@ -1207,21 +1278,21 @@ class UniTensor():
             * Multiple Symmetry::
 
                 ## multiple Qnum:
-                ## U1 x U1 x Z2 x Z4
+                ## U1 x U1 x U1 x U1
                 ## U1 = {-2,-1,0,1,2}
-                ## Z2 = {-1,1}
-                ## Z4 = {0,1,2,3}
-                bd_sym_1 = Tt.Bond(Tt.BD_IN,3,qnums=[[0, 2, 1, 0],
-                                                     [1, 1,-1, 1],
-                                                     [2,-1, 1, 0]])
-                bd_sym_2 = Tt.Bond(Tt.BD_IN,4,qnums=[[-1, 0,-1, 3],
-                                                     [ 0, 0,-1, 2],
-                                                     [ 1, 0, 1, 0],
-                                                     [ 2,-2,-1, 1]])
-                bd_sym_3 = Tt.Bond(Tt.BD_OUT,2,qnums=[[-1,-2,-1,2],
-                                                      [ 1, 1, -2,3]])
+                ## U1 = {-1,1}
+                ## U1 = {0,1,2,3}
+                bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],
+                                               [1, 1,-1, 1],
+                                               [2,-1, 1, 0]])
+                bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],
+                                               [ 0, 0,-1, 2],
+                                               [ 1, 0, 1, 0],
+                                               [ 2,-2,-1, 1]])
+                bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
+                                               [ 1, 1, -2,3]])
 
-                sym_T = Tt.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],dtype=tor.float64)
+                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[1,2,3],dtype=torch.float64)
                 
             >>> tqin, tqout = sym_T.GetTotalQnums()
             >>> print(tqin)
@@ -1331,8 +1402,8 @@ class UniTensor():
 
         Example:
         ::
-            bds_x = [Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,3)]
-            x = Tt.UniTensor(bonds=bds_x, labels=[4,3,5])
+            bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
+            x = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
 
     
         >>> print(x.requires_grad())
@@ -1368,7 +1439,7 @@ class UniTensor():
 
         Example:
         
-            >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(BD_IN,2),Tor10.Bond(BD_OUT,2)],requires_grad=True)
+            >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_inbond=1,requires_grad=True)
             >>> print(x)
             Tensor name: 
             is_diag    : False
@@ -1442,7 +1513,7 @@ def Save(a,filename):
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
         Tor10.Save(a,"a.uniT")
     
     """
@@ -1503,8 +1574,8 @@ def Contract(a,b):
 
     Example:
     ::
-        x = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,5),Tt.Bond(Tt.BD_OUT,5),Tt.Bond(Tt.BD_OUT,4)], labels=[4,3,5])
-        y = Tt.UniTensor(bonds=[Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_OUT,4)],labels=[1,5])
+        x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(4)], N_inbond=2,labels=[4,3,5])
+        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[1,5])
 
 
     >>> x.Print_diagram()
@@ -1514,19 +1585,19 @@ def Contract(a,b):
     is_diag     : False
             ---------------     
             |             |     
-        4 __| 5         5 |__ 3  
+        4 __| 5         4 |__ 5  
             |             |     
-            |           4 |__ 5  
+        3 __| 5           |      
             |             |     
             ---------------     
     lbl:4 Dim = 5 |
-    IN  :
+    REGULAR :
     _
     lbl:3 Dim = 5 |
-    OUT :
+    REGULAR :
     _
     lbl:5 Dim = 4 |
-    OUT :
+    REGULAR :
 
     >>> y.Print_diagram()
     tensor Name : 
@@ -1535,38 +1606,16 @@ def Contract(a,b):
     is_diag     : False
             ---------------     
             |             |     
-        1 __| 3         4 |__ 5  
+        5 __| 4         3 |__ 1  
             |             |     
             ---------------     
-    lbl:1 Dim = 3 |
-    IN  :
-    _
     lbl:5 Dim = 4 |
-    OUT :
+    REGULAR :
+    _
+    lbl:1 Dim = 3 |
+    REGULAR :
 
     >>> c = Tt.Contract(x,y)
-    >>> c.Print_diagram()
-    tensor Name : 
-    tensor Rank : 3
-    on device   : cpu
-    is_diag     : False
-            ---------------     
-            |             |     
-        4 __| 5         5 |__ 3  
-            |             |     
-        1 __| 3           |      
-            |             |     
-            ---------------     
-    lbl:4 Dim = 5 |
-    IN  :
-    _
-    lbl:1 Dim = 3 |
-    IN  :
-    _
-    lbl:3 Dim = 5 |
-    OUT :
-
-    >>> c= Tt.Contract(x,y,inbond_first=False)
     >>> c.Print_diagram()
     tensor Name : 
     tensor Rank : 3
@@ -1580,14 +1629,13 @@ def Contract(a,b):
             |             |     
             ---------------     
     lbl:4 Dim = 5 |
-    IN  :
+    REGULAR :
     _
     lbl:3 Dim = 5 |
-    OUT :
+    REGULAR :
     _
     lbl:1 Dim = 3 |
-    IN  :
-
+    REGULAR :
 
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
@@ -1627,6 +1675,7 @@ def Contract(a,b):
             new_labels = np.concatenate([copy.copy(a.labels[aind_no_combine]),copy.copy(b.labels[bind_no_combine])])
             
             new_io = np.array(new_io)
+            #print(new_io)
             if len(new_bonds)>0:
                 maper = np.argsort(new_io)
                 new_bonds = new_bonds[maper]
@@ -1767,9 +1816,9 @@ def Contract(a,b):
 
 ## The functions that start with "_" are the private functions
 
-def _CombineBonds(a,label):    
+def _CombineBonds(a,label,is_inbond,new_label):    
     """
-    This function combines the bonds in input UniTensor [a] by the specified labels [label]. The bondType of the combined bonds will always follows the same bondType of bond in [a] with label of the first element in [label] 
+    This function combines the bonds in input UniTensor [a] by the specified labels [label]. The bondType of the combined bonds will always follows the same bondType of bond in [a] with label of the largest index element in [label] 
     
     Args:
         
@@ -1780,6 +1829,9 @@ def _CombineBonds(a,label):
 
             labels that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined
 
+        is_inbond:
+            the combined bond should be an inbond or not. If set, the combined bond will be an inbond.
+
     """
     if isinstance(a,UniTensor):
         if a.is_diag:
@@ -1788,6 +1840,8 @@ def _CombineBonds(a,label):
             raise ValueError("_CombineBonds","[ERROR] the # of label_to_combine should be <= rank of UniTensor")
         # checking :
         same_lbls, x_ind, y_ind = np.intersect1d(a.labels,label,return_indices=True)
+
+
         #print(x_ind)
         #print(y_ind)
         #print(same_lbls)
@@ -1801,24 +1855,54 @@ def _CombineBonds(a,label):
         combined_dim = np.prod(combined_dim)
         no_combine_dims = old_shape[idx_no_combine]
 
+        if new_label is not None:
+            newlbl = int(new_label)
+            if newlbl in a.labels[idx_no_combine] or newlbl in a.labels[x_ind[1:]]:
+                raise Exception("_CombineBonds","[ERROR], cannot set new_label to %d as there will be duplicate bond with this label after combined"%(newlbl))
+
+            a.labels[x_ind[0]] = newlbl
+
+        new_Nin = a.N_inbond
+        #print(a.N_inbond)
         ## check if the combined bond will be in-bond or out-bond
         if x_ind[0]>=a.N_inbond:
         #if a.bonds[x_ind[0]].bondType is BD_OUT:        
-            maper = np.concatenate([idx_no_combine,x_ind])
             for i in range(len(x_ind)-1):
                 a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
-            a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[x_ind[0]])
-            a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
-            a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
+                new_Nin -= int(x_ind[1+i]<a.N_inbond)
+            
+            if is_inbond is True:
+                new_Nin += 1 # this bond
+                maper = np.concatenate([x_ind,idx_no_combine])
+                a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
+                a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
+                a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+            else:
+                ## default
+                maper = np.concatenate([idx_no_combine,x_ind])
+                a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[x_ind[0]])
+                a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
+                a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
+
         else:
-            maper = np.concatenate([x_ind,idx_no_combine])
             for i in range(len(x_ind)-1):
                 a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
-            a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
-            a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
-            a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+                new_Nin -= int(x_ind[1+i]<a.N_inbond)
 
+            if is_inbond is False:
+                new_Nin -= 1 # this bond
+                maper = np.concatenate([idx_no_combine,x_ind])
+                a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[x_ind[0]])
+                a.labels = np.append(a.labels[idx_no_combine],a.labels[x_ind[0]])
+                a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
+            else:
+                ## default
+                maper = np.concatenate([x_ind,idx_no_combine])
+                a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
+                a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
+                a.Storage = a.Storage.permute(maper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
 
+        a.N_inbond=new_Nin
 
 
 
@@ -1870,7 +1954,7 @@ def From_torch(torch_tensor,N_inbond,labels=None):
                 [1., 1., 1.],
                 [1., 1., 1.]])
 
-        >>> y = Tt.From_torch(x,N_inbond=1,labels=[4,5])
+        >>> y = Tor10.From_torch(x,N_inbond=1,labels=[4,5])
         >>> y.Print_diagram()
         tensor Name : 
         tensor Rank : 2
@@ -1882,10 +1966,11 @@ def From_torch(torch_tensor,N_inbond,labels=None):
                 |             |     
                 ---------------     
         lbl:4 Dim = 3 |
-        IN  :
+        REGULAR :
         _
         lbl:5 Dim = 3 |
-        OUT :
+        REGULAR :
+
 
         >>> print(y)
         Tensor name: 
@@ -1901,7 +1986,7 @@ def From_torch(torch_tensor,N_inbond,labels=None):
                 [1., 1., 1., 1.],
                 [1., 1., 1., 1.]], requires_grad=True)
         
-        >>> y2 = Tt.From_torch(x2,N_inbond=1)
+        >>> y2 = Tor10.From_torch(x2,N_inbond=1)
         >>> print(y2.requires_grad())
         True
 

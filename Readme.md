@@ -1,5 +1,8 @@
 ![alt text](./Tor10_icon.png)
 
+## Release version
+    v0.2
+
 ## Requirements
     pytorch>=1.0
     numpy  >=1.15
@@ -22,7 +25,7 @@
         
 ```python
        ## create a rank-2 Tensor 
-       bds = [ Bond(BD_REGULAR,3), Bond(BD_REGULAR,4)]
+       bds = [ Bond(3), Bond(4)]
        A = UniTensor(bds,label=[2,4],N_inbond=1,dtype=torch.float64,device=torch.device("cpu"))
 
        ## Moving to GPU:
@@ -59,6 +62,7 @@
     See iTEBD.py for an simple example of using iTEBD algo. to calculate the 1D-transverse field Ising model 
     See iTEBD_gpu.py for an simple example of the same algo accelerated with GPU. 
 
+    See example.py for elementary usage.
 
 ## Developers:
 

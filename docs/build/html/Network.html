@@ -247,11 +247,11 @@
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ntwrk</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ntwrk</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
 <span class="n">ntwrk</span><span class="o">.</span><span class="n">Fromfile</span><span class="p">(</span><span class="s2">&quot;test.net&quot;</span><span class="p">)</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">2</span><span class="p">)])</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">Tt</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">Tt</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ntwrk</span><span class="p">)</span>
@@ -307,16 +307,16 @@
 <span class="go">        |             |     </span>
 <span class="go">        ---------------     </span>
 <span class="go">lbl:-1 Dim = 3 |</span>
-<span class="go">IN :</span>
+<span class="go">REGULAR :</span>
 <span class="go">_</span>
 <span class="go">lbl:-2 Dim = 4 |</span>
-<span class="go">IN :</span>
+<span class="go">REGULAR :</span>
 <span class="go">_</span>
 <span class="go">lbl:3 Dim = 2 |</span>
-<span class="go">OUT :</span>
+<span class="go">REGULAR :</span>
 <span class="go">_</span>
 <span class="go">lbl:4 Dim = 4 |</span>
-<span class="go">OUT :</span>
+<span class="go">REGULAR :</span>
 </pre></div>
 </div>
 </dd></dl>

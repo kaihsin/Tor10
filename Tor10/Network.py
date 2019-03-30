@@ -208,11 +208,11 @@ class Network():
             
         Example:
         ::
-            ntwrk = Tt.Network()
+            ntwrk = Tor10.Network()
             ntwrk.Fromfile("test.net")
-            A = Tt.UniTensor([Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_IN,4),Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,4)])
-            B = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,2)])
-            C = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,4),Tt.Bond(Tt.BD_OUT,4)])
+            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],N_inbond=2)
+            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],N_inbond=1)
+            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],N_inbond=1)
 
 
         >>> print(ntwrk)
@@ -268,16 +268,16 @@ class Network():
                 |             |     
                 ---------------     
         lbl:-1 Dim = 3 |
-        IN :
+        REGULAR :
         _
         lbl:-2 Dim = 4 |
-        IN :
+        REGULAR :
         _
         lbl:3 Dim = 2 |
-        OUT :
+        REGULAR :
         _
         lbl:4 Dim = 4 |
-        OUT :
+        REGULAR :
 
 
         """

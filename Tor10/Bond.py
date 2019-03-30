@@ -60,26 +60,58 @@ class Bond():
         Example:
 
             Create an non-symmetry bond with dimension=3:
-            ::
-                bd_in = Tor10.Bond(3,Tor10.BD_REGULAR)
-            
+
+            >>> bd_in = Tor10.Bond(3,Tor10.BD_REGULAR)
+            >>> print(bd_in)
+            Dim = 3 |
+            REGULAR :
+
             The above example is equivalent to:
-            ::
-                bd_in = Tor10.Bond(3)
-            
-    
+
+            >>> bd_in = Tor10.Bond(3)
+                
             Create an symmetry bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:
-            ::
-                bd_out_sym = Tor10.Bond(3,qnums=[[-1],[0],[1]])
+
+            >>> bd_sym_U1 = Tor10.Bond(3,qnums=[[-1],[0],[1]])
+            >>> print(bd_sym_U1)
+            Dim = 3 |
+            REGULAR : U1::  -1 +0 +1
+
+            The above example is equivalent to:
+
+            >>> bd_sym_U1 = Tor10.Bond(3,qnums=[[-1],[0],[1]],sym_types=[Tor10.Symmetry.U1()])
+
+            Create an symmetry bond of dimension=3 with single Zn symmetry (n can be arbitrary Integer).
+
+            1. Z2 with quantum numbers=[0,1,0] for each dimension:
+
+            >>> bd_sym_Z2 = Tor10.Bond(3,qnums=[[0],[1],[0]],sym_types=[Tor10.Symmetry.Zn(2)])
+            >>> print(bd_sym_Z2)
+            Dim = 3 |
+            REGULAR : Z2::  +0 +1 +0
+            
+            2. Z4 with quantum numbers=[0,2,3] for each dimension:
+
+            >>> bd_sym_Z4 = Tor10.Bond(3,qnums=[[0],[2],[3]],sym_types=[Tor10.Symmetry.Zn(4)])
+            >>> print(bd_sym_Z4)
+            Dim = 3 |
+            REGULAR : Z4::  +0 +2 +3
     
             Create an symmetry bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with 
-            1st dimension quantum number = [-1,-1,0,-1],
-            2nd dimension quantum number = [1 ,-1,0, 0],
-            3rd dimension quantum number = [0 , 0,1, 0].
+            1st dimension quantum number = [-2,-1,0,-1],
+            2nd dimension quantum number = [1 ,-4,0, 0],
+            3rd dimension quantum number = [-8,-3,1, 5].
             ::
-                bd_out_mulsym = Tor10.Bond(3,qnums=[[-1,-1,0,-1],
-                                                    [1 ,-1,0, 0],
-                                                    [0 , 0,1, 0]])
+               bd_out_mulsym = Tor10.Bond(3,qnums=[[-2,-1,0,-1],
+                                                    [1 ,-4,0, 0],
+                                                    [-8,-3,1, 5]])
+
+            >>> print(bd_out_mulsym)
+            Dim = 3 |
+            REGULAR : U1::  -2 +1 -8
+                      U1::  -1 -4 -3
+                      U1::  +0 +0 +1
+                      U1::  -1 +0 +5
  
             Create an symmetry bond of dimension=3 with U1 x Z2 x Z4 symmetry (here, U1 x Z2 x Z4, so the No. of symmetry = 3), with
             1st dimension quantum number = [-2,0,0],
@@ -91,9 +123,15 @@ class Bond():
                                                     [ 1,0,2]],
                                              sym_types=[Tor10.Symmetry.U1(),
                                                         Tor10.Symmetry.Zn(2),
-                                                        Tor10.Symmetry.Zn(4)]) 
-         
-
+                                                        Tor10.Symmetry.Zn(4)])
+ 
+            >>> print(bd_out_mulsym)
+            Dim = 3 |
+            REGULAR : U1::  -2 -1 +1
+                      Z2::  +0 +1 +0
+                      Z4::  +0 +3 +2
+                    
+    
         """
         #declare variable:
         self.bondType = None
@@ -240,22 +278,22 @@ class Bond():
             a = Tor10.Bond(3)
             b = Tor10.Bond(4)
             c = Tor10.Bond(2,qnums=[[0,1,-1],[1,1,0]])
-            d = Tor10.Bond(Tor10.BD_REGULAR,2,qnums=[[1,0,-1],[1,0,0]]) 
-            e = Tor10.Bond(Tor10.BD_REGULAR,2,qnums=[[1,0],[1,0]])
+            d = Tor10.Bond(2,qnums=[[1,0,-1],[1,0,0]]) 
+            e = Tor10.Bond(2,qnums=[[1,0],[1,0]])
 
         Combine two non-symmetry bonds:
             >>> a.combine(b)
             >>> print(a)
             Dim = 12 |
-            IN  :
-            
+            REGULAR :
+ 
         Combine two symmetry bonds:
             >>> c.combine(d)
             >>> print(c)
             Dim = 4 |
-            OUT :U1::  +1 +1 +2 +2
-                 U1::  +1 +1 +1 +1
-                 U1::  -2 -1 -1 +0
+            REGULAR : U1::  +1 +1 +2 +2
+                      U1::  +1 +1 +1 +1
+                      U1::  -2 -1 -1 +0
 
         """
         ## if bds is Bond class 
@@ -369,6 +407,25 @@ class Bond():
 
     ## Arithmic:
     def __eq__(self,rhs):
+        """
+        Compare two bonds. Return True if [dim], [bondType] and [qnums] are all the same.
+        
+        example:
+        ::
+            bd_x = Tor10.Bond(3) 
+            bd_y = Tor10.Bond(4)
+            bd_z = Tor10.Bond(3)
+
+        >>> print(bd_x==bd_z)
+        True
+
+        >>> print(bd_x is bd_z)
+        False
+        
+        >>> print(bd_x==bd_y)
+        False
+
+        """
         if isinstance(rhs,self.__class__):
             iSame = (self.dim == rhs.dim) and (self.bondType == rhs.bondType) and (self.qnums == rhs.qnums)            
             if not self.qnums is None:
