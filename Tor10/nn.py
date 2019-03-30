@@ -146,7 +146,7 @@ class Linear():
     
         out = self.tnn(ipt.Storage)
         
-        return UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(BD_OUT,self.tnn.out_features)),torch_tensor=out,check=False)
+        return UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),N_inbond=len(ipt.bonds[:-1]),torch_tensor=out,check=False)
 
     def extra_repr(self):
         return 'in_features={}, out_features={}, bias={}'.format(\
@@ -162,7 +162,7 @@ class Linear():
         Return:
             UniTensor, 2-rank
         """
-        return UniTensor(bonds=[Bond(BD_IN,self.tnn.out_features),Bond(BD_OUT,self.tnn.in_features)],torch_tensor=self.tnn.weight,check=False)
+        return UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],N_inbond=1,torch_tensor=self.tnn.weight,check=False)
 
     def bias(self):
         """
@@ -178,7 +178,6 @@ class Linear():
         if self.tnn.bias is None:
             return None
         else:
-            return UniTensor(bonds=[Bond(BD_OUT,self.bias.shape[0])],torch_tensor=self.tnn.bias,check=False) 
-
+            return UniTensor(bonds=[Bond(self.bias.shape[0])],N_inbond=0,torch_tensor=self.tnn.bias,check=False) 
 
 

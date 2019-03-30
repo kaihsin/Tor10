@@ -8,9 +8,9 @@ ntwrk = Tt.Network()
 ntwrk.Fromfile("test.net")
 print(ntwrk)
 
-A = Tt.UniTensor([Tt.Bond(Tt.BD_IN,3),Tt.Bond(Tt.BD_IN,4),Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,4)]).Rand()
-B = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,3),Tt.Bond(Tt.BD_OUT,2)]).Rand()
-C = Tt.UniTensor([Tt.Bond(Tt.BD_OUT,4),Tt.Bond(Tt.BD_OUT,4)]).Rand()
+A = Tt.UniTensor([Tt.Bond(3),Tt.Bond(4),Tt.Bond(3),Tt.Bond(4)],2).Rand()
+B = Tt.UniTensor([Tt.Bond(3),Tt.Bond(2)],0).Rand()
+C = Tt.UniTensor([Tt.Bond(4),Tt.Bond(4)],0).Rand()
 
 ntwrk.Put("A",A)
 print(ntwrk)

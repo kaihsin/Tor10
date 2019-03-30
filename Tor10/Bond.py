@@ -10,10 +10,16 @@ from . import Symmetry as Symm
 
 
 ##### Constants #######
-class BD_IN:
+#class BD_INWARD:
+#    pass
+#class BD_OUTWARD:
+#    pass
+class BD_REGULAR:
     pass
-class BD_OUT:
-    pass
+
+#BndType = [BD_INWARD,BD_OUTWARD,BD_REGULAR]
+BndType = [BD_REGULAR]
+
 
 ## [For developer] Append this to extend the symmetry:
 SymmType = {'U1':Symm.U1,'Zn':Symm.Zn}
@@ -32,18 +38,19 @@ class Bond():
 
     ## [DevNote]:The qnums should be integer.
 
-    def __init__(self, bondType, dim,qnums=None,sym_types=None):
+    def __init__(self, dim, bondType=BD_REGULAR,qnums=None,sym_types=None):
         """
         Constructor of the Bond, it calls the member function Bond.assign().
 
         Args:
-
-            bondType:
-                The type of the bond. 
-                It can only be either BD_IN or BD_OUT 
+            
             dim:
                 The dimension of the bond. 
                 It should be larger than 0 (>0)
+            bondType:
+                The type of the bond. 
+                It can be BD_REGULAR in current version. [BD_INWARD , BD_OUTWARD for brading is under developing.]
+                default [BD_REGULAR] 
             qnums:
                 The quantum number(s) specify to the bond. 
                 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary. 
@@ -52,33 +59,39 @@ class Bond():
 
         Example:
 
-            Create an non-symmetry in-bond with dimension=3:
+            Create an non-symmetry bond with dimension=3:
             ::
-                bd_in = Tor10.Bond(Tor10.BD_IN, 3)
-    
-            Create an symmetry out-bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:
+                bd_in = Tor10.Bond(3,Tor10.BD_REGULAR)
+            
+            The above example is equivalent to:
             ::
-                bd_out_sym = Tor10.Bond(Tor10.BD_OUT,3,qnums=[[-1],[0],[1]])
+                bd_in = Tor10.Bond(3)
+            
     
-            Create an symmetry out-bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with 
+            Create an symmetry bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:
+            ::
+                bd_out_sym = Tor10.Bond(3,qnums=[[-1],[0],[1]])
+    
+            Create an symmetry bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with 
             1st dimension quantum number = [-1,-1,0,-1],
             2nd dimension quantum number = [1 ,-1,0, 0],
             3rd dimension quantum number = [0 , 0,1, 0].
             ::
-                bd_out_mulsym = Tor10.Bond(Tor10.BD_OUT,3,qnums=[[-1,-1,0,-1],
-                                                                 [1 ,-1,0, 0],
-                                                                 [0 , 0,1, 0]]) 
-            Create an symmetry out-bond of dimension=3 with U1 x Z2 x Z4 symmetry (here, U1 x Z2 x Z4, so the No. of symmetry = 3), with
+                bd_out_mulsym = Tor10.Bond(3,qnums=[[-1,-1,0,-1],
+                                                    [1 ,-1,0, 0],
+                                                    [0 , 0,1, 0]])
+ 
+            Create an symmetry bond of dimension=3 with U1 x Z2 x Z4 symmetry (here, U1 x Z2 x Z4, so the No. of symmetry = 3), with
             1st dimension quantum number = [-2,0,0],
             2nd dimension quantum number = [-1,1,3],
             3rd dimension quantum number = [ 1,0,2].
             ::
-                bd_out_mulsym = Tor10.Bond(Tor10.BD_OUT,3,qnums=[[-2,0,0],
-                                                                 [-1,1,3],
-                                                                 [ 1,0,2]],
-                                                          sym_types=[Tor10.Symmetry.U1(),
-                                                                     Tor10.Symmetry.Zn(2),
-                                                                     Tor10.Symmetry.Zn(4)]) 
+                bd_out_mulsym = Tor10.Bond(3,qnums=[[-2,0,0],
+                                                    [-1,1,3],
+                                                    [ 1,0,2]],
+                                             sym_types=[Tor10.Symmetry.U1(),
+                                                        Tor10.Symmetry.Zn(2),
+                                                        Tor10.Symmetry.Zn(4)]) 
          
 
         """
@@ -90,20 +103,21 @@ class Bond():
         self.sym_types = None
 
         #call :
-        self.assign(bondType,dim,qnums,sym_types)
+        self.assign(dim,bondType,qnums,sym_types)
  
-    def assign(self,bondType, dim,qnums=None,sym_types=None):
+    def assign(self,dim, bondType = BD_REGULAR, qnums=None,sym_types=None):
         """
         Assign a new property for the Bond.
 
         Args:
 
-            bondType:
-                The type of the bond. 
-                It can only be either BD_IN or BD_OUT 
             dim:
                 The dimension of the bond. 
                 It should be larger than 0 (>0)
+            bondType:
+                The type of the bond. 
+                It can be BD_REGULAR in current version. [BD_INWARD , BD_OUTWARD for brading is under developing.]
+                default [BD_REGULAR] 
             qnums:
                 The quantum number(s) specify to the bond. 
                 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary. 
@@ -112,38 +126,38 @@ class Bond():
 
         Example:
 
-            For a in-bond with dim=4, U1 x U1 x U1; there are 3 of U1 symmetry.
+            For a bond with dim=4, U1 x U1 x U1; there are 3 of U1 symmetry.
             The Bond can be initialize as:
             ::
-                a = Tor10.Bond(Tor10.BD_OUT,4) # create instance
-                a.assign(BD_IN,4,qnums=[[ 0, 1, 1],
-                                        [-1, 2, 0],
-                                        [ 0, 1,-1],
-                                        [ 2, 0, 0]])
+                a = Tor10.Bond(4) # create instance
+                a.assign(4 ,qnums=[[ 0, 1, 1],
+                                   [-1, 2, 0],
+                                   [ 0, 1,-1],
+                                   [ 2, 0, 0]])
              
-                                          ^  ^  ^
-                                         U1 U1 U1
+                                     ^  ^  ^
+                                    U1 U1 U1
 
-            For a out-bond with dim=3, U1 x Z2 x Z4; there are 3 symmetries.
+            For a bond with dim=3, U1 x Z2 x Z4; there are 3 symmetries.
             The Bond should be initialize as :
             ::
-                b = Tor10.Bond(Tor10.BD_OUT,3)
-                b.assign(Tor10.BD_OUT,3,sym_types=[Tor10.Symmetry.U1(),
-                                                   Tor10.Symmetry.Zn(2),
-                                                   Tor10.Symmetry.Zn(4)],
-                                        qnums=[[-2, 0, 3],
-                                               [-1, 1, 1],
-                                               [ 2, 0, 0]])
-                                                 ^  ^  ^
-                                                U1 Z2 Z4
+                b = Tor10.Bond(3)
+                b.assign(3,sym_types=[Tor10.Symmetry.U1(),
+                                      Tor10.Symmetry.Zn(2),
+                                      Tor10.Symmetry.Zn(4)],
+                                            qnums=[[-2, 0, 3],
+                                                   [-1, 1, 1],
+                                                   [ 2, 0, 0]])
+                                                     ^  ^  ^
+                                                    U1 Z2 Z4
         """
 
         #checking:
         if dim < 1: 
             raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
 
-        if not bondType is BD_IN and not bondType is BD_OUT:
-            raise Exception("Bond.assign()","[ERROR] bondType can only be BD_IN or BD_OUT")       
+        if not bondType in BndType:
+            raise Exception("Bond.assign()","[ERROR] bondType can only be BD_INWARD , BD_OUTWARD or BD_REGULAR")       
 
         if not qnums is None:
             sp = np.shape(qnums)
@@ -197,13 +211,15 @@ class Bond():
 
         Args:
 
-            new_bondType: The new bond type to be changed.
+            new_bondType: The new bond type to be changed. In current version, only 
 
         """
         if(self.bondType is not new_bondType):
+            if not new_bondType in BndType:
+                raise TypeError("Bond.change","[ERROR] the bondtype can only be",BndType)
             self.bondType = new_bondType
 
-    
+
     #[DevNote] This is the inplace combine.
     def combine(self,bds,new_type=None):
         """ 
@@ -217,15 +233,15 @@ class Bond():
                 2. two symmetry bonds can only be combined when both of the No. of symmetry are the same.
 
             new_type:
-                the type of the new combined bond, it can only be either BD_IN or BD_OUT. If not specify, the bond Type will remains the same.
+                the type of the new combined bond, it can only be BD_REGULAR in current version. [BD_INWARD , BD_OUTWARD is currently under developing for brading/fermionic system] If not specify, the bond Type will remains the same.
 
         Example:
         ::
-            a = Tor10.Bond(Tor10.BD_IN,3)
-            b = Tor10.Bond(Tor10.BD_OUT,4)
-            c = Tor10.Bond(Tor10.BD_OUT,2,qnums=[[0,1,-1],[1,1,0]])
-            d = Tor10.Bond(Tor10.BD_OUT,2,qnums=[[1,0,-1],[1,0,0]]) 
-            e = Tor10.Bond(Tor10.BD_OUT,2,qnums=[[1,0],[1,0]])
+            a = Tor10.Bond(3)
+            b = Tor10.Bond(4)
+            c = Tor10.Bond(2,qnums=[[0,1,-1],[1,1,0]])
+            d = Tor10.Bond(Tor10.BD_REGULAR,2,qnums=[[1,0,-1],[1,0,0]]) 
+            e = Tor10.Bond(Tor10.BD_REGULAR,2,qnums=[[1,0],[1,0]])
 
         Combine two non-symmetry bonds:
             >>> a.combine(b)
@@ -302,8 +318,8 @@ class Bond():
 
         ## checking change type
         if not new_type is None:
-            if not new_type is BD_IN and not new_type is BD_OUT:
-                raise Exception("Bond.combine(bds,new_type)","[ERROR] new_type can only be BD_IN or BD_OUT")       
+            if not new_type in BndType:
+                raise Exception("Bond.combine(bds,new_type)","[ERROR] new_type can only be",BndType)       
             else:
                 self.change(new_type)
 
@@ -311,9 +327,9 @@ class Bond():
     ## Print layout
     def __print(self):
         print("Dim = %d |"%(self.dim),end="\n")
-
-        if(self.bondType is BD_IN):
-            print("IN  :",end='')
+        """
+        if(self.bondType is BD_INWARD):
+            print("INWARD  :",end='')
             if not self.qnums is None:
                 for n in range(self.nsym):
                     print("%s:: "%(str(self.sym_types[n])),end='')
@@ -321,16 +337,27 @@ class Bond():
                          print(" %+d"%(self.qnums[idim,n]),end='')
                     print("\n     ",end='')
             print("\n",end="")
+        elif(self.bondType is BD_OUTWARD):
+            print("OUTWARD :",end='')
+            if not self.qnums is None:
+                for n in range(self.nsym):
+                    print("%s:: "%(str(self.sym_types[n])),end='')
+                    for idim in range(len(self.qnums)):
+                         print(" %+d"%(self.qnums[idim,n]),end='')
+                    print("\n     ",end='')
+            print("\n",end="")
+        
         else:
-            print("OUT :",end='')
+        """
+        if(self.bondType is BD_REGULAR):
+            print("REGULAR :",end='')
             if not self.qnums is None:
                 for n in range(self.nsym):
-                    print("%s:: "%(str(self.sym_types[n])),end='')
+                    print(" %s:: "%(str(self.sym_types[n])),end='')
                     for idim in range(len(self.qnums)):
                          print(" %+d"%(self.qnums[idim,n]),end='')
-                    print("\n     ",end='')
+                    print("\n         ",end='')
             print("\n",end="")
-
 
     def __str__(self):
         self.__print()    

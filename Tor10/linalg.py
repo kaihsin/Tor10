@@ -224,7 +224,7 @@ def Abs(a):
     if not isinstance(a,UniTensor):
         raise TypeError("Abs(UniTensor)","[ERROR] the input should be a UniTensor")
 
-    return UniTensor(bonds=copy.deepcopy(a.bonds),labels=copy.copy(a.labels),is_diag=a.is_diag,torch_tensor= torch.abs(a.Storage),check=False)
+    return UniTensor(bonds=copy.deepcopy(a.bonds),N_inbond=a.N_inbond,labels=copy.copy(a.labels),is_diag=a.is_diag,torch_tensor= torch.abs(a.Storage),check=False)
 
 def Mean(a):
     """
@@ -241,7 +241,7 @@ def Mean(a):
     if not isinstance(a,UniTensor):
         raise TypeError("Mean(UniTensor)","[ERROR] the input should be a UniTensor")
 
-    return UniTensor(bonds=[],labels=[],torch_tensor=torch.mean(a.Storage),check=False)
+    return UniTensor(bonds=[],labels=[],N_inbond=0,torch_tensor=torch.mean(a.Storage),check=False)
 
 def Otimes(a,b):
     """
@@ -269,7 +269,8 @@ def Otimes(a,b):
         if len(a.labels)==2 and len(b.labels)==2:
             if a.is_diag and b.is_diag:
 
-                return UniTensor(bonds=[Bond(BD_IN,out.shape[0]),Bond(BD_OUT,out.shape[0])],\
+                return UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[0])],\
+                                 N_inbond=1,\
                                  torch_tensor=torch.ger(a.Storage,b.Storage),\
                                  is_diag=True,check=False)
 
@@ -285,7 +286,8 @@ def Otimes(a,b):
                 tmpb = b.Storage            
 
             out = torch.tensordot(a.Storage,b.Storage,dims=0).permute(0,2,1,3).reshape(a.Storage.shape[0]*b.Storage.shape[0],-1)
-            return UniTensor(bonds=[Bond(BD_IN,out.shape[0]),Bond(BD_OUT,out.shape[1])],\
+            return UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[1])],\
+                             N_inbond=1,\
                              torch_tensor=out,\
                              check=False)
 
@@ -325,6 +327,7 @@ def ExpH(a):
             u = torch.exp(a.Storage)
             return UniTensor(bonds=a.bonds,\
                              labels=a.labels,\
+                             N_inbond=a.N_inbond,\
                              torch_tensor=u,\
                              is_diag=True,\
                              check=False)
@@ -339,6 +342,7 @@ def ExpH(a):
 
             return UniTensor(bonds=a.bonds,\
                             labels=a.labels,\
+                            N_inbond=a.N_inbond,\
                             torch_tensor=u,\
                             check=False)
                 
@@ -386,11 +390,13 @@ def Qr(a):
         else:
             tmp = np.min(tmp)
 
-        q = UniTensor(bonds =[Bond(BD_IN,q.shape[0]),Bond(BD_OUT,q.shape[1])],\
+        q = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
+                      N_inbond=1,\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=q,\
                       check=False)
-        r = UniTensor(bonds =[Bond(BD_IN,r.shape[0]),Bond(BD_OUT,r.shape[1])],\
+        r = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
+                      N_inbond=1,\
                       labels=[q.labels[1],a.labels[1]],\
                       torch_tensor=r,\
                       check=False)
@@ -439,16 +445,19 @@ def Qdr(a):
         else:
             tmp = np.min(tmp)
 
-        q = UniTensor(bonds =[Bond(BD_IN,q.shape[0]),Bond(BD_OUT,q.shape[1])],\
+        q = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
+                      N_inbond=1,\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=q,\
                       check=False)
-        d = UniTensor(bonds =[Bond(BD_IN,d.shape[0]),Bond(BD_OUT,d.shape[0])],\
+        d = UniTensor(bonds =[Bond(d.shape[0]),Bond(d.shape[0])],\
+                      N_inbond=1,\
                       labels=[tmp-1,tmp-2],\
                       torch_tensor=d,\
                       is_diag=True,
                       check=False)
-        r = UniTensor(bonds =[Bond(BD_IN,r.shape[0]),Bond(BD_OUT,r.shape[1])],\
+        r = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
+                      N_inbond=1,\
                       labels=[d.labels[1],a.labels[1]],\
                       torch_tensor=r,\
                       check=False)
@@ -534,16 +543,19 @@ def Svd(a):
         else:
             tmp = np.min(tmp)
 
-        u = UniTensor(bonds =[Bond(BD_IN,u.shape[0]),Bond(BD_OUT,u.shape[1])],\
+        u = UniTensor(bonds =[Bond(u.shape[0]),Bond(OUT,u.shape[1])],\
+                      N_inbond=1,\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=u,\
                       check=False)
-        v = UniTensor(bonds =[Bond(BD_IN,v.shape[1]),Bond(BD_OUT,v.shape[0])],\
+        v = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
+                      N_inbond=1,\
                       labels=[tmp-2,a.labels[1]],\
                       torch_tensor=v.transpose(0,1),\
                       check=False)
         s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
                       labels =[u.labels[1],v.labels[0]],\
+                      N_inbond=1,\
                       torch_tensor=s,\
                       check=False,\
                       is_diag=True)   
@@ -635,16 +647,19 @@ def Svd_truncate(a, keepdim=None):
             s = s[:keepdim]
             v = v[:, :keepdim]
 
-        u = UniTensor(bonds =[Bond(BD_IN,u.shape[0]),Bond(BD_OUT,u.shape[1])],\
+        u = UniTensor(bonds =[Bond(u.shape[0]),Bond(u.shape[1])],\
+                      N_inbond=1,\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=u,\
                       check=False)
-        v = UniTensor(bonds =[Bond(BD_IN,v.shape[1]),Bond(BD_OUT,v.shape[0])],\
+        v = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
+                      N_inbond=1,\
                       labels=[tmp-2,a.labels[1]],\
                       torch_tensor=v.transpose(0,1),\
                       check=False)
         s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
                       labels =[u.labels[1],v.labels[0]],\
+                      N_inbond=1,\
                       torch_tensor=s,\
                       check=False,\
                       is_diag=True)   
@@ -684,15 +699,18 @@ def Matmul(a,b):
         if a.is_diag == b.is_diag:
             tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
                             torch_tensor=torch.matmul(a.Storage,b.Storage),\
+                            N_inbond=1,\
                             check=False,\
                             is_diag=a.is_diag)
         else:
             if a.is_diag:
                 tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
+                                N_inbond=1,\
                                 torch_tensor=torch.matmul(torch.diag(a.Storage),b.Storage),\
                                 check=False)
             if b.is_diag:
                 tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
+                                N_inbond=1,\
                                 torch_tensor=torch.matmul(a.Storage,torch.diag(b.Storage)),\
                                 check=False)
 
@@ -767,6 +785,7 @@ def Chain_matmul(*args):
 
 
         return UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
+                         N_inbond=1,\
                          torch_tensor=torch.chain_matmul(*tmp_args),\
                          check=False)
 
@@ -797,15 +816,17 @@ def Inverse(a):
     if isinstance(a,UniTensor):
         
         if a.is_diag:
-            a_inv = UniTensor(bonds = a.bonds,
-                          labels=a.labels,
-                          torch_tensor=a.Storage**-1,
-                          is_diag=True,
+            a_inv = UniTensor(bonds = a.bonds,\
+                          labels=a.labels,\
+                          N_inbond=a.N_inbond,\
+                          torch_tensor=a.Storage**-1,\
+                          is_diag=True,\
                           check=False)
         else:
-            a_inv = UniTensor(bonds = a.bonds,
-                              labels=a.labels,
-                              torch_tensor=torch.inverse(a.Storage),
+            a_inv = UniTensor(bonds = a.bonds,\
+                              labels=a.labels,\
+                              N_inbond=a.N_inbond,\
+                              torch_tensor=torch.inverse(a.Storage),\
                               check=False)
         return a_inv
     else:
@@ -865,7 +886,7 @@ def Det(a):
         else:
             tmp = torch.det(a.Storage)
     
-        return UniTensor(bonds=[],labels=[],torch_tensor=tmp,check=False)
+        return UniTensor(bonds=[],labels=[],N_inbond=0,torch_tensor=tmp,check=False)
 
     else:
         raise Exception("Det(UniTensor)","[ERROR] Det can only accept UniTensor")
@@ -886,6 +907,6 @@ def Norm(a):
     """
 
     if isinstance(a,UniTensor):
-        return UniTensor(bonds=[],labels=[],torch_tensor=torch.norm(a.Storage),check=False)
+        return UniTensor(bonds=[],labels=[],N_inbond=0,torch_tensor=torch.norm(a.Storage),check=False)
     else:
         raise Exception("Norm(UniTensor)","[ERROR] Norm can only accept UniTensor")

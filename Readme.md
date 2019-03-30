@@ -22,8 +22,8 @@
         
 ```python
        ## create a rank-2 Tensor 
-       bds = [ Bond(BD_IN,3), Bond(BD_OUT,4)]
-       A = UniTensor(bds,label=[2,4],dtype=torch.float64,device=torch.device("cpu"))
+       bds = [ Bond(BD_REGULAR,3), Bond(BD_REGULAR,4)]
+       A = UniTensor(bds,label=[2,4],N_inbond=1,dtype=torch.float64,device=torch.device("cpu"))
 
        ## Moving to GPU:
        A.to(torch.device("cuda:0"))
