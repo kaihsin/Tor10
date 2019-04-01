@@ -158,6 +158,25 @@
 <span class="c1">#</span>
 
 
+<span class="c1">##Helper function for Bond:</span>
+<span class="k">def</span> <span class="nf">_fx_GetCommRows</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
+    <span class="c1"># this is the internal function, to get the common row on two 2D numpy array</span>
+    <span class="c1"># [Require for iinput]</span>
+    <span class="c1"># 1. A and B should be 2D numpy array </span>
+    <span class="c1"># 2. the number of col should be the same for A and B</span>
+    
+    <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;names&#39;</span><span class="p">:[</span><span class="s1">&#39;f</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span>
+           <span class="s1">&#39;formats&#39;</span><span class="p">:</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">dtype</span><span class="p">]}</span>
+
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="p">),</span> <span class="n">B</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="p">))</span>
+
+    <span class="c1"># This last bit is optional if you&#39;re okay with &quot;C&quot; being a structured array...</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">C</span>
+
+
+
+
 <span class="c1">##### Constants #######</span>
 <span class="c1">#class BD_INWARD:</span>
 <span class="c1">#    pass</span>
@@ -509,6 +528,19 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Bond.combine(bds,new_type)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] new_type can only be&quot;</span><span class="p">,</span><span class="n">BndType</span><span class="p">)</span>       
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">change</span><span class="p">(</span><span class="n">new_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Bond.GetUniqueQnums"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond.GetUniqueQnums">[docs]</a>    <span class="k">def</span> <span class="nf">GetUniqueQnums</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Get The Unique Qnums by remove the duplicates </span>
+<span class="sd">            </span>
+<span class="sd">            return:</span>
+<span class="sd">                2D numpy.array with shape (# of unique qnum-set, # of symmetry)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.GetUniqueQnums&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] cannot get qnums from a non-sym bond.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
     <span class="c1">## Print layout</span>

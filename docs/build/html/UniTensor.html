@@ -349,10 +349,10 @@
 
 <dl class="class">
 <dt id="Tor10.UniTensor.UniTensor">
-<em class="property">class </em><code class="descclassname">Tor10.UniTensor.</code><code class="descname">UniTensor</code><span class="sig-paren">(</span><em>bonds</em>, <em>N_inbond</em>, <em>labels=None</em>, <em>device=device(type='cpu')</em>, <em>dtype=torch.float64</em>, <em>torch_tensor=None</em>, <em>check=True</em>, <em>is_diag=False</em>, <em>requires_grad=False</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">Tor10.UniTensor.</code><code class="descname">UniTensor</code><span class="sig-paren">(</span><em>bonds</em>, <em>N_inbond</em>, <em>labels=None</em>, <em>device=device(type='cpu')</em>, <em>dtype=torch.float64</em>, <em>torch_tensor=None</em>, <em>check=True</em>, <em>is_diag=False</em>, <em>is_blockform=False</em>, <em>requires_grad=False</em>, <em>name=''</em>, <em>BlockInfo=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="Tor10.UniTensor.UniTensor.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>bonds</em>, <em>N_inbond</em>, <em>labels=None</em>, <em>device=device(type='cpu')</em>, <em>dtype=torch.float64</em>, <em>torch_tensor=None</em>, <em>check=True</em>, <em>is_diag=False</em>, <em>requires_grad=False</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>bonds</em>, <em>N_inbond</em>, <em>labels=None</em>, <em>device=device(type='cpu')</em>, <em>dtype=torch.float64</em>, <em>torch_tensor=None</em>, <em>check=True</em>, <em>is_diag=False</em>, <em>is_blockform=False</em>, <em>requires_grad=False</em>, <em>name=''</em>, <em>BlockInfo=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the constructor of the UniTensor.</p>
 <p>Public Args:</p>
 <blockquote>
@@ -374,6 +374,9 @@ When interprete the memory layout as Matrix, the combine of first N_inbond will 
 <dt>is_diag: </dt>
 <dd>This states if the current UniTensor is a diagonal matrix or not. If True, the Storage will only store diagonal elements.
 Note that if is_diag=True, then the UniTensor is strictly required to be a square 2-rank tensor.</dd>
+<dt>is_blockform:</dt>
+<dd>This states if the current UniTensor is in block-diagonalize form. If True, the Storage will be a list of 2D block. 
+Note that the sparse tensor can be either in blockform (is_blockform = True) or in diagonal form (is_diag = True) the two flag cannot coexists.</dd>
 <dt>requires_grad:</dt>
 <dd>Activate the autograd function for UniTensor. This is the same as torch.Tensor</dd>
 <dt>name: </dt>

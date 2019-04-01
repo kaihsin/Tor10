@@ -285,9 +285,14 @@ class Network():
         if self.tensors is None:
             raise ValueError("Network.put","[ERROR] Network hasn't been constructed. Construct a Netwrok before put the tensors.")
 
+       
         ## checking tensor is UniTensor
         if not isinstance(tensor,UniTensor):
             raise TypeError("Network.put","[ERROR] Network can only accept UniTensor")
+
+        ## tmp check blockform:
+        if tensor.is_blockform:
+            raise TypeError("Network.put","[ERROR] currently Network does not support sparse blockform UniTensor") 
 
         ## check if the name in the Network
         ## remaining thing: how to deal with in, out bond?
