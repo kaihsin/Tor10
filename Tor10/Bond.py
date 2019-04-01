@@ -16,13 +16,16 @@ def _fx_GetCommRows(A,B):
     # 1. A and B should be 2D numpy array 
     # 2. the number of col should be the same for A and B
     
+
     dtype={'names':['f{}'.format(i) for i in range(A.shape[1])],
            'formats':A.shape[1] * [A.dtype]}
 
     C = np.intersect1d(A.view(dtype), B.view(dtype))
 
+    
     # This last bit is optional if you're okay with "C" being a structured array...
     C = C.view(A.dtype).reshape(-1, A.shape[1])
+
     return C
 
 

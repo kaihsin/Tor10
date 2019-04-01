@@ -176,11 +176,9 @@ class UniTensor():
                 
                 ## Get common qnums for in and out bond
                 b_tqin,b_tqout = self.GetTotalQnums()
-                
                 tqin_uni = b_tqin.GetUniqueQnums()
                 tqout_uni= b_tqout.GetUniqueQnums() 
                 C = _fx_GetCommRows(tqin_uni, tqout_uni)
-
                 if len(C.flatten())==0:
                     raise TypeError("UniTensor.__init__","[ERROR] no valid block in current Tensor. please check in-qnums and out-qnums have at least one same set of qnums.")
 
@@ -191,9 +189,9 @@ class UniTensor():
                 self._BlockMapper_out = []
                 self._BlockQnums = []
                 for blk in range(len(C)):
-                    comm = np.array(C[blk]).reshape(1,b_tqin.nsym)
-                    _,idx_in,_=np.intersect1d(b_tqin.qnums,comm,return_indices=True)
-                    _,idx_out,_=np.intersect1d(b_tqout.qnums,comm,return_indices=True)
+                    comm = tuple(C[blk])
+                    idx_in= np.where((b_tqin.qnums == tuple(C[blk])).all(axis=1))[0]
+                    idx_out= np.where((b_tqout.qnums == tuple(C[blk])).all(axis=1))[0]
                     self.Storage.append(torch.zeros((len(idx_in),len(idx_out)),device=device,dtype=dtype))
                     self._BlockMapper_in.append(idx_in)
                     self._BlockMapper_out.append(idx_out)
@@ -418,7 +416,10 @@ class UniTensor():
         """
         print("tensor Name : %s"%(self.name))
         print("tensor Rank : %d"%(len(self.labels)))
-        print("on device   : %s"%(self.Storage.device))        
+        if self.is_blockform:
+            print("on device   : %s"%(self.Storage[0].device))        
+        else:
+            print("on device   : %s"%(self.Storage.device))        
         print("is_diag     : %s"%("True" if self.is_diag else "False"))        
         
         #Nin = len([ 1 for i in range(len(self.labels)) if self.bonds[i].bondType is BD_IN])
@@ -460,13 +461,27 @@ class UniTensor():
     def __str__(self):
         print("Tensor name: %s"%( self.name))
         print("is_diag    : %s"%("True" if self.is_diag else "False"))
-        print(self.Storage)
+        if self.is_blockform:
+            for s in range(len(self.Storage)):
+                print("----------------")
+                print("Block Qnum = ",self._BlockQnums[s])
+                print(self.Storage[s])
+        else:
+            print(self.Storage)
+
         return ""
 
     def __repr__(self):
         print("Tensor name: %s"%( self.name))
         print("is_diag    : %s"%("True" if self.is_diag else "False"))
-        print(self.Storage)
+        if self.is_blockform:
+            for s in range(len(self.Storage)):
+                print("----------------")
+                print("Block Qnum = ",self._BlockQnums[s])
+                print(self.Storage[s])
+        else:
+            print(self.Storage)
+
         return ""
 
     def __len__(self):
@@ -1492,7 +1507,7 @@ class UniTensor():
                         elif isinstance(block,self.__class__):
                             if block.is_blockform:
                                 raise Exception("UniTensor.PutBlock","[ERROR] cannot put a sparse block-from tensor")
-                            if self.Storage[s].shape != block.Storage.shape():
+                            if self.Storage[s].shape != block.Storage.shape:
                                 raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
 
                             self.Storage[s] = block.Storage.clone()

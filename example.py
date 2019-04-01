@@ -164,7 +164,7 @@ print(tqin)
 print(tqout)
 
 
-sym_T_bf = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],N_inbond=2,is_blockform=True,dtype=torch.float64)
+
 
 
 ## GetBlock
@@ -172,14 +172,22 @@ bd_sym_1 = Tor10.Bond(3,qnums=[[0],[1],[2]])
 bd_sym_2 = Tor10.Bond(4,qnums=[[-1],[2],[0],[2]])
 bd_sym_3 = Tor10.Bond(5,qnums=[[4],[2],[-1],[5],[1]])
 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[10,11,12],dtype=torch.float64)
-
+print("================================")
 sym_T.Print_diagram()
-
 q_in, q_out = sym_T.GetTotalQnums()
 print(q_in)
 print(q_out)
+
 block_2 = sym_T.GetBlock(2)
 print(block_2)
+
+print("======================")
+sym_T_bf = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[10,11,12],is_blockform=True,dtype=torch.float64)
+sym_T_bf.Print_diagram()
+block_2bf = sym_T_bf.GetBlock(2) + 3
+sym_T_bf.PutBlock(block_2bf,2)
+print(sym_T_bf)
+exit(1)
 
 ## multiple Qnum:
 ## U1 x U1 x U1 x U1
