@@ -13,9 +13,11 @@ from . import linalg
 ##  Find "Qnum_ipoint" keyword for the part that need to be modify accrodingly when considering the Qnums feature. 
 ##
 
+
+
 class UniTensor():
 
-    def __init__(self, bonds, N_inbond ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, requires_grad=False, name=""):
+    def __init__(self, bonds, N_inbond ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, is_blockform=False, requires_grad=False, name=""):
         """
         This is the constructor of the UniTensor.
 
@@ -44,6 +46,11 @@ class UniTensor():
             is_diag: 
                 This states if the current UniTensor is a diagonal matrix or not. If True, the Storage will only store diagonal elements.
                 Note that if is_diag=True, then the UniTensor is strictly required to be a square 2-rank tensor.  
+
+            is_blockform:
+                This states if the current UniTensor is in block-diagonalize form. If True, the Storage will be a list of 2D block. 
+                Note that the sparse tensor can be either in blockform (is_blockform = True) or in diagonal form (is_diag = True) the two flag cannot coexists. 
+
             requires_grad:
                 Activate the autograd function for UniTensor. This is the same as torch.Tensor 
                 
@@ -92,22 +99,31 @@ class UniTensor():
         self.N_inbond = int(N_inbond)
         self.name = name
         self.is_diag = is_diag        
+        self.is_blockform = is_blockform
 
-        
+                
         if labels is None:
             self.labels = np.arange(len(self.bonds))
         else:
             self.labels = np.array(copy.deepcopy(labels),dtype=np.int)
         
+
         ## Checking:
         if check:
+            ## check sparse flag coexists.
+            if self.is_blockform and self.is_diag:
+                raise Exception("UniTensor.__init__","the sparse Tensor can be either is_blockform=True or is_diag=True. not both.")
+
+            ## check [N_inbond] valid.
             if len(self.bonds)>0:
                 if N_inbond < 0 or N_inbond > len(self.bonds):
                     raise Exception("UniTensor.__init__","the N_inbond should be >=0 and < # of bonds")
 
+            ## check # of labels consist with bond.
             if not len(self.labels) == (len(self.bonds)):
                 raise Exception("UniTensor.__init__","labels size is not consistence with the rank")
 
+            ## check duplicate label
             if not len(np.unique(self.labels)) == len(self.labels):
                 raise Exception("UniTensor.__init__","labels contain duplicate element.")
 
@@ -121,6 +137,16 @@ class UniTensor():
                 if not self.bonds[0].dim == self.bonds[1].dim:
                     raise TypeError("UniTensor.__init__","is_diag=True require Tensor to be square rank-2")
 
+            elif is_blockform:
+                if self.N_inbond < 1 or len(self.bonds)-self.N_inbond < 1:
+                    raise TypeError("UniTensor.__init__","is_blockform=True must have at least one in-bond and one out-bond") 
+                
+                if self.bonds[0].qnums is None:
+                    raise TypeError("UniTensor.__init__","is_blockform=True must be symmetric Tensor with qnums.")
+                ## check empty block:
+                tqin,tqout = self.GetTotalQnums()
+                
+
 
             if len(np.unique([ (bd.qnums is None) for bd in self.bonds])) != 1:
                 raise TypeError("UniTensor.__init__","the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).")
@@ -133,6 +159,8 @@ class UniTensor():
         if torch_tensor is None:
             if self.is_diag:
                 self.Storage = torch.zeros(self.bonds[0].dim,device=device,dtype=dtype)                
+            elif self.is_blockform:
+                 
             else:
                 DALL = [self.bonds[i].dim for i in range(len(self.bonds))]
                 self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
