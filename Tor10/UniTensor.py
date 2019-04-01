@@ -49,7 +49,9 @@ class UniTensor():
 
             is_blockform:
                 This states if the current UniTensor is in block-diagonalize form. If True, the Storage will be a list of 2D block. 
-                Note that the sparse tensor can be either in blockform (is_blockform = True) or in diagonal form (is_diag = True) the two flag cannot coexists. 
+                Note [1]: the sparse tensor can be either in blockform (is_blockform = True) or in diagonal form (is_diag = True) the two flag cannot coexists.
+                Note [2]: When set to true, the order of qnums appear in each bond will be lexsort from large to small.
+ 
 
             requires_grad:
                 Activate the autograd function for UniTensor. This is the same as torch.Tensor 
@@ -1676,8 +1678,7 @@ class UniTensor():
             Tensor name: 
             is_diag    : False
             tensor([[0.]], dtype=torch.float64)
-
-
+ 
         """
         if self.is_diag:
             raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
