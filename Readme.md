@@ -1,5 +1,12 @@
 ![alt text](./Tor10_icon.png)
 
+## What's new
+    1. Fix bugs for UniTensor.shape() if is_diag = True
+    2. Change the Definition of Bond. The In-bond and Out-bond are defined within the UniTensor. (see documentation for details)
+    3. Add new sparse structure: [is_blockform] to efficiently store the tensor with symmetry. (currently has limited function support.)
+    4. Add U1 and Zn Symmetry class. This object as the generator that handle the rule for combine bonds and Symmetry stuff in the UniTensor (for future develope)
+    5. Update the example.py
+
 ## Release version
     v0.2
 
@@ -41,17 +48,55 @@
 ```
 
     3. Multiple Symmetries:
-        * Support arbitrary number of symmetry.
+        * Support arbitrary numbers and types of symmetry.
         * Currently support U1 and Zn (with arbitrary n). 
-        * see test_sym.py for how to use them. 
+
+```python
+        #> Multiple mix symmetry: U1 x Z2 x Z4
+        bd_sym_mix = Tor10.Bond(3,qnums=[[-2,0,0],
+                                         [-1,1,3],
+                                         [ 1,0,2]],
+                                 sym_types=[Tor10.Symmetry.U1(),
+                                            Tor10.Symmetry.Zn(2),
+                                            Tor10.Symmetry.Zn(4)])
+``` 
         
     4. Network :
-        * See test_ntwrk.py for how to use network.
-        * See test.net for how to defined a Network file.
+        * See documentation for how to use network.
 
     5. Autograd mechanism:
         The Tor10 now support the autograd functionality. The Contract, Matmul etc will automatically contruct the gradient flow for UniTensor that has [requires_grad=True]
         
+        * See documentation for further details
+
+
+    6. Easy coordinate with pytorch for Neural-Network:
+        We provide Tor10.nn that can easy cooperate with pytorch.nn.Module to perform neural-network tasks.
+
+```python
+        import torch
+        import Tor10
+        class Model(torch.nn.Module):
+            def __init__(self):
+                super(Model,self).__init__()
+                ## Customize and register the parameter.
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
+ 
+            def forward(self,x):
+                y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
+                return y
+
+        x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)])
+        md = Model()
+        print(list(md.parameters()))
+        ## Output:
+        #    [Parameter containing:
+        #    tensor([[0., 0.],
+        #            [0., 0.]], dtype=torch.float64, requires_grad=True), Parameter containing:
+        #    tensor([[0., 0.],
+        #            [0., 0.]], dtype=torch.float64, requires_grad=True)]
+```
         * See documentation for further details
 
 

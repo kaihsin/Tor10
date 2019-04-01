@@ -72,6 +72,8 @@ print(c)
 e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],N_inbond=1,is_diag=True)
 f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=2,labels=[-3,4,1],dtype=torch.float32)
 
+print(e.shape())
+
 # Labels related 
 g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])
 print(g.labels)
@@ -158,9 +160,13 @@ bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
 
 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],N_inbond=2,dtype=torch.float64)
 tqin,tqout=sym_T.GetTotalQnums()
-
 print(tqin)
 print(tqout)
+
+
+sym_T_bf = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],N_inbond=2,is_blockform=True,dtype=torch.float64)
+exit(1)
+
 
 ## GetBlock
 bd_sym_1 = Tor10.Bond(3,qnums=[[0],[1],[2]])
@@ -256,3 +262,5 @@ d = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(2)],N_inbond=1)
 
 f = Tor10.Chain_matmul(a,b,c,d)
 f.Print_diagram()
+
+

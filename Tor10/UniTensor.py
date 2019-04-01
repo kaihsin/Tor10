@@ -3,6 +3,7 @@ import copy,os
 import numpy as np
 import pickle as pkl
 from .Bond import *
+from .Bond import _fx_GetCommRows
 from . import linalg 
 
 ## Developer Note:
@@ -14,10 +15,9 @@ from . import linalg
 ##
 
 
-
 class UniTensor():
 
-    def __init__(self, bonds, N_inbond ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, is_blockform=False, requires_grad=False, name=""):
+    def __init__(self, bonds, N_inbond ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, is_blockform=False, requires_grad=False, name="", BlockInfo=None):
         """
         This is the constructor of the UniTensor.
 
@@ -100,7 +100,16 @@ class UniTensor():
         self.name = name
         self.is_diag = is_diag        
         self.is_blockform = is_blockform
+        if BlockInfo is None:
+            self._BlockMapper_in = None
+            self._BlockMapper_out = None
+            self._BlockQnums = None
+        else:
+            self._BlockMapper_in = copy.deepcopy(BlockInfo[0])
+            self._BlockMapper_out = copy.deepcopy(BlockInfo[1])
+            self._BlockQnums =copy.deepcopy(BlockInfo[2])
 
+       
                 
         if labels is None:
             self.labels = np.arange(len(self.bonds))
@@ -143,8 +152,6 @@ class UniTensor():
                 
                 if self.bonds[0].qnums is None:
                     raise TypeError("UniTensor.__init__","is_blockform=True must be symmetric Tensor with qnums.")
-                ## check empty block:
-                tqin,tqout = self.GetTotalQnums()
                 
 
 
@@ -158,9 +165,41 @@ class UniTensor():
 
         if torch_tensor is None:
             if self.is_diag:
-                self.Storage = torch.zeros(self.bonds[0].dim,device=device,dtype=dtype)                
+                self.Storage = torch.zeros(self.bonds[0].dim,device=device,dtype=dtype)               
+ 
             elif self.is_blockform:
-                 
+
+                ## sort for each bonds qnums:
+                for bd in range(len(self.bonds)):
+                    y = np.lexsort(self.bonds[bd].qnums.T[::-1])[::-1]
+                    self.bonds[bd].qnums = self.bonds[bd].qnums[y,:]
+                
+                ## Get common qnums for in and out bond
+                b_tqin,b_tqout = self.GetTotalQnums()
+                
+                tqin_uni = b_tqin.GetUniqueQnums()
+                tqout_uni= b_tqout.GetUniqueQnums() 
+                C = _fx_GetCommRows(tqin_uni, tqout_uni)
+
+                if len(C.flatten())==0:
+                    raise TypeError("UniTensor.__init__","[ERROR] no valid block in current Tensor. please check in-qnums and out-qnums have at least one same set of qnums.")
+
+
+                #Create block:
+                self.Storage = []
+                self._BlockMapper_in = []
+                self._BlockMapper_out = []
+                self._BlockQnums = []
+                for blk in range(len(C)):
+                    comm = np.array(C[blk]).reshape(1,b_tqin.nsym)
+                    _,idx_in,_=np.intersect1d(b_tqin.qnums,comm,return_indices=True)
+                    _,idx_out,_=np.intersect1d(b_tqout.qnums,comm,return_indices=True)
+                    self.Storage.append(torch.zeros((len(idx_in),len(idx_out)),device=device,dtype=dtype))
+                    self._BlockMapper_in.append(idx_in)
+                    self._BlockMapper_out.append(idx_out)
+                    self._BlockQnums.append(C[blk])
+                self._BlockQnums = np.array(self._BlockQnums)
+
             else:
                 DALL = [self.bonds[i].dim for i in range(len(self.bonds))]
                 self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
@@ -317,6 +356,9 @@ class UniTensor():
         if self.is_diag==True:
             self.Storage = torch.diag(self.Storage) 
             self.is_diag=False
+        elif self.is_blockform==True:
+            print("developing.")
+            exit(1)
 
         return self
 
@@ -345,7 +387,11 @@ class UniTensor():
         """
         if not isinstance(device,torch.device):
             raise TypeError("[ERROR] UniTensor.to()","only support device argument in this version as torch.device")
-        self.Storage = self.Storage.to(device)         
+        if self.is_blockform:
+            for s in range(len(self.Storage)):
+                self.Storage[s].to(device)
+        else:
+            self.Storage = self.Storage.to(device)         
 
     ## print layout:
     def Print_diagram(self):
@@ -439,7 +485,9 @@ class UniTensor():
 
         """
         if isinstance(rhs,self.__class__):
-            iss = (self.Storage.shape == rhs.Storage.shape) and (len(self.bonds) == len(rhs.bonds))
+            iss = (self.is_diag == rhs.is_diag) and (self.is_blockform == rhs.is_blockform)
+
+            iss = iss and (self.Storage.shape == rhs.Storage.shape) and (len(self.bonds) == len(rhs.bonds))
             if not iss:
                 return False
             
@@ -459,187 +507,345 @@ class UniTensor():
 
         """
         if self.is_diag:
-            return torch.Size([self.bonds.dim[0],self.bonds.dim[0]])
+            return torch.Size([self.bonds[0].dim,self.bonds[0].dim])
+        elif self.is_blockform:
+            return torch.Size([self.bonds[x].dim for x in range(len(self.bonds))])
         else:
             return self.Storage.shape
     
     ## Fill :
     def __getitem__(self,key):
+        if self.is_blockform:
+            raise Exception("UniTensor.__getitem__","[ERROR] cannot use [] to getitem from a block-form tensor. Use get block first.")
         return self.Storage[key]
 
     def __setitem__(self,key,value):
+        if self.is_blockform:
+            raise Exception("UniTensor.__setitem__","[ERROR] cannot use [] to setitem from a block-form tensor. Use get block first.")
+
         self.Storage[key] = value
          
 
     ## Math ::
     def __add__(self,other):
         if isinstance(other, self.__class__):
-            if self.is_diag and other.is_diag:
-                tmp = UniTensor(bonds = self.bonds,\
-                                labels= self.labels,\
-                                N_inbond=self.N_inbond,\
-                                torch_tensor=self.Storage + other.Storage,\
-                                check=False,\
-                                is_diag=True)
+            if self.is_blockform:   
+                if not other.is_blockform:
+                    raise TypeError("UniTensor.+","[ERROR] cannot add a sparse block-form tensor with a densed tensor.")
+                
+                ## Check for matching:
+                if len(self.Storage) != len(other.Storage):
+                    raise TypeError("UniTensor.+","[ERROR] cannot add two sparse block-form tensors with different block-form.")
+                
+                    
+                b_tqin,b_tqout = self.GetTotalQnums()
+                b_tqin_o,b_tqout_o = other.GetTotalQnums()
+                if b_tqin != b_tqin_o or b_tqout != b_tqout_o:  
+                    raise TypeError("UniTensor.+","[ERROR] cannot add two sparse block-form tensors with different qnums.")
 
-            elif self.is_diag==False and other.is_diag==False:
                 tmp = UniTensor(bonds = self.bonds,\
-                                labels= self.labels,\
-                                N_inbond=self.N_inbond,\
-                                torch_tensor=self.Storage + other.Storage,\
-                                check=False)
+                                labels=self.labels,\
+                                N_inbond = self.N_inbond,\
+                                is_blockform=True,\
+                                BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                                check=False,\
+                                torch_tensor = [self.Stoarge[s] + other.Storage[s] for s in range(len(self.Storage))])
+                                
             else:
-                if self.is_diag:
+                if other.is_blockform:
+                    raise TypeError("UniTensor.+","[ERROR] cannot add a dense tensor with sparse block-form tensor")
+
+                if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
                                     N_inbond=self.N_inbond,\
-                                    torch_tensor=torch.diag(self.Storage) + other.Storage,\
+                                    torch_tensor=self.Storage + other.Storage,\
+                                    check=False,\
+                                    is_diag=True)
+
+                elif self.is_diag==False and other.is_diag==False:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    N_inbond=self.N_inbond,\
+                                    torch_tensor=self.Storage + other.Storage,\
                                     check=False)
                 else:
-                    tmp = UniTensor(bonds = self.bonds,\
-                                    labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
-                                    torch_tensor=self.Storage + torch.diag(other.Storage),\
-                                    check=False)
+                    if self.is_diag:
+                        tmp = UniTensor(bonds = self.bonds,\
+                                        labels= self.labels,\
+                                        N_inbond=self.N_inbond,\
+                                        torch_tensor=torch.diag(self.Storage) + other.Storage,\
+                                        check=False)
+                    else:
+                        tmp = UniTensor(bonds = self.bonds,\
+                                        labels= self.labels,\
+                                        N_inbond=self.N_inbond,\
+                                        torch_tensor=self.Storage + torch.diag(other.Storage),\
+                                        check=False)
             return tmp
         else:
-            return UniTensor(bonds = self.bonds,\
-                             labels= self.labels,\
-                             N_inbond=self.N_inbond,\
-                             torch_tensor=self.Storage + other,\
-                             check=False,
-                             is_diag=self.is_diag)
+            if self.is_blockform:
+                return UniTensor(bonds = self.bonds,\
+                                 labels= self.labels,\
+                                 N_inbond=self.N_inbond,\
+                                 torch_tensor=[self.Storage[s] + other for s in range(len(self.Storage))],\
+                                 BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                                 check=False,
+                                 is_blockform=True)
+            else:
+                return UniTensor(bonds = self.bonds,\
+                                 labels= self.labels,\
+                                 N_inbond=self.N_inbond,\
+                                 torch_tensor=self.Storage + other,\
+                                 check=False,
+                                 is_diag=self.is_diag)
 
     def __sub__(self,other):
         if isinstance(other, self.__class__):
-            if self.is_diag and other.is_diag:
-                tmp = UniTensor(bonds = self.bonds,\
-                                labels= self.labels,\
-                                N_inbond=self.N_inbond,\
-                                torch_tensor=self.Storage - other.Storage,\
-                                check=False,\
-                                is_diag=True)
+            if self.is_blockform:
+                if not other.is_blockform:
+                    raise TypeError("UniTensor.-","[ERROR] cannot sub a sparse block-form tensor with a densed tensor.")
+                
+                ## Check for matching:
+                if len(self.Storage) != len(other.Storage):
+                    raise TypeError("UniTensor.-","[ERROR] cannot sub two sparse block-form tensors with different block-form.")
+                
+                b_tqin,b_tqout = self.GetTotalQnums()
+                b_tqin_o,b_tqout_o = other.GetTotalQnums()
+                if b_tqin != b_tqin_o or b_tqout != b_tqout_o:  
+                    raise TypeError("UniTensor.-","[ERROR] cannot sub two sparse block-form tensors with different qnums.")
 
-            elif self.is_diag==False and other.is_diag==False:
                 tmp = UniTensor(bonds = self.bonds,\
-                                 labels= self.labels,\
-                                 N_inbond=self.N_inbond,\
-                                 torch_tensor=self.Storage - other.Storage,\
-                                 check=False)
+                                labels=self.labels,\
+                                N_inbond = self.N_inbond,\
+                                is_blockform=True,\
+                                BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                                check=False,\
+                                torch_tensor = [self.Stoarge[s] - other.Storage[s] for s in range(len(self.Storage))])
+
             else:
-                if self.is_diag:
+                if other.is_blockform:
+                    raise TypeError("UniTensor.-","[ERROR] cannot sub a dense tensor with sparse block-form tensor")
+
+                if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
                                     N_inbond=self.N_inbond,\
-                                    torch_tensor=torch.diag(self.Storage) - other.Storage,\
-                                    check=False)
+                                    torch_tensor=self.Storage - other.Storage,\
+                                    check=False,\
+                                    is_diag=True)
+
+                elif self.is_diag==False and other.is_diag==False:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                     labels= self.labels,\
+                                     N_inbond=self.N_inbond,\
+                                     torch_tensor=self.Storage - other.Storage,\
+                                     check=False)
                 else:
-                    tmp = UniTensor(bonds = self.bonds,\
-                                    labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
-                                    torch_tensor=self.Storage - torch.diag(other.Storage),\
-                                    check=False)
+                    if self.is_diag:
+                        tmp = UniTensor(bonds = self.bonds,\
+                                        labels= self.labels,\
+                                        N_inbond=self.N_inbond,\
+                                        torch_tensor=torch.diag(self.Storage) - other.Storage,\
+                                        check=False)
+                    else:
+                        tmp = UniTensor(bonds = self.bonds,\
+                                        labels= self.labels,\
+                                        N_inbond=self.N_inbond,\
+                                        torch_tensor=self.Storage - torch.diag(other.Storage),\
+                                        check=False)
             return tmp
         else :
-            return UniTensor(bonds = self.bonds,\
-                             labels= self.labels,\
-                             N_inbond=self.N_inbond,\
-                             torch_tensor=self.Storage - other,\
-                             check=False,
-                             is_diag=self.is_diag)
+            if self.is_blockform:
+                return UniTensor(bonds = self.bonds,\
+                                 labels= self.labels,\
+                                 N_inbond=self.N_inbond,\
+                                 torch_tensor=[self.Storage[s] - other for s in range(len(self.Storage))],\
+                                 BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                                 check=False,
+                                 is_blockform=True)
+            else:
+                return UniTensor(bonds = self.bonds,\
+                                 labels= self.labels,\
+                                 N_inbond=self.N_inbond,\
+                                 torch_tensor=self.Storage - other,\
+                                 check=False,
+                                 is_diag=self.is_diag)
 
     def __mul__(self,other):
         if isinstance(other, self.__class__):
-            if self.is_diag and other.is_diag:
+            if self.is_blockform:
+                if not other.is_blockform:
+                    raise TypeError("UniTensor.*","[ERROR] cannot mul a sparse block-form tensor with a densed tensor.")
+                
+                ## Check for matching:
+                if len(self.Storage) != len(other.Storage):
+                    raise TypeError("UniTensor.*","[ERROR] cannot mul two sparse block-form tensors with different block-form.")
+                
+                b_tqin,b_tqout = self.GetTotalQnums()
+                b_tqin_o,b_tqout_o = other.GetTotalQnums()
+                if b_tqin != b_tqin_o or b_tqout != b_tqout_o:  
+                    raise TypeError("UniTensor.*","[ERROR] cannot mul two sparse block-form tensors with different qnums.")
+
+                tmp = UniTensor(bonds = self.bonds,\
+                                labels=self.labels,\
+                                N_inbond = self.N_inbond,\
+                                is_blockform=True,\
+                                BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                                check=False,\
+                                torch_tensor = [self.Stoarge[s] * other.Storage[s] for s in range(len(self.Storage))])
+
+            else:
+                if other.is_blockform:
+                    raise TypeError("UniTensor.*","[ERROR] cannot mul a dense tensor with sparse block-form tensor")
+
+                if self.is_diag and other.is_diag:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                    labels= self.labels,\
+                                    N_inbond=self.N_inbond,\
+                                    torch_tensor=self.Storage * other.Storage,\
+                                    check=False,\
+                                    is_diag=True)
+
+                elif self.is_diag==False and other.is_diag==False:
+                    tmp = UniTensor(bonds = self.bonds,\
+                                     labels= self.labels,\
+                                     N_inbond=self.N_inbond,\
+                                     torch_tensor=self.Storage * other.Storage,\
+                                     check=False)
+                else:
+                    if self.is_diag:
+                        tmp = UniTensor(bonds = self.bonds,\
+                                        labels= self.labels,\
+                                        N_inbond=self.N_inbond,\
+                                        torch_tensor=torch.diag(self.Storage) * other.Storage,\
+                                        check=False)
+                    else:
+                        tmp = UniTensor(bonds = self.bonds,\
+                                        labels= self.labels,\
+                                        N_inbond=self.N_inbond,\
+                                        torch_tensor=self.Storage * torch.diag(other.Storage),\
+                                        check=False)
+        else:
+            if self.is_blockform:
                 tmp = UniTensor(bonds = self.bonds,\
                                 labels= self.labels,\
                                 N_inbond=self.N_inbond,\
-                                torch_tensor=self.Storage * other.Storage,\
+                                torch_tensor=[self.Storage[s] * other for s in range(len(self.Stoarge))],\
                                 check=False,\
-                                is_diag=True)
-
-            elif self.is_diag==False and other.is_diag==False:
-                tmp = UniTensor(bonds = self.bonds,\
-                                 labels= self.labels,\
-                                 N_inbond=self.N_inbond,\
-                                 torch_tensor=self.Storage * other.Storage,\
-                                 check=False)
+                                BlockInfo = (self._BlockMapper_in, self._BlockMapper_out, self._BlockQnums),\
+                                is_blockform=True)
             else:
-                if self.is_diag:
-                    tmp = UniTensor(bonds = self.bonds,\
-                                    labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
-                                    torch_tensor=torch.diag(self.Storage) * other.Storage,\
-                                    check=False)
-                else:
-                    tmp = UniTensor(bonds = self.bonds,\
-                                    labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
-                                    torch_tensor=self.Storage * torch.diag(other.Storage),\
-                                    check=False)
-        else:
-            tmp = UniTensor(bonds = self.bonds,\
-                            labels= self.labels,\
-                            N_inbond=self.N_inbond,\
-                            torch_tensor=self.Storage * other,\
-                            check=False,\
-                            is_diag=self.is_diag)
+                tmp = UniTensor(bonds = self.bonds,\
+                                labels= self.labels,\
+                                N_inbond=self.N_inbond,\
+                                torch_tensor=self.Storage * other,\
+                                check=False,\
+                                is_diag=self.is_diag)
         return tmp
 
     def __pow__(self,other):
-        return UniTensor(bonds=self.bonds,\
-                         labels=self.labels,\
-                         torch_tensor=self.Storage**other,\
-                         N_inbond=self.N_inbond,\
-                         check=False,\
-                         is_diag=self.is_diag)
+        if self.is_blockform:
+            return UniTensor(bonds=self.bonds,\
+                             labels=self.labels,\
+                             torch_tensor=[self.Storage[s]**other for s in range(len(self.Storage))],\
+                             N_inbond=self.N_inbond,\
+                             check=False,\
+                             BlockInfo= (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                             is_blockform=True)
+        else:
+            return UniTensor(bonds=self.bonds,\
+                             labels=self.labels,\
+                             torch_tensor=self.Storage**other,\
+                             N_inbond=self.N_inbond,\
+                             check=False,\
+                             is_diag=self.is_diag)
 
     
     def __truediv__(self,other):
         if isinstance(other, self.__class__):
-            if self.is_diag:
-                if other.is_diag:
-                    return UniTensor(bonds=self.bonds,\
-                                     labels=self.labels,\
-                                     N_inbond=self.N_inbond,\
-                                     check=False,\
-                                     torch_tensor=self.Storage / other.Storage,\
-                                     is_diag=True)
-                else:
-                    return UniTensor(bonds=self.bonds,\
-                                     labels=self.labels,\
-                                     N_inbond=self.N_inbond,\
-                                     check=False,\
-                                     torch_tensor=torch.diag(self.Storage) / other.Storage)
+            if self.is_blockform:
+                if not other.is_blockform:
+                    raise TypeError("UniTensor./","[ERROR] cannot truediv a sparse block-form tensor with a densed tensor.")
+                
+                ## Check for matching:
+                if len(self.Storage) != len(other.Storage):
+                    raise TypeError("UniTensor./","[ERROR] cannot truediv two sparse block-form tensors with different block-form.")
+                
+                b_tqin,b_tqout = self.GetTotalQnums()
+                b_tqin_o,b_tqout_o = other.GetTotalQnums()
+                if b_tqin != b_tqin_o or b_tqout != b_tqout_o:  
+                    raise TypeError("UniTensor./","[ERROR] cannot truediv two sparse block-form tensors with different qnums.")
+
+                tmp = UniTensor(bonds = self.bonds,\
+                                labels=self.labels,\
+                                N_inbond = self.N_inbond,\
+                                is_blockform=True,\
+                                BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                                check=False,\
+                                torch_tensor = [self.Stoarge[s] / other.Storage[s] for s in range(len(self.Storage))])
 
             else:
-                if other.is_diag:
-                    return UniTensor(bonds=self.bonds,\
-                                     labels=self.labels,\
-                                     N_inbond=self.N_inbond,\
-                                     check=False,\
-                                     torch_tensor=self.Storage / torch.diag(other.Storage))
+                if other.is_blockform:
+                    raise TypeError("UniTensor./","[ERROR] cannot truediv a dense tensor with sparse block-form tensor")
+
+                if self.is_diag:
+                    if other.is_diag:
+                        tmp =  UniTensor(bonds=self.bonds,\
+                                         labels=self.labels,\
+                                         N_inbond=self.N_inbond,\
+                                         check=False,\
+                                         torch_tensor=self.Storage / other.Storage,\
+                                         is_diag=True)
+                    else:
+                        tmp =  UniTensor(bonds=self.bonds,\
+                                         labels=self.labels,\
+                                         N_inbond=self.N_inbond,\
+                                         check=False,\
+                                         torch_tensor=torch.diag(self.Storage) / other.Storage)
+
                 else:
-                    return UniTensor(bonds=self.bonds,\
-                                     labels=self.labels,\
-                                     N_inbond=self.N_inbond,\
-                                     check=False,\
-                                     torch_tensor=self.Storage / other.Storage)
+                    if other.is_diag:
+                        tmp =  UniTensor(bonds=self.bonds,\
+                                         labels=self.labels,\
+                                         N_inbond=self.N_inbond,\
+                                         check=False,\
+                                         torch_tensor=self.Storage / torch.diag(other.Storage))
+                    else:
+                        tmp =  UniTensor(bonds=self.bonds,\
+                                         labels=self.labels,\
+                                         N_inbond=self.N_inbond,\
+                                         check=False,\
+                                         torch_tensor=self.Storage / other.Storage)
 
         else :
-            return UniTensor(bonds=self.bonds,\
-                             labels=self.labels,\
-                             N_inbond=self.N_inbond,\
-                             check=False,\
-                             torch_tensor=self.Storage / other,\
-                             is_diag=self.is_diag)
-    
+            if self.is_blockform:   
+                tmp = UniTensor(bonds=self.bonds,\
+                                 labels=self.labels,\
+                                 N_inbond=self.N_inbond,\
+                                 check=False,\
+                                 torch_tensor=[self.Storage[s] / other for s in range(len(self.Storage))],\
+                                 BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
+                                 is_blockform=True)
+
+            else:
+                tmp =  UniTensor(bonds=self.bonds,\
+                                 labels=self.labels,\
+                                 N_inbond=self.N_inbond,\
+                                 check=False,\
+                                 torch_tensor=self.Storage / other,\
+                                 is_diag=self.is_diag)
+
+        return tmp
 
     ## This is the same function that behaves as the memberfunction.
     def Svd(self): 
         """ 
             This is the member function of Svd, see Tor10.linalg.Svd() 
         """
+        if self.is_blockform:
+            raise Exception("UniTensor.Svd","[ERROR] cannot perform Svd on a sparse block-form tensor. use GetBlock() first and perform svd on the Block.")
+
         return linalg.Svd(self)
 
     #def Svd_truncate(self):
@@ -652,65 +858,117 @@ class UniTensor():
         """ 
             This is the member function of Norm, see Tor10.linalg.Norm
         """
+        if self.is_blockform:
+            raise Exception("UniTensor.Norm","[ERROR] cannot perform Norm on a sparse block-form tensor. use GetBlock() first and perform norm on the Block.")
+
         return linalg.Norm(self)
 
     def Det(self):
         """ 
             This is the member function of Det, see Tor10.linalg.Det
         """
+        if self.is_blockform:
+            raise Exception("UniTensor.Det","[ERROR] cannot perform Det on a sparse block-form tensor. use GetBlock() first and perform det on the Block.")
+
         return linalg.Det(self)
 
     def Matmul(self,b):
         """ 
             This is the member function of Matmul, see Tor10.linalg.Matmul
         """
+        if self.is_blockform:
+            raise Exception("UniTensor.Matmul","[ERROR] cannot perform MatMul on a sparse block-form tensor. use GetBlock() first and perform matmul on the Block.")
+
         return linalg.Matmul(self,b)
 
     
     ## Extended Assignment:
     def __iadd__(self,other):
         if isinstance(other, self.__class__):
-            if self.is_diag == other.is_diag:            
-                self.Storage += other.Storage
+            if self.is_blockform:
+                if not other.is_blockform:
+                    raise TypeError("UniTensor.+=","[ERROR] cannot += sparse block form tensor with dense tensor")
+                for s in range(len(self.Storage)):
+                    self.Stoarge[s] += other.Storage[s]
+                
             else:
-                if self.is_diag:
-                    self.Storage = torch.diag(self.Storage) + other.Storage
-                    self.is_diag=False
+                if other.is_blockform:  
+                    raise TypeError("UniTensor.+=","[ERROR] cannot += dense tensor with sparse block form tensor.")
+
+                if self.is_diag == other.is_diag:            
+                    self.Storage += other.Storage
                 else:
-                    self.Storage += torch.diag(other.Storage)
+                    if self.is_diag:
+                        self.Storage = torch.diag(self.Storage) + other.Storage
+                        self.is_diag=False
+                    else:
+                        self.Storage += torch.diag(other.Storage)
 
         else :
-            self.Storage += other
+            if self.is_blockform:
+                for s in range(len(self.Storage)):
+                    self.Storage[s]+= other
+            else:
+                self.Storage += other
+
         return self
 
     def __isub__(self,other):
         if isinstance(other, self.__class__):
-            if self.is_diag == other.is_diag:            
-                self.Storage -= other.Storage
+            if self.is_blockform:
+                if not other.is_blockform:
+                    raise TypeError("UniTensor.-=","[ERROR] cannot -= sparse block form tensor with dense tensor")
+                for s in range(len(self.Storage)):
+                    self.Storage[s] -= other.Storage[s]
             else:
-                if self.is_diag:
-                    self.Storage = torch.diag(self.Storage) + other.Storage
-                    self.is_diag=False
+                if other.is_blockform:
+                    raise TypeError("UniTensor.-=","[ERROR] cannot -= dense tensor with sparse block form tensor.")
+                if self.is_diag == other.is_diag:            
+                    self.Storage -= other.Storage
                 else:
-                    self.Storage -= torch.diag(other.Storage)
+                    if self.is_diag:
+                        self.Storage = torch.diag(self.Storage) + other.Storage
+                        self.is_diag=False
+                    else:
+                        self.Storage -= torch.diag(other.Storage)
 
         else :
-            self.Storage -= other
+            if self.is_blockform:
+                for s in range(len(self.Storage)):
+                    self.Stoarge[s] -= other
+
+            else:
+                self.Storage -= other
+
         return self
 
 
     def __imul__(self,other):
         if isinstance(other, self.__class__):
-            if self.is_diag == other.is_diag:            
-                self.Storage *= other.Storage
+            if self.is_blockform:
+                if not other.is_blockform:
+                    raise TypeError("UniTensor.*=","[ERROR] cannot *= sparse block-form tensor with dense tensor.")
+                for s in range(len(self.Storage)):
+                    self.Storage[s] *= other.Stoarge[s]
+
             else:
-                if self.is_diag:
-                    self.Storage = torch.diag(self.Storage) * other.Storage
-                    self.is_diag=False
+                if other.is_blockform:
+                    raise TypeError("UniTensor.*=","[ERROR] cannot *= dense tensor with sparse block form tensor.")
+                
+                if self.is_diag == other.is_diag:            
+                    self.Storage *= other.Storage
                 else:
-                    self.Storage *= torch.diag(other.Storage)
+                    if self.is_diag:
+                        self.Storage = torch.diag(self.Storage) * other.Storage
+                        self.is_diag=False
+                    else:
+                        self.Storage *= torch.diag(other.Storage)
         else :
-            self.Storage *= other
+            if self.is_blockform:
+                for s in range(len(self.Storage)):
+                    self.Storage[s] *= other
+            else:
+                self.Storage *= other
     
         return self
 
@@ -729,8 +987,11 @@ class UniTensor():
         if self.bonds[0].qnums is None:
             _Randomize(self)
         else:
-            ## Qnum_ipoint
-            raise Exception("[Abort] UniTensor.Rand for symm TN is under developing")
+            if self.is_blockform:
+                _Randomize(self)
+            else:
+                ## Qnum_ipoint
+                raise Exception("[Abort] UniTensor.Rand for dense symm TN is under developing")
         return self
 
     def CombineBonds(self,labels_to_combine,is_inbond=None,new_label=None):
@@ -848,6 +1109,10 @@ class UniTensor():
         if len(labels_to_combine)<2:
             raise ValueError("CombineBonds","[ERROR] the number of bond to combine should be >1")
 
+        if self.is_blockform:
+            print("developing")
+            exit(1)
+
         _CombineBonds(self,labels_to_combine,is_inbond,new_label)
 
     def Contiguous(self):
@@ -876,7 +1141,11 @@ class UniTensor():
             True
             
         """
-        self.Storage = self.Storage.contiguous()
+        if self.is_blockform:
+            print("developing")
+            exit(1)
+        else:
+            self.Storage = self.Storage.contiguous()
         return self
 
 
@@ -888,7 +1157,11 @@ class UniTensor():
             bool, if True, then the Storage of UniTensor is contiguous. if False, then the Storage of UiTensor is non-contiguous. 
  
         """
-        return self.Storage.is_contiguous()        
+        if self.is_blockform:
+            print("developing")
+            exit(1)
+        else:
+            return self.Storage.is_contiguous()        
 
 
     def Permute(self,maper,N_inbond,by_label=False):
@@ -982,6 +1255,11 @@ class UniTensor():
         if self.is_diag:
             raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True cannot be permuted.\n"+
                                                 "[Suggest] Call UniTensor.Todense()")
+
+        elif self.is_blockform:
+            print("developing")
+            exit(1)
+
 
         if not (isinstance(maper,list) or isinstance(maper,np.ndarray)):
             raise TypeError("UniTensor.Permute","[ERROR] maper should be an 1d python list or numpy array.")            
@@ -1187,61 +1465,102 @@ class UniTensor():
         if self.bonds[0].qnums is None: 
             raise Exception("[Warning] PutBlock cannot be use for non-symmetry TN. Use SetElem instead.")
         else:
+
             if len(qnum) != self.bonds[0].nsym :
                 raise ValueError("UniTensor.PutBlock","[ERROR] The qnumtum numbers not match the number of type.")
 
             if self.is_diag:
                 raise TypeError("UniTensor.PutBlock","[ERROR] Cannot put block on a diagonal tensor (is_diag=True)")
 
-            ## create a copy of bonds and labels information that has all the BD_IN on first.            
-            # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
-            #tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
-            #maper = np.argsort(tmp)
-            #tmp_bonds = self.bonds[maper]
-            #tmp_labels = self.labels[maper]
-            #Nin = len(tmp[tmp==False])
+            if self.is_blockform:
+                ## search if the tn has block of that qnums:
+                
+                iflag = False
+                for s in range(len(self.Storage)):
+                    if np.array(qnum) == self._BlockQnums[s]:
+                        if isinstance(block,np.ndarray):
+                            if torch.Size(np.shape(block)) != self.Stoarge[s].shape:
+                                raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
 
-            if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
-                raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond")
+                            self.Storage[s] = torch.from_numpy(block)#.to(torch.float64)
 
-            #virtual_cb-in
-            cb_inbonds = copy.deepcopy(self.bonds[0])
-            if self.N_inbond > 1:
-                cb_inbonds.combine(self.bonds[1:self.N_inbond])
+                        elif isinstance(block,self.Storage.__class__):
+                            if self.Storage[s].shape != block.shape:
+                                 raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
+                            self.Storage[s] = block.clone()
 
-            i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
-            for n in np.arange(1,self.bonds[0].nsym,1):
-                i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
-            if len(i_in) == 0:
-                raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
+                        elif isinstance(block,self.__class__):
+                            if block.is_blockform:
+                                raise Exception("UniTensor.PutBlock","[ERROR] cannot put a sparse block-from tensor")
+                            if self.Storage[s].shape != block.Storage.shape():
+                                raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
 
-            #virtual_cb_out            
-            cb_outbonds = copy.deepcopy(self.bonds[self.N_inbond])
-            if len(self.bonds) - self.N_inbond > 1:
-                cb_outbonds.combine(self.bonds[self.N_inbond+1:])
+                            self.Storage[s] = block.Storage.clone()
 
-            i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
-            for n in np.arange(1,self.bonds[0].nsym,1):
-                i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
-            if len(i_out) == 0:
-                raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
-            
-            #rev_maper = np.argsort(maper) 
-            #self.Storage = self.Storage.permute(*maper)
-            ori_shape = self.Storage.shape
-            print(self.Storage.shape)
-            ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
-            self.Storage = self.Storage.reshape(np.prod(ori_shape[:self.N_inbond]),-1)
-            print(self.Storage.shape)
-            ## no need to check if the size match. if the size doesn't match, let torch handle the error.
-            if isinstance(block,np.ndarray):
-                self.Storage[np.ix_(i_in,i_out)] = torch.from_numpy(block)#.to(torch.float64)
-            elif isinstance(block,self.Storage.__class__):
-                self.Storage[np.ix_(i_in,i_out)] = block
+                        else:
+                            raise TypeError("UniTensor.PutBlock","[ERROR] the block can only be an np.array or a %s"%(self.Storage.__class__))
+                        iflag = True
+                        break
+
+                if not iflag:
+                    raise TypeError("UniTensor.PutBlock","[ERROR] No block has qnums:",qnum)
+
+                                       
             else:
-                raise TypeError("UniTensor.PutBlock","[ERROR] the block can only be an np.array or a %s"%(self.Storage.__class__))
-            
-            self.Storage = self.Storage.reshape(*ori_shape)#.permute(*rev_maper)
+
+                ## create a copy of bonds and labels information that has all the BD_IN on first.            
+                # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
+                #tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
+                #maper = np.argsort(tmp)
+                #tmp_bonds = self.bonds[maper]
+                #tmp_labels = self.labels[maper]
+                #Nin = len(tmp[tmp==False])
+
+                if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
+                    raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond")
+
+                #virtual_cb-in
+                cb_inbonds = copy.deepcopy(self.bonds[0])
+                if self.N_inbond > 1:
+                    cb_inbonds.combine(self.bonds[1:self.N_inbond])
+
+                i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
+                for n in np.arange(1,self.bonds[0].nsym,1):
+                    i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
+                if len(i_in) == 0:
+                    raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
+
+                #virtual_cb_out            
+                cb_outbonds = copy.deepcopy(self.bonds[self.N_inbond])
+                if len(self.bonds) - self.N_inbond > 1:
+                    cb_outbonds.combine(self.bonds[self.N_inbond+1:])
+
+                i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
+                for n in np.arange(1,self.bonds[0].nsym,1):
+                    i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
+                if len(i_out) == 0:
+                    raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
+                
+                #rev_maper = np.argsort(maper) 
+                #self.Storage = self.Storage.permute(*maper)
+                ori_shape = self.Storage.shape
+                print(self.Storage.shape)
+                ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
+                self.Storage = self.Storage.reshape(np.prod(ori_shape[:self.N_inbond]),-1)
+                print(self.Storage.shape)
+                ## no need to check if the size match. if the size doesn't match, let torch handle the error.
+                if isinstance(block,np.ndarray):
+                    self.Storage[np.ix_(i_in,i_out)] = torch.from_numpy(block)#.to(torch.float64)
+                elif isinstance(block,self.Storage.__class__):
+                    self.Storage[np.ix_(i_in,i_out)] = block.clone()
+                elif isinstance(block,self.__class__):
+                    if block.is_blockform:
+                        raise TypeError("UniTensor.PutBlock","[ERRROR] cannot put a sparse block-form tensor.")
+                    self.Storage[np.ix_(i_in,i_out)] = block.Storage.clone()
+                else:
+                    raise TypeError("UniTensor.PutBlock","[ERROR] the block can only be an np.array or a %s"%(self.Storage.__class__))
+                
+                self.Storage = self.Storage.reshape(*ori_shape)#.permute(*rev_maper)
 
     
     def GetBlock(self,*qnum):
@@ -1345,10 +1664,12 @@ class UniTensor():
 
 
         """
+        if self.is_diag:
+            raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
+
+
         if self.bonds[0].qnums is None:
 
-            if self.is_diag:
-                raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
             
             print("[Warning] GetBlock a non-symmetry TN will return self regardless of qnum parameter pass in.")
             return self
@@ -1356,63 +1677,75 @@ class UniTensor():
         else:
             if len(qnum) != self.bonds[0].nsym :
                 raise ValueError("UniTensor.GetBlock","[ERROR] The qnumtum numbers not match the number of type.")
-
-            if self.is_diag:
-                raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
            
-            
+            if self.is_blockform:
+                
+                ## search if the tn has block of that qnums:
+                for s in range(len(self.Storage)):
+                    if np.array(qnum) == self._BlockQnums[s]:
+                        return UniTensor(bonds=[Bond(dim=self.Storage[s].shape[0]),Bond(dim=self.Storage[s].shape[1])],\
+                                         N_inbond = 1,\
+                                         labels=[1,2],\
+                                         torch_tensor=self.Storage[s].clone(),\
+                                         check=False)
+
+                ## if there is no block with qnum:        
+                raise TypeError("UniTensor.PutBlock","[ERROR] No block has qnums:",qnum)
+
+
+            else:
     
-            #######
-            ## create a copy of bonds and labels information that has all the BD_IN on first.            
-            # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
-            #tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
-            #maper = np.argsort(tmp)
-            #tmp_bonds = self.bonds[maper]
-            #tmp_labels = self.labels[maper]
-            #Nin = len(tmp[tmp==False])
+                #######
+                ## create a copy of bonds and labels information that has all the BD_IN on first.            
+                # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
+                #tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
+                #maper = np.argsort(tmp)
+                #tmp_bonds = self.bonds[maper]
+                #tmp_labels = self.labels[maper]
+                #Nin = len(tmp[tmp==False])
 
-            if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
-                raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a block on a TN without either any in-bond or any out-bond")
+                if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
+                    raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a block on a TN without either any in-bond or any out-bond")
 
-            #virtual_cb-in
-            cb_inbonds = copy.deepcopy(self.bonds[0])
-            if self.N_inbond > 1:
-                cb_inbonds.combine(self.bonds[1:self.N_inbond])
-            
-            i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
-            for n in np.arange(1,self.bonds[0].nsym,1):
-                i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
-            if len(i_in) == 0:
-                raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
+                #virtual_cb-in
+                cb_inbonds = copy.deepcopy(self.bonds[0])
+                if self.N_inbond > 1:
+                    cb_inbonds.combine(self.bonds[1:self.N_inbond])
+                
+                i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
+                for n in np.arange(1,self.bonds[0].nsym,1):
+                    i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
+                if len(i_in) == 0:
+                    raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
 
-            #virtual_cb_out            
-            cb_outbonds = copy.deepcopy(self.bonds[self.N_inbond])
-            if len(self.bonds) - self.N_inbond > 1:
-                cb_outbonds.combine(self.bonds[self.N_inbond+1:])
+                #virtual_cb_out            
+                cb_outbonds = copy.deepcopy(self.bonds[self.N_inbond])
+                if len(self.bonds) - self.N_inbond > 1:
+                    cb_outbonds.combine(self.bonds[self.N_inbond+1:])
 
-            i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
-            for n in np.arange(1,self.bonds[0].nsym,1):
-                i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
-            if len(i_out) == 0:
-                raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
-            
-            ## virtual permute:
-            #rev_maper = np.argsort(maper) 
-            #self.Storage = self.Storage.permute(*maper)
-            ori_shape = self.Storage.shape
+                i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
+                for n in np.arange(1,self.bonds[0].nsym,1):
+                    i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
+                if len(i_out) == 0:
+                    raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
+                
+                ## virtual permute:
+                #rev_maper = np.argsort(maper) 
+                #self.Storage = self.Storage.permute(*maper)
+                ori_shape = self.Storage.shape
 
-            ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
-            out = self.Storage.reshape(np.prod(ori_shape[:self.N_inbond]),-1)[np.ix_(i_in,i_out)]
-            
-            #self.Storage = self.Storage.permute(*rev_maper)
+                ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
+                out = self.Storage.reshape(np.prod(ori_shape[:self.N_inbond]),-1)[np.ix_(i_in,i_out)]
+                
+                #self.Storage = self.Storage.permute(*rev_maper)
 
-            #print(out)
-            
-            return UniTensor(bonds=[Bond(dim=out.shape[0]),Bond(dim=out.shape[1])],\
-                             N_inbond = 1,\
-                             labels=[1,2],\
-                             torch_tensor=out,\
-                             check=False)
+                #print(out)
+                
+                return UniTensor(bonds=[Bond(dim=out.shape[0]),Bond(dim=out.shape[1])],\
+                                 N_inbond = 1,\
+                                 labels=[1,2],\
+                                 torch_tensor=out,\
+                                 check=False)
             
 
     ## Autograd feature: 
@@ -1448,9 +1781,16 @@ class UniTensor():
         
         """
         if is_grad is None:
-            return self.Storage.requires_grad
+            if self.is_blockform:
+                return self.Storage[0].requires_grad
+            else:
+                return self.Storage.requires_grad
         else:
-            self.Storage.requires_grad_(bool(is_grad))
+            if self.is_blockform:
+                for s in range(len(self.Storage)):
+                    self.Storage[s].requires_grad_(bool(is_grad))
+            else:
+                self.Storage.requires_grad_(bool(is_grad))
 
 
     def grad(self):
@@ -1498,16 +1838,29 @@ class UniTensor():
         if self.Storage.grad is None:
             return None
         else:
-            return UniTensor(bonds=copy.deepcopy(self.bonds),\
-                             N_inbond = self.N_inbond,\
-                             torch_tensor=self.Storage.grad,\
-                             check=False)
+            if self.is_blockform:
+                return UniTensor(bonds=copy.deepcopy(self.bonds),\
+                                 N_inbond = self.N_inbond,\
+                                 is_blockform = self.is_blockform,\
+                                 BlockInfo = (self._BlockMapper_in, self._BlockMapper_out, self._BlockQnums),\
+                                 torch_tensor=[self.Storage[s].grad for s in range(len(self.Storage))],\
+                                 check=False)
+            else:
+                return UniTensor(bonds=copy.deepcopy(self.bonds),\
+                                 N_inbond = self.N_inbond,\
+                                 torch_tensor=self.Storage.grad,\
+                                 check=False)
     
     def backward(self):
         """
         Backward the gradient flow in the contructed autograd graph. This is the same as torch.Tensor.backward
         """
-        self.Storage.backward()
+        if self.is_blockform:
+            for s in range(len(self.Stoarge)):
+                self.Storage[s].backward()
+
+        else:
+            self.Storage.backward()
 
 
     def detach(self):
@@ -1517,7 +1870,11 @@ class UniTensor():
         Return:
             self
         """
-        self.Storage.detach_()
+        if self.is_blockform:
+            for s in range(len(self.Storage)):
+                self.Storage[s].detach_()
+        else:
+            self.Storage.detach_()
         return self
 
 
@@ -1667,7 +2024,11 @@ def Contract(a,b):
 
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
-
+        
+        if a.is_blockform or b.is_blockform:
+            print("contract for block form tensor is under developing.")
+            exit(1)
+            
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
@@ -1864,6 +2225,12 @@ def _CombineBonds(a,label,is_inbond,new_label):
     if isinstance(a,UniTensor):
         if a.is_diag:
             raise TypeError("_CombineBonds","[ERROR] CombineBonds doesn't support diagonal matrix.")
+
+
+        if a.is_blockform:
+            print("developing.")
+            exit(1)
+
         if len(label) > len(a.labels):
             raise ValueError("_CombineBonds","[ERROR] the # of label_to_combine should be <= rank of UniTensor")
         # checking :
@@ -1947,8 +2314,11 @@ def _Randomize(a):
     """
 
     if isinstance(a,UniTensor):
-    
-        a.Storage = torch.rand(a.Storage.shape, dtype=a.Storage.dtype, device=a.Storage.device)
+        if a.is_blockform:
+            for s in range(len(a.Storage)):
+                a.Storage[s] = torch.rand(a.Storage[s].shape, dtype=a.Storage[s].dtype, device=a.Storage[s].device)
+        else: 
+            a.Storage = torch.rand(a.Storage.shape, dtype=a.Storage.dtype, device=a.Storage.device)
     
         
     else:

@@ -9,6 +9,25 @@ from . import Symmetry as Symm
 #
 
 
+##Helper function for Bond:
+def _fx_GetCommRows(A,B):
+    # this is the internal function, to get the common row on two 2D numpy array
+    # [Require for iinput]
+    # 1. A and B should be 2D numpy array 
+    # 2. the number of col should be the same for A and B
+    
+    dtype={'names':['f{}'.format(i) for i in range(A.shape[1])],
+           'formats':A.shape[1] * [A.dtype]}
+
+    C = np.intersect1d(A.view(dtype), B.view(dtype))
+
+    # This last bit is optional if you're okay with "C" being a structured array...
+    C = C.view(A.dtype).reshape(-1, A.shape[1])
+    return C
+
+
+
+
 ##### Constants #######
 #class BD_INWARD:
 #    pass
@@ -360,6 +379,19 @@ class Bond():
                 raise Exception("Bond.combine(bds,new_type)","[ERROR] new_type can only be",BndType)       
             else:
                 self.change(new_type)
+
+    def GetUniqueQnums(self):
+        """
+            Get The Unique Qnums by remove the duplicates 
+            
+            return:
+                2D numpy.array with shape (# of unique qnum-set, # of symmetry)
+
+        """
+        if self.qnums is None:
+            raise TypeError("Bond.GetUniqueQnums","[ERROR] cannot get qnums from a non-sym bond.")
+
+        return np.unique(self.qnums,axis=0)
 
 
     ## Print layout
