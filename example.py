@@ -165,7 +165,6 @@ print(tqout)
 
 
 sym_T_bf = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],N_inbond=2,is_blockform=True,dtype=torch.float64)
-exit(1)
 
 
 ## GetBlock
