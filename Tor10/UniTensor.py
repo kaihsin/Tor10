@@ -566,7 +566,7 @@ class UniTensor():
                                 is_blockform=True,\
                                 BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
                                 check=False,\
-                                torch_tensor = [self.Stoarge[s] + other.Storage[s] for s in range(len(self.Storage))])
+                                torch_tensor = [self.Storage[s] + other.Storage[s] for s in range(len(self.Storage))])
                                 
             else:
                 if other.is_blockform:
@@ -638,7 +638,7 @@ class UniTensor():
                                 is_blockform=True,\
                                 BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
                                 check=False,\
-                                torch_tensor = [self.Stoarge[s] - other.Storage[s] for s in range(len(self.Storage))])
+                                torch_tensor = [self.Storage[s] - other.Storage[s] for s in range(len(self.Storage))])
 
             else:
                 if other.is_blockform:
@@ -710,7 +710,7 @@ class UniTensor():
                                 is_blockform=True,\
                                 BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
                                 check=False,\
-                                torch_tensor = [self.Stoarge[s] * other.Storage[s] for s in range(len(self.Storage))])
+                                torch_tensor = [self.Storage[s] * other.Storage[s] for s in range(len(self.Storage))])
 
             else:
                 if other.is_blockform:
@@ -748,7 +748,7 @@ class UniTensor():
                 tmp = UniTensor(bonds = self.bonds,\
                                 labels= self.labels,\
                                 N_inbond=self.N_inbond,\
-                                torch_tensor=[self.Storage[s] * other for s in range(len(self.Stoarge))],\
+                                torch_tensor=[self.Storage[s] * other for s in range(len(self.Storage))],\
                                 check=False,\
                                 BlockInfo = (self._BlockMapper_in, self._BlockMapper_out, self._BlockQnums),\
                                 is_blockform=True)
@@ -791,7 +791,7 @@ class UniTensor():
                 
                 b_tqin,b_tqout = self.GetTotalQnums()
                 b_tqin_o,b_tqout_o = other.GetTotalQnums()
-                if b_tqin != b_tqin_o or b_tqout != b_tqout_o:  
+                if (b_tqin != b_tqin_o) or (b_tqout != b_tqout_o):  
                     raise TypeError("UniTensor./","[ERROR] cannot truediv two sparse block-form tensors with different qnums.")
 
                 tmp = UniTensor(bonds = self.bonds,\
@@ -800,7 +800,7 @@ class UniTensor():
                                 is_blockform=True,\
                                 BlockInfo = (self._BlockMapper_in,self._BlockMapper_out,self._BlockQnums),\
                                 check=False,\
-                                torch_tensor = [self.Stoarge[s] / other.Storage[s] for s in range(len(self.Storage))])
+                                torch_tensor = [self.Storage[s] / other.Storage[s] for s in range(len(self.Storage))])
 
             else:
                 if other.is_blockform:
@@ -906,7 +906,7 @@ class UniTensor():
                 if not other.is_blockform:
                     raise TypeError("UniTensor.+=","[ERROR] cannot += sparse block form tensor with dense tensor")
                 for s in range(len(self.Storage)):
-                    self.Stoarge[s] += other.Storage[s]
+                    self.Storage[s] += other.Storage[s]
                 
             else:
                 if other.is_blockform:  
@@ -952,7 +952,7 @@ class UniTensor():
         else :
             if self.is_blockform:
                 for s in range(len(self.Storage)):
-                    self.Stoarge[s] -= other
+                    self.Storage[s] -= other
 
             else:
                 self.Storage -= other
@@ -966,7 +966,7 @@ class UniTensor():
                 if not other.is_blockform:
                     raise TypeError("UniTensor.*=","[ERROR] cannot *= sparse block-form tensor with dense tensor.")
                 for s in range(len(self.Storage)):
-                    self.Storage[s] *= other.Stoarge[s]
+                    self.Storage[s] *= other.Storage[s]
 
             else:
                 if other.is_blockform:
@@ -1496,7 +1496,7 @@ class UniTensor():
                 for s in range(len(self.Storage)):
                     if np.array(qnum) == self._BlockQnums[s]:
                         if isinstance(block,np.ndarray):
-                            if torch.Size(np.shape(block)) != self.Stoarge[s].shape:
+                            if torch.Size(np.shape(block)) != self.Storage[s].shape:
                                 raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
 
                             self.Storage[s] = torch.from_numpy(block)#.to(torch.float64)
@@ -1872,7 +1872,7 @@ class UniTensor():
         Backward the gradient flow in the contructed autograd graph. This is the same as torch.Tensor.backward
         """
         if self.is_blockform:
-            for s in range(len(self.Stoarge)):
+            for s in range(len(self.Storage)):
                 self.Storage[s].backward()
 
         else:

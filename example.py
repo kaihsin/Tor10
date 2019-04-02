@@ -187,7 +187,24 @@ sym_T_bf.Print_diagram()
 block_2bf = sym_T_bf.GetBlock(2) + 3
 sym_T_bf.PutBlock(block_2bf,2)
 print(sym_T_bf)
+
+sym_T_bf.to(torch.device("cpu"))
+
+sym_T_bf += sym_T_bf
+sym_T_bf += 4
+print(sym_T_bf)
+sym_T_bf -= sym_T_bf
+sym_T_bf -= 7
+print(sym_T_bf)
+sym_T_bf *= sym_T_bf
+sym_T_bf *= 7
+print(sym_T_bf)
+sym_T_bf /= sym_T_bf
+sym_T_bf /= 7
+print(sym_T_bf)
 exit(1)
+
+
 
 ## multiple Qnum:
 ## U1 x U1 x U1 x U1

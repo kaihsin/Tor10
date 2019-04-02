@@ -39,7 +39,13 @@ class Zn:
         return 'Z%d'%(self.n)
 
     def __eq__(self,rhs):
-        return (self.__class__ == rhs.__class__) and (self.n == rhs.n)
+        if (self.__class__ == rhs.__class__):
+            if self.n == rhs.n:
+                return True
+            else:
+                return False
+        else:
+            return False
 
     def CheckQnums(self,qlist):
         for q in qlist.flatten():

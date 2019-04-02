@@ -462,11 +462,15 @@ class Bond():
 
         """
         if isinstance(rhs,self.__class__):
-            iSame = (self.dim == rhs.dim) and (self.bondType == rhs.bondType) and (self.qnums == rhs.qnums)            
-            if not self.qnums is None:
+            iSame = (self.dim == rhs.dim) and (self.bondType == rhs.bondType) 
+
+            if self.qnums is None :
+                iSame = iSame and (self.qnums == rhs.qnums)            
+            else:
+                iSame = iSame and all(self.qnums == rhs.qnums)            
                 for s in range(self.nsym):
                     iSame = iSame and (self.sym_types[s] == rhs.sym_types[s])
-
+            
             return iSame
         else:
             raise ValueError("Bond.__eq__","[ERROR] invalid comparison between Bond object and other type class.")
