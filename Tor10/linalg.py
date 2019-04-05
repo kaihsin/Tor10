@@ -1,5 +1,5 @@
 from .UniTensor import *
-import torch 
+import torch
 import numpy as np
 
 
@@ -26,22 +26,22 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
     Return:
         if core is true, return 2d tuple, with structure (list of unitary tensors, coreTensor)
 
-        if core is False, return a list of unitary tensors. 
+        if core is False, return a list of unitary tensors.
 
     Example:
         >>> x = Tor10.From_torch(torch.arange(0.1,2.5,0.1).reshape(2,3,4).to(torch.float64),labels=[6,7,8],N_inbond=1)
         >>> x.Print_diagram()
-        tensor Name : 
+        tensor Name :
         tensor Rank : 3
         on device   : cpu
         is_diag     : False
-                ---------------     
-                |             |     
-            6 __| 2         3 |__ 7  
-                |             |     
-                |           4 |__ 8  
-                |             |     
-                ---------------     
+                ---------------
+                |             |
+            6 __| 2         3 |__ 7
+                |             |
+                |           4 |__ 8
+                |             |
+                ---------------
         lbl:6 Dim = 2 |
         REGULAR :
         _
@@ -52,7 +52,7 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         REGULAR :
 
         >>> print(x)
-        Tensor name: 
+        Tensor name:
         is_diag    : False
         tensor([[[0.1000, 0.2000, 0.3000, 0.4000],
                  [0.5000, 0.6000, 0.7000, 0.8000],
@@ -64,17 +64,17 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
 
         >>> factors, core = Tor10.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)
         >>> core.Print_diagram()
-        tensor Name : 
+        tensor Name :
         tensor Rank : 2
         on device   : cpu
         is_diag     : False
-                ---------------     
-                |             |     
-                |           4 |__ -1 
-                |             |     
-                |           4 |__ -2 
-                |             |     
-                ---------------     
+                ---------------
+                |             |
+                |           4 |__ -1
+                |             |
+                |           4 |__ -2
+                |             |
+                ---------------
         lbl:-1 Dim = 4 |
         REGULAR :
         _
@@ -85,17 +85,17 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         2
 
         >>> factor[0].Print_diagram()
-        tensor Name : 
+        tensor Name :
         tensor Rank : 3
         on device   : cpu
         is_diag     : False
-                ---------------     
-                |             |     
-            7 __| 3         2 |__ 6  
-                |             |     
-                |           4 |__ -1 
-                |             |     
-                ---------------     
+                ---------------
+                |             |
+            7 __| 3         2 |__ 6
+                |             |
+                |           4 |__ -1
+                |             |
+                ---------------
         lbl:7 Dim = 3 |
         REGULAR :
         _
@@ -104,19 +104,19 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         _
         lbl:-1 Dim = 4 |
         REGULAR :
-       
 
- 
+
+
         >>> factor[1].Print_diagram()
-        tensor Name : 
+        tensor Name :
         tensor Rank : 2
         on device   : cpu
         is_diag     : False
-                ---------------     
-                |             |     
-            8 __| 4         4 |__ -2 
-                |             |     
-                ---------------     
+                ---------------
+                |             |
+            8 __| 4         4 |__ -2
+                |             |
+                ---------------
         lbl:8 Dim = 4 |
         REGULAR :
         _
@@ -130,7 +130,7 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         >>>     rep_x = Tor10.Contract(rep_x,f)
         >>> rep_x.Permute([6,7,8],N_inbond=1,by_label=True)
         >>> print(rep_x - x)
-        Tensor name: 
+        Tensor name:
         is_diag    : False
         tensor([[[3.0531e-16, 6.1062e-16, 5.5511e-16, 4.9960e-16],
                  [6.6613e-16, 8.8818e-16, 8.8818e-16, 8.8818e-16],
@@ -147,7 +147,7 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
 
     if not (isinstance(bonds_group,list) or isinstance(bonds_group,np.array)):
         raise TypeError("Hosvd(UniTensor,order,bonds_group,*args)","[ERROR] the bonds_group should be a python list or 1d numpy array")
-    
+
     if not (isinstance(order,list) or isinstance(order,np.array)):
         raise TypeError("Hosvd(UniTensor,order,bonds_group,*args)","[ERROR] the order should be a python list or 1d numpy array")
 
@@ -161,55 +161,55 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
 
     ## checking:
     if all( x<=0 for x in bonds_group):
-        
+
         raise ValueError("Hosvd","[ERROR] bonds_group cannot have elements <=0")
 
     old_labels = copy.copy(a.labels)
     old_bonds  = copy.deepcopy(a.bonds)
 
     if by_label:
-        maper = copy.copy(order)
+        mapper = copy.copy(order)
     else:
         if not all(id<len(a.labels) for id in order):
             raise ValueError("Hosvd","[ERROR] by_label=False but the input 'order' exceed the rank of UniTensor")
-        maper = a.labels[order]
-    
-    
+        mapper = a.labels[order]
+
+
     old_Nin = a.N_inbond
     factors = []
     start_label = np.min(a.labels)
     start_label = start_label-1 if start_label<=0 else -1
     for bg in bonds_group:
-        a.Permute(maper,N_inbond=bg,by_label=True)
+        a.Permute(mapper,N_inbond=bg,by_label=True)
 
         ## manipulate only the Storage, keep the shell of UniTensor unchange.
         old_shape = a.Storage.shape
         a.Contiguous()
         a.Storage = a.Storage.view(np.prod(a.Storage.shape[:bg]),-1)
         u,_,_ = torch.svd(a.Storage)
-        
+
         new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(u.shape[-1]))
         new_labels= np.append(copy.copy(a.labels[:bg]),start_label)
 
         factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),N_inbond=1,check=False) )
 
         a.Storage = a.Storage.view(old_shape)
-        start_label -= 1 
-        maper = np.roll(maper,-bg)
- 
+        start_label -= 1
+        mapper = np.roll(mapper,-bg)
+
     a.Permute(old_labels,N_inbond=old_Nin,by_label=True)
     a.bonds = old_bonds
-    
+
     ## if compute core?
 
     if not core:
         return factors
     else:
-        out = a    
+        out = a
         for n in factors:
             out = Contract(out,n)
         return factors,out
-    
+
 
 
 def Abs(a):
@@ -232,7 +232,7 @@ def Mean(a):
     Calculate the mean of all elements in the input UniTensor
 
     Args:
-        a: 
+        a:
             UniTensor
 
     Return:
@@ -248,17 +248,17 @@ def Otimes(a,b):
     """
     Perform matrix product for two rank-2 tensors.
 
-        :math:`a \otimes b`    
+        :math:`a \otimes b`
 
     Args:
-        a:  
+        a:
             UniTensor, must be rank-2
-        
+
         b:
             UUniTensor, must be rank-2
 
     Return:
-        UniTensor, rank-2, one in-bond one out-bond. 
+        UniTensor, rank-2, one in-bond one out-bond.
         If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.
 
         If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.
@@ -284,7 +284,7 @@ def Otimes(a,b):
             if b.is_diag:
                 tmpb = torch.diag(b.Storage)
             else:
-                tmpb = b.Storage            
+                tmpb = b.Storage
 
             out = torch.tensordot(a.Storage,b.Storage,dims=0).permute(0,2,1,3).reshape(a.Storage.shape[0]*b.Storage.shape[0],-1)
             return UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[1])],\
@@ -294,7 +294,7 @@ def Otimes(a,b):
 
         else:
             raise TypeError("Otimes","[ERROR], Otimes only accept rank-2 UniTensors as arguments.")
-        
+
     else:
         raise TypeError("Otimes","[ERROR], Otimes only accept UniTensor as arguments.")
 
@@ -302,21 +302,21 @@ def Otimes(a,b):
 
 def ExpH(a):
     """
-    This function performs 
+    This function performs
 
             :math:`e^{H}`
 
-    where H is the hermitian matrix. 
+    where H is the hermitian matrix.
     The Intricate computation follows procedure: symeig() -> exp() the singular matrix.
 
     Args:
-        
-        a : 
-            UniTensor, Must be a rank-2. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.  
+
+        a :
+            UniTensor, Must be a rank-2. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.
 
     Return:
 
-        UniTensor, 2-rank, same bonds and labels as the original H
+        UniTensor, rank-2, same bonds and labels as the original H
     """
 
     if isinstance(a,UniTensor):
@@ -346,7 +346,7 @@ def ExpH(a):
                             N_inbond=a.N_inbond,\
                             torch_tensor=u,\
                             check=False)
-                
+
     else:
         raise Exception("ExpH(UniTensor)","[ERROR] ExpH can only accept UniTensor")
 
@@ -354,24 +354,24 @@ def ExpH(a):
 
 def Qr(a):
     """
-    The function performs the qr decomposition 
+    The function performs the qr decomposition
 
         :math:`a = q \cdot r`
 
-    to the input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
+    to the input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2.
 
-    
+
     Args:
 
         a : UniTensor, it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.
 
     Return:
-        
-        q , r  
-        
-        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-        
-        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
+
+        q , r
+
+        q : UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix
+
+        r : UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix
 
     """
     if isinstance(a,UniTensor):
@@ -382,7 +382,7 @@ def Qr(a):
 
         if a.is_diag:
             raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
-        
+
         q, r = torch.qr(a.Storage)
 
         tmp = np.argwhere(a.labels<0)
@@ -408,24 +408,24 @@ def Qr(a):
 
 def Qdr(a):
     """
-    The function performs the qdr decomposition 
+    The function performs the qdr decomposition
 
         :math:`a = q \cdot d \cdot r`
 
-    to input UniTensor. The UniTensor should be rank-2 with eachbond's dim should be >=2. 
-    
+    to input UniTensor. The UniTensor should be rank-2 with eachbond's dim should be >=2.
+
     Args:
-        a : 
+        a :
             UniTensor , rank-2, 1 inbond 1 outbond.
 
-    Return: q , r  
-        q : 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
+    Return: q , r
+        q :
+            UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix
 
         d :
-            The diagonal matrix. It is a diagonal 2-rank UniTensor with 1 inbond 1 outbond and is_diag=True.
-        r : 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix 
+            The diagonal matrix. It is a diagonal rank-2 UniTensor with 1 inbond 1 outbond and is_diag=True.
+        r :
+            UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix
     """
     if isinstance(a,UniTensor):
 
@@ -468,25 +468,25 @@ def Qdr(a):
 
 def Svd(a):
     """
-    The function performs the svd 
+    The function performs the svd
 
         :math:`a = u \cdot s \cdot vt`
 
-    to input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
+    to input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2.
 
     Args:
-        a : 
+        a :
             UniTensor, rank-2.
 
-    Return: u , s , vt 
-        u : 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix
-                        
-        s : 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True
- 
-        vt: 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix
+    Return: u , s , vt
+        u :
+            UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix
+
+        s :
+            UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True
+
+        vt:
+            UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix
 
 
     Example:
@@ -498,7 +498,7 @@ def Svd(a):
 
 
     >>> print(y)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor([[1., 1., 0., 1.],
             [0., 0., 0., 1.],
@@ -506,19 +506,19 @@ def Svd(a):
 
     >>> u,s,v = Tor10.linalg.Svd(y)
     >>> print(u)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor([[-0.7887, -0.2113, -0.5774],
             [-0.2113, -0.7887,  0.5774],
             [-0.5774,  0.5774,  0.5774]], dtype=torch.float64)
 
     >>> print(s)
-    Tensor name: 
+    Tensor name:
     is_diag    : True
     tensor([2.1753e+00, 1.1260e+00, 1.0164e-16], dtype=torch.float64)
 
     >>> print(v)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor([[-6.2796e-01, -6.2796e-01,  0.0000e+00, -4.5970e-01],
             [ 3.2506e-01,  3.2506e-01,  0.0000e+00, -8.8807e-01],
@@ -559,7 +559,7 @@ def Svd(a):
                       N_inbond=1,\
                       torch_tensor=s,\
                       check=False,\
-                      is_diag=True)   
+                      is_diag=True)
         return u,s,v
     else:
         raise Exception("Svd(UniTensor)","[ERROR] Svd can only accept UniTensor")
@@ -568,26 +568,26 @@ def Svd(a):
 
 def Svd_truncate(a, keepdim=None):
     """
-    The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond's dim should be >=2. 
+    The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond's dim should be >=2.
 
 
     Args:
-        a : 
+        a :
             UniTensor, rank-2, 1 inbond 1 outbond.
-    
+
         keepdim:
             integer, the keeping dimension. When set, it will keep only the largest "keepdim" singular values and their corresponding eigenvectors.
 
 
-    Return: u , s , vt 
-        u : 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
-        
-        s : 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)
-                        
-        vt: 
-            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
+    Return: u , s , vt
+        u :
+            UniTensor, rank-2, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
+
+        s :
+            UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)
+
+        vt:
+            UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
 
 
     Example:
@@ -598,7 +598,7 @@ def Svd_truncate(a, keepdim=None):
                    1,1,0,0])
 
     >>> print(y)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor([[1., 1., 0., 1.],
             [0., 0., 0., 1.],
@@ -606,19 +606,19 @@ def Svd_truncate(a, keepdim=None):
 
     >>> u,s,v = Tor10.linalg.Svd_truncate(y,keepdim=2)
     >>> print(u)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor([[-0.7887, -0.2113],
             [-0.2113, -0.7887],
             [-0.5774,  0.5774]], dtype=torch.float64)
- 
+
     >>> print(s)
-    Tensor name: 
+    Tensor name:
     is_diag    : True
     tensor([2.1753, 1.1260], dtype=torch.float64)
 
     >>> print(v)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor([[-0.6280, -0.6280,  0.0000, -0.4597],
             [ 0.3251,  0.3251,  0.0000, -0.8881]], dtype=torch.float64)
@@ -663,35 +663,35 @@ def Svd_truncate(a, keepdim=None):
                       N_inbond=1,\
                       torch_tensor=s,\
                       check=False,\
-                      is_diag=True)   
+                      is_diag=True)
         return u,s,v
     else:
         raise Exception("Svd_truncate(UniTensor,int)","[ERROR] Svd_truncate can only accept UniTensor")
 
 def Matmul(a,b):
     """
-    Performs matrix multiplication on the rank-2 UniTensors. 
+    Performs matrix multiplication on the rank-2 UniTensors.
 
         :math:`A \cdot B`
 
-    Note that both the UniTensors should be rank-2, and dimension should be matched. 
+    Note that both the UniTensors should be rank-2, and dimension should be matched.
 
     If a and b are both diagonal matrix, the return will be a diagonal matrix. If one (or both) of them are non-diagonal matrix and the other is diagonal matrix, the return will be a dense matrix.
 
     Args:
-        a: 
+        a:
             The UniTensors that will be matrix-multiply
 
-        b: 
+        b:
             The UniTensors that will be matrix-multiply
 
     Return:
-        UniTensor,rank-2 tensor with 1 inbond 1 outbond. 
+        UniTensor,rank-2 tensor with 1 inbond 1 outbond.
 
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
-        ## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling! 
+        ## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling!
 
         ## Qnum_ipoint
         if a.bonds[0].qnums is not None or b.bonds[0].qnums is not None:
@@ -723,41 +723,41 @@ def Matmul(a,b):
 
 def Chain_matmul(*args):
     """
-    Performs matrix multiplication on all the UniTensors. 
+    Performs matrix multiplication on all the UniTensors.
 
         :math:`A \cdot B \cdot C \cdot D \cdots`
 
-    Note that 
-    
-    1. all the UniTensors should be rank-2, and dimension should be matched. 
-    
-    2. The input UniTensors can have some of them are diagonal matrix (is_diag=True). The return will always be a rank-2 UniTensor with is_diag=False 
+    Note that
+
+    1. all the UniTensors should be rank-2, and dimension should be matched.
+
+    2. The input UniTensors can have some of them are diagonal matrix (is_diag=True). The return will always be a rank-2 UniTensor with is_diag=False
 
     Args:
-        *args: 
+        *args:
             The UniTensors that will be matrix-multiply
 
     Return:
-        UniTensor,rank-2 tensor with 1 inbond 1 outbond. 
+        UniTensor,rank-2 tensor with 1 inbond 1 outbond.
 
     Example:
     ::
         a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
         b = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(5)],N_inbond=1)
-        c = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(6)],N_inbond=1)   
+        c = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(6)],N_inbond=1)
         d = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(2)],N_inbond=1)
 
     >>> f = Tor10.Chain_matmul(a,b,c,d)
     >>> f.Print_diagram()
-    tensor Name : 
+    tensor Name :
     tensor Rank : 2
     on device   : cpu
     is_diag     : False
-            ---------------     
-            |             |     
-        0 __| 3         2 |__ 1  
-            |             |     
-            ---------------     
+            ---------------
+            |             |
+        0 __| 3         2 |__ 1
+            |             |
+            ---------------
     lbl:0 Dim = 3 |
     REGULAR :
     _
@@ -765,18 +765,18 @@ def Chain_matmul(*args):
     REGULAR :
 
     """
-    f = lambda x,idiag: torch.diag(x) if idiag else x 
-    isUT = all( isinstance(UT,UniTensor) for UT in args)    
-    
-    
-    tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))] 
+    f = lambda x,idiag: torch.diag(x) if idiag else x
+    isUT = all( isinstance(UT,UniTensor) for UT in args)
+
+
+    tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))]
 
     ## Checking performance:
-    #"""  
+    #"""
     #for i in range(len(tmp_args)):
     #    if not tmp_args[i] is args[i].Storage:
     #       print("Fatal performance")
-    #       exit(1) 
+    #       exit(1)
     #"""
 
     if isUT:
@@ -801,21 +801,21 @@ def Chain_matmul(*args):
 def Inverse(a):
     """
     This function returns the inverse of a rank-2 tensor (matrix).
-    
+
         :math:`a^{-1}`
 
     If the input UniTensor is diagonal, the return will also be a diagonal matrix.
 
     Args:
-        a : 
-            A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued. 
+        a :
+            A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued.
 
     Return:
         UniTensor
-                    
+
     """
     if isinstance(a,UniTensor):
-        
+
         if a.is_diag:
             a_inv = UniTensor(bonds = a.bonds,\
                           labels=a.labels,\
@@ -837,12 +837,12 @@ def Inverse(a):
 def Det(a):
     """
     This function returns the determinant a rank-2 tensor.
-    
+
     :math:`\det(a)`
 
     Args:
-        a : 
-            a rank-2 UniTensor (matrix). 
+        a :
+            a rank-2 UniTensor (matrix).
     Return:
         UniTensor, 0-rank (constant)
 
@@ -856,7 +856,7 @@ def Det(a):
         b.SetElem([1,2,3])
 
     >>> print(a)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor([[ 4., -3.,  0.],
             [ 2., -1.,  2.],
@@ -864,21 +864,21 @@ def Det(a):
 
     >>> out = Tor10.Det(a)
     >>> print(out)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor(-32., dtype=torch.float64)
 
     >>> print(b)
-    Tensor name: 
+    Tensor name:
     is_diag    : True
     tensor([1., 2., 3.], dtype=torch.float64)
 
     >>> out = Tor10.Det(b)
     >>> print(out)
-    Tensor name: 
+    Tensor name:
     is_diag    : False
     tensor(6., dtype=torch.float64)
-                
+
     """
     if isinstance(a,UniTensor):
 
@@ -886,7 +886,7 @@ def Det(a):
             tmp = torch.prod(a.Storage)
         else:
             tmp = torch.det(a.Storage)
-    
+
         return UniTensor(bonds=[],labels=[],N_inbond=0,torch_tensor=tmp,check=False)
 
     else:
@@ -894,17 +894,17 @@ def Det(a):
 
 def Norm(a):
     """
-    Returns the matrix norm of the UniTensor. 
+    Returns the matrix norm of the UniTensor.
 
-    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension. 
+    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension.
 
     Args:
-        a : 
+        a :
             a UniTensor.
 
     Return:
         UniTensor, 0-rank (constant)
-                    
+
     """
 
     if isinstance(a,UniTensor):

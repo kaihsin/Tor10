@@ -160,7 +160,7 @@ class Linear():
         :math:`k = \frac{1}{\text{in\_features}}`
 
         Return:
-            UniTensor, 2-rank
+            UniTensor, rank-2
         """
         return UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],N_inbond=1,torch_tensor=self.tnn.weight,check=False)
 
