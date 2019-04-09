@@ -19,15 +19,17 @@ class UniTensor():
 
     def __init__(self, bonds, N_inbond ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, is_blockform=False, requires_grad=False, name="", BlockInfo=None):
         """
-        This is the constructor of the UniTensor.
+        This is the constructor of UniTensor.
 
         Public Args:
 
             bonds:
-                The list of bonds. it should be an list or np.ndarray with len(list) is the # of bonds.
+                List of bonds.
+                It should be an list or np.ndarray with len(list) being the number of bonds.
 
             N_inbond:
-                The number of in-bond, The first [N_inbond] bonds will be define as the in-bond (the BD_IN in the uni10 definition) and the other bonds will be defined as the out-bond (the BD_OUT in the uni10 definition)
+                The number of in-bond.
+                The first [N_inbond] bonds will be define as the in-bond (the BD_IN in the uni10 definition) and the other bonds will be defined as the out-bond (the BD_OUT in the uni10 definition)
                 When interprete the memory layout as Matrix, the combine of first N_inbond will be the row and the other bond will be column.
 
 
@@ -214,7 +216,7 @@ class UniTensor():
 
     def SetLabel(self, newLabel, idx):
         """
-        Set a new label for the bond local at specify index.
+        Set a new label for the bond at index :idx:
 
         Args:
 
@@ -253,7 +255,7 @@ class UniTensor():
 
         Args:
 
-            newLabels: The list of new label, it should be an python list or numpy array with size equal to the number of bonds of the UniTensor.
+            newLabels: The list of new labels, it should be a list or numpy array with size equal to the number of bonds of the UniTensor.
 
         Example:
 
@@ -273,10 +275,10 @@ class UniTensor():
             newlabels = np.array(newlabels)
 
         if not len(newlabels) == len(self.labels):
-            raise ValueError("UniTensor.SetLabels","the length of newlabels not match with the rank of UniTensor")
+            raise ValueError("UniTensor.SetLabels","the length of newlabels does not match with the rank of UniTensor.")
 
         if len(np.unique(newlabels)) != len(newlabels):
-            raise ValueError("UniTensor.SetLabels","the newlabels contain duplicated elementes.")
+            raise ValueError("UniTensor.SetLabels","the newlabels contain duplicate entries.")
 
         self.labels = copy.copy(newlabels)
 
@@ -394,6 +396,7 @@ class UniTensor():
             self.Storage = self.Storage.to(device)
 
     ## print layout:
+
     def Print_diagram(self):
         """
         This is the beauty print of the tensor diagram. Including the information for the placeing device
@@ -514,7 +517,7 @@ class UniTensor():
         else:
             raise ValueError("Bond.__eq__","[ERROR] invalid comparison between Bond object and other type class.")
 
-
+    @property
     def shape(self):
         """
             Return the shape of UniTensor
@@ -621,7 +624,7 @@ class UniTensor():
         if isinstance(other, self.__class__):
             if self.is_blockform:
                 if not other.is_blockform:
-                    raise TypeError("UniTensor.-","[ERROR] cannot sub a sparse block-form tensor with a densed tensor.")
+                    raise TypeError("UniTensor.-","[ERROR] cannot sub a sparse block-form tensor with a dense tensor.")
 
                 ## Check for matching:
                 if len(self.Storage) != len(other.Storage):

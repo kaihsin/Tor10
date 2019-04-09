@@ -36,15 +36,18 @@ def _fx_GetCommRows(A,B):
 #    pass
 #class BD_OUTWARD:
 #    pass
+
 class BD_REGULAR:
     pass
 
-#BndType = [BD_INWARD,BD_OUTWARD,BD_REGULAR]
-BndType = [BD_REGULAR]
+#BondType = [BD_INWARD,BD_OUTWARD,BD_REGULAR]
+
+BondType = [BD_REGULAR]
 
 
 ## [For developer] Append this to extend the symmetry:
-SymmType = {'U1':Symm.U1,'Zn':Symm.Zn}
+
+SymmetryTypes = {'U1':Symm.U1, 'Zn':Symm.Zn}
 
 #######################
 
@@ -164,7 +167,8 @@ class Bond():
 
         #call :
         self.assign(dim,bondType,qnums,sym_types)
- 
+
+#    @classmethod
     def assign(self,dim, bondType = BD_REGULAR, qnums=None,sym_types=None):
         """
         Assign a new property for the Bond.
@@ -212,11 +216,12 @@ class Bond():
                                                     U1 Z2 Z4
         """
 
-        #checking:
-        if dim < 1: 
-            raise Exception("Bond.assign()","[ERROR] Bond dimension must > 0") 
+        # checking:
 
-        if not bondType in BndType:
+        if dim < 1:
+            raise Exception("Bond.assign()","[ERROR] Bond dimension must be greater than 0.")
+
+        if not bondType in BondType:
             raise Exception("Bond.assign()","[ERROR] bondType can only be BD_INWARD , BD_OUTWARD or BD_REGULAR")       
 
         if not qnums is None:
@@ -235,7 +240,7 @@ class Bond():
 
             ## default is U1. this is to preserve the API
             if sym_types is None:
-                self.sym_types = np.array([SymmType['U1']() for i in range(xdim[0])])
+                self.sym_types = np.array([SymmetryTypes['U1']() for i in range(xdim[0])])
             else:
                 if xdim[0] != len(sym_types):
                     raise TypeError("Bond.assign()","[ERROR] the number of multiple symm types must match with qnums")
@@ -244,7 +249,7 @@ class Bond():
                     for s in range(len(sym_types)):
 
                         # check the sym_types is a vaild symmetry class appears in SymmType dict.
-                        if sym_types[s].__class__ not in SymmType.values():
+                        if sym_types[s].__class__ not in SymmetryTypes.values():
                             raise TypeError("Bond.assign()","[ERROR] invalid Symmetry Type.")
 
                         # check each qnum validity subject to the symmetry.
@@ -265,6 +270,8 @@ class Bond():
     
     #[DevNote]this is the dummy_change as uni10_2.0
     #[DevNote]This is the inplace change
+
+
     def change(self,new_bondType):
         """ 
         Change the type of the bond
@@ -275,12 +282,14 @@ class Bond():
 
         """
         if(self.bondType is not new_bondType):
-            if not new_bondType in BndType:
-                raise TypeError("Bond.change","[ERROR] the bondtype can only be",BndType)
+            if not new_bondType in BondType:
+                raise TypeError("Bond.change","[ERROR] the bondtype can only be", BondType)
             self.bondType = new_bondType
 
 
     #[DevNote] This is the inplace combine.
+
+    @classmethod
     def combine(self,bds,new_type=None):
         """ 
         Combine self with the bond that specified.
@@ -378,8 +387,8 @@ class Bond():
 
         ## checking change type
         if not new_type is None:
-            if not new_type in BndType:
-                raise Exception("Bond.combine(bds,new_type)","[ERROR] new_type can only be",BndType)       
+            if not new_type in BondType:
+                raise Exception("Bond.combine(bds,new_type)","[ERROR] new_type can only be", BondType)
             else:
                 self.change(new_type)
 
