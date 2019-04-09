@@ -289,7 +289,7 @@ class Bond():
 
     #[DevNote] This is the inplace combine.
 
-   
+
     def combine(self,bds,new_type=None):
         """ 
         Combine self with the bond that specified.
@@ -351,7 +351,7 @@ class Bond():
                 for s in range(self.nsym):
                     self.qnums.append(self.sym_types[s].CombineRule(A[:,:,s],B[:,:,s]))
                 
-                self.qnums = np.array(self.qnums).reshape(self.nsym,-1).swapaxes(0,1)
+                    self.qnums = np.array(self.qnums).reshape(self.nsym,-1).swapaxes(0,1)
                 
                 #self.qnums = (self.qnums.reshape(len(self.qnums),1,self.nsym)+bds.qnums.reshape(1,len(bds.qnums),self.nsym)).reshape(-1,self.nsym)
 
@@ -378,6 +378,9 @@ class Bond():
                         
                         self.qnums = []
                         for s in range(self.nsym):
+                            # [Dev Note] Using side effects of numpy.add to first reshape to
+                            # len(self.qnums)xlen(bds.qnums) array and add, will not work for non-Abelian symmetries
+
                             self.qnums.append(self.sym_types[s].CombineRule(A[:,:,s],B[:,:,s]))
                         
                         self.qnums = np.array(self.qnums).reshape(self.nsym,-1).swapaxes(0,1)
