@@ -168,7 +168,7 @@ class Bond():
         #call :
         self.assign(dim,bondType,qnums,sym_types)
 
-#    @classmethod
+
     def assign(self,dim, bondType = BD_REGULAR, qnums=None,sym_types=None):
         """
         Assign a new property for the Bond.
@@ -289,7 +289,7 @@ class Bond():
 
     #[DevNote] This is the inplace combine.
 
-    @classmethod
+   
     def combine(self,bds,new_type=None):
         """ 
         Combine self with the bond that specified.
