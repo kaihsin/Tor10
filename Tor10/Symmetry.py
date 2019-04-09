@@ -25,7 +25,7 @@ class U1:
 class Zn:
     def __init__(self,n):
         if n < 2:
-            raise ValueError("Symmetry.Zn","[ERROR] descrete symmetry Zn must have n>=2")
+            raise ValueError("Symmetry.Zn","[ERROR] discrete symmetry Zn must have n >= 2.")
 
         self.n = int(n)
 
