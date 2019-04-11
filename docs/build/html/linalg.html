@@ -181,7 +181,7 @@ Args:</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args: </dt>
+<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args:</dt>
 <dd>The UniTensors that will be matrix-multiply</dd>
 </dl>
 </dd>
@@ -191,21 +191,21 @@ Args:</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>   
+<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Chain_matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
-<span class="go">tensor Name : </span>
+<span class="go">tensor Name :</span>
 <span class="go">tensor Rank : 2</span>
 <span class="go">on device   : cpu</span>
 <span class="go">is_diag     : False</span>
-<span class="go">        ---------------     </span>
-<span class="go">        |             |     </span>
-<span class="go">    0 __| 3         2 |__ 1  </span>
-<span class="go">        |             |     </span>
-<span class="go">        ---------------     </span>
+<span class="go">        ---------------</span>
+<span class="go">        |             |</span>
+<span class="go">    0 __| 3         2 |__ 1</span>
+<span class="go">        |             |</span>
+<span class="go">        ---------------</span>
 <span class="go">lbl:0 Dim = 3 |</span>
 <span class="go">REGULAR :</span>
 <span class="go">_</span>
@@ -223,7 +223,7 @@ Args:</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dt>a :</dt>
 <dd>a rank-2 UniTensor (matrix).</dd>
 </dl>
 </dd>
@@ -240,7 +240,7 @@ Args:</p>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[ 4., -3.,  0.],</span>
 <span class="go">        [ 2., -1.,  2.],</span>
@@ -249,20 +249,20 @@ Args:</p>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Det</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor(-32., dtype=torch.float64)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : True</span>
 <span class="go">tensor([1., 2., 3.], dtype=torch.float64)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Det</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor(6., dtype=torch.float64)</span>
 </pre></div>
@@ -275,18 +275,18 @@ Args:</p>
 <dd><p>This function performs</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(e^{H}\)</span></div></blockquote>
-<p>where H is the hermitian matrix. 
+<p>where H is the hermitian matrix.
 The Intricate computation follows procedure: symeig() -&gt; exp() the singular matrix.</p>
 <p>Args:</p>
 <blockquote>
 <div><dl class="docutils">
-<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dt>a :</dt>
 <dd>UniTensor, Must be a rank-2. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.</dd>
 </dl>
 </div></blockquote>
 <p>Return:</p>
 <blockquote>
-<div>UniTensor, 2-rank, same bonds and labels as the original H</div></blockquote>
+<div>UniTensor, rank-2, same bonds and labels as the original H</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -315,17 +315,17 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <dt>Example:</dt>
 <dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
-<span class="go">tensor Name : </span>
+<span class="go">tensor Name :</span>
 <span class="go">tensor Rank : 3</span>
 <span class="go">on device   : cpu</span>
 <span class="go">is_diag     : False</span>
-<span class="go">        ---------------     </span>
-<span class="go">        |             |     </span>
-<span class="go">    6 __| 2         3 |__ 7  </span>
-<span class="go">        |             |     </span>
-<span class="go">        |           4 |__ 8  </span>
-<span class="go">        |             |     </span>
-<span class="go">        ---------------     </span>
+<span class="go">        ---------------</span>
+<span class="go">        |             |</span>
+<span class="go">    6 __| 2         3 |__ 7</span>
+<span class="go">        |             |</span>
+<span class="go">        |           4 |__ 8</span>
+<span class="go">        |             |</span>
+<span class="go">        ---------------</span>
 <span class="go">lbl:6 Dim = 2 |</span>
 <span class="go">REGULAR :</span>
 <span class="go">_</span>
@@ -337,7 +337,7 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[[0.1000, 0.2000, 0.3000, 0.4000],</span>
 <span class="go">         [0.5000, 0.6000, 0.7000, 0.8000],</span>
@@ -350,17 +350,17 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">factors</span><span class="p">,</span> <span class="n">core</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Hosvd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">bonds_group</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">core</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
-<span class="go">tensor Name : </span>
+<span class="go">tensor Name :</span>
 <span class="go">tensor Rank : 2</span>
 <span class="go">on device   : cpu</span>
 <span class="go">is_diag     : False</span>
-<span class="go">        ---------------     </span>
-<span class="go">        |             |     </span>
-<span class="go">        |           4 |__ -1 </span>
-<span class="go">        |             |     </span>
-<span class="go">        |           4 |__ -2 </span>
-<span class="go">        |             |     </span>
-<span class="go">        ---------------     </span>
+<span class="go">        ---------------</span>
+<span class="go">        |             |</span>
+<span class="go">        |           4 |__ -1</span>
+<span class="go">        |             |</span>
+<span class="go">        |           4 |__ -2</span>
+<span class="go">        |             |</span>
+<span class="go">        ---------------</span>
 <span class="go">lbl:-1 Dim = 4 |</span>
 <span class="go">REGULAR :</span>
 <span class="go">_</span>
@@ -373,17 +373,17 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">factor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
-<span class="go">tensor Name : </span>
+<span class="go">tensor Name :</span>
 <span class="go">tensor Rank : 3</span>
 <span class="go">on device   : cpu</span>
 <span class="go">is_diag     : False</span>
-<span class="go">        ---------------     </span>
-<span class="go">        |             |     </span>
-<span class="go">    7 __| 3         2 |__ 6  </span>
-<span class="go">        |             |     </span>
-<span class="go">        |           4 |__ -1 </span>
-<span class="go">        |             |     </span>
-<span class="go">        ---------------     </span>
+<span class="go">        ---------------</span>
+<span class="go">        |             |</span>
+<span class="go">    7 __| 3         2 |__ 6</span>
+<span class="go">        |             |</span>
+<span class="go">        |           4 |__ -1</span>
+<span class="go">        |             |</span>
+<span class="go">        ---------------</span>
 <span class="go">lbl:7 Dim = 3 |</span>
 <span class="go">REGULAR :</span>
 <span class="go">_</span>
@@ -395,15 +395,15 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">factor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
-<span class="go">tensor Name : </span>
+<span class="go">tensor Name :</span>
 <span class="go">tensor Rank : 2</span>
 <span class="go">on device   : cpu</span>
 <span class="go">is_diag     : False</span>
-<span class="go">        ---------------     </span>
-<span class="go">        |             |     </span>
-<span class="go">    8 __| 4         4 |__ -2 </span>
-<span class="go">        |             |     </span>
-<span class="go">        ---------------     </span>
+<span class="go">        ---------------</span>
+<span class="go">        |             |</span>
+<span class="go">    8 __| 4         4 |__ -2</span>
+<span class="go">        |             |</span>
+<span class="go">        ---------------</span>
 <span class="go">lbl:8 Dim = 4 |</span>
 <span class="go">REGULAR :</span>
 <span class="go">_</span>
@@ -419,7 +419,7 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">rep_x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">rep_x</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep_x</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rep_x</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[[3.0531e-16, 6.1062e-16, 5.5511e-16, 4.9960e-16],</span>
 <span class="go">         [6.6613e-16, 8.8818e-16, 8.8818e-16, 8.8818e-16],</span>
@@ -445,7 +445,7 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dt>a :</dt>
 <dd>A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued.</dd>
 </dl>
 </dd>
@@ -465,9 +465,9 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a: </dt>
+<dt>a:</dt>
 <dd>The UniTensors that will be matrix-multiply</dd>
-<dt>b: </dt>
+<dt>b:</dt>
 <dd>The UniTensors that will be matrix-multiply</dd>
 </dl>
 </dd>
@@ -483,7 +483,7 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a: </dt>
+<dt>a:</dt>
 <dd>UniTensor</dd>
 </dl>
 </dd>
@@ -500,7 +500,7 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dt>a :</dt>
 <dd>a UniTensor.</dd>
 </dl>
 </dd>
@@ -518,14 +518,14 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a:  </dt>
+<dt>a:</dt>
 <dd>UniTensor, must be rank-2</dd>
 <dt>b:</dt>
 <dd>UUniTensor, must be rank-2</dd>
 </dl>
 </dd>
 <dt>Return:</dt>
-<dd><p class="first">UniTensor, rank-2, one in-bond one out-bond. 
+<dd><p class="first">UniTensor, rank-2, one in-bond one out-bond.
 If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.</p>
 <p class="last">If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.</p>
 </dd>
@@ -542,18 +542,18 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dt>a :</dt>
 <dd>UniTensor , rank-2, 1 inbond 1 outbond.</dd>
 </dl>
 </dd>
-<dt>Return: q , r  </dt>
+<dt>Return: q , r</dt>
 <dd><dl class="first last docutils">
-<dt>q <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</dd>
+<dt>q :</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix</dd>
 <dt>d :</dt>
-<dd>The diagonal matrix. It is a diagonal 2-rank UniTensor with 1 inbond 1 outbond and is_diag=True.</dd>
-<dt>r <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix</dd>
+<dd>The diagonal matrix. It is a diagonal rank-2 UniTensor with 1 inbond 1 outbond and is_diag=True.</dd>
+<dt>r :</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix</dd>
 </dl>
 </dd>
 </dl>
@@ -572,8 +572,8 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 <p>Return:</p>
 <blockquote>
 <div><p>q , r</p>
-<p>q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</p>
-<p>r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix</p>
+<p>q : UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix</p>
+<p>r : UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix</p>
 </div></blockquote>
 </dd></dl>
 
@@ -587,18 +587,18 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dt>a :</dt>
 <dd>UniTensor, rank-2.</dd>
 </dl>
 </dd>
-<dt>Return: u , s , vt </dt>
+<dt>Return: u , s , vt</dt>
 <dd><dl class="first last docutils">
-<dt>u <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</dd>
-<dt>s <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True</dd>
-<dt>vt: </dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</dd>
+<dt>u :</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix</dd>
+<dt>s :</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True</dd>
+<dt>vt:</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix</dd>
 </dl>
 </dd>
 </dl>
@@ -610,7 +610,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[1., 1., 0., 1.],</span>
 <span class="go">        [0., 0., 0., 1.],</span>
@@ -619,7 +619,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[-0.7887, -0.2113, -0.5774],</span>
 <span class="go">        [-0.2113, -0.7887,  0.5774],</span>
@@ -627,13 +627,13 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : True</span>
 <span class="go">tensor([2.1753e+00, 1.1260e+00, 1.0164e-16], dtype=torch.float64)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[-6.2796e-01, -6.2796e-01,  0.0000e+00, -4.5970e-01],</span>
 <span class="go">        [ 3.2506e-01,  3.2506e-01,  0.0000e+00, -8.8807e-01],</span>
@@ -650,20 +650,20 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
-<dt>a <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
+<dt>a :</dt>
 <dd>UniTensor, rank-2, 1 inbond 1 outbond.</dd>
 <dt>keepdim:</dt>
 <dd>integer, the keeping dimension. When set, it will keep only the largest “keepdim” singular values and their corresponding eigenvectors.</dd>
 </dl>
 </dd>
-<dt>Return: u , s , vt </dt>
+<dt>Return: u , s , vt</dt>
 <dd><dl class="first last docutils">
-<dt>u <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)</dd>
-<dt>s <span class="classifier-delimiter">:</span> <span class="classifier"></span></dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)</dd>
-<dt>vt: </dt>
-<dd>UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])</dd>
+<dt>u :</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)</dd>
+<dt>s :</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)</dd>
+<dt>vt:</dt>
+<dd>UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])</dd>
 </dl>
 </dd>
 </dl>
@@ -675,7 +675,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[1., 1., 0., 1.],</span>
 <span class="go">        [0., 0., 0., 1.],</span>
@@ -684,7 +684,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">keepdim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[-0.7887, -0.2113],</span>
 <span class="go">        [-0.2113, -0.7887],</span>
@@ -692,13 +692,13 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : True</span>
 <span class="go">tensor([2.1753, 1.1260], dtype=torch.float64)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-<span class="go">Tensor name: </span>
+<span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
 <span class="go">tensor([[-0.6280, -0.6280,  0.0000, -0.4597],</span>
 <span class="go">        [ 0.3251,  0.3251,  0.0000, -0.8881]], dtype=torch.float64)</span>

@@ -704,6 +704,9 @@ class UniTensor():
         self.bonds  = np.roll(self.bonds, -self.N_inbond)
         if not self.is_diag :
             self.Storage = self.Storage.permute(*mapper)
+        if self.is_blockform:
+            for s in range(len(self.Storage)):
+                self.Storage[s].permute(0,1)
         self.N_inbond = len(self.labels) - self.N_inbond
 
     def __mul__(self,other):
@@ -1359,6 +1362,8 @@ class UniTensor():
     ## This is the old permute that allow in/out inter-permute. (maybe can be support in the future with transpose() ? like numpy treat for tensor transpose. 
     def _Permute(self,mapper,N_inbond,by_label=False):
         """
+        [Warning] This is internal function .
+
         _Permute the bonds of the UniTensor.
 
         Args:

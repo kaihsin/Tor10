@@ -148,7 +148,7 @@
             
   <h1>Source code for Tor10.linalg</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">.UniTensor</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">torch</span> 
+<span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
@@ -175,22 +175,22 @@
 <span class="sd">    Return:</span>
 <span class="sd">        if core is true, return 2d tuple, with structure (list of unitary tensors, coreTensor)</span>
 
-<span class="sd">        if core is False, return a list of unitary tensors. </span>
+<span class="sd">        if core is False, return a list of unitary tensors.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; x = Tor10.From_torch(torch.arange(0.1,2.5,0.1).reshape(2,3,4).to(torch.float64),labels=[6,7,8],N_inbond=1)</span>
 <span class="sd">        &gt;&gt;&gt; x.Print_diagram()</span>
-<span class="sd">        tensor Name : </span>
+<span class="sd">        tensor Name :</span>
 <span class="sd">        tensor Rank : 3</span>
 <span class="sd">        on device   : cpu</span>
 <span class="sd">        is_diag     : False</span>
-<span class="sd">                ---------------     </span>
-<span class="sd">                |             |     </span>
-<span class="sd">            6 __| 2         3 |__ 7  </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                |           4 |__ 8  </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                ---------------     </span>
+<span class="sd">                ---------------</span>
+<span class="sd">                |             |</span>
+<span class="sd">            6 __| 2         3 |__ 7</span>
+<span class="sd">                |             |</span>
+<span class="sd">                |           4 |__ 8</span>
+<span class="sd">                |             |</span>
+<span class="sd">                ---------------</span>
 <span class="sd">        lbl:6 Dim = 2 |</span>
 <span class="sd">        REGULAR :</span>
 <span class="sd">        _</span>
@@ -201,7 +201,7 @@
 <span class="sd">        REGULAR :</span>
 
 <span class="sd">        &gt;&gt;&gt; print(x)</span>
-<span class="sd">        Tensor name: </span>
+<span class="sd">        Tensor name:</span>
 <span class="sd">        is_diag    : False</span>
 <span class="sd">        tensor([[[0.1000, 0.2000, 0.3000, 0.4000],</span>
 <span class="sd">                 [0.5000, 0.6000, 0.7000, 0.8000],</span>
@@ -213,17 +213,17 @@
 
 <span class="sd">        &gt;&gt;&gt; factors, core = Tor10.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)</span>
 <span class="sd">        &gt;&gt;&gt; core.Print_diagram()</span>
-<span class="sd">        tensor Name : </span>
+<span class="sd">        tensor Name :</span>
 <span class="sd">        tensor Rank : 2</span>
 <span class="sd">        on device   : cpu</span>
 <span class="sd">        is_diag     : False</span>
-<span class="sd">                ---------------     </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                |           4 |__ -1 </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                |           4 |__ -2 </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                ---------------     </span>
+<span class="sd">                ---------------</span>
+<span class="sd">                |             |</span>
+<span class="sd">                |           4 |__ -1</span>
+<span class="sd">                |             |</span>
+<span class="sd">                |           4 |__ -2</span>
+<span class="sd">                |             |</span>
+<span class="sd">                ---------------</span>
 <span class="sd">        lbl:-1 Dim = 4 |</span>
 <span class="sd">        REGULAR :</span>
 <span class="sd">        _</span>
@@ -234,17 +234,17 @@
 <span class="sd">        2</span>
 
 <span class="sd">        &gt;&gt;&gt; factor[0].Print_diagram()</span>
-<span class="sd">        tensor Name : </span>
+<span class="sd">        tensor Name :</span>
 <span class="sd">        tensor Rank : 3</span>
 <span class="sd">        on device   : cpu</span>
 <span class="sd">        is_diag     : False</span>
-<span class="sd">                ---------------     </span>
-<span class="sd">                |             |     </span>
-<span class="sd">            7 __| 3         2 |__ 6  </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                |           4 |__ -1 </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                ---------------     </span>
+<span class="sd">                ---------------</span>
+<span class="sd">                |             |</span>
+<span class="sd">            7 __| 3         2 |__ 6</span>
+<span class="sd">                |             |</span>
+<span class="sd">                |           4 |__ -1</span>
+<span class="sd">                |             |</span>
+<span class="sd">                ---------------</span>
 <span class="sd">        lbl:7 Dim = 3 |</span>
 <span class="sd">        REGULAR :</span>
 <span class="sd">        _</span>
@@ -253,19 +253,19 @@
 <span class="sd">        _</span>
 <span class="sd">        lbl:-1 Dim = 4 |</span>
 <span class="sd">        REGULAR :</span>
-<span class="sd">       </span>
 
-<span class="sd"> </span>
+
+
 <span class="sd">        &gt;&gt;&gt; factor[1].Print_diagram()</span>
-<span class="sd">        tensor Name : </span>
+<span class="sd">        tensor Name :</span>
 <span class="sd">        tensor Rank : 2</span>
 <span class="sd">        on device   : cpu</span>
 <span class="sd">        is_diag     : False</span>
-<span class="sd">                ---------------     </span>
-<span class="sd">                |             |     </span>
-<span class="sd">            8 __| 4         4 |__ -2 </span>
-<span class="sd">                |             |     </span>
-<span class="sd">                ---------------     </span>
+<span class="sd">                ---------------</span>
+<span class="sd">                |             |</span>
+<span class="sd">            8 __| 4         4 |__ -2</span>
+<span class="sd">                |             |</span>
+<span class="sd">                ---------------</span>
 <span class="sd">        lbl:8 Dim = 4 |</span>
 <span class="sd">        REGULAR :</span>
 <span class="sd">        _</span>
@@ -279,7 +279,7 @@
 <span class="sd">        &gt;&gt;&gt;     rep_x = Tor10.Contract(rep_x,f)</span>
 <span class="sd">        &gt;&gt;&gt; rep_x.Permute([6,7,8],N_inbond=1,by_label=True)</span>
 <span class="sd">        &gt;&gt;&gt; print(rep_x - x)</span>
-<span class="sd">        Tensor name: </span>
+<span class="sd">        Tensor name:</span>
 <span class="sd">        is_diag    : False</span>
 <span class="sd">        tensor([[[3.0531e-16, 6.1062e-16, 5.5511e-16, 4.9960e-16],</span>
 <span class="sd">                 [6.6613e-16, 8.8818e-16, 8.8818e-16, 8.8818e-16],</span>
@@ -296,7 +296,7 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">bonds_group</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bonds_group</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Hosvd(UniTensor,order,bonds_group,*args)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] the bonds_group should be a python list or 1d numpy array&quot;</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">order</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">order</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Hosvd(UniTensor,order,bonds_group,*args)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] the order should be a python list or 1d numpy array&quot;</span><span class="p">)</span>
 
@@ -310,55 +310,61 @@
 
     <span class="c1">## checking:</span>
     <span class="k">if</span> <span class="nb">all</span><span class="p">(</span> <span class="n">x</span><span class="o">&lt;=</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bonds_group</span><span class="p">):</span>
-        
+
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Hosvd&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] bonds_group cannot have elements &lt;=0&quot;</span><span class="p">)</span>
 
     <span class="n">old_labels</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
     <span class="n">old_bonds</span>  <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">by_label</span><span class="p">:</span>
-        <span class="n">maper</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">id</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">order</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Hosvd&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] by_label=False but the input &#39;order&#39; exceed the rank of UniTensor&quot;</span><span class="p">)</span>
-        <span class="n">maper</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
-    
-    
+        <span class="n">mapper</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+
+    <span class="n">iod</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="o">==</span><span class="n">mapper</span><span class="p">[</span><span class="n">x</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mapper</span><span class="p">))]</span>
     <span class="n">old_Nin</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span>
     <span class="n">factors</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">start_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
     <span class="n">start_label</span> <span class="o">=</span> <span class="n">start_label</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">start_label</span><span class="o">&lt;=</span><span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">for</span> <span class="n">bg</span> <span class="ow">in</span> <span class="n">bonds_group</span><span class="p">:</span>
-        <span class="n">a</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">maper</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="n">bg</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">_Permute</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="n">bg</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1">## manipulate only the Storage, keep the shell of UniTensor unchange.</span>
         <span class="n">old_shape</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">a</span><span class="o">.</span><span class="n">Contiguous</span><span class="p">()</span>
         <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="n">bg</span><span class="p">]),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">u</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
-        
+
         <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="n">bg</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
         <span class="n">new_labels</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[:</span><span class="n">bg</span><span class="p">]),</span><span class="n">start_label</span><span class="p">)</span>
-
+        <span class="n">iiod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iod</span><span class="p">[:</span><span class="n">bg</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">factors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">new_labels</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">u</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">old_shape</span><span class="p">[:</span><span class="n">bg</span><span class="p">]),</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">iiod</span><span class="p">)</span>       
+        <span class="n">factors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_Permute</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">iiod</span><span class="o">==</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
 
         <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">old_shape</span><span class="p">)</span>
-        <span class="n">start_label</span> <span class="o">-=</span> <span class="mi">1</span> 
-        <span class="n">maper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">maper</span><span class="p">,</span><span class="o">-</span><span class="n">bg</span><span class="p">)</span>
- 
-    <span class="n">a</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">old_labels</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="n">old_Nin</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">start_label</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span><span class="o">-</span><span class="n">bg</span><span class="p">)</span>
+        <span class="n">iod</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">iod</span><span class="p">,</span><span class="o">-</span><span class="n">bg</span><span class="p">)</span>
+
+    <span class="n">a</span><span class="o">.</span><span class="n">_Permute</span><span class="p">(</span><span class="n">old_labels</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="n">old_Nin</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">old_bonds</span>
-    
+
     <span class="c1">## if compute core?</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">core</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">factors</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">a</span>    
+        <span class="n">out</span> <span class="o">=</span> <span class="n">a</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">factors</span><span class="p">:</span>
+            <span class="n">n</span><span class="o">.</span><span class="n">Whole_transpose</span><span class="p">()</span>
             <span class="n">out</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">n</span><span class="o">.</span><span class="n">Whole_transpose</span><span class="p">()</span>
+        
         <span class="k">return</span> <span class="n">factors</span><span class="p">,</span><span class="n">out</span></div>
-    
+
 
 
 <div class="viewcode-block" id="Abs"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Abs">[docs]</a><span class="k">def</span> <span class="nf">Abs</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
@@ -381,7 +387,7 @@
 <span class="sd">    Calculate the mean of all elements in the input UniTensor</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a: </span>
+<span class="sd">        a:</span>
 <span class="sd">            UniTensor</span>
 
 <span class="sd">    Return:</span>
@@ -397,17 +403,17 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform matrix product for two rank-2 tensors.</span>
 
-<span class="sd">        :math:`a \otimes b`    </span>
+<span class="sd">        :math:`a \otimes b`</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a:  </span>
+<span class="sd">        a:</span>
 <span class="sd">            UniTensor, must be rank-2</span>
-<span class="sd">        </span>
+
 <span class="sd">        b:</span>
 <span class="sd">            UUniTensor, must be rank-2</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        UniTensor, rank-2, one in-bond one out-bond. </span>
+<span class="sd">        UniTensor, rank-2, one in-bond one out-bond.</span>
 <span class="sd">        If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.</span>
 
 <span class="sd">        If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.</span>
@@ -433,7 +439,7 @@
             <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                 <span class="n">tmpb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">tmpb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">Storage</span>            
+                <span class="n">tmpb</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">Storage</span>
 
             <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">b</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span>\
@@ -443,7 +449,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Otimes&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR], Otimes only accept rank-2 UniTensors as arguments.&quot;</span><span class="p">)</span>
-        
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Otimes&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR], Otimes only accept UniTensor as arguments.&quot;</span><span class="p">)</span></div>
 
@@ -451,21 +457,21 @@
 
 <div class="viewcode-block" id="ExpH"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.ExpH">[docs]</a><span class="k">def</span> <span class="nf">ExpH</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function performs </span>
+<span class="sd">    This function performs</span>
 
 <span class="sd">            :math:`e^{H}`</span>
 
-<span class="sd">    where H is the hermitian matrix. </span>
+<span class="sd">    where H is the hermitian matrix.</span>
 <span class="sd">    The Intricate computation follows procedure: symeig() -&gt; exp() the singular matrix.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        </span>
-<span class="sd">        a : </span>
-<span class="sd">            UniTensor, Must be a rank-2. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.  </span>
+
+<span class="sd">        a :</span>
+<span class="sd">            UniTensor, Must be a rank-2. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.</span>
 
 <span class="sd">    Return:</span>
 
-<span class="sd">        UniTensor, 2-rank, same bonds and labels as the original H</span>
+<span class="sd">        UniTensor, rank-2, same bonds and labels as the original H</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
@@ -495,7 +501,7 @@
                             <span class="n">N_inbond</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span>\
                             <span class="n">torch_tensor</span><span class="o">=</span><span class="n">u</span><span class="p">,</span>\
                             <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                
+
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;ExpH(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] ExpH can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
@@ -503,24 +509,24 @@
 
 <div class="viewcode-block" id="Qr"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Qr">[docs]</a><span class="k">def</span> <span class="nf">Qr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The function performs the qr decomposition </span>
+<span class="sd">    The function performs the qr decomposition</span>
 
 <span class="sd">        :math:`a = q \cdot r`</span>
 
-<span class="sd">    to the input UniTensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2. </span>
+<span class="sd">    to the input UniTensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2.</span>
 
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 
 <span class="sd">        a : UniTensor, it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        </span>
-<span class="sd">        q , r  </span>
-<span class="sd">        </span>
-<span class="sd">        q : UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
-<span class="sd">        </span>
-<span class="sd">        r : UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix </span>
+
+<span class="sd">        q , r</span>
+
+<span class="sd">        q : UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix</span>
+
+<span class="sd">        r : UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
@@ -531,7 +537,7 @@
 
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Qr(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[Aboart] Currently not support diagonal tensors.&quot;</span><span class="p">)</span>
-        
+
         <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
 
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
@@ -557,24 +563,24 @@
 
 <div class="viewcode-block" id="Qdr"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Qdr">[docs]</a><span class="k">def</span> <span class="nf">Qdr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The function performs the qdr decomposition </span>
+<span class="sd">    The function performs the qdr decomposition</span>
 
 <span class="sd">        :math:`a = q \cdot d \cdot r`</span>
 
-<span class="sd">    to input UniTensor. The UniTensor should be rank-2 with eachbond&#39;s dim should be &gt;=2. </span>
-<span class="sd">    </span>
+<span class="sd">    to input UniTensor. The UniTensor should be rank-2 with eachbond&#39;s dim should be &gt;=2.</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        a : </span>
+<span class="sd">        a :</span>
 <span class="sd">            UniTensor , rank-2, 1 inbond 1 outbond.</span>
 
-<span class="sd">    Return: q , r  </span>
-<span class="sd">        q : </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
+<span class="sd">    Return: q , r</span>
+<span class="sd">        q :</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix</span>
 
 <span class="sd">        d :</span>
-<span class="sd">            The diagonal matrix. It is a diagonal 2-rank UniTensor with 1 inbond 1 outbond and is_diag=True.</span>
-<span class="sd">        r : </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the upper triangular matrix </span>
+<span class="sd">            The diagonal matrix. It is a diagonal rank-2 UniTensor with 1 inbond 1 outbond and is_diag=True.</span>
+<span class="sd">        r :</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
@@ -617,25 +623,25 @@
 
 <div class="viewcode-block" id="Svd"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Svd">[docs]</a><span class="k">def</span> <span class="nf">Svd</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The function performs the svd </span>
+<span class="sd">    The function performs the svd</span>
 
 <span class="sd">        :math:`a = u \cdot s \cdot vt`</span>
 
-<span class="sd">    to input UniTensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2. </span>
+<span class="sd">    to input UniTensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a : </span>
+<span class="sd">        a :</span>
 <span class="sd">            UniTensor, rank-2.</span>
 
-<span class="sd">    Return: u , s , vt </span>
-<span class="sd">        u : </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the unitary matrix</span>
-<span class="sd">                        </span>
-<span class="sd">        s : </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True</span>
-<span class="sd"> </span>
-<span class="sd">        vt: </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix</span>
+<span class="sd">    Return: u , s , vt</span>
+<span class="sd">        u :</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix</span>
+
+<span class="sd">        s :</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True</span>
+
+<span class="sd">        vt:</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix</span>
 
 
 <span class="sd">    Example:</span>
@@ -647,7 +653,7 @@
 
 
 <span class="sd">    &gt;&gt;&gt; print(y)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor([[1., 1., 0., 1.],</span>
 <span class="sd">            [0., 0., 0., 1.],</span>
@@ -655,19 +661,19 @@
 
 <span class="sd">    &gt;&gt;&gt; u,s,v = Tor10.linalg.Svd(y)</span>
 <span class="sd">    &gt;&gt;&gt; print(u)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor([[-0.7887, -0.2113, -0.5774],</span>
 <span class="sd">            [-0.2113, -0.7887,  0.5774],</span>
 <span class="sd">            [-0.5774,  0.5774,  0.5774]], dtype=torch.float64)</span>
 
 <span class="sd">    &gt;&gt;&gt; print(s)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : True</span>
 <span class="sd">    tensor([2.1753e+00, 1.1260e+00, 1.0164e-16], dtype=torch.float64)</span>
 
 <span class="sd">    &gt;&gt;&gt; print(v)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor([[-6.2796e-01, -6.2796e-01,  0.0000e+00, -4.5970e-01],</span>
 <span class="sd">            [ 3.2506e-01,  3.2506e-01,  0.0000e+00, -8.8807e-01],</span>
@@ -708,7 +714,7 @@
                       <span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>\
                       <span class="n">torch_tensor</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>\
                       <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
-                      <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   
+                      <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Svd(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Svd can only accept UniTensor&quot;</span><span class="p">)</span></div>
@@ -717,26 +723,26 @@
 
 <div class="viewcode-block" id="Svd_truncate"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Svd_truncate">[docs]</a><span class="k">def</span> <span class="nf">Svd_truncate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2. </span>
+<span class="sd">    The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2.</span>
 
 
 <span class="sd">    Args:</span>
-<span class="sd">        a : </span>
+<span class="sd">        a :</span>
 <span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond.</span>
-<span class="sd">    </span>
+
 <span class="sd">        keepdim:</span>
 <span class="sd">            integer, the keeping dimension. When set, it will keep only the largest &quot;keepdim&quot; singular values and their corresponding eigenvectors.</span>
 
 
-<span class="sd">    Return: u , s , vt </span>
-<span class="sd">        u : </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)</span>
-<span class="sd">        </span>
-<span class="sd">        s : </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)</span>
-<span class="sd">                        </span>
-<span class="sd">        vt: </span>
-<span class="sd">            UniTensor, 2-rank, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])</span>
+<span class="sd">    Return: u , s , vt</span>
+<span class="sd">        u :</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)</span>
+
+<span class="sd">        s :</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)</span>
+
+<span class="sd">        vt:</span>
+<span class="sd">            UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])</span>
 
 
 <span class="sd">    Example:</span>
@@ -747,7 +753,7 @@
 <span class="sd">                   1,1,0,0])</span>
 
 <span class="sd">    &gt;&gt;&gt; print(y)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor([[1., 1., 0., 1.],</span>
 <span class="sd">            [0., 0., 0., 1.],</span>
@@ -755,19 +761,19 @@
 
 <span class="sd">    &gt;&gt;&gt; u,s,v = Tor10.linalg.Svd_truncate(y,keepdim=2)</span>
 <span class="sd">    &gt;&gt;&gt; print(u)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor([[-0.7887, -0.2113],</span>
 <span class="sd">            [-0.2113, -0.7887],</span>
 <span class="sd">            [-0.5774,  0.5774]], dtype=torch.float64)</span>
-<span class="sd"> </span>
+
 <span class="sd">    &gt;&gt;&gt; print(s)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : True</span>
 <span class="sd">    tensor([2.1753, 1.1260], dtype=torch.float64)</span>
 
 <span class="sd">    &gt;&gt;&gt; print(v)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor([[-0.6280, -0.6280,  0.0000, -0.4597],</span>
 <span class="sd">            [ 0.3251,  0.3251,  0.0000, -0.8881]], dtype=torch.float64)</span>
@@ -812,35 +818,35 @@
                       <span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>\
                       <span class="n">torch_tensor</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>\
                       <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>\
-                      <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   
+                      <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">v</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Svd_truncate(UniTensor,int)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Svd_truncate can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Matmul"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Matmul">[docs]</a><span class="k">def</span> <span class="nf">Matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Performs matrix multiplication on the rank-2 UniTensors. </span>
+<span class="sd">    Performs matrix multiplication on the rank-2 UniTensors.</span>
 
 <span class="sd">        :math:`A \cdot B`</span>
 
-<span class="sd">    Note that both the UniTensors should be rank-2, and dimension should be matched. </span>
+<span class="sd">    Note that both the UniTensors should be rank-2, and dimension should be matched.</span>
 
 <span class="sd">    If a and b are both diagonal matrix, the return will be a diagonal matrix. If one (or both) of them are non-diagonal matrix and the other is diagonal matrix, the return will be a dense matrix.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a: </span>
+<span class="sd">        a:</span>
 <span class="sd">            The UniTensors that will be matrix-multiply</span>
 
-<span class="sd">        b: </span>
+<span class="sd">        b:</span>
 <span class="sd">            The UniTensors that will be matrix-multiply</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        UniTensor,rank-2 tensor with 1 inbond 1 outbond. </span>
+<span class="sd">        UniTensor,rank-2 tensor with 1 inbond 1 outbond.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
-        <span class="c1">## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling! </span>
+        <span class="c1">## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling!</span>
 
         <span class="c1">## Qnum_ipoint</span>
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">b</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -872,41 +878,41 @@
 
 <div class="viewcode-block" id="Chain_matmul"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Chain_matmul">[docs]</a><span class="k">def</span> <span class="nf">Chain_matmul</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Performs matrix multiplication on all the UniTensors. </span>
+<span class="sd">    Performs matrix multiplication on all the UniTensors.</span>
 
 <span class="sd">        :math:`A \cdot B \cdot C \cdot D \cdots`</span>
 
-<span class="sd">    Note that </span>
-<span class="sd">    </span>
-<span class="sd">    1. all the UniTensors should be rank-2, and dimension should be matched. </span>
-<span class="sd">    </span>
-<span class="sd">    2. The input UniTensors can have some of them are diagonal matrix (is_diag=True). The return will always be a rank-2 UniTensor with is_diag=False </span>
+<span class="sd">    Note that</span>
+
+<span class="sd">    1. all the UniTensors should be rank-2, and dimension should be matched.</span>
+
+<span class="sd">    2. The input UniTensors can have some of them are diagonal matrix (is_diag=True). The return will always be a rank-2 UniTensor with is_diag=False</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        *args: </span>
+<span class="sd">        *args:</span>
 <span class="sd">            The UniTensors that will be matrix-multiply</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        UniTensor,rank-2 tensor with 1 inbond 1 outbond. </span>
+<span class="sd">        UniTensor,rank-2 tensor with 1 inbond 1 outbond.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
 <span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)</span>
 <span class="sd">        b = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(5)],N_inbond=1)</span>
-<span class="sd">        c = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(6)],N_inbond=1)   </span>
+<span class="sd">        c = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(6)],N_inbond=1)</span>
 <span class="sd">        d = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(2)],N_inbond=1)</span>
 
 <span class="sd">    &gt;&gt;&gt; f = Tor10.Chain_matmul(a,b,c,d)</span>
 <span class="sd">    &gt;&gt;&gt; f.Print_diagram()</span>
-<span class="sd">    tensor Name : </span>
+<span class="sd">    tensor Name :</span>
 <span class="sd">    tensor Rank : 2</span>
 <span class="sd">    on device   : cpu</span>
 <span class="sd">    is_diag     : False</span>
-<span class="sd">            ---------------     </span>
-<span class="sd">            |             |     </span>
-<span class="sd">        0 __| 3         2 |__ 1  </span>
-<span class="sd">            |             |     </span>
-<span class="sd">            ---------------     </span>
+<span class="sd">            ---------------</span>
+<span class="sd">            |             |</span>
+<span class="sd">        0 __| 3         2 |__ 1</span>
+<span class="sd">            |             |</span>
+<span class="sd">            ---------------</span>
 <span class="sd">    lbl:0 Dim = 3 |</span>
 <span class="sd">    REGULAR :</span>
 <span class="sd">    _</span>
@@ -914,18 +920,18 @@
 <span class="sd">    REGULAR :</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">idiag</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">idiag</span> <span class="k">else</span> <span class="n">x</span> 
-    <span class="n">isUT</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">UT</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="k">for</span> <span class="n">UT</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>    
-    
-    
-    <span class="n">tmp_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))]</span> 
+    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">idiag</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">idiag</span> <span class="k">else</span> <span class="n">x</span>
+    <span class="n">isUT</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">UT</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="k">for</span> <span class="n">UT</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+
+
+    <span class="n">tmp_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Storage</span><span class="p">,</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))]</span>
 
     <span class="c1">## Checking performance:</span>
-    <span class="c1">#&quot;&quot;&quot;  </span>
+    <span class="c1">#&quot;&quot;&quot;</span>
     <span class="c1">#for i in range(len(tmp_args)):</span>
     <span class="c1">#    if not tmp_args[i] is args[i].Storage:</span>
     <span class="c1">#       print(&quot;Fatal performance&quot;)</span>
-    <span class="c1">#       exit(1) </span>
+    <span class="c1">#       exit(1)</span>
     <span class="c1">#&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">isUT</span><span class="p">:</span>
@@ -950,21 +956,21 @@
 <div class="viewcode-block" id="Inverse"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Inverse">[docs]</a><span class="k">def</span> <span class="nf">Inverse</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function returns the inverse of a rank-2 tensor (matrix).</span>
-<span class="sd">    </span>
+
 <span class="sd">        :math:`a^{-1}`</span>
 
 <span class="sd">    If the input UniTensor is diagonal, the return will also be a diagonal matrix.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a : </span>
-<span class="sd">            A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued. </span>
+<span class="sd">        a :</span>
+<span class="sd">            A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued.</span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        UniTensor</span>
-<span class="sd">                    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
-        
+
         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
             <span class="n">a_inv</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span>\
                           <span class="n">labels</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>\
@@ -986,12 +992,12 @@
 <div class="viewcode-block" id="Det"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Det">[docs]</a><span class="k">def</span> <span class="nf">Det</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function returns the determinant a rank-2 tensor.</span>
-<span class="sd">    </span>
+
 <span class="sd">    :math:`\det(a)`</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a : </span>
-<span class="sd">            a rank-2 UniTensor (matrix). </span>
+<span class="sd">        a :</span>
+<span class="sd">            a rank-2 UniTensor (matrix).</span>
 <span class="sd">    Return:</span>
 <span class="sd">        UniTensor, 0-rank (constant)</span>
 
@@ -1005,7 +1011,7 @@
 <span class="sd">        b.SetElem([1,2,3])</span>
 
 <span class="sd">    &gt;&gt;&gt; print(a)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor([[ 4., -3.,  0.],</span>
 <span class="sd">            [ 2., -1.,  2.],</span>
@@ -1013,21 +1019,21 @@
 
 <span class="sd">    &gt;&gt;&gt; out = Tor10.Det(a)</span>
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor(-32., dtype=torch.float64)</span>
 
 <span class="sd">    &gt;&gt;&gt; print(b)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : True</span>
 <span class="sd">    tensor([1., 2., 3.], dtype=torch.float64)</span>
 
 <span class="sd">    &gt;&gt;&gt; out = Tor10.Det(b)</span>
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
-<span class="sd">    Tensor name: </span>
+<span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
 <span class="sd">    tensor(6., dtype=torch.float64)</span>
-<span class="sd">                </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
 
@@ -1035,7 +1041,7 @@
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
-    
+
         <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
@@ -1043,17 +1049,17 @@
 
 <div class="viewcode-block" id="Norm"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Norm">[docs]</a><span class="k">def</span> <span class="nf">Norm</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the matrix norm of the UniTensor. </span>
+<span class="sd">    Returns the matrix norm of the UniTensor.</span>
 
-<span class="sd">    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension. </span>
+<span class="sd">    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        a : </span>
+<span class="sd">        a :</span>
 <span class="sd">            a UniTensor.</span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        UniTensor, 0-rank (constant)</span>
-<span class="sd">                    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>

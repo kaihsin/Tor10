@@ -23,8 +23,8 @@ class Network():
             The following is an simple example for a Network file ("test.net").
             ::
                 A : -1 -2; 1 2 
-                B : ; 1 3
-                C : ; 2 4
+                B : 1;  3
+                C : 2;  4
                 TOUT: -1 -2; 3 4
                 Order: (A,B),C
 
@@ -41,9 +41,9 @@ class Network():
 
             1. an "A" UniTensor with 2 inbonds label [-1,-2], 2 outbonds label [1,2]
 
-            2. an "B" UniTensor with 0 inbonds, 2 outbonds label [1,3]
+            2. an "B" UniTensor with 1 inbonds, 1 outbonds label [1,3]
 
-            3. an "C" UniTensor with 0 inbonds, 2 outbonds label [2,4]
+            3. an "C" UniTensor with 1 inbonds, 1 outbonds label [2,4]
     
             4. the output UniTensor will be 2 in-bonds with labels [-1,-2] and 2 out-bonds with labels [3,4].
 
