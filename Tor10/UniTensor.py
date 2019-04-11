@@ -2311,7 +2311,6 @@ def Contract(a,b):
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
-        print(a.N_inbond,b.N_inbond)
         if(len(same)):
 
             ## check bra-ket 
@@ -2342,8 +2341,6 @@ def Contract(a,b):
             else:
                 tmpb = b.Storage
             
-            print(a_ind,b_ind,same)
-            print(tmpa.shape,tmpb.shape)
             tmp = torch.tensordot(tmpa,tmpb,dims=(a_ind.tolist(),b_ind.tolist()))
 
             new_bonds = np.concatenate([copy.deepcopy(a.bonds[aind_no_combine]),copy.deepcopy(b.bonds[bind_no_combine])])

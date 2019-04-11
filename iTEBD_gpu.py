@@ -45,11 +45,11 @@ del Sz,Sx,I
 H = TFterm + ZZterm
 del TFterm,ZZterm
 
-H.Reshape([4,4],new_labels=[0,1],N_inbond=1)
+H = H.Reshape([4,4],new_labels=[0,1],N_inbond=1)
 ## Create Evov Op.
 eH = Tt.ExpH(H*-0.1)
-eH.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2)
-H.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2) # this is estimator.
+eH = eH.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2)
+H = H.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2) # this is estimator.
 
 
 ## Create MPS:
@@ -95,11 +95,12 @@ for i in range(100000):
     #  (-4) --lb-A-la-B-lb-- (-5) 
     #
     #X.Print_diagram()
-    XNorm = Tt.Contract(X, X)
+    Xt = copy.deepcopy(X)
+    Xt.Whole_transpose()
+    XNorm = Tt.Contract(X, Xt)
     XH = Tt.Contract(X, H)
-    #XH.Print_diagram()
     XH.SetLabels([-4,-5,0,1]) ## JJ, this is your bug.
-    XHX = Tt.Contract(X, XH)
+    XHX = Tt.Contract(Xt, XH)
     XeH = Tt.Contract(X,eH)
     
     # measurements
@@ -111,16 +112,16 @@ for i in range(100000):
     Elast = E
     print("Energy = {:.6f}".format(E))
 
-    XeH.Permute([-4,2,3,-5],N_inbond=2,by_label=True)
+    XeH.Permute(out_mapper=[2,3,-5],by_label=True)
     XeH.Contiguous()
-    XeH.Reshape([chi*2,chi*2],N_inbond=1)
+    XeH = XeH.Reshape([chi*2,chi*2],N_inbond=1)
 
     A,la,B = Tt.Svd_truncate(XeH,chi)
 
     la *= la.Norm()**-1
 
-    A.Reshape([chi,2,chi], new_labels=[-1,0,-2], N_inbond=1)
-    B.Reshape([chi,2,chi], new_labels=[-3,1,-4], N_inbond=1)
+    A = A.Reshape([chi,2,chi], new_labels=[-1,0,-2], N_inbond=1)
+    B = B.Reshape([chi,2,chi], new_labels=[-3,1,-4], N_inbond=1)
 
     # de-contract the lb tensor , so it returns to 
     #             
