@@ -4,11 +4,18 @@
     1. Fix bugs for UniTensor.shape() if is_diag = True
     2. Change the Definition of Bond. The In-bond and Out-bond are defined within the UniTensor. (see documentation for details)
     3. Add new sparse structure: [is_blockform] to efficiently store the tensor with symmetry. (currently has limited function support.)
-    4. Add U1 and Zn Symmetry class. This object as the generator that handle the rule for combine bonds and Symmetry stuff in the UniTensor (for future develope)
+    4. Add U1 and Zn Symmetry class. This object as the generator that handle the rule for combine bonds and Symmetry stuff in the UniTensor (for future develope
     5. Update the example.py
+    6. Change shape to @property
+    7. The Permute and Contract can only be intra- in-bond/out-bond.
+    8. in aspect of 7., Permute API is changed.     
+    9. Reshape will return new UniTensor, as it re-define the underlying physical space. 
+    10. Explicity define the in-bond as bra, out-bond as ket
+    11. Hosvd, the return Tensor in/out bond layout
+    12. Add UniTensor.Whole_transpose(), it is use to permute all in-bond to out-bond and vise versa.    
 
 ## Release version
-    v0.2
+    v0.2.1
 
 ## Requirements
     pytorch>=1.0

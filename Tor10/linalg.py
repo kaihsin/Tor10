@@ -174,13 +174,13 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
             raise ValueError("Hosvd","[ERROR] by_label=False but the input 'order' exceed the rank of UniTensor")
         mapper = a.labels[order]
 
-
+    iod = [np.argwhere(a.labels==mapper[x])[0]>=a.N_inbond for x in range(len(mapper))]
     old_Nin = a.N_inbond
     factors = []
     start_label = np.min(a.labels)
     start_label = start_label-1 if start_label<=0 else -1
     for bg in bonds_group:
-        a.Permute(mapper,N_inbond=bg,by_label=True)
+        a._Permute(mapper,N_inbond=bg,by_label=True)
 
         ## manipulate only the Storage, keep the shell of UniTensor unchange.
         old_shape = a.Storage.shape
@@ -190,14 +190,17 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
 
         new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(u.shape[-1]))
         new_labels= np.append(copy.copy(a.labels[:bg]),start_label)
-
+        iiod = np.append(iod[:bg],1)
         factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),N_inbond=1,check=False) )
+        x = np.argsort(iiod)       
+        factors[-1]._Permute(x,N_inbond=len(np.where(iiod==0)[0]))
 
         a.Storage = a.Storage.view(old_shape)
         start_label -= 1
         mapper = np.roll(mapper,-bg)
+        iod   = np.roll(iod,-bg)
 
-    a.Permute(old_labels,N_inbond=old_Nin,by_label=True)
+    a._Permute(old_labels,N_inbond=old_Nin,by_label=True)
     a.bonds = old_bonds
 
     ## if compute core?
@@ -207,7 +210,10 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
     else:
         out = a
         for n in factors:
+            n.Whole_transpose()
             out = Contract(out,n)
+            n.Whole_transpose()
+        
         return factors,out
 
 

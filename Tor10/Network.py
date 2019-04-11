@@ -298,7 +298,7 @@ class Network():
         ## remaining thing: how to deal with in, out bond?
         if name in self.tensors:
             ##checking:
-            if len(tensor.shape()) != len(self.tensors[name][0]) + len(self.tensors[name][1]):
+            if len(tensor.shape) != len(self.tensors[name][0]) + len(self.tensors[name][1]):
                 raise TypeError("Network.put","[ERROR] Trying to put tensor %s that has different rank"%(name))
             if self.instances is None:
                 self.instances = {name:tensor}
@@ -412,7 +412,7 @@ class Network():
 
  
         per_lbl = self.TOUT[0].tolist() + self.TOUT[1].tolist()
-        out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
+        #out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
         ## this is temporary, not finished!!!
         #print("Network.Launch is currently under developing.")
 

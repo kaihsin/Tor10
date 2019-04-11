@@ -45,7 +45,6 @@ bd_sym_mix = Tor10.Bond(3,qnums=[[-2,0,0],
                          sym_types=[Tor10.Symmetry.U1(),
                                     Tor10.Symmetry.Zn(2),
                                     Tor10.Symmetry.Zn(4)]) 
-print(bd_sym_mix)
 
 
 ## Combine:
@@ -71,8 +70,7 @@ print(c)
 #d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,device=torch.device("cuda:0"))
 e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],N_inbond=1,is_diag=True)
 f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=2,labels=[-3,4,1],dtype=torch.float32)
-
-print(e.shape())
+print(e.shape)
 
 # Labels related 
 g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])
@@ -101,41 +99,40 @@ print(a)
 
 # CombineBonds:
 bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-x = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
-y = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
-z = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
+x = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
+y = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
+z = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
 x.Print_diagram()
 
 x.CombineBonds([4,3])
 x.Print_diagram()
 
-y.CombineBonds([4,3],is_inbond=True)
+y.CombineBonds([4,3])
 y.Print_diagram()
 
-z.CombineBonds([4,3],is_inbond=True,new_label=8)
+z.CombineBonds([4,3],new_label=8)
 z.Print_diagram()
-
 
 # Contiguous()
 bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
 x = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
 print(x.is_contiguous())
-x.Permute([0,2,1],N_inbond=1)
+x.Permute(out_mapper=[2,1])
 print(x.is_contiguous())
 x.Contiguous()
 print(x.is_contiguous())
 
 
 # Permute
-bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
-x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
-y = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
+bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]
+x = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
+y = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
 x.Print_diagram()
 
-x.Permute([0,2,1],N_inbond=2)
+x.Permute(in_mapper=[0,2,1],out_mapper=[4,3])
 x.Print_diagram()
 
-y.Permute([3,4,5],N_inbond=2,by_label=True)
+y.Permute(in_mapper=[3,1,5],by_label=True)
 y.Print_diagram()
 
 # Reshape
@@ -143,9 +140,9 @@ bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
 x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
 x.Print_diagram()
 
-x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)
+y = x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)
+y.Print_diagram()
 x.Print_diagram()
-
 
 ## GetTotalQnums
 bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],
@@ -162,7 +159,6 @@ sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],N_inbo
 tqin,tqout=sym_T.GetTotalQnums()
 print(tqin)
 print(tqout)
-
 
 
 
@@ -202,7 +198,6 @@ print(sym_T_bf)
 sym_T_bf /= sym_T_bf
 sym_T_bf /= 7
 print(sym_T_bf)
-exit(1)
 
 
 
@@ -230,12 +225,14 @@ block_1123 = sym_T.GetBlock(1,1,-2,3)
 print(block_1123)
 
 ## Contract:
-x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(4)], N_inbond=2,labels=[4,3,5])
-y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(3)],N_inbond=1,labels=[5,1])
+x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], N_inbond=2,labels=[6,1,7,8])
+y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(2),Tor10.Bond(3),Tor10.Bond(6)], N_inbond=2,labels=[7,2,10,9])
 x.Print_diagram()
 y.Print_diagram()
 c = Tor10.Contract(x,y)
 c.Print_diagram()
+d = Tor10.Contract(y,x)
+d.Print_diagram()
 
 ## From_torch
 x = torch.ones(3,3)
@@ -276,7 +273,8 @@ factors[1].Print_diagram()
 rep_x = core
 for f in factors:
     rep_x = Tor10.Contract(rep_x,f)
-rep_x.Permute([6,7,8],N_inbond=1,by_label=True)
+#rep_x.Permute([6,7,8],N_inbond=1,by_label=True)
+rep_x.Print_diagram()
 print(rep_x - x)
 
 a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
