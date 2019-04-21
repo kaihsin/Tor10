@@ -1923,7 +1923,7 @@ class UniTensor():
             raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
 
         if len(self.bonds)==0:
-            return self
+            return copy.deepcopy(self)
 
         if self.bonds[0].qnums is None:
             new_bonds = copy.deepcopy(self.bonds)
