@@ -101,6 +101,7 @@ class UniTensor():
 
 
         """
+
         self.bonds = np.array(copy.deepcopy(bonds))
         self.N_inbond = int(N_inbond)
         self.name = name
@@ -284,6 +285,24 @@ class UniTensor():
 
         self.labels = copy.copy(newlabels)
 
+    def SetName(self, name):
+        """
+        Set the name of the UniTensor
+        
+        Args:
+            
+            name:
+                a string. 
+
+        """
+        if not isinstance(name,str):
+            raise TypeError("UniTensor.str","the name should be a string.")
+
+
+        self.name = name
+
+        return self
+
     def SetElem(self, elem):
         """
         Given 1D array of elements, set the elements stored in tensor as the same as the given ones. Note that elem can only be python-list or numpy
@@ -320,10 +339,14 @@ class UniTensor():
         if self.bonds[0].qnums is not None:
             raise Exception("UniTensor.SetElem","[ERROR] the TN that has symm should use PutBlock.")
 
+        raw_elems = np.array(elem)
+        if len(raw_elems.shape) != 1:
+            raise Exception("UniTensor.SetElem","[ERROR] can only accept 1D array of elements.")
+
         my_type = self.Storage.dtype
         my_shape = self.Storage.shape
         my_device = self.Storage.device
-        self.Storage = torch.from_numpy(np.array(elem)).type(my_type).reshape(my_shape).to(my_device)
+        self.Storage = torch.from_numpy(raw_elems).type(my_type).reshape(my_shape).to(my_device)
 
     def Todense(self):
         """
@@ -539,7 +562,7 @@ class UniTensor():
     def __getitem__(self,key):
         if self.is_blockform:
             raise Exception("UniTensor.__getitem__","[ERROR] cannot use [] to getitem from a block-form tensor. Use get block first.")
-        return self.Storage[key]
+        return From_torch(self.Storage[key],N_inbond=0)
 
     def __setitem__(self,key,value):
         if self.is_blockform:
@@ -547,6 +570,19 @@ class UniTensor():
 
         self.Storage[key] = value
 
+
+    def item(self):
+        """
+        Get the python scalar from a UniTensor with one-element
+ 
+        Return:
+            python scalar
+
+        """
+        if self.Storage.numel() != 1:
+            raise TypeError("UniTensor.item","[ERROR] only one element tensors can be converted to Python scalars")
+
+        return self.Storage.item()
 
     ## Math ::
     def __add__(self,other):
@@ -1886,10 +1922,11 @@ class UniTensor():
         if self.is_diag:
             raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
 
+        if len(self.bonds)==0:
+            print("[Warning] GetBlock a rank-0 TN will return self.")
+            return self
 
         if self.bonds[0].qnums is None:
-
-
             print("[Warning] GetBlock a non-symmetry TN will return self regardless of qnum parameter pass in.")
             return self
 
@@ -1965,6 +2002,17 @@ class UniTensor():
                                  labels=[1,2],\
                                  torch_tensor=out,\
                                  check=False)
+
+
+    def torch():
+        """
+        Transform a UniTensor to torch.Tensor.
+
+        Return:
+            a cloned torch.Tensor, note that the return tensor will not share the same memory with the UniTensor. 
+ 
+        """
+        return self.Storage.clone()
 
 
     ## Autograd feature:
@@ -2674,5 +2722,7 @@ def From_torch(torch_tensor,N_inbond,labels=None):
     new_bonds = [Bond(shape[i]) for i in range(N_inbond)]+\
                 [Bond(shape[i]) for i in np.arange(N_inbond,len(shape),1)]
 
-
-    return UniTensor(bonds=new_bonds,labels=labels,N_inbond=N_inbond,torch_tensor=torch_tensor)
+    if len(new_bonds)==0:
+         return UniTensor(bonds=new_bonds,labels=labels,N_inbond=N_inbond,check=False,torch_tensor=torch_tensor)
+    else:
+         return UniTensor(bonds=new_bonds,labels=labels,N_inbond=N_inbond,torch_tensor=torch_tensor)

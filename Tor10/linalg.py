@@ -550,13 +550,15 @@ def Svd(a):
         else:
             tmp = np.min(tmp)
 
-        u = UniTensor(bonds =[Bond(u.shape[0]),Bond(OUT,u.shape[1])],\
-                      N_inbond=1,\
+       
+
+        u = UniTensor(bonds =[Bond(u.shape[0]),Bond(u.shape[1])],\
+                      N_inbond=1 if a.N_inbond>0 else 0,\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=u,\
                       check=False)
         v = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
-                      N_inbond=1,\
+                      N_inbond=2 if a.N_inbond>1 else 1,\
                       labels=[tmp-2,a.labels[1]],\
                       torch_tensor=v.transpose(0,1),\
                       check=False)
