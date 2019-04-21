@@ -1978,7 +1978,7 @@
 
 <span class="sd">        Return:</span>
 <span class="sd">            * UniTensor, rank-2 (for symmetry tensor)</span>
-<span class="sd">            * self (only if the UniTensor is non-symmetry tensor)</span>
+<span class="sd">            * a new rank-2 flattened UniTensor (for non-symmetry tensor)</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            * Single Symmetry::</span>
@@ -2072,12 +2072,33 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.GetBlock&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Cannot get block on a diagonal tensor (is_diag=True)&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Warning] GetBlock a rank-0 TN will return self.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[Warning] GetBlock a non-symmetry TN will return self regardless of qnum parameter pass in.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span>
+            <span class="n">new_bonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span>
+            <span class="n">new_in</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">new_out</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">new_in</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>      
+                    <span class="n">new_in</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_in</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">),</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">new_out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">new_out</span> <span class="o">=</span> <span class="n">new_bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_out</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">new_in</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">new_bonds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_in</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">new_bonds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_out</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">new_bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">new_bonds</span><span class="p">,</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inbond</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span><span class="n">torch_tensor</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">qnum</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nsym</span> <span class="p">:</span>

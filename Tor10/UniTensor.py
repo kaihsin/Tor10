@@ -1829,7 +1829,7 @@ class UniTensor():
 
         Return:
             * UniTensor, rank-2 (for symmetry tensor)
-            * self (only if the UniTensor is non-symmetry tensor)
+            * a new rank-2 flattened UniTensor (for non-symmetry tensor)
 
         Example:
             * Single Symmetry::
@@ -1923,12 +1923,33 @@ class UniTensor():
             raise TypeError("UniTensor.GetBlock","[ERROR] Cannot get block on a diagonal tensor (is_diag=True)")
 
         if len(self.bonds)==0:
-            print("[Warning] GetBlock a rank-0 TN will return self.")
             return self
 
         if self.bonds[0].qnums is None:
-            print("[Warning] GetBlock a non-symmetry TN will return self regardless of qnum parameter pass in.")
-            return self
+            new_bonds = copy.deepcopy(self.bonds)
+            new_in = None
+            new_out = None
+            for i in range(self.N_inbond):
+                if new_in is None:      
+                    new_in = new_bonds[i]
+                else:
+                    new_in.combine(new_bonds[i])
+            for i in np.arange(self.N_inbond,len(self.bonds),1):
+                if new_out is None:
+                    new_out = new_bonds[i]
+                else:
+                    new_out.combine(new_bonds[i])
+
+            new_bonds = []
+            if new_in is not None:
+                new_bonds.append(new_in)
+            if new_out is not None:
+                new_bonds.append(new_out)
+            if len(new_bonds)>1:
+                out = self.Storage.contiguous().reshape(new_bonds[0].dim,-1)
+            else:
+                out = self.Storage.contiguous().reshape(new_bonds[0].dim)
+            return UniTensor(bonds=new_bonds,N_inbond=1 if self.N_inbond>0 else 0,torch_tensor=out)
 
         else:
             if len(qnum) != self.bonds[0].nsym :
