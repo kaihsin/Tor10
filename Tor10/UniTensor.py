@@ -268,8 +268,8 @@ class UniTensor():
 
         """
         x = np.argsort(self.braket)
-        self.Permute(x,by_label=False)
-        self.N_inbond = len(np.argwhere(self.braket==BondType[BD_BRA]))
+        Nin = len(np.argwhere(self.braket==BondType[BD_BRA]))
+        self.Permute(x,N_inbond=Nin,by_label=False)
         return self 
             
    
@@ -502,11 +502,12 @@ class UniTensor():
                         -----------
 
         """
+        print("-----------------------")
         print("tensor Name : %s"%(self.name))
         print("tensor Rank : %d"%(len(self.labels)))
         print("braket_form : %s"%("True" if self.is_braket else "False"))
+        print("has_symmetry: %s"%("True" if self.is_braket else "False"))
         if self.is_symm:
-            print("[Symmetry]")
             print("on device     : %s"%(self.Storage[0].device))
         else:
             print("on device     : %s"%(self.Storage.device))
@@ -1231,7 +1232,13 @@ class UniTensor():
                 raise Exception("UniTensor.Permute","[ERROR] by_label=True but mapper contain invalid labels not appear in the UniTensor label")
             idx_mapper = [ DD[x] for x in mapper]
         else:
-            idx_mapper = mapper
+            idx_mapper = np.array(mapper).astype(np.int)
+
+
+
+        self.labels = self.labels[idx_mapper]
+        self.bonds = self.bonds[idx_mapper]
+        self.braket = self.braket[idx_mapper]
 
         if N_inbond is not None:
             if N_inbond < 0 :
@@ -1239,10 +1246,6 @@ class UniTensor():
 
             self.N_inbond = N_inbond
 
-
-        self.labels = self.labels[idx_mapper]
-        self.bonds = self.bonds[idx_mapper]
-        self.braket = self.braket[idx_mapper]
         ## check braket_form:
         self._check_braket()
 
@@ -1252,11 +1255,13 @@ class UniTensor():
         else:
 
             if self.is_diag:
-                raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True cannot be permuted.\n"+
-                                                    "[Suggest] Call UniTensor.Todense()")
-
-                        
-            self.Storage = self.Storage.permute(tuple(idx_mapper))
+                if self.N_inbond != 1:
+                    raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True must have N_inbond==1\n"+"Suggest, call Todense()")
+                else:
+                    return self
+                    
+            else:        
+                self.Storage = self.Storage.permute(tuple(idx_mapper))
         
     
     

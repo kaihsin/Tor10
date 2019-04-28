@@ -130,7 +130,18 @@ y.Print_diagram()
 z.CombineBonds([4,3],new_label=8)
 z.Print_diagram()
 
+
+dT = Tor10.UniTensor(bonds=[Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA)],N_inbond=1,is_diag=True)
+print(dT)
+dT.Print_diagram()
+dT.Permute([1,0])
+dT.Print_diagram()
+dT.Todense().braket_form()
+dT.Print_diagram()
 exit(1)
+
+
+
 # Contiguous()
 bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
 x = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
