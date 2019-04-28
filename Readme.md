@@ -83,7 +83,8 @@
                                          [ 1,0,2]],
                                  sym_types=[Tor10.Symmetry.U1(),
                                             Tor10.Symmetry.Zn(2),
-                                            Tor10.Symmetry.Zn(4)])
+                                            Tor10.Symmetry.Zn(4)],
+                                  Tor10.BD_BRA)
 ``` 
         
     4. Network :
@@ -105,14 +106,13 @@
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2,BD_BRA),Tor10.Bond(2,BD_KET)]))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2,BD_BRA),Tor10.Bond(2,BD_KET)]))
  
             def forward(self,x):
                 y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
                 return y
 
-        x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)])
         md = Model()
         print(list(md.parameters()))
         ## Output:
