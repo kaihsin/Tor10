@@ -33,13 +33,12 @@ class BD_KET:
 class BD_BRA:
     pass
 
-#class BD_Regular:
-#    pass
+class BD_REG:
+    pass
 
 
-BondType = {BD_KET:1,BD_BRA:-1}
-
-#BondType = [BD_REGULAR]
+BondType = {BD_KET:1,BD_BRA:-1, BD_REG:0}
+#BondType = {BD_KET:1,BD_BRA:-1,BD_REG:0}
 
 ## [For developer] Append this to extend the symmetry:
 
@@ -60,7 +59,7 @@ class Bond():
 
     ## [DevNote]:The qnums should be integer.
 
-    def __init__(self, dim, bondType, qnums=None, sym_types=None):
+    def __init__(self, dim, bondType=BD_REG, qnums=None, sym_types=None):
         """
         Constructor of the Bond, it calls the member function Bond.assign().
 
@@ -162,7 +161,7 @@ class Bond():
         # call :
         self.assign(dim, bondType, qnums, sym_types)
 
-    def assign(self, dim, bondType, qnums=None, sym_types=None):
+    def assign(self, dim, bondType=BD_REG, qnums=None, sym_types=None):
         """
         Assign a new property for the Bond.
 
@@ -214,9 +213,12 @@ class Bond():
             raise Exception("Bond.assign()", "[ERROR] Bond dimension must be greater than 0.")
 
         if not bondType in BondType:
-            raise Exception("Bond.assign()", "[ERROR] bondType can only be BD_BRA or BD_KET")
+            raise Exception("Bond.assign()", "[ERROR] bondType can only be BD_BRA, BD_KET or BD_REG")
+            #raise Exception("Bond.assign()", "[ERROR] bondType can only be BD_BRA or BD_KET")
 
         if not qnums is None:
+            if bondType is BD_REG:
+                raise Exception("Bond.assign()","[ERROR] with qnums, bondType can only be BD_BRA or BD_KET")
             sp = np.shape(qnums)
             if len(sp) != 2:
                 raise TypeError("Bond.assign()", "[ERROR] qnums must be a list of lists (2D list).")
@@ -276,6 +278,9 @@ class Bond():
         if (self.bondType is not new_bondType):
             if not new_bondType in BondType:
                 raise TypeError("Bond.change", "[ERROR] the bondtype can only be", BondType)
+            if self.qnums is not None:
+                if new_bondType == BD_REG:
+                    raise TypeError("Bond.change","[ERROR] cannot change a bond with symmetry to BD_REG type")
             self.bondType = new_bondType
 
     # [DevNote] This is the inplace combine.
@@ -403,32 +408,20 @@ class Bond():
 
         return np.unique(self.qnums, axis=0)
 
+
+    def __mul__(self,val):
+        if (val != -1) and (val != 1):
+            raise Exception("[ERROR] val can only be +1 or -1")
+       
+        self.qnums *= val
+        return self
+
     ## Print layout
     def __print(self):
         print("Dim = %d |" % (self.dim), end="\n")
-        """
-        if(self.bondType is BD_INWARD):
-            print("INWARD  :",end='')
-            if not self.qnums is None:
-                for n in range(self.nsym):
-                    print("%s:: "%(str(self.sym_types[n])),end='')
-                    for idim in range(len(self.qnums)):
-                         print(" %+d"%(self.qnums[idim,n]),end='')
-                    print("\n     ",end='')
-            print("\n",end="")
-        elif(self.bondType is BD_OUTWARD):
-            print("OUTWARD :",end='')
-            if not self.qnums is None:
-                for n in range(self.nsym):
-                    print("%s:: "%(str(self.sym_types[n])),end='')
-                    for idim in range(len(self.qnums)):
-                         print(" %+d"%(self.qnums[idim,n]),end='')
-                    print("\n     ",end='')
-            print("\n",end="")
-
-        else:
-        """
-        if (self.bondType is BD_BRA):
+        if (self.bondType is BD_REG):
+            print("REG     :", end='')
+        elif (self.bondType is BD_BRA):
             print("BRA     :", end='')
         elif (self.bondType is BD_KET):
             print("KET     :", end='')
@@ -474,11 +467,17 @@ class Bond():
         """
         if isinstance(rhs, self.__class__):
             iSame = (self.dim == rhs.dim) and (self.bondType == rhs.bondType)
+            if iSame == False:
+               return False
 
             if self.qnums is None:
-                iSame = iSame and (self.qnums == rhs.qnums)
+                if rhs.qnums is not None:
+                    return False
             else:
-                iSame = iSame and all(self.qnums == rhs.qnums)
+                if rhs.qnums is None:
+                    return False
+
+                iSame = iSame and (self.qnums == rhs.qnums).all()
                 for s in range(self.nsym):
                     iSame = iSame and (self.sym_types[s] == rhs.sym_types[s])
 

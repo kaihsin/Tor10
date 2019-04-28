@@ -138,21 +138,24 @@ dT.Permute([1,0])
 dT.Print_diagram()
 dT.Todense().braket_form()
 dT.Print_diagram()
-exit(1)
 
 
 
 # Contiguous()
-bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-x = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
+bds_x = [Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_KET)]
+x = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
 print(x.is_contiguous())
-x.Permute(out_mapper=[2,1])
+print(x.is_braket_form())
+x.Permute([0,2,1])
 print(x.is_contiguous())
-x.Contiguous()
+print(x.is_braket_form())
+x.Contiguous_()
 print(x.is_contiguous())
+print(x.is_braket_form())
 
 
 # Permute
+"""
 bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]
 x = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
 y = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
@@ -163,8 +166,9 @@ x.Print_diagram()
 
 y.Permute(in_mapper=[3,1,5],by_label=True)
 y.Print_diagram()
-
+"""
 # Reshape
+"""
 bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
 x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
 x.Print_diagram()
@@ -172,24 +176,45 @@ x.Print_diagram()
 y = x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)
 y.Print_diagram()
 x.Print_diagram()
-
+"""
 ## GetTotalQnums
-bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],
-                                     [1, 1,-1, 1],
-                                     [2,-1, 1, 0]])
-bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],
-                                     [ 0, 0,-1, 2],
-                                     [ 1, 0, 1, 0],
-                                     [ 2,-2,-1, 1]])
-bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
-                                      [ 1, 1, -2,3]])
+bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0, 2, 1, 0],
+                                            [1, 1,-1, 1],
+                                            [2,-1, 1, 0]])
+bd_sym_2 = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1, 0,-1, 3],
+                                            [ 0, 0,-1, 2],
+                                            [ 1, 0, 1, 0],
+                                            [ 2,-2,-1, 1]])
+bd_sym_3 = Tor10.Bond(2,Tor10.BD_KET,qnums=[[-4,3,0,-1],
+                                            [1, 1, -2,3]])
 
 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],N_inbond=2,dtype=torch.float64)
+sym_T2 = Tor10.UniTensor(bonds=[bd_sym_2,bd_sym_1,bd_sym_3],labels=[2,1,3],N_inbond=2,dtype=torch.float64)
 tqin,tqout=sym_T.GetTotalQnums()
 print(tqin)
 print(tqout)
-
-
+"""
+sym_T.Permute([0,2,1])
+sym_T.Print_diagram()
+tqin2,tqout2=sym_T.GetTotalQnums()
+print(tqin==tqin2)
+print(tqout==tqout2)
+sym_T.Permute([1,0,2])
+sym_T.Print_diagram()
+sym_T.Permute([1,0,2],N_inbond=1)
+sym_T.Print_diagram()
+tqin3,tqout3 = sym_T.GetTotalQnums()
+print(tqin==tqin3)
+print(tqout==tqout3)
+"""
+sym_T.Permute([1,0,2])
+tqin5,tqout5 = sym_T.GetTotalQnums()
+print(tqin==tqin5)
+print(tqout==tqout5)
+tqin4,tqout4 = sym_T2.GetTotalQnums()
+print(tqin==tqin4)
+print(tqout==tqout4)
+exit(1)
 
 
 ## GetBlock

@@ -116,13 +116,26 @@ class UniTensor():
             self.labels = np.array(copy.deepcopy(labels),dtype=np.int)
 
 
+        ## braket, is_braket:
+        self.is_braket = None
+        if braket is None:
+            self.braket = np.array([ BondType[self.bonds[i].bondType] for i in range(len(self.bonds))],dtype=np.int)
+        else:
+            self.braket = copy.deepcopy(braket)
+
+        if N_inbond is None:
+            self.N_inbond = len(np.argwhere(self.braket==BondType[BD_BRA]))
+        else:
+            self.N_inbond = int(N_inbond)
+ 
+        self._check_braket()
+
 
         ## checking :
         if check:
             # Bonds:
-            if N_inbond is not None:
-                if N_inbond < 0 or N_inbond > len(self.bonds):
-                    raise Exception("UniTensor.__init__","the N_inbond should be >=0 and < # of bonds")
+            if self.N_inbond < 0 or self.N_inbond > len(self.bonds):
+                raise Exception("UniTensor.__init__","the N_inbond should be >=0 and < # of bonds")
 
             # Labels:
             # check # of labels consist with bond.
@@ -137,31 +150,6 @@ class UniTensor():
             isSymm = np.unique([ (bd.qnums is None) for bd in self.bonds])
             if len(isSymm) != 1:
                 raise TypeError("UniTensor.__init__","the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).")
-            
-            
-
-        ## braket, is_braket:
-        
-        self.is_braket = None
-        if braket is None:
-            if (len(self.bonds)>0) and (self.bonds[0].bondType!=BD_REG):
-                self.braket = np.array([ BondType[self.bonds[i].bondType] for i in range(len(self.bonds))],dtype=np.int)
-        else:
-            self.braket = copy.deepcopy(braket)
-
-        
-        if N_inbond is None:
-            if self.braket is not None:
-                self.N_inbond = len(np.argwhere(self.braket==BondType[BD_BRA]))
-            else:
-                raise Exception("[ERROR] for UniTensor init with all the bond are regular, N_inbond should be provided")
-        else:
-            self.N_inbond = int(N_inbond)
- 
-
-        self._check_braket()
-
-
 
 
         ## check is_symm:
@@ -287,45 +275,13 @@ class UniTensor():
             self.requires_grad(True)
 
 
-    def tag_braket(self):
-        if self.braket is None:
-            self.braket = []
-            for b_in in range(self.N_inbond):
-                self.bonds[b_in].bondType = BD_BRA
-                self.braket.append(BondType[BD_BRA])
-            for b_out in range(len(self.bonds)-self.N_inbond):
-                self.bonds[b_out+self.N_inbond].bondType = BD_KET
-                self.braket.append(BondType[BD_KET])
-            self.braket = np.array(self.braket)
-            self.is_braket = True
-
-    def untag_braket(self):
-        if self.is_symm:
-            raise Exception("[ERROR]","Cannot untag bra/ket on the bonds for symmetry tensor.")
-        
-        if self.braket is None:
-            pass
-        
-        else:
-            self.is_braket = None
-            self.braket = None
-            for b in range(len(self.bonds)):
-                self.bonds[b].bondType = BD_REG
-
-
     def _check_braket(self):
-        if self.braket is None:
-            pass
-
         if (self.braket[:self.N_inbond]==BondType[BD_BRA]).all() and (self.braket[self.N_inbond:]==BondType[BD_KET]).all():
             self.is_braket = True
         else:
             self.is_braket = False
 
     def is_braket_form(self):
-        if self.braket is None:
-            raise Exception("[ERROR] for a tensor with regular bonds, there is no property of barket.")
-
         return self.is_braket
 
     def braket_form(self):
@@ -338,8 +294,6 @@ class UniTensor():
             self.
 
         """
-        if self.braket is None:
-            raise Exception("[ERROR] for a tensor with regular bonds, there is no property of barket.")
         x = np.argsort(self.braket)
         Nin = len(np.argwhere(self.braket==BondType[BD_BRA]))
         self.Permute(x,N_inbond=Nin,by_label=False)
@@ -566,7 +520,8 @@ class UniTensor():
         print("-----------------------")
         print("tensor Name : %s"%(self.name))
         print("tensor Rank : %d"%(len(self.labels)))
-        print("has_symmetry: %s"%("True" if self.is_symm else "False"))
+        print("braket_form : %s"%("True" if self.is_braket else "False"))
+        print("has_symmetry: %s"%("True" if self.is_braket else "False"))
         if self.is_symm:
             print("on device     : %s"%(self.Storage[0].device))
         else:
@@ -580,57 +535,34 @@ class UniTensor():
         else:
             vl = Nout
 
-        if self.braket is not None:
-            print("braket_form : %s"%("True" if self.is_braket else "False"))
-            print("       <bra|             |ket> ")
-            print("           ---------------     ")
-            for i in range(vl):
-                print("           |             |     ")
-                if(i<Nin):
-                    if self.braket[i]==BondType[BD_BRA]:
-                        bks = "< "
-                    else:
-                        bks = ">*"
-                    l = "%3d %s__"%(self.labels[i],bks)
-                    llbl = "%-3d"%(self.bonds[i].dim)
-                else:
-                    l = "        "
-                    llbl = "   "
-                if(i<Nout):
-                    if self.braket[Nin+i]==BondType[BD_BRA]:
-                        bks = "*<"
-                    else:
-                        bks = " >"
-                    r = "__%s %-3d"%(bks,self.labels[Nin+i])
-                    rlbl = "%3d"%(self.bonds[Nin+i].dim)
-                else:
-                    r = "        "
-                    rlbl = "   "
-                print("   %s| %s     %s |%s"%(l,llbl,rlbl,r))
+        #print(vl)
+        print("       <bra|             |ket> ")
+        print("           ---------------     ")
+        for i in range(vl):
             print("           |             |     ")
-            print("           ---------------     ")
-        else:
-            print("           ---------------     ")
-            for i in range(vl):
-                print("           /             \     ")
-                if(i<Nin):
-                    bks = "__"
-                    l = "%3d %s__"%(self.labels[i],bks)
-                    llbl = "%-3d"%(self.bonds[i].dim)
+            if(i<Nin):
+                if self.braket[i]==BondType[BD_BRA]:
+                    bks = "< "
                 else:
-                    l = "        "
-                    llbl = "   "
-                if(i<Nout):
-                    bks = "__"
-                    r = "__%s %-3d"%(bks,self.labels[Nin+i])
-                    rlbl = "%3d"%(self.bonds[Nin+i].dim)
+                    bks = ">*"
+                l = "%3d %s__"%(self.labels[i],bks)
+                llbl = "%-3d"%(self.bonds[i].dim)
+            else:
+                l = "        "
+                llbl = "   "
+            if(i<Nout):
+                if self.braket[Nin+i]==BondType[BD_BRA]:
+                    bks = "*<"
                 else:
-                    r = "        "
-                    rlbl = "   "
-                print("   %s| %s     %s |%s"%(l,llbl,rlbl,r))
-            print("           \             /     ")
-            print("           ---------------     ")
-
+                    bks = " >"
+                r = "__%s %-3d"%(bks,self.labels[Nin+i])
+                rlbl = "%3d"%(self.bonds[Nin+i].dim)
+            else:
+                r = "        "
+                rlbl = "   "
+            print("   %s| %s     %s |%s"%(l,llbl,rlbl,r))
+        print("           |             |     ")
+        print("           ---------------     ")
 
         for i in range(len(self.bonds)):
             print("lbl:%d "%(self.labels[i]),end="")
@@ -641,9 +573,7 @@ class UniTensor():
 
     def __str__(self):
         print("Tensor name: %s"%( self.name))
-        if self.braket is not None:
-            print("braket_form : %s"%("True" if self.is_braket else "False"))
-
+        print("braket_form : %s"%("True" if self.is_braket else "False"))
         if self.is_symm:
             print("[Symmetry]")
             if self._contiguous:
@@ -662,9 +592,7 @@ class UniTensor():
 
     def __repr__(self):
         print("Tensor name: %s"%( self.name))
-        if self.braket is not None:
-            print("braket_form : %s"%("True" if self.is_braket else "False"))
-
+        print("braket_form : %s"%("True" if self.is_braket else "False"))
         if self.is_symm:
             print("[Symmetry]")
             if self._contiguous:
@@ -712,12 +640,8 @@ class UniTensor():
             if not self.N_inbond==rhs.N_inbond:
                 return False
 
-            if (self.braket is None) != (rhs.braket is None):            
+            if not (self.braket==rhs.braket).all():
                 return False
-
-            if self.braket is None:
-                if not (self.braket==rhs.braket).all():
-                    return False
 
             if self.is_symm:
                 pass
@@ -790,7 +714,6 @@ class UniTensor():
         if isinstance(other, self.__class__):
             if self.is_symm != other.is_symm:
                 raise TypeError("[ERROR]","Cannot + two symm and non-symm UniTensor ")
-
             
             if self.is_symm:
                 if self != other:
@@ -815,9 +738,6 @@ class UniTensor():
             
 
             else:
-                if not (self.is_braket is None) == (other.is_braket is None):
-                    raise Exception("[ERROR]","Cannot add non-braket-tag tensor with tagged tensor")
-
                 if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
@@ -907,7 +827,6 @@ class UniTensor():
             if self.is_symm != other.is_symm:
                 raise TypeError("[ERROR]","[Cannot - two symm and non-symm UniTensors]")
 
-
             if self.is_symm:
                 if self != other:
                     raise TypeError("[ERROR]","Cannot - two symm tensors that have different symmetry structure.")
@@ -929,9 +848,6 @@ class UniTensor():
                     raise Exception("[ERROR]","Two symmetry tensors can only sub when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before sub")
 
             else:
-                if not (self.is_braket is None) == (other.is_braket is None):
-                    raise Exception("[ERROR]","Cannot sub non-braket-tag tensor with tagged tensor")
-
                 if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
@@ -1051,9 +967,6 @@ class UniTensor():
                 else:
                     raise Exception("[ERROR]","Two symmetry tensors can only mul when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before mul")
             else:
-                if not (self.is_braket is None) == (other.is_braket is None):
-                    raise Exception("[ERROR]","Cannot mul non-braket-tag tensor with tagged tensor")
-
                 if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
@@ -1183,9 +1096,6 @@ class UniTensor():
                 else:
                     raise Exception("[ERROR]","Two symmetry tensors can only mul when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before mul")
             else:
-                if not (self.is_braket is None) == (other.is_braket is None):
-                    raise Exception("[ERROR]","Cannot / non-braket-tag tensor with tagged tensor")
-
                 if self.is_diag:
                     if other.is_diag:
                         tmp =  UniTensor(bonds=self.bonds,\
@@ -1253,9 +1163,6 @@ class UniTensor():
         """
         if self.is_symm:
             raise Exception("UniTensor.Svd","[ERROR] cannot perform Svd on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
-        
-        if self.braket is not None:
-            raise Exception("UniTensor.Svd","[ERROR] cannot perform Svd on a bra-ket tagged tensor.")
 
         return linalg.Svd(self)
 
@@ -1266,9 +1173,6 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Svd_truncate","[ERROR] cannot perform Svd on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
 
-        if self.braket is not None:
-            raise Exception("UniTensor.Svd","[ERROR] cannot perform Svd on a bra-ket tagged tensor.")
-
         return Svd_truncate(self)
 
     def Norm(self):
@@ -1276,10 +1180,7 @@ class UniTensor():
             This is the member function of Norm, see Tor10.linalg.Norm
         """
         if self.is_symm:
-            raise Exception("UniTensor.Norm","[ERROR] cannot perform Norm on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
-
-        if self.braket is not None:
-            raise Exception("UniTensor.Norm","[ERROR] cannot perform Norm on a bra-ket tagged tensor.")
+            raise Exception("UniTensor.Svd_truncate","[ERROR] cannot perform Svd on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
 
         return linalg.Norm(self)
 
@@ -1290,9 +1191,6 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Det","[ERROR] cannot perform Det on a symmetry, block-form tensor. use GetBlock() first and perform det on the Block.")
 
-        if self.braket is not None:
-            raise Exception("UniTensor.Det","[ERROR] cannot perform Det on a bra-ket tagged tensor.")
-
         return linalg.Det(self)
 
     def Matmul(self,b):
@@ -1301,9 +1199,6 @@ class UniTensor():
         """
         if self.is_symm:
             raise Exception("UniTensor.Matmul","[ERROR] cannot perform MatMul on a symmetry, block-form tensor. use GetBlock() first and perform matmul on the Block.")
-
-        if self.braket is not None:
-            raise Exception("UniTensor.Matmul","[ERROR] cannot perform Matmul on a bra-ket tagged tensor.")
 
         return linalg.Matmul(self,b)
 
@@ -1326,9 +1221,6 @@ class UniTensor():
                     raise Exception("[ERROR]","Two symmetry tensors can only add when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before add")
 
             else:
-                if (self.braket is None) != (other.braket is None):
-                    raise Exception("[ERROR]","cannot += non-braket-tag tensor with tagged tensor")
-
                 if self.is_diag == other.is_diag:
                     self.Storage += other.Storage
                 else:
@@ -1362,9 +1254,6 @@ class UniTensor():
                 else:
                     raise Exception("[ERROR]","Two symmetry tensors can only sub when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before sub")
             else:
-                if (self.braket is None) != (other.braket is None):
-                    raise Exception("[ERROR]","cannot -= non-braket-tag tensor with tagged tensor")
-
                 if self.is_diag == other.is_diag:
                     self.Storage -= other.Storage
                 else:
@@ -1400,9 +1289,6 @@ class UniTensor():
                     raise Exception("[ERROR]","Two symmetry tensors can only mul when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before mul")
 
             else:
-                if (self.braket is None) != (other.braket is None):
-                    raise Exception("[ERROR]","cannot -= non-braket-tag tensor with tagged tensor")
-
                 if self.is_diag == other.is_diag:
                     self.Storage *= other.Storage
                 else:
@@ -1670,8 +1556,7 @@ class UniTensor():
 
         self.labels = self.labels[idx_mapper]
         self.bonds = self.bonds[idx_mapper]
-        if self.braket is not None:
-            self.braket = self.braket[idx_mapper]
+        self.braket = self.braket[idx_mapper]
 
         if N_inbond is not None:
             if N_inbond < 0 :
@@ -1754,10 +1639,6 @@ class UniTensor():
                                                 "[Suggest] Call UniTensor.Todense()")
 
 
-        if self.braket is not None:
-            raise Exception("UniTensor.Reshape","[ERROR] UniTensor.Reshape can only operate on a tensor with regular bonds (BD_REG).")
-
-
         if not isinstance(dimer,list):
             raise TypeError("UniTensor.Reshape","[ERROR] mapper should be an python list.")
 
@@ -1774,6 +1655,7 @@ class UniTensor():
                          labels=new_labels,\
                          N_inbond=N_inbond,\
                          check=False,\
+                         braket = self.braket,\
                          torch_tensor=new_Storage)
 
 
@@ -2025,17 +1907,7 @@ class UniTensor():
 
         """
         if not self.is_symm:
-
-            if self.N_inbond==0 :
-                bds = [Bond(1),Bond(self.Storage.numel())]
-                
-            elif len(self.bonds) - self.N_inbond==0:
-                bds = [Bond(self.Storage.numel()),Bond(1)]
-            else:
-                bds = [Bond(np.prod([x.dim for x in self.bonds[:N_inbond]])),\
-                       Bond(np.prod([x.dim for x in self.bonds[N_inbond:]]))]
-
-            return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.reshape(bds[0].dim,-1),check=False)
+            raise Exception("Cannot put-block into a non-symmetry tensor.")
         
         else:
             raise Exception("[Developing]")
