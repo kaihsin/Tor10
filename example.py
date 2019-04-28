@@ -3,16 +3,16 @@ import numpy as np
 import torch 
 import copy
 
-## Example for Tor10 v0.2
+## Example for Tor10 v0.3
 ## Kai-Hsin Wu
 
 
 ## Bond:
 #=======================================
 ## Non-symmetry:
-bd_x = Tor10.Bond(3) ## This is equivalent to Tor10.Bond(3,Tor10.BD_REGULAR)
-bd_y = Tor10.Bond(4)
-bd_z = Tor10.Bond(3)
+bd_x = Tor10.Bond(3,Tor10.BD_KET) ## This is equivalent to Tor10.Bond(3,Tor10.BD_REGULAR)
+bd_y = Tor10.Bond(4,Tor10.BD_BRA)
+bd_z = Tor10.Bond(3,Tor10.BD_KET)
 print(bd_x)
 print(bd_y)
 print(bd_x==bd_z) ## This should be true
@@ -21,38 +21,38 @@ print(bd_x==bd_y) ## This should be false
 
 ## Symmetry:
 #> U1
-bd_sym_U1 = Tor10.Bond(3,qnums=[[-1],[0],[1]])
+bd_sym_U1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[-1],[0],[1]])
 print(bd_sym_U1)
 
 #> Z2 
-bd_sym_Z2 = Tor10.Bond(3,qnums=[[0],[1],[0]],sym_types=[Tor10.Symmetry.Zn(2)])
+bd_sym_Z2 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[0]],sym_types=[Tor10.Symmetry.Zn(2)])
 print(bd_sym_Z2)
 
 #> Z4
-bd_sym_Z4 = Tor10.Bond(3,qnums=[[0],[2],[3]],sym_types=[Tor10.Symmetry.Zn(4)])
+bd_sym_Z4 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[2],[3]],sym_types=[Tor10.Symmetry.Zn(4)])
 print(bd_sym_Z4)
 
 #> Multiple U1
-bd_sym_multU1 = Tor10.Bond(3,qnums=[[-2,-1,0,-1],
-                                    [1 ,-4,0, 0],
-                                    [-8,-3,1, 5]])
+bd_sym_multU1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[-2,-1,0,-1],
+                                                 [1 ,-4,0, 0],
+                                                 [-8,-3,1, 5]])
 print(bd_sym_multU1)
 
 #> Multiple mix symmetry: U1 x Z2 x Z4
-bd_sym_mix = Tor10.Bond(3,qnums=[[-2,0,0],
-                                 [-1,1,3],
-                                 [ 1,0,2]],
+bd_sym_mix = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[-2,0,0],
+                                              [-1,1,3],
+                                              [ 1,0,2]],
                          sym_types=[Tor10.Symmetry.U1(),
                                     Tor10.Symmetry.Zn(2),
                                     Tor10.Symmetry.Zn(4)]) 
-
+print(bd_sym_mix)
 
 ## Combine:
-a = Tor10.Bond(3)
-b = Tor10.Bond(4)
-c = Tor10.Bond(2,qnums=[[0,1,-1],[1,1,0]])
-d = Tor10.Bond(2,qnums=[[1,0,-1],[1,0,0]]) 
-e = Tor10.Bond(2,qnums=[[1,0],[1,0]])
+a = Tor10.Bond(3,Tor10.BD_BRA)
+b = Tor10.Bond(4,Tor10.BD_KET)
+c = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[0,1,-1],[1,1,0]])
+d = Tor10.Bond(2,Tor10.BD_KET,qnums=[[1,0,-1],[1,0,0]]) 
+e = Tor10.Bond(2,Tor10.BD_KET,qnums=[[1,0],[1,0]])
 a.combine(b)
 print(a)
 
@@ -62,18 +62,33 @@ print(c)
 ## UniTensor:
 #=========================================================
 # Create Tensor
-a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
+a = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA)])
+a.Print_diagram()
+print(a.is_braket)
 print(a)
-c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=1,labels=[-3,4,1])
+
+a2 = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA)],N_inbond=1)
+a2.Print_diagram()
+print(a2.is_braket)
+print(a2)
+
+c = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_KET)],labels=[-3,4,1])
+c.Print_diagram()
 print(c)
+c2 = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_BRA)],labels=[-3,4,1])
+c2.Print_diagram()
+print(c2)
+
 ## Execute this only when CUDA is installed along with pytorch 
 #d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,device=torch.device("cuda:0"))
-e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],N_inbond=1,is_diag=True)
-f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=2,labels=[-3,4,1],dtype=torch.float32)
+e = Tor10.UniTensor(bonds=[Tor10.Bond(6,Tor10.BD_BRA),Tor10.Bond(6,Tor10.BD_BRA)],is_diag=True,N_inbond=1)
+f = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_BRA)],labels=[-3,4,1],dtype=torch.float32)
 print(e.shape)
+e.Print_diagram()
+
 
 # Labels related 
-g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])
+g = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_BRA)],labels=[5,6])
 print(g.labels)
 g.SetLabel(-1,1)
 print(g.labels)
@@ -82,26 +97,28 @@ new_label=[-1,-2]
 g.SetLabels(new_label)
 print(g.labels)
 
+
 # Element related
-Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_inbond=1,
+Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(2,Tor10.BD_KET)],
                               dtype=torch.float64,
                               device=torch.device("cpu"))
 Sz.SetElem([1, 0,
             0,-1])
 print(Sz)
 
+
 # Sparse
-a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],N_inbond=1,is_diag=True)
+a = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)],N_inbond=1,is_diag=True)
 print(a)
 
 a.Todense()
 print(a)
 
 # CombineBonds:
-bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-x = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
-y = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
-z = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
+bds_x = [Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)]
+x = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
+y = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
+z = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
 x.Print_diagram()
 
 x.CombineBonds([4,3])
@@ -113,6 +130,7 @@ y.Print_diagram()
 z.CombineBonds([4,3],new_label=8)
 z.Print_diagram()
 
+exit(1)
 # Contiguous()
 bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
 x = Tor10.UniTensor(bonds=bds_x, N_inbond=1, labels=[4,3,5])
