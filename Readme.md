@@ -30,7 +30,7 @@
     3. Add block_form() to coalesce the bra/ket with row/col(in/out)
     4. N_inbond defines the row/col space. 
     5. Enhanced Print_diagram
-
+    6. Seperate Contiguous() and Contiguous\_() for inplace and return type function.
 
 ## Release version
     v0.2.2 -> v0.3 deving
@@ -57,7 +57,7 @@
         
 ```python
        ## create a rank-2 Tensor 
-       bds = [ Bond(3), Bond(4)]
+       bds = [ Bond(3,BD_BRA), Bond(4,BD_KET)]
        A = UniTensor(bds,label=[2,4],N_inbond=1,dtype=torch.float64,device=torch.device("cpu"))
 
        ## Moving to GPU:
@@ -66,7 +66,7 @@
 
     2. Tensor :
         * vitual swap and permute. All the permute and swap will not change the underlying memory
-        * Use Contiguous() when needed to actual moving the memory layout.
+        * Use Contiguous() or Contiguous_() when needed to actual moving the memory layout.
 
 ```python
         A.Contiguous()
