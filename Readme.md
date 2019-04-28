@@ -24,8 +24,16 @@
     6. Fix Svd bug. This bug is due to accidentally insert "OUT" in the code when editing.
     7. Changed Svd return behavior.The return u,s,v UniTensors' in/out bond layout will be: s (2in2out); u(1out+the original first bond's type of input tensor); v(1in+the original second bond's type of input tensor)
 
+    v0.3
+    1. Add a property "is_blockform" to further detach the memory and the bond layout. 
+    2. Now change the storage of symmetry to blockform. the dense storage for symmetry is deprecated.
+    3. Add block_form() to coalesce the bra/ket with row/col(in/out)
+    4. N_inbond defines the row/col space. 
+    5. Enhanced Print_diagram
+
+
 ## Release version
-    v0.2.2
+    v0.2.2 -> v0.3 deving
 
 ## Requirements
     pytorch>=1.0
