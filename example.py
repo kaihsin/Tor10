@@ -81,11 +81,19 @@ print(c2)
 
 ## Execute this only when CUDA is installed along with pytorch 
 #d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,device=torch.device("cuda:0"))
-e = Tor10.UniTensor(bonds=[Tor10.Bond(6,Tor10.BD_BRA),Tor10.Bond(6,Tor10.BD_BRA)],is_diag=True,N_inbond=1)
+e = Tor10.UniTensor(bonds=[Tor10.Bond(6,Tor10.BD_BRA),Tor10.Bond(6,Tor10.BD_BRA)],N_inbond=1)
 f = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_BRA)],labels=[-3,4,1],dtype=torch.float32)
 print(e.shape)
 e.Print_diagram()
-
+e.Permute([0,1],N_inbond=2)
+e.Print_diagram()
+e.untag_braket()
+e.Print_diagram()
+e.Permute([1,0])
+e.Print_diagram()
+eB = e.GetBlock()
+eB.Print_diagram()
+exit(1)
 
 # Labels related 
 g = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_BRA)],labels=[5,6])

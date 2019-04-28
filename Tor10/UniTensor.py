@@ -143,6 +143,7 @@ class UniTensor():
         ## braket, is_braket:
         
         self.is_braket = None
+        self.braket = None
         if braket is None:
             if (len(self.bonds)>0) and (self.bonds[0].bondType!=BD_REG):
                 self.braket = np.array([ BondType[self.bonds[i].bondType] for i in range(len(self.bonds))],dtype=np.int)
@@ -314,13 +315,11 @@ class UniTensor():
 
 
     def _check_braket(self):
-        if self.braket is None:
-            pass
-
-        if (self.braket[:self.N_inbond]==BondType[BD_BRA]).all() and (self.braket[self.N_inbond:]==BondType[BD_KET]).all():
-            self.is_braket = True
-        else:
-            self.is_braket = False
+        if self.braket is not None:
+            if (self.braket[:self.N_inbond]==BondType[BD_BRA]).all() and (self.braket[self.N_inbond:]==BondType[BD_KET]).all():
+                self.is_braket = True
+            else:
+                self.is_braket = False
 
     def is_braket_form(self):
         if self.braket is None:
@@ -612,7 +611,10 @@ class UniTensor():
         else:
             print("           ---------------     ")
             for i in range(vl):
-                print("           /             \     ")
+                if i==0: 
+                    print("           /             \     ")
+                else:
+                    print("           |             |     ")
                 if(i<Nin):
                     bks = "__"
                     l = "%3d %s__"%(self.labels[i],bks)
@@ -2032,8 +2034,8 @@ class UniTensor():
             elif len(self.bonds) - self.N_inbond==0:
                 bds = [Bond(self.Storage.numel()),Bond(1)]
             else:
-                bds = [Bond(np.prod([x.dim for x in self.bonds[:N_inbond]])),\
-                       Bond(np.prod([x.dim for x in self.bonds[N_inbond:]]))]
+                bds = [Bond(np.prod([x.dim for x in self.bonds[:self.N_inbond]])),\
+                       Bond(np.prod([x.dim for x in self.bonds[self.N_inbond:]]))]
 
             return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.reshape(bds[0].dim,-1),check=False)
         
