@@ -65,7 +65,7 @@ class UniTensor():
 
         self.labels = np.roll(self.labels,-self.N_inbond)
         self.bonds  = np.roll(self.bonds, -self.N_inbond)
-        
+
            ** [Warning] Private Args should not be call directly **
 
 
@@ -288,11 +288,11 @@ class UniTensor():
     def SetName(self, name):
         """
         Set the name of the UniTensor
-        
+
         Args:
-            
+
             name:
-                a string. 
+                a string.
 
         """
         if not isinstance(name,str):
@@ -573,14 +573,14 @@ class UniTensor():
 
     def item(self):
         """
-        Get the python scalar from a UniTensor with one-element
- 
+        Get the python scalar from a UniTensor with one element
+
         Return:
             python scalar
 
         """
         if self.Storage.numel() != 1:
-            raise TypeError("UniTensor.item","[ERROR] only one element tensors can be converted to Python scalars")
+            raise TypeError("UniTensor.item","[ERROR] only one-element tensors can be converted to Python scalars.")
 
         return self.Storage.item()
 
@@ -589,11 +589,11 @@ class UniTensor():
         if isinstance(other, self.__class__):
             if self.is_blockform:
                 if not other.is_blockform:
-                    raise TypeError("UniTensor.+","[ERROR] cannot add a sparse block-form tensor with a densed tensor.")
+                    raise TypeError("UniTensor.+","[ERROR] cannot add a sparse block-form tensor with a dense tensor.")
 
                 ## Check for matching:
                 if len(self.Storage) != len(other.Storage):
-                    raise TypeError("UniTensor.+","[ERROR] cannot add two sparse block-form tensors with different block-form.")
+                    raise TypeError("UniTensor.+","[ERROR] cannot add two sparse block-form tensors with different block forms.")
 
 
                 b_tqin,b_tqout = self.GetTotalQnums()
@@ -1084,9 +1084,9 @@ class UniTensor():
 
     def CombineBonds(self,labels_to_combine,new_label=None):
         """
-        This function combines the bonds in input UniTensor [a] by the specified labels [label]. 
+        This function combines the bonds in input UniTensor [a] by the specified labels [label].
 
-        [Note][v0.3+] that in-bond(bra) can only be combine with in-bond(bra), out-bond(ket) can only combine with out-bond(ket). 
+        [Note][v0.3+] that in-bonds(ket) can only be combine with in-bonds(ket), out-bonds(bra) can only combine with out-bonds(bra).
 
         Args:
 
@@ -1108,17 +1108,17 @@ class UniTensor():
             >>> y = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
             >>> z = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
             >>> x.Print_diagram()
-            tensor Name : 
+            tensor Name :
             tensor Rank : 3
             on device   : cpu
             is_diag     : False
-                    ---------------     
-                    |             |     
-                4 __| 5         3 |__ 5  
-                    |             |     
-                3 __| 5           |      
-                    |             |     
-                    ---------------     
+                    ---------------
+                    |             |
+                4 __| 5         3 |__ 5
+                    |             |
+                3 __| 5           |
+                    |             |
+                    ---------------
             lbl:4 Dim = 5 |
             REGULAR :
             _
@@ -1130,15 +1130,15 @@ class UniTensor():
 
             >>> x.CombineBonds([4,3])
             >>> x.Print_diagram()
-            tensor Name : 
+            tensor Name :
             tensor Rank : 2
             on device   : cpu
             is_diag     : False
-                    ---------------     
-                    |             |     
-                3 __| 25        3 |__ 5  
-                    |             |     
-                    ---------------     
+                    ---------------
+                    |             |
+                3 __| 25        3 |__ 5
+                    |             |
+                    ---------------
             lbl:3 Dim = 25 |
             REGULAR :
             _
@@ -1168,7 +1168,7 @@ class UniTensor():
 
         """
         if len(labels_to_combine)<2:
-            raise ValueError("CombineBonds","[ERROR] the number of bond to combine should be >1")
+            raise ValueError("CombineBonds","[ERROR] the number of bonds to combine should be greater than one.")
 
         if self.is_blockform:
             print("developing")
@@ -1233,7 +1233,7 @@ class UniTensor():
             in_mapper:
                 a python list or 1d numpy array with integer type elements that the UniTensor permute accroding to.
                 the in-bond(bra) permute. if by_label=False, the in_mapper will use index as mapper. the index run from 0~N_inbond
-                
+
             out_mapper:
                 a python list or 1d numpy array with integer type elements that the UniTensor permute accroding to.
                 the out-bond(ket) permute. if by_label=False, the out_mapper will use index as mapper. the index run from N_inbond~(total number of bonds-1)
@@ -1247,19 +1247,19 @@ class UniTensor():
             >>> x = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
             >>> y = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
             >>> x.Print_diagram()
-            tensor Name : 
+            tensor Name :
             tensor Rank : 5
             on device   : cpu
             is_diag     : False
-                    ---------------     
-                    |             |     
-                1 __| 6         3 |__ 7  
-                    |             |     
-                3 __| 5         2 |__ 8  
-                    |             |     
-                5 __| 4           |      
-                    |             |     
-                    ---------------     
+                    ---------------
+                    |             |
+                1 __| 6         3 |__ 7
+                    |             |
+                3 __| 5         2 |__ 8
+                    |             |
+                5 __| 4           |
+                    |             |
+                    ---------------
             lbl:1 Dim = 6 |
             REGULAR :
             _
@@ -1277,19 +1277,19 @@ class UniTensor():
 
             >>> x.Permute(in_mapper=[0,2,1],out_mapper=[4,3])
             >>> x.Print_diagram()
-            tensor Name : 
+            tensor Name :
             tensor Rank : 5
             on device   : cpu
             is_diag     : False
-                    ---------------     
-                    |             |     
-                1 __| 6         2 |__ 8  
-                    |             |     
-                5 __| 4         3 |__ 7  
-                    |             |     
-                3 __| 5           |      
-                    |             |     
-                    ---------------     
+                    ---------------
+                    |             |
+                1 __| 6         2 |__ 8
+                    |             |
+                5 __| 4         3 |__ 7
+                    |             |
+                3 __| 5           |
+                    |             |
+                    ---------------
             lbl:1 Dim = 6 |
             REGULAR :
             _
@@ -1307,19 +1307,19 @@ class UniTensor():
 
             >>> y.Permute(in_mapper=[3,1,5],by_label=True)
             >>> y.Print_diagram()
-            tensor Name : 
+            tensor Name :
             tensor Rank : 5
             on device   : cpu
             is_diag     : False
-                    ---------------     
-                    |             |     
-                3 __| 5         3 |__ 7  
-                    |             |     
-                1 __| 6         2 |__ 8  
-                    |             |     
-                5 __| 4           |      
-                    |             |     
-                    ---------------     
+                    ---------------
+                    |             |
+                3 __| 5         3 |__ 7
+                    |             |
+                1 __| 6         2 |__ 8
+                    |             |
+                5 __| 4           |
+                    |             |
+                    ---------------
             lbl:3 Dim = 5 |
             REGULAR :
             _
@@ -1345,31 +1345,31 @@ class UniTensor():
             exit(1)
 
         if in_mapper is None and out_mapper is None:
-            raise TypeError("UniTensor.Permute","[ERROR] as least one of in_mapper or out_mapper should be specify.")
+            raise TypeError("UniTensor.Permute","[ERROR] as least one of in_mapper or out_mapper should be specified.")
 
 
-        ## check 
+        ## check
         if in_mapper is not None:
             if not (isinstance(in_mapper,list) or isinstance(in_mapper,np.ndarray)):
                 raise TypeError("UniTensor.Permute","[ERROR] in_mapper should be an 1d python list or numpy array.")
             if len(in_mapper)!=self.N_inbond:
                 raise ValueError("UniTensor.Permute","[ERROR] len(in_mapper) should equal to N_inbond")
-            
-        if out_mapper is not None: 
+
+        if out_mapper is not None:
             if not (isinstance(out_mapper,list) or isinstance(out_mapper,np.ndarray)):
                 raise TypeError("UniTensor.Permute","[ERROR] out_mapper should be an 1d python list or numpy array.")
             if len(out_mapper)!=len(self.labels)-self.N_inbond:
                 raise ValueError("UniTensor.Permute","[ERROR] len(out_mapper) should equal to # of out-bond")
 
 
-        
+
 
         if by_label:
             DD = dict(zip(self.labels,np.arange(len(self.labels))))
 
             in_label = self.labels[:self.N_inbond]
             if in_mapper is not None:
-                ## check label 
+                ## check label
                 if not all(lbl in in_label for lbl in in_mapper):
                     raise Exception("UniTensor.Permute","[ERROR] by_label=True but in_mapper contain invalid labels not appear in the UniTensor label for in-bond")
                 idx_in_mapper = [ DD[x] for x in in_mapper]
@@ -1379,14 +1379,14 @@ class UniTensor():
 
             out_label = self.labels[self.N_inbond:]
             if out_mapper is not None:
-                ## check label 
+                ## check label
                 if not all(lbl in out_label for lbl in out_mapper):
                     raise Exception("UniTensor.Permute","[ERROR] by_label=True but out_mapper contain invalid labels not appear in the UniTensor label for out-bond")
                 idx_out_mapper = [ DD[x] for x in out_mapper ]
             else:
                 idx_out_mapper = np.arange(self.N_inbond,len(self.labels),1)
                 out_mapper = out_label
-            new_mapper= np.concatenate((idx_in_mapper , idx_out_mapper)) 
+            new_mapper= np.concatenate((idx_in_mapper , idx_out_mapper))
 
             self.Storage = self.Storage.permute(tuple(new_mapper))
             self.labels = np.concatenate((in_mapper,out_mapper))
@@ -1410,7 +1410,7 @@ class UniTensor():
             self.bonds = self.bonds[new_mapper]
 
 
-    ## This is the old permute that allow in/out inter-permute. (maybe can be support in the future with transpose() ? like numpy treat for tensor transpose. 
+    ## This is the old permute that allow in/out inter-permute. (maybe can be support in the future with transpose() ? like numpy treat for tensor transpose.
     def _Permute(self,mapper,N_inbond,by_label=False):
         """
         [Warning] This is internal function .
@@ -1532,7 +1532,7 @@ class UniTensor():
            self.Storage = self.Storage.permute(list(mapper))
            self.labels = self.labels[mapper]
            self.bonds = self.bonds[mapper]
-        
+
         #for i in range(len(self.bonds)):
         #    if i < N_inbond:
         #        self.bonds[i].change(BD_IN)
@@ -1544,9 +1544,9 @@ class UniTensor():
     def Reshape(self,dimer,N_inbond,new_labels=None):
         """
         Return a new reshaped UniTensor into the shape specified as [dimer], with the first [N_inbond] Bonds as in-bond and other bonds as out-bond.
-        
-        [Note] Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element. 
-        
+
+        [Note] Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.
+
         Args:
 
             dimer:
@@ -1559,7 +1559,7 @@ class UniTensor():
                 The new labels that will be set for new bonds after reshape.
 
         reture:
-        
+
             UniTensor
 
         Example:
@@ -1619,7 +1619,7 @@ class UniTensor():
         if self.is_diag:
             raise Exception("UniTensor.Reshape","[ERROR] UniTensor.is_diag=True cannot be Reshape.\n"+
                                                 "[Suggest] Call UniTensor.Todense()")
-        
+
         if not isinstance(dimer,list):
             raise TypeError("UniTensor.Reshape","[ERROR] mapper should be an python list.")
 
@@ -1633,7 +1633,7 @@ class UniTensor():
         new_Storage = new_Storage.view(dimer)
         if new_labels is None:
             new_labels = np.arange(len(dimer))
-        
+
         np.array([Bond(dimer[i]) for i in range(len(dimer))])
 
         return UniTensor(bonds=np.array([Bond(dimer[i]) for i in range(len(dimer))]),\
@@ -1945,7 +1945,7 @@ class UniTensor():
             new_in = None
             new_out = None
             for i in range(self.N_inbond):
-                if new_in is None:      
+                if new_in is None:
                     new_in = new_bonds[i]
                 else:
                     new_in.combine(new_bonds[i])
@@ -2045,8 +2045,8 @@ class UniTensor():
         Transform a UniTensor to torch.Tensor.
 
         Return:
-            a cloned torch.Tensor, note that the return tensor will not share the same memory with the UniTensor. 
- 
+            a cloned torch.Tensor, note that the return tensor will not share the same memory with the UniTensor.
+
         """
         return self.Storage.clone()
 
@@ -2248,7 +2248,7 @@ def Contract(a,b):
 
     1. two tensors must be the same type, if "a" is a symmetry tensor, "b" must also be a symmetry tensor.
     2. When contract two symmetry tensor, the bonds that to be contracted must have the same qnums.
-    3. Each in-bond(bra) can only contract with out-bond(ket), in terms of physical meaning, this means the contract traceing out the matched bra-ket. 
+    3. Each in-bond(bra) can only contract with out-bond(ket), in terms of physical meaning, this means the contract traceing out the matched bra-ket.
 
     [Note] the argument "a" and "b" tensor defines the order of the out-come bond. After contract,  the order of remaining bonds (both in-bond(bra) and out-bond(ket)) that appears in the new-tensor will follows the rule: a's in-bond will appears first, then the b's in-bond; a's out-bond will appears first, then b's out-bond (see example in below)
 
@@ -2271,17 +2271,17 @@ def Contract(a,b):
 
 
     >>> x.Print_diagram()
-    tensor Name : 
+    tensor Name :
     tensor Rank : 4
     on device   : cpu
     is_diag     : False
-            ---------------     
-            |             |     
-        6 __| 5         4 |__ 7  
-            |             |     
-        1 __| 2         3 |__ 8  
-            |             |     
-            ---------------     
+            ---------------
+            |             |
+        6 __| 5         4 |__ 7
+            |             |
+        1 __| 2         3 |__ 8
+            |             |
+            ---------------
     lbl:6 Dim = 5 |
     REGULAR :
     _
@@ -2295,17 +2295,17 @@ def Contract(a,b):
     REGULAR :
 
     >>> y.Print_diagram()
-    tensor Name : 
+    tensor Name :
     tensor Rank : 4
     on device   : cpu
     is_diag     : False
-            ---------------     
-            |             |     
-        7 __| 4         3 |__ 10 
-            |             |     
-        2 __| 2         6 |__ 9  
-            |             |     
-            ---------------     
+            ---------------
+            |             |
+        7 __| 4         3 |__ 10
+            |             |
+        2 __| 2         6 |__ 9
+            |             |
+            ---------------
     lbl:7 Dim = 4 |
     REGULAR :
     _
@@ -2320,19 +2320,19 @@ def Contract(a,b):
 
     >>> c = Tor10.Contract(x,y)
     >>> c.Print_diagram()
-    tensor Name : 
+    tensor Name :
     tensor Rank : 6
     on device   : cpu
     is_diag     : False
-            ---------------     
-            |             |     
-        6 __| 5         3 |__ 8  
-            |             |     
-        1 __| 2         3 |__ 10 
-            |             |     
-        2 __| 2         6 |__ 9  
-            |             |     
-            ---------------     
+            ---------------
+            |             |
+        6 __| 5         3 |__ 8
+            |             |
+        1 __| 2         3 |__ 10
+            |             |
+        2 __| 2         6 |__ 9
+            |             |
+            ---------------
     lbl:6 Dim = 5 |
     REGULAR :
     _
@@ -2348,23 +2348,23 @@ def Contract(a,b):
     lbl:10 Dim = 3 |
     REGULAR :
     _
-    lbl:9 Dim = 6 
+    lbl:9 Dim = 6
 
     >>> d = Tor10.Contract(y,x)
     >>> d.Print_diagram()
-    tensor Name : 
+    tensor Name :
     tensor Rank : 6
     on device   : cpu
     is_diag     : False
-            ---------------     
-            |             |     
-        2 __| 2         3 |__ 10 
-            |             |     
-        6 __| 5         6 |__ 9  
-            |             |     
-        1 __| 2         3 |__ 8  
-            |             |     
-            ---------------     
+            ---------------
+            |             |
+        2 __| 2         3 |__ 10
+            |             |
+        6 __| 5         6 |__ 9
+            |             |
+        1 __| 2         3 |__ 8
+            |             |
+            ---------------
     lbl:2 Dim = 2 |
     REGULAR :
     _
@@ -2382,7 +2382,7 @@ def Contract(a,b):
     _
     lbl:8 Dim = 3 |
     REGULAR :
-     
+
 
 
     """
@@ -2397,7 +2397,7 @@ def Contract(a,b):
 
         if(len(same)):
 
-            ## check bra-ket 
+            ## check bra-ket
             if False in np.unique((a_ind<a.N_inbond)^(b_ind<b.N_inbond)):
                 raise Exception("Contract(a,b)","[ERROR] in-bond(bra) can only contract with out-bond (ket)")
 
@@ -2410,11 +2410,11 @@ def Contract(a,b):
                     if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
                         raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
 
-            
+
             aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
             bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
 
-            
+
             if a.is_diag :
                 tmpa = torch.diag(a.Storage).to(a.Storage.device)
             else:
@@ -2424,7 +2424,7 @@ def Contract(a,b):
                 tmpb = torch.diag(b.Storage).to(b.Storage.device)
             else:
                 tmpb = b.Storage
-            
+
             tmp = torch.tensordot(tmpa,tmpb,dims=(a_ind.tolist(),b_ind.tolist()))
 
             new_bonds = np.concatenate([copy.deepcopy(a.bonds[aind_no_combine]),copy.deepcopy(b.bonds[bind_no_combine])])
@@ -2590,7 +2590,7 @@ def _CombineBonds(a,label,new_label):
 
         new_label:
             the new_label of the UniTensor
-    
+
     """
     if isinstance(a,UniTensor):
         if a.is_diag:
@@ -2607,8 +2607,8 @@ def _CombineBonds(a,label,new_label):
         # checking :
         same_lbls, x_ind, y_ind = np.intersect1d(a.labels,label,return_indices=True)
 
-        
-        ## checking 
+
+        ## checking
         if not len(same_lbls) == len(label):
             raise Exception("_CombineBonds","[ERROR], label_to_combine doesn't exists in the UniTensor")
 
@@ -2633,19 +2633,19 @@ def _CombineBonds(a,label,new_label):
 
             a.labels[x_ind[0]] = newlbl
 
-        
+
         if contype_inout:
             # combine bond is in-bond(bra)
             new_Nin = a.N_inbond - len(x_ind) + 1
             for i in range(len(x_ind)-1):
                 a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
-            
+
             mapper = np.concatenate([x_ind,idx_no_combine])
             a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
             a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
             a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
-            
-        else:  
+
+        else:
             # combine bond is out-bond(ket)
             new_Nin = a.N_inbond
             for i in range(len(x_ind)-1):
