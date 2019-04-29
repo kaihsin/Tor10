@@ -2457,18 +2457,25 @@ def Contract(a,b):
 
         if(len(same)):
 
-            ## check bra-ket
-            if False in np.unique((a_ind<a.N_inbond)^(b_ind<b.N_inbond)):
-                raise Exception("Contract(a,b)","[ERROR] in-bond(bra) can only contract with out-bond (ket)")
 
             ## Qnum_ipoint
-            if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):
+            if (a.is_symm)!=(b.is_symm):
                 raise Exception("Contract(a,b)","[ERROR] contract Symm TN with non-sym tensor")
 
-            if(a.bonds[0].qnums is not None):
+            if (a.braket is None) != (b.braket is None):
+                raise Exception("Contract(a,b)","[ERROR] contract untagged TN with tagged TN is not allowed")
+
+            if(a.is_symm):
                 for i in range(len(a_ind)):
                     if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
                         raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
+
+            ## check bra-ket
+            if a.braket is None:
+                pass
+            else:
+                if False in np.unique((a.braket[a_ind]+b.braket[b_ind])==0):
+                    raise Exception("Contract(a,b)","[ERROR] in-bond(bra) can only contract with out-bond (ket)")
 
 
             aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
@@ -2746,7 +2753,7 @@ def _Randomize(a):
         raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
 
-def From_torch(torch_tensor,N_inbond,labels=None):
+def From_torch(torch_tensor,N_inbond,labels=None,is_tag=False):
     """
     Construct UniTensor from torch.Tensor.
 
@@ -2819,11 +2826,17 @@ def From_torch(torch_tensor,N_inbond,labels=None):
     if N_inbond > len(shape):
         raise ValueError("From_torch","[ERROR] N_inbond exceed the rank of input torch tensor.")
 
-    new_bonds = [Bond(shape[i],BD_BRA) for i in range(N_inbond)]+\
-                [Bond(shape[i],BD_KET) for i in np.arange(N_inbond,len(shape),1)]
+    if len(labels) != len(shape):
+        raise TypeError("From_torch","[ERROR] # of labels should match the rank of torch.Tensor")
+
+    if is_tag:
+        new_bonds = [Bond(shape[i],BD_BRA) for i in range(N_inbond)]+\
+                    [Bond(shape[i],BD_KET) for i in np.arange(N_inbond,len(shape),1)]
+    else:
+        new_bonds = [Bond(shape[i]) for i in range(len(shape))]
 
     if len(new_bonds)==0:
-         return UniTensor(bonds=new_bonds,labels=labels,N_inbond=N_inbond,check=False,torch_tensor=torch_tensor)
+         return UniTensor(bonds=[],labels=[],N_inbond=0,check=False,torch_tensor=torch_tensor)
     else:
          return UniTensor(bonds=new_bonds,labels=labels,N_inbond=N_inbond,torch_tensor=torch_tensor)
 

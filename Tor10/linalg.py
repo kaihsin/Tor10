@@ -141,10 +141,10 @@ def Abs(a):
     Take the absolute value for all the elements in the UniTensor
     Args:
         a:
-            UniTensor
+            UniTensor, can be [regular][regular-tagged][symm]
 
     Return:
-        UniTensor, same shape as the input.
+        UniTensor, same shape and type as the input.
     """
     if not isinstance(a,UniTensor):
         raise TypeError("Abs(UniTensor)","[ERROR] the input should be a UniTensor")
@@ -177,7 +177,7 @@ def Mean(a):
 
     Args:
         a:
-            UniTensor
+            UniTensor, can be [regular][regular-tagged]
 
     Return:
         UniTensor, 0-rank (constant)
@@ -198,13 +198,13 @@ def Otimes(a,b):
 
     Args:
         a:
-            UniTensor, must be rank-2, non-symmetry, with 1-inbond and 1-outbond
+            UniTensor, must be rank-2, [regular], with 1-inbond and 1-outbond
 
         b:
-            UniTensor, must be rank-2, non-symmetry, with 1-inbond and 1-outbond
+            UniTensor, must be rank-2, [regular], with 1-inbond and 1-outbond
 
     Return:
-        UniTensor, rank-2, one in-bond one out-bond.
+        UniTensor, rank-2, one in-bond one out-bond. [regular]
         If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.
 
         If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.
@@ -216,12 +216,11 @@ def Otimes(a,b):
         if a.is_symm or b.is_symm:
             raise Exception("Otimes(UniTensor,UniTensor)","Cannot accept symmetry tensors")
 
-        if len(a.labels)==2 and len(b.labels)==2:
+        if len(a.labels)==2 and len(b.labels)==2 and a.N_inbond==1 and b.N_inbond==1:
             if a.is_diag and b.is_diag:
 
-                return UniTensor(bonds=[Bond(out.shape[0],BD_BRA),Bond(out.shape[0],BD_KET)],\
+                return UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[0])],\
                                  N_inbond=1,\
-                                 braket = np.array([BondType[BD_BRA],BondType[BD_KET]]),\
                                  torch_tensor=torch.ger(a.Storage,b.Storage),\
                                  is_diag=True,check=False)
 
@@ -237,9 +236,8 @@ def Otimes(a,b):
                 tmpb = b.Storage
 
             out = torch.tensordot(a.Storage,b.Storage,dims=0).permute(0,2,1,3).reshape(a.Storage.shape[0]*b.Storage.shape[0],-1)
-            return UniTensor(bonds=[Bond(out.shape[0],Tor10.BD_BRA),Bond(out.shape[1],Tor10.BD_KET)],\
+            return UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[1])],\
                              N_inbond=1,\
-                             braket = np.array([BondType[BD_BRA],BondType[BD_KET]]),\
                              torch_tensor=out,\
                              check=False)
 
@@ -264,26 +262,28 @@ def ExpH(a):
     Args:
 
         a :
-            UniTensor, Must be a rank-2, with one inbond, one outbond. If pass a non-rank2 tensor or pass a non-hermitian rank2 tensor, it will raise Error.
+            UniTensor, Must be a rank-2 [regular], with one inbond, one outbond. If pass a non-rank2 tensor, tagged tensor, or pass a non-hermitian rank2 tensor; it will raise Error.
 
     Return:
 
-        UniTensor, rank-2, same bonds and labels and braket form as the original H
+        UniTensor, rank-2 [regular], same bonds and labels and braket form as the original H
     """
 
     if isinstance(a,UniTensor):
         
-        if a.is_symm is not None:
+        if a.is_symm:
            raise Exception("ExpH(a)","don't support symm tensor. GetBlock first.")
 
         else:
+            if a.braket is not None:
+                raise Exception("ExpH(a)","can only accept un-tagged [regular] type UniTensor")
+
             if a.is_diag:   
                 u = torch.exp(a.Storage)
                 return UniTensor(bonds=a.bonds,\
                                  labels=a.labels,\
                                  N_inbond=a.N_inbond,\
                                  torch_tensor=u,\
-                                 braket = a.braket,\
                                  is_diag=True,\
                                  check=False)
             else:
@@ -301,7 +301,6 @@ def ExpH(a):
                 return UniTensor(bonds=a.bonds,\
                                 labels=a.labels,\
                                 N_inbond=a.N_inbond,\
-                                braket = a.braket,\
                                 torch_tensor=u,\
                                 check=False)
 
@@ -322,15 +321,15 @@ def Qr(a):
 
     Args:
 
-        a : UniTensor, it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.
+        a : UniTensor[regular], it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.
 
     Return:
 
         q , r
 
-        q : UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix
+        q : UniTensor[regular], rank-2, 1 inbond 1 outbond, the unitary matrix
 
-        r : UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix
+        r : UniTensor[regular], rank-2, 1 inbond 1 outbond, the upper triangular matrix
 
     """
     if isinstance(a,UniTensor):
@@ -342,6 +341,8 @@ def Qr(a):
         if a.is_diag:
             raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
 
+        if a.braket is not None:
+            raise Exception("Qr(UniTensor)","Can only accept untagged [regular] tensor")
 
         if a.N_inbond != 1:
             raise Exception("Qr(UniTensor)","Should have 1 in-bond, 1 out-bond")
@@ -354,18 +355,17 @@ def Qr(a):
         else:
             tmp = np.min(tmp)
 
-        q = UniTensor(bonds =[Bond(q.shape[0],BD_BRA),Bond(q.shape[1],BD_KET)],\
+        q = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
                       N_inbond=1,\
-                      braket = np.array([BondType[BD_BRA],BondType[BD_KET]]),\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=q,\
                       check=False)
-        r = UniTensor(bonds =[Bond(r.shape[0],BD_BRA),Bond(r.shape[1],BD_KET)],\
+        r = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
                       N_inbond=1,\
-                      braket = np.array([BondType[BD_BRA],BondType[BD_KET]]),\
                       labels=[q.labels[1],a.labels[1]],\
                       torch_tensor=r,\
                       check=False)
+
         return q,r
     else:
         raise Exception("Qr(UniTensor)","[ERROR] Qr can only accept UniTensor")
@@ -402,6 +402,9 @@ def Qdr(a):
         if a.is_diag:
             raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
 
+        if a.braket is not None:
+            raise Exception("Qr(UniTensor)","can only operate on [regular](untagged) tensor")
+            
         if a.N_inbond != 1:
             raise Exception("Qdr(a)","Should have 1 inbond 1 outbond")
 
@@ -416,22 +419,19 @@ def Qdr(a):
         else:
             tmp = np.min(tmp)
 
-        q = UniTensor(bonds =[Bond(q.shape[0],BD_BRA),Bond(q.shape[1],BD_KET)],\
+        q = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
                       N_inbond=1,\
-                      braket = np.array([BondType[BD_BRA],BondType[BD_KET]]),\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=q,\
                       check=False)
-        d = UniTensor(bonds =[Bond(d.shape[0],BD_BRA),Bond(d.shape[0],BD_KET)],\
+        d = UniTensor(bonds =[Bond(d.shape[0]),Bond(d.shape[0])],\
                       N_inbond=1,\
-                      braket = np.array([BondType[BD_BRA],BondType[BD_KET]]),\
                       labels=[tmp-1,tmp-2],\
                       torch_tensor=d,\
                       is_diag=True,
                       check=False)
-        r = UniTensor(bonds =[Bond(r.shape[0],BD_BRA),Bond(r.shape[1],BD_KET)],\
+        r = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
                       N_inbond=1,\
-                      braket = np.array([BondType[BD_BRA],BondType[BD_KET]]),\
                       labels=[d.labels[1],a.labels[1]],\
                       torch_tensor=r,\
                       check=False)
@@ -449,17 +449,17 @@ def Svd(a):
 
     Args:
         a :
-            UniTensor, rank-2.
+            UniTensor[regular], rank-2.
 
     Return: u , s , vt
         u :
-            UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix
+            UniTensor[regular], rank-2, 1 inbond 1 outbond, the unitary matrix
 
         s :
-            UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True
+            UniTensor[regular], rank-2, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True
 
         vt:
-            UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix
+            UniTensor[regular], rank-2, 1 inbond 1 outbond, the transposed right unitary matrix
 
 
     Example:
@@ -509,7 +509,12 @@ def Svd(a):
         if a.is_diag:
             raise Exception("svd(a)","[Abort] svd currently don't support diagonal tensor.")
 
- 
+        if a.braket is not None:
+            raise Exception("svd(a)","can only accept UniTensor[regular] (untagged)")
+
+        if a.N_inbond != 1:
+            raise Exception("svd(a)","should be a UniTensor with 1 in-bond, 1 out-bond")
+
         u, s, v = torch.svd(a.Storage,some=True)
 
         tmp = np.argwhere(a.labels<0)
@@ -521,12 +526,12 @@ def Svd(a):
        
 
         u = UniTensor(bonds =[Bond(u.shape[0]),Bond(u.shape[1])],\
-                      N_inbond=1 if a.N_inbond>0 else 0,\
+                      N_inbond=1,\
                       labels=[a.labels[0],tmp-1],\
                       torch_tensor=u,\
                       check=False)
         v = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
-                      N_inbond=2 if a.N_inbond>1 else 1,\
+                      N_inbond=1,\
                       labels=[tmp-2,a.labels[1]],\
                       torch_tensor=v.transpose(0,1),\
                       check=False)
@@ -543,13 +548,14 @@ def Svd(a):
 
 
 def Svd_truncate(a, keepdim=None):
+    #v0.3 OK
     """
     The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond's dim should be >=2.
 
 
     Args:
         a :
-            UniTensor, rank-2, 1 inbond 1 outbond.
+            UniTensor[regular], rank-2, 1 inbond 1 outbond.
 
         keepdim:
             integer, the keeping dimension. When set, it will keep only the largest "keepdim" singular values and their corresponding eigenvectors.
@@ -557,13 +563,13 @@ def Svd_truncate(a, keepdim=None):
 
     Return: u , s , vt
         u :
-            UniTensor, rank-2, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
+            UniTensor[regular], rank-2, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
 
         s :
-            UniTensor, rank-2, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)
+            UniTensor[regular], rank-2, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)
 
         vt:
-            UniTensor, rank-2, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
+            UniTensor[regular], rank-2, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
 
 
     Example:
@@ -608,6 +614,12 @@ def Svd_truncate(a, keepdim=None):
 
         if a.is_diag:
             raise Exception("svd(a)","[Abort] svd currently don't support diagonal tensor.")
+
+        if a.braket is not None:
+            raise Exception("svd(a)","svd can only accept untagged UniTensor[regular]")
+
+        if a.N_inbond != 1:
+            raise Exception("svd(a)","should be a UniTensor with 1 in-bond, 1 out-bond")
 
         u, s, v = torch.svd(a.Storage,some=True)
 
@@ -656,10 +668,10 @@ def Matmul(a,b):
 
     Args:
         a:
-            The UniTensors that will be matrix-multiply
+            The UniTensors that will be matrix-multiply, UniTensor should be [regular]
 
         b:
-            The UniTensors that will be matrix-multiply
+            The UniTensors that will be matrix-multiply, UniTensor should be [regular]
 
     Return:
         UniTensor,rank-2 tensor with 1 inbond 1 outbond.
@@ -668,10 +680,18 @@ def Matmul(a,b):
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
         ## [Note] no need to check if a,b are both rank 2. Rely on torch to do error handling!
+       
 
         ## Qnum_ipoint
-        if a.bonds[0].qnums is not None or b.bonds[0].qnums is not None:
-            raise Exception("Matmul(a,b)","[Abort] Matmul for sym TN is under developing.")
+        if a.is_symm or b.is_symm :
+            raise Exception("Matmul(a,b)","[Abort] Matmul cannot operate on sym TN.")
+
+        if a.braket is not None or b.braket is not None:
+            raise Exception("Matmul(a,b)","Matmul can only accept two regular Tensors")
+
+        
+        if a.N_inbond != 1 or b.N_inbond != 1:
+            raise Exception("Matmul(a,b)","Matmul can only accept two UniTensor with each has 1 inbond and 1 outbond")
 
         if a.is_diag == b.is_diag:
             tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
@@ -711,7 +731,7 @@ def Chain_matmul(*args):
 
     Args:
         *args:
-            The UniTensors that will be matrix-multiply
+            The UniTensors that will be matrix-multiply. Each UniTensor should be [regular] (untagged) and with 1 inbond and 1 outbond
 
     Return:
         UniTensor,rank-2 tensor with 1 inbond 1 outbond.
@@ -745,8 +765,6 @@ def Chain_matmul(*args):
     isUT = all( isinstance(UT,UniTensor) for UT in args)
 
 
-    tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))]
-
     ## Checking performance:
     #"""
     #for i in range(len(tmp_args)):
@@ -757,9 +775,13 @@ def Chain_matmul(*args):
 
     if isUT:
         ## Qnum_ipoint
-        if not all( (UT.bonds[0].qnums is None) for UT in args):
+        if not all( UT.is_symm==False for UT in args):
             raise Exception("Chain_matmul(*args)","[Abort] Chain multiplication for symm tensor(s) are under developing.")
 
+        if not all( UT.braket is None and UT.N_inbond==1 for UT in args):
+            raise Exception("Chain_matmul(*args)","Chain mult should have all UniTensor have 1 inbond 1 outbond")
+
+        tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))]
 
         return UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
                          N_inbond=1,\
@@ -775,6 +797,7 @@ def Chain_matmul(*args):
 
 
 def Inverse(a):
+    #v0.3 OK
     """
     This function returns the inverse of a rank-2 tensor (matrix).
 
@@ -784,25 +807,33 @@ def Inverse(a):
 
     Args:
         a :
-            A rank-2 UniTensor (matrix). Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued.
+            A rank-2 UniTensor[regular] (matrix), with 1-inbond. 1-outbond. Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued.
 
     Return:
         UniTensor
 
     """
     if isinstance(a,UniTensor):
+        if a.is_symm :
+            raise TypeError("Inverse","[ERROR] cannot inverse a symmetry tensor")
+
+        if a.braket is not None:
+            raise TypeError("Inverse","[ERROR] inverse can only accept untagged UniTensor[regular]")
+
+        if a.N_inbond != 1:
+            raise Exception("Inverse","[ERROR] inverse should have UniTensor with N_inbond=1")
 
         if a.is_diag:
             a_inv = UniTensor(bonds = a.bonds,\
                           labels=a.labels,\
-                          N_inbond=a.N_inbond,\
+                          N_inbond=1,\
                           torch_tensor=a.Storage**-1,\
                           is_diag=True,\
                           check=False)
         else:
             a_inv = UniTensor(bonds = a.bonds,\
                               labels=a.labels,\
-                              N_inbond=a.N_inbond,\
+                              N_inbond=1,\
                               torch_tensor=torch.inverse(a.Storage),\
                               check=False)
         return a_inv
@@ -810,7 +841,8 @@ def Inverse(a):
         raise Exception("Inverse(UniTensor)","[ERROR] Inverse can only accept UniTensor")
 
 
-def Det(a):
+def Det(a): 
+    #v0.3 OK
     """
     This function returns the determinant a rank-2 tensor.
 
@@ -818,7 +850,7 @@ def Det(a):
 
     Args:
         a :
-            a rank-2 UniTensor (matrix).
+            a rank-2 UniTensor[regular] (matrix) with 1 inbond 1 outbond.
     Return:
         UniTensor, 0-rank (constant)
 
@@ -857,6 +889,14 @@ def Det(a):
 
     """
     if isinstance(a,UniTensor):
+        if a.is_symm:
+            raise Exception("Det","[ERROR] cannot operate deteminant on a symmetry tensor")
+        
+        if a.braket is not None:
+            raise Exception("Det","[ERROR] det can only operate on untagged UniTensor[regular]")
+    
+        if a.N_inbond != 1:
+            raise Exception("Det","[ERROR] det should have a rank-2 UniTensor with N_inbond=1")
 
         if a.is_diag:
             tmp = torch.prod(a.Storage)
@@ -876,7 +916,7 @@ def Norm(a):
 
     Args:
         a :
-            a UniTensor.
+            a UniTensor[regular] with 1-inbond 1-outbond.
 
     Return:
         UniTensor, 0-rank (constant)
@@ -884,6 +924,16 @@ def Norm(a):
     """
 
     if isinstance(a,UniTensor):
+        if a.is_symm :
+            raise Exception("Norm","[ERROR] cannot operate Norm on a symmetry tensor")
+
+        if a.braket is not None:
+            raise Exception("Norm","[ERROR] Norm can only operate on untagged UniTensor")
+
+        if a.N_inbond != 1:
+            raise Exception("Norm","[ERROR] the input UniTensor should be rank-2, untagged with N_inbond=1")
+        
         return UniTensor(bonds=[],labels=[],N_inbond=0,torch_tensor=torch.norm(a.Storage),check=False)
+
     else:
         raise Exception("Norm(UniTensor)","[ERROR] Norm can only accept UniTensor")
