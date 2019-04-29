@@ -732,18 +732,33 @@ class UniTensor():
 
     def Whole_transpose(self):
         """
-            transpose the inbond and out-bond (Bra <-> Ket)
+        Transpose the inbond and out-bond (Bra <-> Ket)
+
+        Return:
+            UniTensor
+            
         """
+
         mapper = np.arange(len(self.labels))
-        mapper = np.roll(mapper,-self.N_inbond)
-        self.labels = np.roll(self.labels,-self.N_inbond)
-        self.bonds  = np.roll(self.bonds, -self.N_inbond)
-        if not self.is_diag :
-            self.Storage = self.Storage.permute(*mapper)
+        mapper = np.roll(mapper, -self.N_inbond)
+        new_labels = np.roll(self.labels, -self.N_inbond)
+        new_bonds = np.roll(self.bonds, -self.N_inbond)
+        new_inbond = len(self.labels) - self.N_inbond
+        if not self.is_diag:
+            new_storage = self.Storage.permute(*mapper)
+            return UniTensor(bonds=new_bonds,\
+                             N_inbond=new_inbond,\
+                             labels=new_labels,\
+                             torch_tensor=new_storage)
         if self.is_blockform:
+            new_storage = []
             for s in range(len(self.Storage)):
-                self.Storage[s].permute(0,1)
-        self.N_inbond = len(self.labels) - self.N_inbond
+                new_storage.append(self.Storage[s].permute(0, 1))
+            return UniTensor(bonds=new_bonds,\
+                             N_inbond=new_inbond,\
+                             labels=new_labels,\
+                             torch_tensor=new_storage,\
+                             is_blockform=self.is_blockform)
 
     def __mul__(self,other):
         if isinstance(other, self.__class__):
