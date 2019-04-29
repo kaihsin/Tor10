@@ -93,7 +93,9 @@ e.Permute([1,0])
 e.Print_diagram()
 eB = e.GetBlock()
 eB.Print_diagram()
-exit(1)
+eB += 2
+e.PutBlock(eB)
+print(e)
 
 # Labels related 
 g = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_BRA)],labels=[5,6])
@@ -107,13 +109,12 @@ print(g.labels)
 
 
 # Element related
-Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(2,Tor10.BD_KET)],
+Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2,Tor10.BD_KET),Tor10.Bond(2,Tor10.BD_BRA)],
                               dtype=torch.float64,
                               device=torch.device("cpu"))
 Sz.SetElem([1, 0,
             0,-1])
 print(Sz)
-
 
 # Sparse
 a = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)],N_inbond=1,is_diag=True)
@@ -121,6 +122,11 @@ print(a)
 
 a.Todense()
 print(a)
+
+c = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_BRA)],is_diag=True)
+
+exit(1)
+
 
 # CombineBonds:
 bds_x = [Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)]
@@ -222,7 +228,6 @@ print(tqout==tqout5)
 tqin4,tqout4 = sym_T2.GetTotalQnums()
 print(tqin==tqin4)
 print(tqout==tqout4)
-exit(1)
 
 
 ## GetBlock

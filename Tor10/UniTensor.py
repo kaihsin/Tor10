@@ -10,8 +10,7 @@ from . import linalg
 ## [KHW]
 ## from v0.3+, we deprecate dense Symmetry. 
 ## Using a is_symm as master switch. 
-##  Find "Qnum_ipoint" keyword for the part that need to be modify accrodingly when considering the Qnums feature.
-##
+## Find "[Fusion tree]" keyword for future extend of non-abelian / fermion etc. 
 
 def _fx_decompress_idx(x,accu_offsets):
 
@@ -288,15 +287,26 @@ class UniTensor():
             self.requires_grad(True)
 
 
-    def tag_braket(self):
+    def tag_braket(self,tags=None):
         if self.braket is None:
-            self.braket = []
-            for b_in in range(self.N_inbond):
-                self.bonds[b_in].bondType = BD_BRA
-                self.braket.append(BondType[BD_BRA])
-            for b_out in range(len(self.bonds)-self.N_inbond):
-                self.bonds[b_out+self.N_inbond].bondType = BD_KET
-                self.braket.append(BondType[BD_KET])
+            if tags is None:
+                self.braket = []
+                for b_in in range(self.N_inbond):
+                    self.bonds[b_in].bondType = BD_BRA
+                    self.braket.append(BondType[BD_BRA])
+                for b_out in range(len(self.bonds)-self.N_inbond):
+                    self.bonds[b_out+self.N_inbond].bondType = BD_KET
+                    self.braket.append(BondType[BD_KET])
+            else:
+                #check:
+                if len(tags) != len(self.bonds):
+                    raise ValueError("[ERROR] tags must match the rank of bonds.")
+                if all([x==BD_REG for x in rags]):
+                    raise ValueError("[ERROR] tags cannot contain BD_REG")
+                for b in range(len(self.bonds)):
+                    self.bonds[b].bondType = tags[b]
+                    self.braket.append(BondType[tags[b]])
+
             self.braket = np.array(self.braket)
             self.is_braket = True
 
@@ -315,6 +325,9 @@ class UniTensor():
 
 
     def _check_braket(self):
+        """
+            This is internal function!!
+        """
         if self.braket is not None:
             if (self.braket[:self.N_inbond]==BondType[BD_BRA]).all() and (self.braket[self.N_inbond:]==BondType[BD_KET]).all():
                 self.is_braket = True
@@ -1871,8 +1884,35 @@ class UniTensor():
         """
         ## Note, block should be a numpy array.
         if not self.is_symm:
-            raise Exception("[Warning] PutBlock cannot be use for non-symmetry TN. Use SetElem instead.")
+            ## check:
+            if block.braket is not None:
+                raise Exception("[ERROR] PutBlock can only accept a UniTensor with regular bonds.")
+          
+            if self.is_diag:
+                if not block.is_diag:
+                    raise Exception("[ERROR] PutBlock for a is_diag=True tensor can only accept a block with is_diag=True") 
+             
+            if self.N_inbond==0 :
+                curr_shape_2d = torch.Size([self.Storage.numel()])
+                if block.shape != curr_shape_2d:
+                    raise Exception("[ERROR] the shape of input Block",block.shape,"does not match the shape of current block",curr_shape_2d)
+                
+            elif len(self.bonds) - self.N_inbond==0:
+                curr_shape_2d = torch.Size([self.Storage.numel()])
+                if block.shape != curr_shape_2d:
+                    raise Exception("[ERROR] the shape of input Block",block.shape,"does not match the shape of current block",curr_shape_2d)
+            else:
+                curr_shape_2d = torch.Size([np.prod([x.dim for x in self.bonds[:self.N_inbond]]),\
+                                         np.prod([x.dim for x in self.bonds[self.N_inbond:]])])
+                if block.shape != curr_shape_2d:
+                    raise Exception("[ERROR] the shape of input Block",block.shape,"does not match the shape of current block",curr_shape_2d)
+
+            ## memcpy low-lv-api
+            self.Storage.storage().copy_(block.Storage.storage())
+            #raise Exception("[Warning] PutBlock cannot be use for non-symmetry TN. Use SetElem instead.")
+
         else:
+            
             raise Exception("Developing")
 
             """
@@ -2028,16 +2068,24 @@ class UniTensor():
         """
         if not self.is_symm:
 
-            if self.N_inbond==0 :
-                bds = [Bond(1),Bond(self.Storage.numel())]
-                
-            elif len(self.bonds) - self.N_inbond==0:
-                bds = [Bond(self.Storage.numel()),Bond(1)]
-            else:
-                bds = [Bond(np.prod([x.dim for x in self.bonds[:self.N_inbond]])),\
-                       Bond(np.prod([x.dim for x in self.bonds[self.N_inbond:]]))]
+            if self.is_diag:
+                bds = [Bond(self.Storage.bonds[0].dim),Bond(self.Storage.bonds[0].dim)]
+                return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.clone(),check=False,is_diag=True)
 
-            return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.reshape(bds[0].dim,-1),check=False)
+            else:
+
+                if self.N_inbond==0 :
+                    bds = [Bond(self.Storage.numel())]
+                    return UniTensor(bonds=bds,N_inbond=0,torch_tensor=self.Storage.flatten(),check=False)
+                    
+                elif len(self.bonds) - self.N_inbond==0:
+                    bds = [Bond(self.Storage.numel())]
+                    return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.flatten(),check=False)
+                else:
+                    bds = [Bond(np.prod([x.dim for x in self.bonds[:self.N_inbond]])),\
+                           Bond(np.prod([x.dim for x in self.bonds[self.N_inbond:]]))]
+
+                    return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.reshape(bds[0].dim,-1),check=False)
         
         else:
             raise Exception("[Developing]")
@@ -2649,6 +2697,7 @@ def _CombineBonds(a,label,new_label):
 
             if contype_inout:
                 # combine bond is in-bond(bra)
+                ##[Fusion tree]
                 new_Nin = a.N_inbond - len(x_ind) + 1
                 for i in range(len(x_ind)-1):
                     a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
@@ -2661,6 +2710,7 @@ def _CombineBonds(a,label,new_label):
 
             else:
                 # combine bond is out-bond(ket)
+                ##[Fusion tree]
                 new_Nin = a.N_inbond
                 for i in range(len(x_ind)-1):
                     a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
