@@ -1503,7 +1503,7 @@ class UniTensor():
 
         return self
 
-    def CombineBonds(self,labels_to_combine,new_label=None):
+    def CombineBonds(self,labels_to_combine,new_label=None,permute_back=True):
         """
         This function combines the bonds in input UniTensor [a] by the specified labels [label].
 
@@ -1517,8 +1517,13 @@ class UniTensor():
             new_label [default=None]
                 This should be an integer, for floating point number, it will be truncated to integer.
 
-                if new_label is set to None, the combined bond will have label as the bond in the to-be-combined bond that has the largest INDEX in input tensor.
+                if new_label is set to None, the combined bond will have label as the bond in the to-be-combined bonds that has the smallest LABEL in input tensor.
+
                 if new_label is set, the combined bond will have label [new_label]
+        
+            permuted_back[True]:
+                this state if the combine bond should be permuted back or not. If false, the combined bond will always presented as the first bond.
+
 
         Example:
 
@@ -1544,11 +1549,14 @@ class UniTensor():
         if len(labels_to_combine)<2:
             raise ValueError("CombineBonds","[ERROR] the number of bonds to combine should be greater than one.")
 
-        #if self.is_blockform:
-        #    print("developing")
-        #    exit(1)
 
-        _CombineBonds(self,labels_to_combine,new_label)
+        # checking :
+        #same_lbls = np.intersect1d(a.labels,label,return_indices=True)
+
+        #if len(same_lbls) != len(label):
+        #    raise Exception("[ERROR] not all the label appears in the current tensor.")
+ 
+        _CombineBonds(self,labels_to_combine,new_label,permute_back)
 
     def Contiguous_(self):
         """
@@ -2155,103 +2163,6 @@ class UniTensor():
                     raise TypeError("UniTensor.PutBlock","[ERROR] No block has qnums:",qnum)
 
 
-            """
-            if len(qnum) != self.bonds[0].nsym :
-                raise ValueError("UniTensor.PutBlock","[ERROR] The qnumtum numbers not match the number of type.")
-
-            if self.is_diag:
-                raise TypeError("UniTensor.PutBlock","[ERROR] Cannot put block on a diagonal tensor (is_diag=True)")
-
-            if self.is_blockform:
-                ## search if the tn has block of that qnums:
-
-                iflag = False
-                for s in range(len(self.Storage)):
-                    if np.array(qnum) == self._BlockQnums[s]:
-                        if isinstance(block,np.ndarray):
-                            if torch.Size(np.shape(block)) != self.Storage[s].shape:
-                                raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
-
-                            self.Storage[s] = torch.from_numpy(block)#.to(torch.float64)
-
-                        elif isinstance(block,self.Storage.__class__):
-                            if self.Storage[s].shape != block.shape:
-                                 raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
-                            self.Storage[s] = block.clone()
-
-                        elif isinstance(block,self.__class__):
-                            if block.is_blockform:
-                                raise Exception("UniTensor.PutBlock","[ERROR] cannot put a sparse block-from tensor")
-                            if self.Storage[s].shape != block.Storage.shape:
-                                raise Exception("UniTensor.PutBlock","[ERROR] block size does not match")
-
-                            self.Storage[s] = block.Storage.clone()
-
-                        else:
-                            raise TypeError("UniTensor.PutBlock","[ERROR] the block can only be an np.array or a %s"%(self.Storage.__class__))
-                        iflag = True
-                        break
-
-                if not iflag:
-                    raise TypeError("UniTensor.PutBlock","[ERROR] No block has qnums:",qnum)
-
-
-            else:
-
-                ## create a copy of bonds and labels information that has all the BD_IN on first.
-                # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
-                #tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
-                #mapper = np.argsort(tmp)
-                #tmp_bonds = self.bonds[mapper]
-                #tmp_labels = self.labels[mapper]
-                #Nin = len(tmp[tmp==False])
-
-                if (self.N_rowrank==0) or (self.N_rowrank==len(self.bonds)):
-                    raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond")
-
-                #virtual_cb-in
-                cb_inbonds = copy.deepcopy(self.bonds[0])
-                if self.N_rowrank > 1:
-                    cb_inbonds.combine(self.bonds[1:self.N_rowrank])
-
-                i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
-                for n in np.arange(1,self.bonds[0].nsym,1):
-                    i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
-                if len(i_in) == 0:
-                    raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
-
-                #virtual_cb_out
-                cb_outbonds = copy.deepcopy(self.bonds[self.N_rowrank])
-                if len(self.bonds) - self.N_rowrank > 1:
-                    cb_outbonds.combine(self.bonds[self.N_rowrank+1:])
-
-                i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
-                for n in np.arange(1,self.bonds[0].nsym,1):
-                    i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
-                if len(i_out) == 0:
-                    raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
-
-                #rev_mapper = np.argsort(mapper)
-                #self.Storage = self.Storage.permute(*mapper)
-                ori_shape = self.Storage.shape
-                print(self.Storage.shape)
-                ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
-                self.Storage = self.Storage.reshape(np.prod(ori_shape[:self.N_rowrank]),-1)
-                print(self.Storage.shape)
-                ## no need to check if the size match. if the size doesn't match, let torch handle the error.
-                if isinstance(block,np.ndarray):
-                    self.Storage[np.ix_(i_in,i_out)] = torch.from_numpy(block)#.to(torch.float64)
-                elif isinstance(block,self.Storage.__class__):
-                    self.Storage[np.ix_(i_in,i_out)] = block.clone()
-                elif isinstance(block,self.__class__):
-                    if block.is_blockform:
-                        raise TypeError("UniTensor.PutBlock","[ERRROR] cannot put a sparse block-form tensor.")
-                    self.Storage[np.ix_(i_in,i_out)] = block.Storage.clone()
-                else:
-                    raise TypeError("UniTensor.PutBlock","[ERROR] the block can only be an np.array or a %s"%(self.Storage.__class__))
-
-                self.Storage = self.Storage.reshape(*ori_shape)#.permute(*rev_mapper)
-        """
 
     def GetBlock(self,*qnum):
         """
@@ -2420,108 +2331,6 @@ class UniTensor():
                 ## if there is no block with qnum:
                 raise TypeError("UniTensor.GetBlock","[ERROR] No block has qnums:",qnum)
  
-        """
-        if len(self.bonds)==0:
-            return copy.deepcopy(self)
-
-        if not self.is_symm:
-            new_bonds = copy.deepcopy(self.bonds)
-            new_in = None
-            new_out = None
-            for i in range(self.N_rowrank):
-                if new_in is None:
-                    new_in = new_bonds[i]
-                else:
-                    new_in.combine(new_bonds[i])
-            for i in np.arange(self.N_rowrank,len(self.bonds),1):
-                if new_out is None:
-                    new_out = new_bonds[i]
-                else:
-                    new_out.combine(new_bonds[i])
-
-            new_bonds = []
-            if new_in is not None:
-                new_bonds.append(new_in)
-            if new_out is not None:
-                new_bonds.append(new_out)
-            if len(new_bonds)>1:
-                out = self.Storage.contiguous().reshape(new_bonds[0].dim,-1)
-            else:
-                out = self.Storage.contiguous().reshape(new_bonds[0].dim)
-            return UniTensor(bonds=new_bonds,N_rowrank=1 if self.N_rowrank>0 else 0,torch_tensor=out)
-
-        else:
-            
-
-            if self.is_blockform:
-
-                ## search if the tn has block of that qnums:
-                for s in range(len(self.Storage)):
-                    if np.array(qnum) == self._BlockQnums[s]:
-                        return UniTensor(bonds=[Bond(dim=self.Storage[s].shape[0]),Bond(dim=self.Storage[s].shape[1])],\
-                                         N_rowrank = 1,\
-                                         labels=[1,2],\
-                                         torch_tensor=self.Storage[s].clone(),\
-                                         check=False)
-
-                ## if there is no block with qnum:
-                raise TypeError("UniTensor.PutBlock","[ERROR] No block has qnums:",qnum)
-
-
-            else:
-
-                #######
-                ## create a copy of bonds and labels information that has all the BD_IN on first.
-                # [IN, IN, ..., IN, IN, OUT, OUT, ..., OUT, OUT]
-                #tmp = np.array([ (x.bondType is BD_OUT) for x in self.bonds])
-                #mapper = np.argsort(tmp)
-                #tmp_bonds = self.bonds[mapper]
-                #tmp_labels = self.labels[mapper]
-                #Nin = len(tmp[tmp==False])
-
-                if (self.N_rowrank==0) or (self.N_rowrank==len(self.bonds)):
-                    raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a block on a TN without either any in-bond or any out-bond")
-
-                #virtual_cb-in
-                cb_inbonds = copy.deepcopy(self.bonds[0])
-                if self.N_rowrank > 1:
-                    cb_inbonds.combine(self.bonds[1:self.N_rowrank])
-
-                i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
-                for n in np.arange(1,self.bonds[0].nsym,1):
-                    i_in = np.intersect1d(i_in, np.argwhere(cb_inbonds.qnums[:,n]==qnum[n]).flatten())
-                if len(i_in) == 0:
-                    raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
-
-                #virtual_cb_out
-                cb_outbonds = copy.deepcopy(self.bonds[self.N_rowrank])
-                if len(self.bonds) - self.N_rowrank > 1:
-                    cb_outbonds.combine(self.bonds[self.N_rowrank+1:])
-
-                i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
-                for n in np.arange(1,self.bonds[0].nsym,1):
-                    i_out = np.intersect1d(i_out, np.argwhere(cb_outbonds.qnums[:,n]==qnum[n]).flatten())
-                if len(i_out) == 0:
-                    raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the totoal Qnum out-bonds in current TN.")
-
-                ## virtual permute:
-                #rev_mapper = np.argsort(mapper)
-                #self.Storage = self.Storage.permute(*mapper)
-                ori_shape = self.Storage.shape
-
-                ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
-                out = self.Storage.reshape(np.prod(ori_shape[:self.N_rowrank]),-1)[np.ix_(i_in,i_out)]
-
-                #self.Storage = self.Storage.permute(*rev_mapper)
-
-                #print(out)
-
-                return UniTensor(bonds=[Bond(dim=out.shape[0]),Bond(dim=out.shape[1])],\
-                                 N_rowrank = 1,\
-                                 labels=[1,2],\
-                                 torch_tensor=out,\
-                                 check=False)
-        """
 
     def torch():
         """
@@ -2969,7 +2778,7 @@ def Contract(a,b):
 
 ## The functions that start with "_" are the private functions
 
-def _CombineBonds(a,label,new_label):
+def _CombineBonds(a,label,new_label,permute_back):
     """
     [Private function, should not be called directly by user]
 
@@ -3001,21 +2810,15 @@ def _CombineBonds(a,label,new_label):
         if not len(same_lbls) == len(label):
             raise Exception("_CombineBonds","[ERROR], label_to_combine doesn't exists in the UniTensor")
 
-        ## if the combine are BRA or KET
-        contype_inout = np.unique(a.braket[x_ind])
-        if len(contype_inout)!=1:
-                raise Exception("_CombineBonds","[ERROR], label_to_combine should be all bra-bond or all ket-bond")
-        contype_inout = contype_inout[0]
 
-
+        ## symmetry?
         ## master switch 
         if a.is_symm:
             raise Exception("[Develope]")
-        else:
 
+        else:
             if a.is_diag:
                 raise TypeError("_CombineBonds","[ERROR] CombineBonds doesn't support diagonal matrix.")
-
 
             idx_no_combine = np.setdiff1d(np.arange(len(a.labels)),x_ind)
             old_shape = np.array(a.Storage.shape)
@@ -3031,32 +2834,92 @@ def _CombineBonds(a,label,new_label):
 
                 a.labels[x_ind[0]] = newlbl
 
-            if contype_inout:
-                # combine bond is in-bond(bra)
-                ##[Fusion tree]
-                new_Nin = a.N_rowrank - len(x_ind) + 1
-                for i in range(len(x_ind)-1):
-                    a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
 
-                mapper = np.concatenate([x_ind,idx_no_combine])
-                a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
-                a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
-                a.braket = np.append(a.braket[x_ind[0]],a.braket[idx_no_combine])
-                a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+            if a.braket is None:
 
-            else:
-                # combine bond is out-bond(ket)
+
                 ##[Fusion tree]
                 new_Nin = a.N_rowrank
                 for i in range(len(x_ind)-1):
+                    if x_ind[1+i]<a.N_rowrank:
+                        new_Nin-=1
                     a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
-                mapper = np.concatenate([idx_no_combine,x_ind])
-                a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[x_ind[0]])
-                a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
-                a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
 
 
-            a.N_rowrank=new_Nin
+                if permute_back:
+
+                    mapper = np.concatenate([x_ind,idx_no_combine])
+                    f_label = a.labels[x_ind[0]]
+                    a.bonds = np.delete(a.bonds,x_ind[1:])
+                    a.labels = np.delete(a.labels,x_ind[1:])
+                    a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+
+                    x = np.argwhere(a.labels==f_label)
+                    final_mapper = np.insert(np.arange(1,len(a.bonds),1).astype(np.int),x[0],0)
+                    a.Stoarge = a.Storage.permute(final_mapper.tolist())
+
+                    a.N_rowrank=new_Nin
+                else:
+
+                    if x_ind[0] >= a.N_rowrank:
+                        mapper = np.concatenate([idx_no_combine,x_ind])
+                        a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[x_ind[0]])
+                        a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
+                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+                        a.N_rowrank = len(a.labels)-1
+                    else:
+                        mapper = np.concatenate([x_ind,idx_no_combine])
+                        a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
+                        a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
+                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+                        a.N_rowrank = 1
+ 
+            else:
+
+                ## if the combine are BRA or KET
+                contype_inout = np.unique(a.braket[x_ind])
+                if len(contype_inout)!=1:
+                        raise Exception("_CombineBonds","[ERROR], label_to_combine should be all bra-bond or all ket-bond for tagged-nonsymm Tensor")
+
+
+                ##[Fusion tree]
+                new_Nin = a.N_rowrank
+                for i in range(len(x_ind)-1):
+                    if x_ind[1+i]<a.N_rowrank:
+                        new_Nin-=1
+                    a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
+
+
+                if permute_back:     
+                    mapper = np.concatenate([x_ind,idx_no_combine])
+                
+                    f_label = a.labels[x_ind[0]]
+                    a.bonds = np.delete(a.bonds,x_ind[1:])
+                    a.labels = np.delete(a.labels,x_ind[1:])
+                    a.braket = np.delete(a.braket,x_ind[1:])
+                    a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+
+                    x = np.argwhere(a.labels==f_label)
+                    final_mapper = np.insert(np.arange(1,len(a.bonds),1).astype(np.int),x[0],0)
+                    a.Stoarge = a.Storage.permute(final_mapper.tolist())
+
+                    a.N_rowrank=new_Nin
+                else:
+
+                    if x_ind[0] >= a.N_rowrank:
+                        mapper = np.concatenate([idx_no_combine,x_ind])
+                        a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[x_ind[0]])
+                        a.labels = np.append(a.labels[idx_no_combine], a.labels[x_ind[0]])
+                        a.braket = np.append(a.braket[idx_no_combine], a.braket[x_ind[0]])
+                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+                        a.N_rowrank = len(a.labels)-1
+                    else:
+                        mapper = np.concatenate([x_ind,idx_no_combine])
+                        a.bonds = np.append(a.bonds[x_ind[0]],a.bonds[idx_no_combine])
+                        a.labels = np.append(a.labels[x_ind[0]],a.labels[idx_no_combine])
+                        a.braket = np.append(a.braket[x_ind[0]],a.braket[idx_no_combine])
+                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(combined_dim,no_combine_dims).tolist())
+                        a.N_rowrank = 1
 
     else :
         raise Exception("_CombineBonds(UniTensor,int_arr)","[ERROR] )CombineBonds can only accept UniTensor")

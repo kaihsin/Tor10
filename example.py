@@ -127,21 +127,6 @@ c = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_BRA)
 
 
 
-# CombineBonds:
-bds_x = [Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)]
-x = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
-y = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
-z = Tor10.UniTensor(bonds=bds_x, labels=[4,3,5])
-x.Print_diagram()
-
-x.CombineBonds([4,3])
-x.Print_diagram()
-
-y.CombineBonds([4,3])
-y.Print_diagram()
-
-z.CombineBonds([4,3],new_label=8)
-z.Print_diagram()
 
 
 dT = Tor10.UniTensor(bonds=[Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA)],N_rowrank=1,is_diag=True)
@@ -274,6 +259,24 @@ print(SN.GetBlock(0).shape)
 bbn2 = SN.GetBlock(0)+2
 SN.PutBlock(bbn2,0)
 print(SN)
+
+# CombineBonds:
+bds_x = [Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_BRA)]
+x = Tor10.UniTensor(bonds=bds_x, labels=[4,5,3])
+y = Tor10.UniTensor(bonds=bds_x, labels=[4,5,3])
+z = Tor10.UniTensor(bonds=bds_x, labels=[4,5,3])
+x.Print_diagram()
+
+x.CombineBonds([4,3])
+x.Print_diagram()
+
+y.CombineBonds([4,3])
+y.Print_diagram()
+
+z.CombineBonds([4,3],new_label=8,permute_back=False)
+z.Print_diagram()
+
+
 exit(1)
 
 
