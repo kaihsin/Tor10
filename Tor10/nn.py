@@ -106,7 +106,7 @@ class Linear():
     Examples::
 
         >>> m = Tor10.nn.Linear(20, 30)
-        >>> iput = Tor10.From_torch(torch.randn(128, 20),N_inbond=1)
+        >>> iput = Tor10.From_torch(torch.randn(128, 20),N_rowrank=1)
         >>> oput = m(iput)
         >>> print(oput.shape())
         torch.Size([128, 30])
@@ -146,7 +146,7 @@ class Linear():
     
         out = self.tnn(ipt.Storage)
         
-        return UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),N_inbond=len(ipt.bonds[:-1]),torch_tensor=out,check=False)
+        return UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),N_rowrank=len(ipt.bonds[:-1]),torch_tensor=out,check=False)
 
     def extra_repr(self):
         return 'in_features={}, out_features={}, bias={}'.format(\
@@ -162,7 +162,7 @@ class Linear():
         Return:
             UniTensor, rank-2
         """
-        return UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],N_inbond=1,torch_tensor=self.tnn.weight,check=False)
+        return UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],N_rowrank=1,torch_tensor=self.tnn.weight,check=False)
 
     def bias(self):
         """
@@ -178,6 +178,6 @@ class Linear():
         if self.tnn.bias is None:
             return None
         else:
-            return UniTensor(bonds=[Bond(self.bias.shape[0])],N_inbond=0,torch_tensor=self.tnn.bias,check=False) 
+            return UniTensor(bonds=[Bond(self.bias.shape[0])],N_rowrank=0,torch_tensor=self.tnn.bias,check=False) 
 
 

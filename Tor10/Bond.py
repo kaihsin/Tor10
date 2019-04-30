@@ -395,9 +395,14 @@ class Bond():
             else:
                 self.change(new_type)
 
-    def GetUniqueQnums(self):
+    def GetUniqueQnums(self,return_degeneracy=False):
         """
             Get The Unique Qnums by remove the duplicates
+            Args:
+                
+                return_degeneracy [default: False]: 
+                    return the defeneracy of each qnums:
+                
 
             return:
                 2D numpy.array with shape (# of unique qnum-set, # of symmetry)
@@ -406,7 +411,22 @@ class Bond():
         if self.qnums is None:
             raise TypeError("Bond.GetUniqueQnums", "[ERROR] cannot get qnums from a non-sym bond.")
 
-        return np.unique(self.qnums, axis=0)
+        if return_degeneracy:
+            uqn = np.unique(self.qnums, axis=0)
+            deg = []
+            for q in uqn:
+                deg.append( len(np.argwhere((self.qnums == uqn).all(axis=1)).flatten()))
+            deg = np.array(deg)
+            return uqn,deg
+        else:
+            return np.unique(self.qnums, axis=0)
+
+    def GetDegenerate(self,*qnums):
+        if self.qnums is None:
+            raise TypeError("Bond.GetDegenerate","[ERROR] cannot get degenerate from a non-sym bond.")
+
+        deg = len(np.argwhere((self.qnums == np.array(qnums).astype(np.int)).all(axis=1)).flatten())
+        return deg
 
 
     def __mul__(self,val):

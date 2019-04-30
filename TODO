@@ -1,5 +1,11 @@
 Network
 Contract
 
-linalg for regular tensor.
+#linalg for regular tensor.
+
+HOSVD
+Contract
+Whole_transpose for symm tensor can optimize.
+
+
  

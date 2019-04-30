@@ -11,6 +11,7 @@ from . import linalg
 ## from v0.3+, we deprecate dense Symmetry. 
 ## Using a is_symm as master switch. 
 ## Find "[Fusion tree]" keyword for future extend of non-abelian / fermion etc. 
+## Find "DEBUG" keywork to comment the debug section when in release!!. 
 
 def _fx_decompress_idx(x,accu_offsets):
 
@@ -22,7 +23,7 @@ def _fx_decompress_idx(x,accu_offsets):
 
 class UniTensor():
 
-    def __init__(self, bonds, N_inbond=None ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, requires_grad=False, name="",braket=None,sym_mappers=None):
+    def __init__(self, bonds, N_rowrank=None ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, requires_grad=False, name="",braket=None,sym_mappers=None):
         """
         This is the constructor of UniTensor.
 
@@ -32,10 +33,10 @@ class UniTensor():
                 List of bonds.
                 It should be an list or np.ndarray with len(list) being the number of bonds.
 
-            N_inbond:
+            N_rowrank:
                 The number of in-bond.
-                The first [N_inbond] bonds will be define as the in-bond (which is the row space when flatten as Matrix), and the other bonds will be defined as the out-bond (which is the column space when flatten as Matrix).
-                When interprete the memory layout as Matrix, the combine of first N_inbond will be the row and the other bond will be column.
+                The first [N_rowrank] bonds will be define as the in-bond (which is the row space when flatten as Matrix), and the other bonds will be defined as the out-bond (which is the column space when flatten as Matrix).
+                When interprete the memory layout as Matrix, the combine of first N_rowrank will be the row and the other bond will be column.
 
 
             labels:
@@ -62,8 +63,8 @@ class UniTensor():
 
         Private Args:
 
-        self.labels = np.roll(self.labels,-self.N_inbond)
-        self.bonds  = np.roll(self.bonds, -self.N_inbond)
+        self.labels = np.roll(self.labels,-self.N_rowrank)
+        self.bonds  = np.roll(self.bonds, -self.N_rowrank)
 
            ** [Warning] Private Args should not be call directly **
 
@@ -80,22 +81,22 @@ class UniTensor():
         Example for how to create a UniTensor:
 
             * create a rank-2 UniTensor (matrix) with shape (3,4):
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
 
             * create a rank-3 UniTensor with one inbond and two outbond, shape (3,4,5) and set labels [-3,4,1] for each bond:
-            >>> c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=1,labels=[-3,4,1])
+            >>> c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_rowrank=1,labels=[-3,4,1])
 
             * create a rank-2 UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:
-            >>> d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,device=torch.device("cuda:0"))
+            >>> d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1,device=torch.device("cuda:0"))
 
             * create a diagonal 6x6 rank-2 tensor(matrix):
-              Note that if is_diag is True, N_inbond must be 1.
-            >>> e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],N_inbond=1,is_diag=True)
+              Note that if is_diag is True, N_rowrank must be 1.
+            >>> e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],N_rowrank=1,is_diag=True)
 
             Note that when is_diag is set to True, the UniTensor should be a square matrix.
 
             * crate a rank-3 UniTensor with two in-bond and one-outbond, and single precision:
-            >>> f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_inbond=2,labels=[-3,4,1],dtype=torch.float32)
+            >>> f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_rowrank=2,labels=[-3,4,1],dtype=torch.float32)
 
 
 
@@ -119,9 +120,9 @@ class UniTensor():
         ## checking :
         if check:
             # Bonds:
-            if N_inbond is not None:
-                if N_inbond < 0 or N_inbond > len(self.bonds):
-                    raise Exception("UniTensor.__init__","the N_inbond should be >=0 and < # of bonds")
+            if N_rowrank is not None:
+                if N_rowrank < 0 or N_rowrank > len(self.bonds):
+                    raise Exception("UniTensor.__init__","the N_rowrank should be >=0 and < # of bonds")
 
             # Labels:
             # check # of labels consist with bond.
@@ -150,13 +151,13 @@ class UniTensor():
             self.braket = copy.deepcopy(braket)
 
         
-        if N_inbond is None:
+        if N_rowrank is None:
             if self.braket is not None:
-                self.N_inbond = len(np.argwhere(self.braket==BondType[BD_BRA]))
+                self.N_rowrank = len(np.argwhere(self.braket==BondType[BD_BRA]))
             else:
-                raise Exception("[ERROR] for UniTensor init with all the bond are regular, N_inbond should be provided")
+                raise Exception("[ERROR] for UniTensor init with all the bond are regular, N_rowrank should be provided")
         else:
-            self.N_inbond = int(N_inbond)
+            self.N_rowrank = int(N_rowrank)
  
 
         self._check_braket()
@@ -176,8 +177,8 @@ class UniTensor():
                     if not len(self.labels) == 2:
                         raise TypeError("UniTensor.__init__","is_diag=True require Tensor rank==2")
 
-                    if not self.N_inbond == 1:
-                        raise TypeError("UniTensor.__init__","is_diag=True require Tensor rank==2, with 1 inbond and 1 outbond (N_inbond=1)")
+                    if not self.N_rowrank == 1:
+                        raise TypeError("UniTensor.__init__","is_diag=True require Tensor rank==2, with 1 inbond and 1 outbond (N_rowrank=1)")
 
                     if not self.bonds[0].dim == self.bonds[1].dim:
                         raise TypeError("UniTensor.__init__","is_diag=True require Tensor to be square rank-2")
@@ -198,7 +199,7 @@ class UniTensor():
                 if self.bonds[0].qnums is not None:
                     if len(np.unique([ bd.nsym for bd in self.bonds])) != 1:
                         raise TypeError("UniTensor.__init__","the number of symmetry type for symmetry bonds doesn't match.")
-                if self.N_inbond < 1 or self.N_inbond >= len(self.bonds):
+                if self.N_rowrank < 1 or self.N_rowrank >= len(self.bonds):
                     raise TypeError("UniTensor.__init__","[ERROR] tensor with symmetry must have at least one rank for row space and one rank for column space")
                 
                 nket = len(np.argwhere(self.braket==BondType[BD_KET]).flatten())
@@ -207,15 +208,16 @@ class UniTensor():
 
 
             ## only activate when symmetry is on.
-            self._bra_mapper_blks = None
-            self._ket_mapper_blks = None
-            self._bra_invmapper_blks = None
-            self._ket_invmapper_blks = None
-            self._mapper = None
-            self._inv_mapper = None
-            self._contiguous = True
-            self._accu_off_in = None
-            self._accu_off_out = None
+            self._bra_mapper_blks = None     ## this follow memory
+            self._ket_mapper_blks = None     ## this follow memory
+            self._bra_invmapper_blks = None  ## this follow memory
+            self._ket_invmapper_blks = None  ## this follow memory
+            self._mapper = None       ## memory idx to real idx
+            self._inv_mapper = None   ## real idx to memory index
+            self._contiguous = True   
+            self._accu_off_in = None  ## this follows memory
+            self._accu_off_out = None ## this follows memory
+            self._block_qnums = None  ## this follows real Tensor, not memory!!!
             
             # calc offsets
             accu_off = []
@@ -224,8 +226,8 @@ class UniTensor():
                 accu_off.append(tmp)
                 tmp*= self.bonds[-1-i].dim
             accu_off = np.array(accu_off[::-1])
-            self._accu_off_in = accu_off[:self.N_inbond]
-            self._accu_off_out = accu_off[self.N_inbond:]
+            self._accu_off_in = (accu_off[:self.N_rowrank]/accu_off[self.N_rowrank-1]).astype(np.int)
+            self._accu_off_out = accu_off[self.N_rowrank:]
             del accu_off 
 
             ## memory contiguous mapper this 
@@ -234,7 +236,7 @@ class UniTensor():
                 self._inv_mapper = copy.copy(self._mapper)
 
                 ## Get common qnums for in and out b
-                b_tqin,b_tqout = self.GetTotalQnums(include_braket=True)
+                b_tqin,b_tqout = self.GetTotalQnums(physical=False)
                 tqin_uni = b_tqin.GetUniqueQnums()
                 tqout_uni = b_tqout.GetUniqueQnums()
                 C = _fx_GetCommRows(tqin_uni,tqout_uni)
@@ -246,7 +248,7 @@ class UniTensor():
                 self._ket_invmapper_blks = []
                 self._bra_mapper_blks = -np.ones((b_tqin.dim,2)).astype(np.int)
                 self._ket_mapper_blks = -np.ones((b_tqout.dim,2)).astype(np.int)
-                
+                self._block_qnums = [] 
 
                 for b in range(len(C)):
                     comm = tuple(C[b])
@@ -263,6 +265,7 @@ class UniTensor():
                     self._ket_invmapper_blks.append(_fx_decompress_idx(idx_out,self._accu_off_out))
                     self._ket_mapper_blks[idx_out,0] = b
                     self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
+                self._block_qnums = C
 
             else:
                 self._mapper = copy.deepcopy(sym_mappers[0])
@@ -275,7 +278,7 @@ class UniTensor():
                 self._contiguous = copy.deepcopy(sym_mappers[6])
                 self._accu_off_in  = copy.deepcopy(sym_mappers[7])  
                 self._accu_off_out = copy.deepcopy(sym_mappers[8])
-
+                self._block_qnums = copy.deepcopy(sym_mappers[9])
                 if torch_tensor is None:
                     raise TypeError("UniTensor.__init__","[ERROR], pass the interface must accompany with torch_tensor")
 
@@ -291,11 +294,11 @@ class UniTensor():
         if self.braket is None:
             if tags is None:
                 self.braket = []
-                for b_in in range(self.N_inbond):
+                for b_in in range(self.N_rowrank):
                     self.bonds[b_in].bondType = BD_BRA
                     self.braket.append(BondType[BD_BRA])
-                for b_out in range(len(self.bonds)-self.N_inbond):
-                    self.bonds[b_out+self.N_inbond].bondType = BD_KET
+                for b_out in range(len(self.bonds)-self.N_rowrank):
+                    self.bonds[b_out+self.N_rowrank].bondType = BD_KET
                     self.braket.append(BondType[BD_KET])
             else:
                 #check:
@@ -329,7 +332,7 @@ class UniTensor():
             This is internal function!!
         """
         if self.braket is not None:
-            if (self.braket[:self.N_inbond]==BondType[BD_BRA]).all() and (self.braket[self.N_inbond:]==BondType[BD_KET]).all():
+            if (self.braket[:self.N_rowrank]==BondType[BD_BRA]).all() and (self.braket[self.N_rowrank:]==BondType[BD_KET]).all():
                 self.is_braket = True
             else:
                 self.is_braket = False
@@ -354,7 +357,7 @@ class UniTensor():
             raise Exception("[ERROR] for a tensor with regular bonds, there is no property of barket.")
         x = np.argsort(self.braket)
         Nin = len(np.argwhere(self.braket==BondType[BD_BRA]))
-        self.Permute(x,N_inbond=Nin,by_label=False)
+        self.Permute(x,N_rowrank=Nin,by_label=False)
         return self 
             
    
@@ -370,7 +373,7 @@ class UniTensor():
 
         Example:
 
-            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])
+            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1,labels=[5,6])
             >>> g.labels
             [5 6]
 
@@ -403,7 +406,7 @@ class UniTensor():
 
         Example:
 
-            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1,labels=[5,6])
+            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1,labels=[5,6])
             >>> g.labels
             [5 6]
 
@@ -456,7 +459,7 @@ class UniTensor():
 
         Example:
         ::
-            Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_inbond=1,
+            Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1,
                               dtype=torch.float64,
                               device=torch.device("cpu"))
             Sz.SetElem([1, 0,
@@ -496,7 +499,7 @@ class UniTensor():
 
         Example:
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],N_inbond=1,is_diag=True)
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],N_rowrank=1,is_diag=True)
             >>> print(a.is_diag)
             True
 
@@ -534,7 +537,7 @@ class UniTensor():
 
             Construct a tensor (default is on cpu)
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
 
             Set to GPU.
 
@@ -565,7 +568,7 @@ class UniTensor():
 
             [ex:] Rank = 4.
             shape: (1,2,3,6)
-            N_inbond = 2
+            N_rowrank = 2
             labels=[0,5,3,11]
 
                         -----------
@@ -585,8 +588,8 @@ class UniTensor():
             print("on device     : %s"%(self.Storage.device))
             print("is_diag       : %s"%("True" if self.is_diag else "False"))
 
-        Nin = self.N_inbond
-        Nout = len(self.bonds) - self.N_inbond
+        Nin = self.N_rowrank
+        Nout = len(self.bonds) - self.N_rowrank
         if Nin > Nout:
             vl = Nin
         else:
@@ -665,10 +668,20 @@ class UniTensor():
                 for b in range(len(self.Storage)):
                     print(self.Storage[b])
             else:
+                
                 out = self.Contiguous()
                 for b in range(len(out.Storage)):
                     print(out.Storage[b])
                 del out
+                
+                ## DEBUG >>>
+                print("xxxxxxxxxxxxxxxxxxxxxx")
+                print("Real memory:")
+                for b in range(len(self.Storage)):
+                    print(self.Storage[b])
+                print("xxxxxxxxxxxxxxxxxxxxxx")
+                ## <<<
+
         else:
             print("is_diag    : %s"%("True" if self.is_diag else "False"))
             print(self.Storage)
@@ -690,6 +703,15 @@ class UniTensor():
                 for b in range(len(out.Storage)):
                     print(out.Storage[b])
                 del out
+
+                ## DEBUG >>>
+                print("xxxxxxxxxxxxxxxxxxxxxx")
+                print("Real memory:")
+                for b in range(len(self.Storage)):
+                    print(self.Storage[b])
+                print("xxxxxxxxxxxxxxxxxxxxxx")
+                ## <<<
+
         else:
             print("is_diag    : %s"%("True" if self.is_diag else "False"))
             print(self.Storage)
@@ -724,7 +746,7 @@ class UniTensor():
             if not (all(self.bonds[i]==rhs.bonds[i] for i in range(len(self.bonds))) and all(self.labels[i]==rhs.labels[i] for i in range(len(self.labels))) ):
                 return False
 
-            if not self.N_inbond==rhs.N_inbond:
+            if not self.N_rowrank==rhs.N_rowrank:
                 return False
 
             if (self.braket is None) != (rhs.braket is None):            
@@ -775,7 +797,7 @@ class UniTensor():
     def __getitem__(self,key):
         if self.is_symm:
             raise Exception("UniTensor.__getitem__","[ERROR] cannot use [] to getitem from a block-form tensor. Use get block first.")
-        return From_torch(self.Storage[key],N_inbond=0)
+        return From_torch(self.Storage[key],N_rowrank=0)
 
     def __setitem__(self,key,value):
         if self.is_symm:
@@ -813,7 +835,7 @@ class UniTensor():
                 if self.is_contiguous() and other.is_contiguous():
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels = self.labels,\
-                                    N_inbond = self.N_inbond,\
+                                    N_rowrank = self.N_rowrank,\
                                     braket = self.braket,\
                                     torch_tensor=[self.Storage[b]+other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
@@ -822,7 +844,8 @@ class UniTensor():
                                                  self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
-                                                 self._accu_off_out))    
+                                                 self._accu_off_out,\
+                                                 self._block_qnums))    
                                     
                 else:
                     raise Exception("[ERROR]","Two symmetry tensors can only add when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before add")
@@ -836,7 +859,7 @@ class UniTensor():
                 if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
+                                    N_rowrank=self.N_rowrank,\
                                     torch_tensor=self.Storage + other.Storage,\
                                     braket = self.braket,\
                                     check=False,\
@@ -845,7 +868,7 @@ class UniTensor():
                 elif self.is_diag==False and other.is_diag==False:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
+                                    N_rowrank=self.N_rowrank,\
                                     torch_tensor=self.Storage + other.Storage,\
                                     braket = self.braket,\
                                     check=False)
@@ -853,14 +876,14 @@ class UniTensor():
                     if self.is_diag:
                         tmp = UniTensor(bonds = self.bonds,\
                                         labels= self.labels,\
-                                        N_inbond=self.N_inbond,\
+                                        N_rowrank=self.N_rowrank,\
                                         torch_tensor=torch.diag(self.Storage) + other.Storage,\
                                         braket = self.braket,\
                                         check=False)
                     else:
                         tmp = UniTensor(bonds = self.bonds,\
                                         labels= self.labels,\
-                                        N_inbond=self.N_inbond,\
+                                        N_rowrank=self.N_rowrank,\
                                         torch_tensor=self.Storage + torch.diag(other.Storage),\
                                         braket = self.braket,\
                                         check=False)
@@ -870,7 +893,7 @@ class UniTensor():
             if self.is_symm:
                 tmp = UniTensor(bonds = self.bonds,\
                                 labels = self.labels,\
-                                N_inbond = self.N_inbond,\
+                                N_rowrank = self.N_rowrank,\
                                 braket = self.braket,\
                                 torch_tensor=[self.Storage[b]+other for b in range(len(self.Storage))],\
                                 check=False,\
@@ -879,13 +902,14 @@ class UniTensor():
                                              self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
-                                             self._accu_off_out))  
+                                             self._accu_off_out,\
+                                             self._block_qnums))  
  
                 return tmp 
             else:
                 return UniTensor(bonds = self.bonds,\
                                  labels= self.labels,\
-                                 N_inbond=self.N_inbond,\
+                                 N_rowrank=self.N_rowrank,\
                                  torch_tensor=self.Storage + other,\
                                  check=False,
                                  braket = self.braket,\
@@ -896,7 +920,7 @@ class UniTensor():
         if self.is_symm:
             tmp = UniTensor(bonds = self.bonds,\
                             labels = self.labels,\
-                            N_inbond = self.N_inbond,\
+                            N_rowrank = self.N_rowrank,\
                             braket = self.braket,\
                             torch_tensor=[other + self.Storage[b] for b in range(len(self.Storage))],\
                             check=False,\
@@ -905,13 +929,14 @@ class UniTensor():
                                          self._ket_mapper_blks,self._ket_invmapper_blks,\
                                          self._contiguous,\
                                          self._accu_off_in,\
-                                         self._accu_off_out))  
+                                         self._accu_off_out,\
+                                         self._block_qnums))  
 
             return tmp 
         else:
             return UniTensor(bonds = self.bonds,\
                              labels= self.labels,\
-                             N_inbond=self.N_inbond,\
+                             N_rowrank=self.N_rowrank,\
                              torch_tensor= other + self.Storage,\
                              check=False,
                              braket = self.braket,\
@@ -929,7 +954,7 @@ class UniTensor():
                 if self.is_contiguous() and other.is_contiguous():
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels = self.labels,\
-                                    N_inbond = self.N_inbond,\
+                                    N_rowrank = self.N_rowrank,\
                                     braket = self.braket,\
                                     torch_tensor=[self.Storage[b]-other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
@@ -938,7 +963,8 @@ class UniTensor():
                                                  self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
-                                                 self._accu_off_out))    
+                                                 self._accu_off_out,\
+                                                 self._block_qnums))    
                                     
                 else:
                     raise Exception("[ERROR]","Two symmetry tensors can only sub when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before sub")
@@ -950,7 +976,7 @@ class UniTensor():
                 if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
+                                    N_rowrank=self.N_rowrank,\
                                     torch_tensor=self.Storage - other.Storage,\
                                     braket = self.braket,\
                                     check=False,\
@@ -959,7 +985,7 @@ class UniTensor():
                 elif self.is_diag==False and other.is_diag==False:
                     tmp = UniTensor(bonds = self.bonds,\
                                      labels= self.labels,\
-                                     N_inbond=self.N_inbond,\
+                                     N_rowrank=self.N_rowrank,\
                                      torch_tensor=self.Storage - other.Storage,\
                                      braket = self.braket,\
                                      check=False)
@@ -967,14 +993,14 @@ class UniTensor():
                     if self.is_diag:
                         tmp = UniTensor(bonds = self.bonds,\
                                         labels= self.labels,\
-                                        N_inbond=self.N_inbond,\
+                                        N_rowrank=self.N_rowrank,\
                                         torch_tensor=torch.diag(self.Storage) - other.Storage,\
                                         braket = self.braket,\
                                         check=False)
                     else:
                         tmp = UniTensor(bonds = self.bonds,\
                                         labels= self.labels,\
-                                        N_inbond=self.N_inbond,\
+                                        N_rowrank=self.N_rowrank,\
                                         torch_tensor=self.Storage - torch.diag(other.Storage),\
                                         braket = self.braket,\
                                         check=False)
@@ -983,7 +1009,7 @@ class UniTensor():
             if self.is_symm:
                 tmp = UniTensor(bonds = self.bonds,\
                                 labels = self.labels,\
-                                N_inbond = self.N_inbond,\
+                                N_rowrank = self.N_rowrank,\
                                 braket = self.braket,\
                                 torch_tensor=[self.Storage[b]-other for b in range(len(self.Storage))],\
                                 check=False,\
@@ -992,13 +1018,14 @@ class UniTensor():
                                              self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
-                                             self._accu_off_out))  
+                                             self._accu_off_out,\
+                                             self._block_qnums))  
  
                 return tmp 
             else:
                 return UniTensor(bonds = self.bonds,\
                                  labels= self.labels,\
-                                 N_inbond=self.N_inbond,\
+                                 N_rowrank=self.N_rowrank,\
                                  torch_tensor=self.Storage - other,\
                                  check=False,\
                                  braket = self.braket,\
@@ -1008,7 +1035,7 @@ class UniTensor():
         if self.is_symm:
             tmp = UniTensor(bonds = self.bonds,\
                             labels = self.labels,\
-                            N_inbond = self.N_inbond,\
+                            N_rowrank = self.N_rowrank,\
                             braket = self.braket,\
                             torch_tensor=[other - self.Storage[b] for b in range(len(self.Storage))],\
                             check=False,\
@@ -1017,30 +1044,57 @@ class UniTensor():
                                          self._ket_mapper_blks,self._ket_invmapper_blks,\
                                          self._contiguous,\
                                          self._accu_off_in,\
-                                         self._accu_off_out))  
+                                         self._accu_off_out,\
+                                         self._block_qnums))  
 
             return tmp 
         else:
             return UniTensor(bonds = self.bonds,\
                              labels= self.labels,\
-                             N_inbond=self.N_inbond,\
+                             N_rowrank=self.N_rowrank,\
                              torch_tensor= other - self.Storage,\
                              check=False,
                              braket = self.braket,\
                              is_diag=self.is_diag)
-    """
+    ""
     def Whole_transpose(self):
-        mapper = np.arange(len(self.labels))
-        mapper = np.roll(mapper,-self.N_inbond)
-        self.labels = np.roll(self.labels,-self.N_inbond)
-        self.bonds  = np.roll(self.bonds, -self.N_inbond)
-        if not self.is_diag :
-            self.Storage = self.Storage.permute(*mapper)
-        if self.is_blockform:
-            for s in range(len(self.Storage)):
-                self.Storage[s].permute(0,1)
-        self.N_inbond = len(self.labels) - self.N_inbond
-    """
+        """
+            If the UniTensor is tagged, exchange the bra/ket tags on each bond, and transpose (rowspace and colspace) by referencing to the "N_rowrank".
+            
+            Return:
+                UniTensor, shared the same type with each bond's tag bra <-> ket exchanged.
+
+        """
+        out = copy.deepcopy(self)
+        if self.is_symm:
+            ## symmetry Tensor:
+            for b in range(len(self.bonds)):
+                if out.bonds[b].bondType==BD_BRA:
+                    out.bonds[b].bondType = BD_KET
+                else:
+                    out.bonds[b].bondType = BD_BRA
+            out.braket*=-1
+            tmp = np.roll(np.arange(len(out.bonds)).astype(np.int),-out.N_rowrank)
+            out.Permute(tmp,N_rowrank=len(out.bonds)-out.N_rowrank)
+            
+        else:
+            if self.braket is None:
+                ## untagged tensor
+                out.Permute(tmp,N_rowrank=len(out.bonds)-out.N_rowrank)
+                return out
+            else:
+                ## tagged nonsymm Tensor:                
+                for b in range(len(self.bonds)):
+                    if out.bonds[b].bondType==BD_BRA:
+                        out.bonds[b].bondType = BD_KET
+                    else:
+                        out.bonds[b].bondType = BD_BRA
+                out.braket*=-1
+                tmp = np.roll(np.arange(len(out.bonds)).astype(np.int),-out.N_rowrank)
+                out.Permute(tmp,N_rowrank=len(out.bonds)-out.N_rowrank)
+
+        return out
+    ""
 
     def __mul__(self,other):
         if isinstance(other, self.__class__):
@@ -1052,7 +1106,7 @@ class UniTensor():
                 if self.is_contiguous() and other.is_contiguous():
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels = self.labels,\
-                                    N_inbond = self.N_inbond,\
+                                    N_rowrank = self.N_rowrank,\
                                     braket = self.braket,\
                                     torch_tensor=[self.Storage[b]*other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
@@ -1061,7 +1115,8 @@ class UniTensor():
                                                  self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
-                                                 self._accu_off_out))    
+                                                 self._accu_off_out,\
+                                                 self._block_qnums))    
                                     
                 else:
                     raise Exception("[ERROR]","Two symmetry tensors can only mul when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before mul")
@@ -1072,7 +1127,7 @@ class UniTensor():
                 if self.is_diag and other.is_diag:
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels= self.labels,\
-                                    N_inbond=self.N_inbond,\
+                                    N_rowrank=self.N_rowrank,\
                                     torch_tensor=self.Storage * other.Storage,\
                                     check=False,\
                                     braket = self.braket,\
@@ -1081,7 +1136,7 @@ class UniTensor():
                 elif self.is_diag==False and other.is_diag==False:
                     tmp = UniTensor(bonds = self.bonds,\
                                      labels= self.labels,\
-                                     N_inbond=self.N_inbond,\
+                                     N_rowrank=self.N_rowrank,\
                                      torch_tensor=self.Storage * other.Storage,\
                                      braket = self.braket,\
                                      check=False)
@@ -1089,14 +1144,14 @@ class UniTensor():
                     if self.is_diag:
                         tmp = UniTensor(bonds = self.bonds,\
                                         labels= self.labels,\
-                                        N_inbond=self.N_inbond,\
+                                        N_rowrank=self.N_rowrank,\
                                         torch_tensor=torch.diag(self.Storage) * other.Storage,\
                                         braket = self.braket,\
                                         check=False)
                     else:
                         tmp = UniTensor(bonds = self.bonds,\
                                         labels= self.labels,\
-                                        N_inbond=self.N_inbond,\
+                                        N_rowrank=self.N_rowrank,\
                                         torch_tensor=self.Storage * torch.diag(other.Storage),\
                                         braket = self.braket,\
                                         check=False)
@@ -1104,7 +1159,7 @@ class UniTensor():
             if self.is_symm:
                 tmp = UniTensor(bonds = self.bonds,\
                                 labels = self.labels,\
-                                N_inbond = self.N_inbond,\
+                                N_rowrank = self.N_rowrank,\
                                 braket = self.braket,\
                                 torch_tensor=[self.Storage[b]*other for b in range(len(self.Storage))],\
                                 check=False,\
@@ -1113,13 +1168,14 @@ class UniTensor():
                                              self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
-                                             self._accu_off_out))  
+                                             self._accu_off_out,\
+                                             self._block_qnums))  
  
                 return tmp 
             else:
                 tmp = UniTensor(bonds = self.bonds,\
                                 labels= self.labels,\
-                                N_inbond=self.N_inbond,\
+                                N_rowrank=self.N_rowrank,\
                                 torch_tensor=self.Storage * other,\
                                 check=False,\
                                 braket = self.braket,\
@@ -1129,7 +1185,7 @@ class UniTensor():
         if self.is_symm:
             tmp = UniTensor(bonds = self.bonds,\
                             labels = self.labels,\
-                            N_inbond = self.N_inbond,\
+                            N_rowrank = self.N_rowrank,\
                             braket = self.braket,\
                             torch_tensor=[other * self.Storage[b] for b in range(len(self.Storage))],\
                             check=False,\
@@ -1138,13 +1194,14 @@ class UniTensor():
                                          self._ket_mapper_blks,self._ket_invmapper_blks,\
                                          self._contiguous,\
                                          self._accu_off_in,\
-                                         self._accu_off_out))  
+                                         self._accu_off_out,\
+                                         self._block_qnums))  
 
             return tmp 
         else:
             return UniTensor(bonds = self.bonds,\
                              labels= self.labels,\
-                             N_inbond=self.N_inbond,\
+                             N_rowrank=self.N_rowrank,\
                              torch_tensor= other * self.Storage,\
                              check=False,
                              braket = self.braket,\
@@ -1155,19 +1212,19 @@ class UniTensor():
             #raise Exception("[Develope][check impl]")
             tmp = UniTensor(bonds=self.bonds,\
                             labels=self.labels,\
-                            N_inbond=self.N_inbond,\
+                            N_rowrank=self.N_rowrank,\
                             check=False,\
                             sym_mappers=(self._mapper,self._inv_mapper,\
                                          self._bra_mapper_blks,self._bra_invmapper_blks,\
                                          self._ket_mapper_blks,self._ket_invmapper_blks,\
-                                         self._contiguous,self._accu_off_in,self._accu_off_out),\
+                                         self._contiguous,self._accu_off_in,self._accu_off_out,self._block_qnums),\
                             braket = self.braket,\
                             torch_tensor=[self.Storage[b]**other for b in range(len(self.Storage))])
         else: 
             return UniTensor(bonds=self.bonds,\
                              labels=self.labels,\
                              torch_tensor=self.Storage**other,\
-                             N_inbond=self.N_inbond,\
+                             N_rowrank=self.N_rowrank,\
                              check=False,\
                              braket = self.braket,\
                              is_diag=self.is_diag)
@@ -1184,7 +1241,7 @@ class UniTensor():
                 if self.is_contiguous() and other.is_contiguous():
                     tmp = UniTensor(bonds = self.bonds,\
                                     labels = self.labels,\
-                                    N_inbond = self.N_inbond,\
+                                    N_rowrank = self.N_rowrank,\
                                     braket = self.braket,\
                                     torch_tensor=[self.Storage[b]/other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
@@ -1193,7 +1250,8 @@ class UniTensor():
                                                  self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
-                                                 self._accu_off_out))    
+                                                 self._accu_off_out,\
+                                                 self._block_qnums))    
                                     
                 else:
                     raise Exception("[ERROR]","Two symmetry tensors can only mul when both are contiguous.\n suggestion: Call .Contiguous() or .Contiguous_() before mul")
@@ -1205,7 +1263,7 @@ class UniTensor():
                     if other.is_diag:
                         tmp =  UniTensor(bonds=self.bonds,\
                                          labels=self.labels,\
-                                         N_inbond=self.N_inbond,\
+                                         N_rowrank=self.N_rowrank,\
                                          check=False,\
                                          torch_tensor=self.Storage / other.Storage,\
                                          braket = self.braket,\
@@ -1213,7 +1271,7 @@ class UniTensor():
                     else:
                         tmp =  UniTensor(bonds=self.bonds,\
                                          labels=self.labels,\
-                                         N_inbond=self.N_inbond,\
+                                         N_rowrank=self.N_rowrank,\
                                          check=False,\
                                          braket = self.braket,\
                                          torch_tensor=torch.diag(self.Storage) / other.Storage)
@@ -1222,14 +1280,14 @@ class UniTensor():
                     if other.is_diag:
                         tmp =  UniTensor(bonds=self.bonds,\
                                          labels=self.labels,\
-                                         N_inbond=self.N_inbond,\
+                                         N_rowrank=self.N_rowrank,\
                                          check=False,\
                                          braket = self.braket,\
                                          torch_tensor=self.Storage / torch.diag(other.Storage))
                     else:
                         tmp =  UniTensor(bonds=self.bonds,\
                                          labels=self.labels,\
-                                         N_inbond=self.N_inbond,\
+                                         N_rowrank=self.N_rowrank,\
                                          check=False,\
                                          braket = self.braket,\
                                          torch_tensor=self.Storage / other.Storage)
@@ -1238,7 +1296,7 @@ class UniTensor():
             if self.is_symm:
                 tmp = UniTensor(bonds = self.bonds,\
                                 labels = self.labels,\
-                                N_inbond = self.N_inbond,\
+                                N_rowrank = self.N_rowrank,\
                                 braket = self.braket,\
                                 torch_tensor=[self.Storage[b]/other for b in range(len(self.Storage))],\
                                 check=False,\
@@ -1247,13 +1305,14 @@ class UniTensor():
                                              self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
-                                             self._accu_off_out))  
+                                             self._accu_off_out,\
+                                             self._block_qnums))  
  
                 return tmp 
             else:
                 tmp =  UniTensor(bonds=self.bonds,\
                                  labels=self.labels,\
-                                 N_inbond=self.N_inbond,\
+                                 N_rowrank=self.N_rowrank,\
                                  check=False,\
                                  braket = self.braket,\
                                  torch_tensor=self.Storage / other,\
@@ -1281,8 +1340,6 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Svd_truncate","[ERROR] cannot perform Svd on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
 
-        if self.braket is not None:
-            raise Exception("UniTensor.Svd","[ERROR] cannot perform Svd on a bra-ket tagged tensor.")
 
         return Svd_truncate(self)
 
@@ -1293,8 +1350,6 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Norm","[ERROR] cannot perform Norm on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
 
-        if self.braket is not None:
-            raise Exception("UniTensor.Norm","[ERROR] cannot perform Norm on a bra-ket tagged tensor.")
 
         return linalg.Norm(self)
 
@@ -1305,8 +1360,6 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Det","[ERROR] cannot perform Det on a symmetry, block-form tensor. use GetBlock() first and perform det on the Block.")
 
-        if self.braket is not None:
-            raise Exception("UniTensor.Det","[ERROR] cannot perform Det on a bra-ket tagged tensor.")
 
         return linalg.Det(self)
 
@@ -1317,8 +1370,6 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Matmul","[ERROR] cannot perform MatMul on a symmetry, block-form tensor. use GetBlock() first and perform matmul on the Block.")
 
-        if self.braket is not None:
-            raise Exception("UniTensor.Matmul","[ERROR] cannot perform Matmul on a bra-ket tagged tensor.")
 
         return linalg.Matmul(self,b)
 
@@ -1474,9 +1525,9 @@ class UniTensor():
             1. Combine Bond for an non-symmetric tensor.
 
             >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
-            >>> y = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
-            >>> z = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=2, labels=[4,3,5])
+            >>> y = Tor10.UniTensor(bonds=bds_x, N_rowrank=2, labels=[4,3,5])
+            >>> z = Tor10.UniTensor(bonds=bds_x, N_rowrank=2, labels=[4,3,5])
             >>> x.Print_diagram()
 
             >>> x.CombineBonds([4,3])
@@ -1512,11 +1563,11 @@ class UniTensor():
         Example:
 
             >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tt.UniTensor(bonds=bds_x,N_inbond=1, labels=[4,3,5])
+            >>> x = Tt.UniTensor(bonds=bds_x,N_rowrank=1, labels=[4,3,5])
             >>> print(x.is_contiguous())
             True
 
-            >>> x.Permute([0,2,1],N_inbond=1)
+            >>> x.Permute([0,2,1],N_rowrank=1)
             >>> print(x.is_contiguous())
             False
 
@@ -1556,11 +1607,11 @@ class UniTensor():
         Example:
 
             >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tt.UniTensor(bonds=bds_x,N_inbond=1, labels=[4,3,5])
+            >>> x = Tt.UniTensor(bonds=bds_x,N_rowrank=1, labels=[4,3,5])
             >>> print(x.is_contiguous())
             True
 
-            >>> x.Permute([0,2,1],N_inbond=1)
+            >>> x.Permute([0,2,1],N_rowrank=1)
             >>> print(x.is_contiguous())
             False
 
@@ -1579,23 +1630,24 @@ class UniTensor():
             else:
                 out = UniTensor(bonds=self.bonds,\
                                 labels = self.labels,\
-                                N_inbond=self.N_inbond,\
+                                N_rowrank=self.N_rowrank,\
                                 braket = self.braket)
-                out_bd_dims = np.array([out.bonds[x].dim for x in range(out.N_inbond)],dtype=np.int)
+                out_bd_dims = np.array([out.bonds[x].dim for x in range(out.N_rowrank)],dtype=np.int)
 
                 ## copy elemenets:  
-                for b in range(len(self.Blocks)):
-                    oldshape = self.Blocks[b].shape
+                for b in range(len(self.Storage)):
+                    oldshape = self.Storage[b].shape
                     for i in range(oldshape[0]):
                         for j in range(oldshape[1]):    
-                            oldidx = np.concatenate((self._in_invmapper_blks[b][i],self._out_invmapper_blks[b][j]))
+                            oldidx = np.concatenate((self._bra_invmapper_blks[b][i],self._ket_invmapper_blks[b][j]))
                             newidx = oldidx[self._mapper]
                             #
-                            new_row = int(np.sum(out._accu_off_in*newidx[:out.N_inbond]))
-                            new_col = int(np.sum(out._accu_off_out*newidx[out.N_inbond:]))
-                            b_id_in = out._in_mapper_blks[new_row]
-                            b_id_out  = out._out_mapper_blks[new_col]
-                            ## debug check >>>>
+                            new_row = int(np.sum(out._accu_off_in*newidx[:out.N_rowrank]))
+                            new_col = int(np.sum(out._accu_off_out*newidx[out.N_rowrank:]))
+                            b_id_in = out._bra_mapper_blks[new_row]
+                            b_id_out  = out._ket_mapper_blks[new_col]
+
+                            ## [DEBUG] >>>>
                             if b_id_in[0] < 0 or b_id_out[0]<0:
                                 raise Exception("[ERRRO]")
                             if b_id_in[0] != b_id_out[0]:
@@ -1603,7 +1655,7 @@ class UniTensor():
                                 print("[ERROR!]")
                                 exit(1)
                             ## <<<<
-                            out.Blocks[b_id_in[0]][b_id_in[1],b_id_out[1]] = self.Blocks[b][i,j]
+                            out.Storage[b_id_in[0]][b_id_in[1],b_id_out[1]] = self.Storage[b][i,j]
                 #out._contiguous = True
                 return out
 
@@ -1615,7 +1667,7 @@ class UniTensor():
                                  labels = self.labels,\
                                  torch_tensor = self.Storage.contiguous(),\
                                  is_diag = self.is_diag,\
-                                 N_inbond= self.N_inbond,\
+                                 N_rowrank= self.N_rowrank,\
                                  braket = self.braket,\
                                  check=False)
 
@@ -1634,7 +1686,7 @@ class UniTensor():
             return self.Storage.is_contiguous()
 
 
-    def Permute(self,mapper,N_inbond=None,by_label=False):
+    def Permute(self,mapper,N_rowrank=None,by_label=False):
         """
         Permute the bonds of the UniTensor.
 
@@ -1645,14 +1697,14 @@ class UniTensor():
             by_label: [default False]
                 bool, when True, the mapper using the labels. When False, the mapper using the index.
 
-            N_inbond: [default: current N_inbond]
+            N_rowrank: [default: current N_rowrank]
                 uint, the rank of row space. If not set, it is equal to the current Tensor's rank of row space.
 
         Example:
 
             >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
-            >>> y = Tor10.UniTensor(bonds=bds_x, N_inbond=3,labels=[1,3,5,7,8])
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=3,labels=[1,3,5,7,8])
+            >>> y = Tor10.UniTensor(bonds=bds_x, N_rowrank=3,labels=[1,3,5,7,8])
             >>> x.Print_diagram()
 
             >>> x.Permute(in_mapper=[0,2,1],out_mapper=[4,3])
@@ -1675,9 +1727,9 @@ class UniTensor():
         if by_label:
             DD = dict(zip(self.labels,np.arange(len(self.labels))))
 
-            if not all(lbl in in_label for lbl in in_mapper):
+            if not all(lbl in self.labels for lbl in mapper):
                 raise Exception("UniTensor.Permute","[ERROR] by_label=True but mapper contain invalid labels not appear in the UniTensor label")
-            idx_mapper = [ DD[x] for x in mapper]
+            idx_mapper = np.array([ DD[x] for x in mapper])
         else:
             idx_mapper = np.array(mapper).astype(np.int)
 
@@ -1688,11 +1740,11 @@ class UniTensor():
         if self.braket is not None:
             self.braket = self.braket[idx_mapper]
 
-        if N_inbond is not None:
-            if N_inbond < 0 :
-                raise ValueError("UniTensor.Permute","N_inbond must >=0")
+        if N_rowrank is not None:
+            if N_rowrank < 0 :
+                raise ValueError("UniTensor.Permute","N_rowrank must >=0")
 
-            self.N_inbond = N_inbond
+            self.N_rowrank = N_rowrank
 
         ## check braket_form:
         self._check_braket()
@@ -1710,12 +1762,17 @@ class UniTensor():
             self._inv_mapper = np.zeros(len(self._mapper)).astype(np.int)
             self._inv_mapper[self._mapper] = Arr_range
             self._inv_mapper = self._inv_mapper.astype(np.int)
-            
+
+            b_tqin,b_tqout = self.GetTotalQnums(physical=False)
+            tqin_uni = b_tqin.GetUniqueQnums()
+            tqout_uni = b_tqout.GetUniqueQnums()
+            self._block_qnums = _fx_GetCommRows(tqin_uni,tqout_uni)
+
         else:
 
             if self.is_diag:
-                if self.N_inbond != 1:
-                    raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True must have N_inbond==1\n"+"Suggest, call Todense()")
+                if self.N_rowrank != 1:
+                    raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True must have N_rowrank==1\n"+"Suggest, call Todense()")
                 else:
                     return self
                     
@@ -1727,19 +1784,23 @@ class UniTensor():
 
 
 
-    def Reshape(self,dimer,N_inbond,new_labels=None):
+    def Reshape(self,dimer,N_rowrank,new_labels=None):
         """
-        Return a new reshaped UniTensor into the shape specified as [dimer], with the first [N_inbond] Bonds as bra-bond and other bonds as ket-bond.
+        Return a new reshaped UniTensor into the shape specified as [dimer], with the first [N_rowrank] Bonds as bra-bond and other bonds as ket-bond.
 
-        [Note] Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.
+        [Note] 
+
+            1.Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.
+
+            2.Reshape can only operate on an untagged tensor.
 
         Args:
 
             dimer:
                 The new shape of the UniTensor. This should be a python list.
 
-            N_inbond:
-                The number of in-bond.
+            N_rowrank:
+                The number of bonds in row space.
 
             new_labels:
                 The new labels that will be set for new bonds after reshape.
@@ -1751,11 +1812,11 @@ class UniTensor():
         Example:
 
             >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, N_inbond=1,labels=[4,3,5])
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
             >>> x.Print_diagram()
 
 
-            >>> y = x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_inbond=2)
+            >>> y = x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
             >>> y.Print_diagram()
 
 
@@ -1767,10 +1828,10 @@ class UniTensor():
         if self.is_diag:
             raise Exception("UniTensor.Reshape","[ERROR] UniTensor.is_diag=True cannot be Reshape.\n"+
                                                 "[Suggest] Call UniTensor.Todense()")
-
+        
 
         if self.braket is not None:
-            raise Exception("UniTensor.Reshape","[ERROR] UniTensor.Reshape can only operate on a tensor with regular bonds (BD_REG).")
+            raise Exception("UniTensor.Reshape","[ERROR] UniTensor.Reshape can only operate on a [untagged] tensor with regular bonds (BD_REG).")
 
 
         if not isinstance(dimer,list):
@@ -1787,13 +1848,81 @@ class UniTensor():
 
         return UniTensor(bonds=np.array([Bond(dimer[i]) for i in range(len(dimer))]),\
                          labels=new_labels,\
-                         N_inbond=N_inbond,\
+                         N_rowrank=N_rowrank,\
                          check=False,\
                          torch_tensor=new_Storage)
 
 
+    def Reshape_(self,dimer,N_rowrank,new_labels=None):
+        """
+        Inplace version of Reshape. 
+        Reshape UniTensor into the shape specified as [dimer], with the first [N_rowrank] Bonds as bra-bond and other bonds as ket-bond.
+
+        [Note] 
+
+            1.Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.
+
+            2.Reshape can only operate on an untagged tensor.
+
+        Args:
+
+            dimer:
+                The new shape of the UniTensor. This should be a python list.
+
+            N_rowrank:
+                The number of bonds in row space.
+
+            new_labels [option]:
+                The new labels that will be set for new bonds after reshape. If not set, the label will be initialize using default enumerate rule.
+
+        Return:
+
+            self
+    
+        Example:
+
+            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
+            >>> x.Print_diagram()
+
+
+            >>> x.Reshape_([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
+            >>> x.Print_diagram()
+
+
+
+        """
+        if self.is_symm:
+            raise TypeError("UniTensor.Reshape","[ERROR] Cannot perform Reshape on a symmetry Tensor")
+
+        if self.is_diag:
+            raise Exception("UniTensor.Reshape","[ERROR] UniTensor.is_diag=True cannot be Reshape.\n"+
+                                                "[Suggest] Call UniTensor.Todense()")
+        
+
+        if self.braket is not None:
+            raise Exception("UniTensor.Reshape","[ERROR] UniTensor.Reshape can only operate on a [untagged] tensor with regular bonds (BD_REG).")
+
+
+        if not isinstance(dimer,list):
+            raise TypeError("UniTensor.Reshape","[ERROR] mapper should be an python list.")
+
+
+        #new_Storage = copy.deepcopy(self.Storage)
+
+        new_Storage = new_Storage.view(dimer)
+        self.Storage = self.Storage.view(dimer)
+
+        if new_labels is None:
+            new_labels = np.arange(len(dimer))
+
+        self.bonds = np.array([Bond(dimer[i]) for i in range(len(dimer))])
+        self.N_rowrank = rowrank
+
+        return self
+
     ## Symmetric Tensor function
-    def GetTotalQnums(self,include_braket=False):
+    def GetTotalQnums(self,physical=False):
         """
         Return two combined bond objects that has the information for the total qnums at bra and ket bonds.
 
@@ -1826,7 +1955,7 @@ class UniTensor():
                 bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
                                                       [ 1, 1, -2,3]])
 
-                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[1,2,3],dtype=torch.float64)
+                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[1,2,3],dtype=torch.float64)
 
             >>> tqin, tqout = sym_T.GetTotalQnums()
             >>> print(tqin)
@@ -1850,9 +1979,9 @@ class UniTensor():
         if not self.is_symm:
             raise TypeError("UniTensor.GetTotalQnums","[ERROR] GetTotal Qnums from a non-symm tensor")
 
-        #if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
+        #if (self.N_rowrank==0) or (self.N_rowrank==len(self.bonds)):
         #    raise Exception("UniTensor.GetTotalQnums","[ERROR] The TN symmetry structure is incorrect, without either any in-bond or any-outbond")
-        if include_braket==False:
+        if physical:
             #virtual_cb-in
             cb_inbonds = copy.deepcopy(self.bonds[np.argwhere(self.braket==BondType[BD_BRA]).flatten()])
             in_all = cb_inbonds[0]
@@ -1865,12 +1994,11 @@ class UniTensor():
                 out_all.combine(cb_outbonds[1:])
         else:
             #virtual_cb-in
-            print(self.braket)
-            cb_inbonds = copy.deepcopy(self.bonds[:self.N_inbond])*self.braket[:self.N_inbond]
+            cb_inbonds = copy.deepcopy(self.bonds[:self.N_rowrank])*self.braket[:self.N_rowrank]*BondType[BD_BRA]
             in_all = cb_inbonds[0]
             if len(cb_inbonds)>1:
                 in_all.combine(cb_inbonds[1:])
-            cb_outbonds = copy.deepcopy(self.bonds[self.N_inbond:])*self.braket[self.N_inbond:]
+            cb_outbonds = copy.deepcopy(self.bonds[self.N_rowrank:])*self.braket[self.N_rowrank:]*BondType[BD_KET]
             out_all = cb_outbonds[0]
             if len(cb_outbonds)>1:
                 out_all.combine(cb_outbonds[1:])
@@ -1879,31 +2007,59 @@ class UniTensor():
         return in_all,out_all
 
 
+    def GetValidQnums(self,physical=False,return_shape=False):
+        if physical:
+            b_tqin,b_tqout = self.GetTotalQnums(physical=True)
+            tqin_uni = b_tqin.GetUniqueQnums()
+            tqout_uni = b_tqout.GetUniqueQnums()
+            comm = _fx_GetCommRows(tqin_uni,tqout_uni)
+            shap = []
+            if return_shape:
+                for q in comm:
+                     shap.append(np.array([b_tqin.GetDegenerate(*q),b_tqout.GetDegenerate(*q)])) 
+                return comm , np.array(shap)    
+            else:
+                return comm
+        else:
+            comm = copy.deepcopy(self._block_qnums)
+            if return_shape:
+                b_tqin,b_tqout = self.GetTotalQnums(physical=False)
+                shap = []
+                for q in comm:
+                     shap.append(np.array([b_tqin.GetDegenerate(*q),b_tqout.GetDegenerate(*q)])) 
+                return comm , np.array(shap)    
+            else:
+                return comm
+
     def PutBlock(self,block,*qnum):
         """
         """
-        ## Note, block should be a numpy array.
+        if not isinstance(block,self.__class__):
+            raise TypeError("[ERROR] PutBlock can only accept a untagged UniTensor ")
+
+        ## Note, block should be a UniTensor:
+        if block.braket is not None:
+            raise Exception("[ERROR] PutBlock can only accept a untagged UniTensor ")
+
         if not self.is_symm:
             ## check:
-            if block.braket is not None:
-                raise Exception("[ERROR] PutBlock can only accept a UniTensor with regular bonds.")
           
             if self.is_diag:
                 if not block.is_diag:
                     raise Exception("[ERROR] PutBlock for a is_diag=True tensor can only accept a block with is_diag=True") 
              
-            if self.N_inbond==0 :
+            if self.N_rowrank==0 :
                 curr_shape_2d = torch.Size([self.Storage.numel()])
                 if block.shape != curr_shape_2d:
                     raise Exception("[ERROR] the shape of input Block",block.shape,"does not match the shape of current block",curr_shape_2d)
                 
-            elif len(self.bonds) - self.N_inbond==0:
+            elif len(self.bonds) - self.N_rowrank==0:
                 curr_shape_2d = torch.Size([self.Storage.numel()])
                 if block.shape != curr_shape_2d:
                     raise Exception("[ERROR] the shape of input Block",block.shape,"does not match the shape of current block",curr_shape_2d)
             else:
-                curr_shape_2d = torch.Size([np.prod([x.dim for x in self.bonds[:self.N_inbond]]),\
-                                         np.prod([x.dim for x in self.bonds[self.N_inbond:]])])
+                curr_shape_2d = torch.Size([np.prod([x.dim for x in self.bonds[:self.N_rowrank]]),\
+                                         np.prod([x.dim for x in self.bonds[self.N_rowrank:]])])
                 if block.shape != curr_shape_2d:
                     raise Exception("[ERROR] the shape of input Block",block.shape,"does not match the shape of current block",curr_shape_2d)
 
@@ -1913,7 +2069,91 @@ class UniTensor():
 
         else:
             
-            raise Exception("Developing")
+            #raise Exception("Developing")
+
+            if len(qnum) != self.bonds[0].nsym:
+                raise ValueError("UniTensor.PutBlock","[ERROR] The qnumtum numbers not match the number of type.")
+
+            ## check contiguous:
+            if self._contiguous:
+                is_set = False
+                ## search if the tn has block of that qnums:
+                for s in range(len(self._block_qnums)):
+                    if np.array(qnum) == self._block_qnums[s]:
+                        ##check if shape is correct:
+                        if self.Storage[s].shape != block.shape:
+                            raise TypeError("UniTensor.PutBlock","[ERROR] the input block with shape",block.shape,"does not match the current block's shape",self.Storage[s].shape)
+                        self.Storage[s].storage().copy_(block.Storage.storage())
+                        if_set = True
+                        break
+                if not is_set:
+                    raise TypeError("UniTensor.PutBlock","[ERROR] no block has qnums:",qnum)
+
+            else:
+
+                ## search the current valid blocks :
+                is_set = False
+                for s in range(len(self._block_qnums)):
+                    if np.array(qnum) == self._block_qnums[s]:
+                        ## get Nrowrank for the memory
+                        old_N_rowrank = len(self._bra_invmapper_blks[0][0])
+
+                        accu_off = []
+                        tmp = 1
+                        for i in range(len(self.bonds)):
+                            accu_off.append(tmp)
+                            tmp*= self.bonds[-1-i].dim
+                        accu_off = np.array(accu_off[::-1])
+                        
+                        new_accu_off_in  = (accu_off[:self.N_rowrank]/accu_off[self.N_rowrank-1]).astype(np.int)
+                        new_accu_off_out = accu_off[self.N_rowrank:]
+                        del accu_off
+ 
+                        ## copy from the right address.
+                        b_tqin,b_tqout = self.GetTotalQnums(physical=False) 
+                        idx_in = np.argwhere((b_tqin.qnums == self._block_qnums[s]).all(axis=1)).flatten()
+                        idx_out= np.argwhere((b_tqout.qnums == self._block_qnums[s]).all(axis=1)).flatten()
+
+                        ## interface
+                        new_bra_invmapper_blks = _fx_decompress_idx(idx_in,new_accu_off_in)
+                        #self._bra_mapper_blks[idx_in,0] = b
+                        #self._bra_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
+
+                        ## interface
+                        new_ket_invmapper_blks = _fx_decompress_idx(idx_out,new_accu_off_out)
+                        #self._ket_mapper_blks[idx_out,0] = b
+                        #self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
+
+
+                        ## Get element only for this block from the right memory place:
+                        #old_rowrank = self._bra_invmapper_blks[0].
+                        for i in range(len(idx_in)):
+                            for j in range(len(idx_out)):
+                                newidx = np.concatenate((new_bra_invmapper_blks[i],new_ket_invmapper_blks[j]))
+                                oldidx = newidx[self._inv_mapper]
+
+                                old_row = int(np.sum(self._accu_off_in*oldidx[:old_N_rowrank]))
+                                old_col = int(np.sum(self._accu_off_out*oldidx[old_N_rowrank:]))
+
+                                b_id_in = self._bra_mapper_blks[old_row]
+                                b_id_out = self._ket_mapper_blks[old_col]
+
+                                if b_id_in[0] != b_id_out[0]:
+                                    raise Exception("[ERROR] internal FATAL")
+
+                                if b_id_in[0] >= 0 and b_id_out[0] >= 0:
+                                    self.Storage[b_id_in[0]][b_id_in[1],b_id_out[1]] = block.Storage[i,j]
+                                else:
+                                    print("[unphys pos]")
+
+                        is_set = True
+                        break                               
+
+  
+                ## if there is no block with qnum:
+                if not is_set:
+                    raise TypeError("UniTensor.PutBlock","[ERROR] No block has qnums:",qnum)
+
 
             """
             if len(qnum) != self.bonds[0].nsym :
@@ -1966,13 +2206,13 @@ class UniTensor():
                 #tmp_labels = self.labels[mapper]
                 #Nin = len(tmp[tmp==False])
 
-                if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
+                if (self.N_rowrank==0) or (self.N_rowrank==len(self.bonds)):
                     raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a block on a TN without either any in-bond or any out-bond")
 
                 #virtual_cb-in
                 cb_inbonds = copy.deepcopy(self.bonds[0])
-                if self.N_inbond > 1:
-                    cb_inbonds.combine(self.bonds[1:self.N_inbond])
+                if self.N_rowrank > 1:
+                    cb_inbonds.combine(self.bonds[1:self.N_rowrank])
 
                 i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
                 for n in np.arange(1,self.bonds[0].nsym,1):
@@ -1981,9 +2221,9 @@ class UniTensor():
                     raise Exception("UniTensor.PutBlock","[ERROR] Trying to put a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
 
                 #virtual_cb_out
-                cb_outbonds = copy.deepcopy(self.bonds[self.N_inbond])
-                if len(self.bonds) - self.N_inbond > 1:
-                    cb_outbonds.combine(self.bonds[self.N_inbond+1:])
+                cb_outbonds = copy.deepcopy(self.bonds[self.N_rowrank])
+                if len(self.bonds) - self.N_rowrank > 1:
+                    cb_outbonds.combine(self.bonds[self.N_rowrank+1:])
 
                 i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
                 for n in np.arange(1,self.bonds[0].nsym,1):
@@ -1996,7 +2236,7 @@ class UniTensor():
                 ori_shape = self.Storage.shape
                 print(self.Storage.shape)
                 ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
-                self.Storage = self.Storage.reshape(np.prod(ori_shape[:self.N_inbond]),-1)
+                self.Storage = self.Storage.reshape(np.prod(ori_shape[:self.N_rowrank]),-1)
                 print(self.Storage.shape)
                 ## no need to check if the size match. if the size doesn't match, let torch handle the error.
                 if isinstance(block,np.ndarray):
@@ -2031,7 +2271,7 @@ class UniTensor():
                 bd_sym_1 = Tor10.Bond(3,qnums=[[0],[1],[2]])
                 bd_sym_2 = Tor10.Bond(4,qnums=[[-1],[2],[0],[2]])
                 bd_sym_3 = Tor10.Bond(5,qnums=[[4],[2],[-1],[5],[1]])
-                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[10,11,12],dtype=torch.float64)
+                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[10,11,12],dtype=torch.float64)
 
             >>> sym_T.Print_diagram()
 
@@ -2055,7 +2295,7 @@ class UniTensor():
                 bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
                                                [ 1, 1, -2,3]])
 
-                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_inbond=2,labels=[1,2,3],dtype=torch.float64)
+                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[1,2,3],dtype=torch.float64)
 
             >>> tqin, tqout = sym_T.GetTotalQnums()
             >>> print(tqin)
@@ -2070,25 +2310,116 @@ class UniTensor():
 
             if self.is_diag:
                 bds = [Bond(self.Storage.bonds[0].dim),Bond(self.Storage.bonds[0].dim)]
-                return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.clone(),check=False,is_diag=True)
+                return UniTensor(bonds=bds,N_rowrank=1,torch_tensor=self.Storage.clone(),check=False,is_diag=True)
 
             else:
 
-                if self.N_inbond==0 :
+                if self.N_rowrank==0 :
                     bds = [Bond(self.Storage.numel())]
-                    return UniTensor(bonds=bds,N_inbond=0,torch_tensor=self.Storage.flatten(),check=False)
+                    return UniTensor(bonds=bds,N_rowrank=0,torch_tensor=self.Storage.flatten(),check=False)
                     
-                elif len(self.bonds) - self.N_inbond==0:
+                elif len(self.bonds) - self.N_rowrank==0:
                     bds = [Bond(self.Storage.numel())]
-                    return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.flatten(),check=False)
+                    return UniTensor(bonds=bds,N_rowrank=1,torch_tensor=self.Storage.flatten(),check=False)
                 else:
-                    bds = [Bond(np.prod([x.dim for x in self.bonds[:self.N_inbond]])),\
-                           Bond(np.prod([x.dim for x in self.bonds[self.N_inbond:]]))]
+                    bds = [Bond(np.prod([x.dim for x in self.bonds[:self.N_rowrank]])),\
+                           Bond(np.prod([x.dim for x in self.bonds[self.N_rowrank:]]))]
 
-                    return UniTensor(bonds=bds,N_inbond=1,torch_tensor=self.Storage.reshape(bds[0].dim,-1),check=False)
+                    return UniTensor(bonds=bds,N_rowrank=1,torch_tensor=self.Storage.reshape(bds[0].dim,-1),check=False)
         
         else:
-            raise Exception("[Developing]")
+            #raise Exception("[Developing]")
+
+            #if not self.is_braket:
+            #    raise Exception("[ERROR] Can only get block from a symmetry Tensor in it's bra-ket form\n   Suggestion: call to_braket_form() or manually permute the tensor to the braket form. before get-block")
+
+
+
+            if len(qnum) != self.bonds[0].nsym :
+                raise ValueError("UniTensor.GetBlock","[ERROR] The qnumtum numbers not match the number of type.")
+                                
+            ## check contiguous:
+            if self._contiguous:
+                ## search if the tn has block of that qnums:
+                for s in range(len(self._block_qnums)):
+                    if np.array(qnum) == self._block_qnums[s]:
+                        return UniTensor(bonds=[Bond(self.Storage[s].shape[0]),Bond(self.Storage[s].shape[1])],\
+                                         N_rowrank = 1,\
+                                         torch_tensor=self.Storage[s].clone(),\
+                                         check=False)
+                ## if there is no block with qnum:
+                raise TypeError("UniTensor.GetBlock","[ERROR] No block has qnums:",qnum)
+            else:
+                ## search the current valid blocks :
+                for s in range(len(self._block_qnums)):
+                    if np.array(qnum) == self._block_qnums[s]:
+                        ## get Nrowrank for the memory
+                        old_N_rowrank = len(self._bra_invmapper_blks[0][0])
+
+                        accu_off = []
+                        tmp = 1
+                        for i in range(len(self.bonds)):
+                            accu_off.append(tmp)
+                            tmp*= self.bonds[-1-i].dim
+                        accu_off = np.array(accu_off[::-1])
+                        
+                        new_accu_off_in  = (accu_off[:self.N_rowrank]/accu_off[self.N_rowrank-1]).astype(np.int)
+                        new_accu_off_out = accu_off[self.N_rowrank:]
+                        del accu_off
+ 
+                        ## copy from the right address.
+                        b_tqin,b_tqout = self.GetTotalQnums(physical=False) 
+                        idx_in = np.argwhere((b_tqin.qnums == self._block_qnums[s]).all(axis=1)).flatten()
+                        idx_out= np.argwhere((b_tqout.qnums == self._block_qnums[s]).all(axis=1)).flatten()
+
+                        ## Create only the block:
+                        Block = torch.zeros((len(idx_in),len(idx_out)),device=self.Storage[0].device,dtype=self.Storage[0].dtype)
+
+                        ## interface
+                        new_bra_invmapper_blks = _fx_decompress_idx(idx_in,new_accu_off_in)
+                        #self._bra_mapper_blks[idx_in,0] = b
+                        #self._bra_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
+
+                        ## interface
+                        new_ket_invmapper_blks = _fx_decompress_idx(idx_out,new_accu_off_out)
+                        #self._ket_mapper_blks[idx_out,0] = b
+                        #self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
+
+
+                        ## Get element only for this block from the right memory place:
+                        #old_rowrank = self._bra_invmapper_blks[0].
+                        for i in range(len(idx_in)):
+                            for j in range(len(idx_out)):
+                                newidx = np.concatenate((new_bra_invmapper_blks[i],new_ket_invmapper_blks[j]))
+                                oldidx = newidx[self._inv_mapper]
+
+                                old_row = int(np.sum(self._accu_off_in*oldidx[:old_N_rowrank]))
+                                old_col = int(np.sum(self._accu_off_out*oldidx[old_N_rowrank:]))
+
+                                b_id_in = self._bra_mapper_blks[old_row]
+                                b_id_out = self._ket_mapper_blks[old_col]
+
+                                ## [DEBUG] >>>
+                                if b_id_in[0] != b_id_out[0]:
+                                    raise Exception("[ERROR] internal FATAL")
+                                ## <<<
+
+                                if b_id_in[0] >= 0 and b_id_out[0] >= 0:
+                                    Block[i,j] = self.Storage[b_id_in[0]][b_id_in[1],b_id_out[1]]
+                                else:                                    
+                                    ## [DEBUG] >>>
+                                    print("[ERROR] unphys pos!")
+                                    ## <<<<
+
+                            
+                        return UniTensor(bonds=[Bond(Block.shape[0]),Bond(Block.shape[1])],\
+                                         check=False,\
+                                         N_rowrank=1,\
+                                         torch_tensor = Block)
+  
+                ## if there is no block with qnum:
+                raise TypeError("UniTensor.GetBlock","[ERROR] No block has qnums:",qnum)
+ 
         """
         if len(self.bonds)==0:
             return copy.deepcopy(self)
@@ -2097,12 +2428,12 @@ class UniTensor():
             new_bonds = copy.deepcopy(self.bonds)
             new_in = None
             new_out = None
-            for i in range(self.N_inbond):
+            for i in range(self.N_rowrank):
                 if new_in is None:
                     new_in = new_bonds[i]
                 else:
                     new_in.combine(new_bonds[i])
-            for i in np.arange(self.N_inbond,len(self.bonds),1):
+            for i in np.arange(self.N_rowrank,len(self.bonds),1):
                 if new_out is None:
                     new_out = new_bonds[i]
                 else:
@@ -2117,12 +2448,10 @@ class UniTensor():
                 out = self.Storage.contiguous().reshape(new_bonds[0].dim,-1)
             else:
                 out = self.Storage.contiguous().reshape(new_bonds[0].dim)
-            return UniTensor(bonds=new_bonds,N_inbond=1 if self.N_inbond>0 else 0,torch_tensor=out)
+            return UniTensor(bonds=new_bonds,N_rowrank=1 if self.N_rowrank>0 else 0,torch_tensor=out)
 
         else:
             
-            if len(qnum) != self.bonds[0].nsym :
-                raise ValueError("UniTensor.GetBlock","[ERROR] The qnumtum numbers not match the number of type.")
 
             if self.is_blockform:
 
@@ -2130,7 +2459,7 @@ class UniTensor():
                 for s in range(len(self.Storage)):
                     if np.array(qnum) == self._BlockQnums[s]:
                         return UniTensor(bonds=[Bond(dim=self.Storage[s].shape[0]),Bond(dim=self.Storage[s].shape[1])],\
-                                         N_inbond = 1,\
+                                         N_rowrank = 1,\
                                          labels=[1,2],\
                                          torch_tensor=self.Storage[s].clone(),\
                                          check=False)
@@ -2150,13 +2479,13 @@ class UniTensor():
                 #tmp_labels = self.labels[mapper]
                 #Nin = len(tmp[tmp==False])
 
-                if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
+                if (self.N_rowrank==0) or (self.N_rowrank==len(self.bonds)):
                     raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a block on a TN without either any in-bond or any out-bond")
 
                 #virtual_cb-in
                 cb_inbonds = copy.deepcopy(self.bonds[0])
-                if self.N_inbond > 1:
-                    cb_inbonds.combine(self.bonds[1:self.N_inbond])
+                if self.N_rowrank > 1:
+                    cb_inbonds.combine(self.bonds[1:self.N_rowrank])
 
                 i_in = np.argwhere(cb_inbonds.qnums[:,0]==qnum[0]).flatten()
                 for n in np.arange(1,self.bonds[0].nsym,1):
@@ -2165,9 +2494,9 @@ class UniTensor():
                     raise Exception("UniTensor.GetBlock","[ERROR] Trying to get a qnum block that is not exists in the total Qnum of in-bonds in current TN.")
 
                 #virtual_cb_out
-                cb_outbonds = copy.deepcopy(self.bonds[self.N_inbond])
-                if len(self.bonds) - self.N_inbond > 1:
-                    cb_outbonds.combine(self.bonds[self.N_inbond+1:])
+                cb_outbonds = copy.deepcopy(self.bonds[self.N_rowrank])
+                if len(self.bonds) - self.N_rowrank > 1:
+                    cb_outbonds.combine(self.bonds[self.N_rowrank+1:])
 
                 i_out = np.argwhere(cb_outbonds.qnums[:,0]==qnum[0]).flatten()
                 for n in np.arange(1,self.bonds[0].nsym,1):
@@ -2181,14 +2510,14 @@ class UniTensor():
                 ori_shape = self.Storage.shape
 
                 ## this will copy a new tensor , future can provide an shallow copy with no new tensor will create, using .view() possibly handy for Getblock and change the element inplace.
-                out = self.Storage.reshape(np.prod(ori_shape[:self.N_inbond]),-1)[np.ix_(i_in,i_out)]
+                out = self.Storage.reshape(np.prod(ori_shape[:self.N_rowrank]),-1)[np.ix_(i_in,i_out)]
 
                 #self.Storage = self.Storage.permute(*rev_mapper)
 
                 #print(out)
 
                 return UniTensor(bonds=[Bond(dim=out.shape[0]),Bond(dim=out.shape[1])],\
-                                 N_inbond = 1,\
+                                 N_rowrank = 1,\
                                  labels=[1,2],\
                                  torch_tensor=out,\
                                  check=False)
@@ -2224,7 +2553,7 @@ class UniTensor():
         Example:
         ::
             bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-            x = Tor10.UniTensor(bonds=bds_x, N_inbond=2, labels=[4,3,5])
+            x = Tor10.UniTensor(bonds=bds_x, N_rowrank=2, labels=[4,3,5])
 
 
         >>> print(x.requires_grad())
@@ -2267,7 +2596,7 @@ class UniTensor():
 
         Example:
 
-            >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_inbond=1,requires_grad=True)
+            >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1,requires_grad=True)
             >>> print(x)
             Tensor name:
             is_diag    : False
@@ -2302,7 +2631,7 @@ class UniTensor():
                 
                 return UniTensor(bonds=self.bonds,\
                                  labels=self.labels,\
-                                 N_inbond = self.N_inbond,\
+                                 N_rowrank = self.N_rowrank,\
                                  braket = self.braket,\
                                  sym_mappers = (self._mapper,self._inv_mapper,\
                                                 self._bra_mapper_blks,self._bra_invmapper_blks,\
@@ -2314,7 +2643,7 @@ class UniTensor():
                 #raise Exception("Developing")
             else:
                 return UniTensor(bonds=copy.deepcopy(self.bonds),\
-                                 N_inbond = self.N_inbond,\
+                                 N_rowrank = self.N_rowrank,\
                                  torch_tensor=self.Storage.grad,\
                                  check=False)
 
@@ -2365,7 +2694,7 @@ def Save(a,filename):
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_inbond=1)
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
         Tor10.Save(a,"a.uniT")
 
     """
@@ -2430,8 +2759,8 @@ def Contract(a,b):
 
     Example:
     ::
-        x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], N_inbond=2,labels=[6,1,7,8])
-        y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(2),Tor10.Bond(3),Tor10.Bond(6)], N_inbond=2,labels=[7,2,10,9])
+        x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], N_rowrank=2,labels=[6,1,7,8])
+        y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(2),Tor10.Bond(3),Tor10.Bond(6)], N_rowrank=2,labels=[7,2,10,9])
 
 
     >>> x.Print_diagram()
@@ -2495,7 +2824,7 @@ def Contract(a,b):
             tmp = torch.tensordot(tmpa,tmpb,dims=(a_ind.tolist(),b_ind.tolist()))
 
             new_bonds = np.concatenate([copy.deepcopy(a.bonds[aind_no_combine]),copy.deepcopy(b.bonds[bind_no_combine])])
-            new_io = [ (aind_no_combine[x]>=a.N_inbond) for x in range(len(aind_no_combine))] + [(bind_no_combine[x]>=b.N_inbond)  for x in range(len(bind_no_combine))]
+            new_io = [ (aind_no_combine[x]>=a.N_rowrank) for x in range(len(aind_no_combine))] + [(bind_no_combine[x]>=b.N_rowrank)  for x in range(len(bind_no_combine))]
             new_labels = np.concatenate([copy.copy(a.labels[aind_no_combine]),copy.copy(b.labels[bind_no_combine])])
 
             new_io = np.array(new_io)
@@ -2508,7 +2837,7 @@ def Contract(a,b):
 
             return UniTensor(bonds =new_bonds,\
                              labels=new_labels,\
-                             N_inbond=len(np.argwhere(new_io==0)),\
+                             N_rowrank=len(np.argwhere(new_io==0)),\
                              torch_tensor=tmp,\
                              check=False)
 
@@ -2528,7 +2857,7 @@ def Contract(a,b):
             tmp = torch.tensordot(tmpa,tmpb,dims=0)
             new_bonds = np.concatenate([copy.deepcopy(a.bonds),copy.deepcopy(b.bonds)])
             new_labels = np.concatenate([copy.copy(a.labels), copy.copy(b.labels)])
-            new_io = [ (x>=a.N_inbond) for x in range(len(a.bonds))] + [(x>=b.N_inbond)  for x in range(len(b.bonds))]
+            new_io = [ (x>=a.N_rowrank) for x in range(len(a.bonds))] + [(x>=b.N_rowrank)  for x in range(len(b.bonds))]
 
             if len(new_bonds)>0:
                 mapper = np.argsort(new_io)
@@ -2538,7 +2867,7 @@ def Contract(a,b):
 
             return UniTensor(bonds=new_bonds,\
                              labels=new_labels,\
-                             N_inbond=a.N_inbond+b.N_inbond,\
+                             N_rowrank=a.N_rowrank+b.N_rowrank,\
                              torch_tensor=tmp,\
                              check=False)
 
@@ -2705,7 +3034,7 @@ def _CombineBonds(a,label,new_label):
             if contype_inout:
                 # combine bond is in-bond(bra)
                 ##[Fusion tree]
-                new_Nin = a.N_inbond - len(x_ind) + 1
+                new_Nin = a.N_rowrank - len(x_ind) + 1
                 for i in range(len(x_ind)-1):
                     a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
 
@@ -2718,7 +3047,7 @@ def _CombineBonds(a,label,new_label):
             else:
                 # combine bond is out-bond(ket)
                 ##[Fusion tree]
-                new_Nin = a.N_inbond
+                new_Nin = a.N_rowrank
                 for i in range(len(x_ind)-1):
                     a.bonds[x_ind[0]].combine(a.bonds[x_ind[1+i]])
                 mapper = np.concatenate([idx_no_combine,x_ind])
@@ -2727,7 +3056,7 @@ def _CombineBonds(a,label,new_label):
                 a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
 
 
-            a.N_inbond=new_Nin
+            a.N_rowrank=new_Nin
 
     else :
         raise Exception("_CombineBonds(UniTensor,int_arr)","[ERROR] )CombineBonds can only accept UniTensor")
@@ -2753,7 +3082,7 @@ def _Randomize(a):
         raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
 
-def From_torch(torch_tensor,N_inbond,labels=None,is_tag=False):
+def From_torch(torch_tensor,N_rowrank,labels=None,is_tag=False):
     """
     Construct UniTensor from torch.Tensor.
 
@@ -2763,8 +3092,8 @@ def From_torch(torch_tensor,N_inbond,labels=None,is_tag=False):
         torch_tensor:
             Torch.Tensor
 
-        N_inbond:
-            int, The number of inbond. Note that the first [N_inbond] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT
+        N_rowrank:
+            int, The number of inbond. Note that the first [N_rowrank] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT
 
         labels:
             python list or 1d numpy array, The labels for each bonds. If ignore, the constucted UniTensor will using the default labels for each bond.
@@ -2780,7 +3109,7 @@ def From_torch(torch_tensor,N_inbond,labels=None,is_tag=False):
                 [1., 1., 1.],
                 [1., 1., 1.]])
 
-        >>> y = Tor10.From_torch(x,N_inbond=1,labels=[4,5])
+        >>> y = Tor10.From_torch(x,N_rowrank=1,labels=[4,5])
         >>> y.Print_diagram()
         tensor Name :
         tensor Rank : 2
@@ -2812,7 +3141,7 @@ def From_torch(torch_tensor,N_inbond,labels=None,is_tag=False):
                 [1., 1., 1., 1.],
                 [1., 1., 1., 1.]], requires_grad=True)
 
-        >>> y2 = Tor10.From_torch(x2,N_inbond=1)
+        >>> y2 = Tor10.From_torch(x2,N_rowrank=1)
         >>> print(y2.requires_grad())
         True
 
@@ -2823,20 +3152,20 @@ def From_torch(torch_tensor,N_inbond,labels=None,is_tag=False):
 
     shape = torch_tensor.shape
 
-    if N_inbond > len(shape):
-        raise ValueError("From_torch","[ERROR] N_inbond exceed the rank of input torch tensor.")
+    if N_rowrank > len(shape):
+        raise ValueError("From_torch","[ERROR] N_rowrank exceed the rank of input torch tensor.")
 
     if len(labels) != len(shape):
         raise TypeError("From_torch","[ERROR] # of labels should match the rank of torch.Tensor")
 
     if is_tag:
-        new_bonds = [Bond(shape[i],BD_BRA) for i in range(N_inbond)]+\
-                    [Bond(shape[i],BD_KET) for i in np.arange(N_inbond,len(shape),1)]
+        new_bonds = [Bond(shape[i],BD_BRA) for i in range(N_rowrank)]+\
+                    [Bond(shape[i],BD_KET) for i in np.arange(N_rowrank,len(shape),1)]
     else:
         new_bonds = [Bond(shape[i]) for i in range(len(shape))]
 
     if len(new_bonds)==0:
-         return UniTensor(bonds=[],labels=[],N_inbond=0,check=False,torch_tensor=torch_tensor)
+         return UniTensor(bonds=[],labels=[],N_rowrank=0,check=False,torch_tensor=torch_tensor)
     else:
-         return UniTensor(bonds=new_bonds,labels=labels,N_inbond=N_inbond,torch_tensor=torch_tensor)
+         return UniTensor(bonds=new_bonds,labels=labels,N_rowrank=N_rowrank,torch_tensor=torch_tensor)
 
