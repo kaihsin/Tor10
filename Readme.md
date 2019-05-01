@@ -25,12 +25,16 @@
     7. Changed Svd return behavior.The return u,s,v UniTensors' in/out bond layout will be: s (2in2out); u(1out+the original first bond's type of input tensor); v(1in+the original second bond's type of input tensor)
 
     v0.3
-    1. Add a property "is_blockform" to further detach the memory and the bond layout. 
-    2. Now change the storage of symmetry to blockform. the dense storage for symmetry is deprecated.
-    3. Add block_form() to coalesce the bra/ket with row/col(in/out)
-    4. N_inbond defines the row/col space. 
-    5. Enhanced Print_diagram
-    6. Seperate Contiguous() and Contiguous\_() for inplace and return type function.
+    1. Three type of UniTensor can be construct. [symmetry][tagged][untagged] 
+    2. The Bond can be tagged with bra/ket or untagged (regular)
+    3. Now change the storage of symmetry to blockform. the dense storage for symmetry is deprecated.
+    4. Add braketform() to coalesce the bra/ket with row/col(in/out)
+    5. N_rowrank defines the row/col space. 
+    6. Enhanced Print_diagram
+    7. Seperate Contiguous() and Contiguous\_() for inplace and return type function.
+    8. change behavior of GetBlock and PutBlock on a non-symm tensor. in this version, it will return a rank-2 matrix.
+    9. Add GetValidQnums() for symmetry tensor
+    10. For symmtry, the bond order is relevant. The default fusion tree is in order of ((((0,1),2),3),4 ....
 
 ## Release version
     v0.2.2 -> v0.3 deving
