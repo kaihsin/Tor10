@@ -785,7 +785,7 @@ class UniTensor():
                     return False
 
             if self.is_symm:
-                pass
+                iss = True
             else:
                 iss = (self.is_diag == rhs.is_diag) 
                 iss = iss and (self.Storage.shape == rhs.Storage.shape)
@@ -2161,12 +2161,12 @@ class UniTensor():
                 is_set = False
                 ## search if the tn has block of that qnums:
                 for s in range(len(self._block_qnums)):
-                    if np.array(qnum) == self._block_qnums[s]:
+                    if (np.array(qnum) == self._block_qnums[s]).all():
                         ##check if shape is correct:
                         if self.Storage[s].shape != block.shape:
                             raise TypeError("UniTensor.PutBlock","[ERROR] the input block with shape",block.shape,"does not match the current block's shape",self.Storage[s].shape)
                         self.Storage[s].storage().copy_(block.Storage.storage())
-                        if_set = True
+                        is_set = True
                         break
                 if not is_set:
                     raise TypeError("UniTensor.PutBlock","[ERROR] no block has qnums:",qnum)
@@ -2176,7 +2176,7 @@ class UniTensor():
                 ## search the current valid blocks :
                 is_set = False
                 for s in range(len(self._block_qnums)):
-                    if np.array(qnum) == self._block_qnums[s]:
+                    if (np.array(qnum) == self._block_qnums[s]).all():
                         ## get Nrowrank for the memory
                         old_N_rowrank = len(self._bra_invmapper_blks[0][0])
 
@@ -2327,7 +2327,7 @@ class UniTensor():
             if self._contiguous:
                 ## search if the tn has block of that qnums:
                 for s in range(len(self._block_qnums)):
-                    if np.array(qnum) == self._block_qnums[s]:
+                    if (np.array(qnum) == self._block_qnums[s]).all():
                         return UniTensor(bonds=[Bond(self.Storage[s].shape[0]),Bond(self.Storage[s].shape[1])],\
                                          N_rowrank = 1,\
                                          torch_tensor=self.Storage[s].clone(),\
@@ -2337,7 +2337,7 @@ class UniTensor():
             else:
                 ## search the current valid blocks :
                 for s in range(len(self._block_qnums)):
-                    if np.array(qnum) == self._block_qnums[s]:
+                    if (np.array(qnum) == self._block_qnums[s]).all():
                         ## get Nrowrank for the memory
                         old_N_rowrank = len(self._bra_invmapper_blks[0][0])
 
