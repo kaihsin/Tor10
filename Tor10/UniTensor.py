@@ -2701,7 +2701,6 @@ def Contract(a,b):
                 aQ = tmpa.GetValidQnums()
                 bQ = tmpb.GetValidQnums()
 
-                #comm = _fx_GetCommRows(aQ,bQ)
                 
 
                 ## DEBUG >>>

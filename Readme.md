@@ -37,7 +37,8 @@
     10. For symmtry, the bond order is relevant. The default fusion tree is in order of ((((0,1),2),3),4 ....
     11. Add UniTensor.dtype() [@property]
     12. Add UniTensor.device() [@property]
-
+    13. nn , some linalg can only accept non-symm, untagged tensor. 
+    
 ## Release version
     v0.2.2 -> v0.3 deving
 
@@ -60,11 +61,16 @@
         * support multiple precisions.        
         * support devices (cpu and gpu are trivial)
         * preserve the similar api for Bond 
+        * can serve as regular generic Tensor or physical tensor (with bra-ket tagged)
         
 ```python
-       ## create a rank-2 Tensor 
+       ## create a rank-2 Physical Tensor with no symmetry 
        bds = [ Bond(3,BD_BRA), Bond(4,BD_KET)]
        A = UniTensor(bds,label=[2,4],N_inbond=1,dtype=torch.float64,device=torch.device("cpu"))
+
+       ## create a rank-2 generic Tensor 
+       bds = [ Bond(4), Bond(6) ]
+       B = UniTensor(bds,N_inbond=1)
 
        ## Moving to GPU:
        A.to(torch.device("cuda:0"))
@@ -112,8 +118,8 @@
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2,BD_BRA),Tor10.Bond(2,BD_KET)]))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2,BD_BRA),Tor10.Bond(2,BD_KET)]))
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
  
             def forward(self,x):
                 y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)

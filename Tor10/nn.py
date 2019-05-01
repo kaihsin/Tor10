@@ -46,6 +46,10 @@ def Parameter(data,requires_grad=True):
     if not isinstance(data,UniTensor):
         raise TypeError("nn.Parameter","[ERROR] data should be an UniTensor")
 
+    if data.braket is not None:
+        raise TypeError("nn.Parameter","[ERROR] data can only be an untagged uniTensor")
+    
+
     data.Storage = torch.nn.Parameter(data.Storage,requires_grad=requires_grad)
 
 
