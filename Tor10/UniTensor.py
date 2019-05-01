@@ -1779,6 +1779,10 @@ class UniTensor():
             N_rowrank: [default: current N_rowrank]
                 uint, the rank of row space. If not set, it is equal to the current Tensor's rank of row space.
 
+        Return:
+
+            self
+
         Example:
 
             >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]
@@ -1852,14 +1856,12 @@ class UniTensor():
             if self.is_diag:
                 if self.N_rowrank != 1:
                     raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True must have N_rowrank==1\n"+"Suggest, call Todense()")
-                else:
-                    return self
                     
             else:        
                 self.Storage = self.Storage.permute(tuple(idx_mapper))
         
     
-    
+        return self 
 
 
 
@@ -2685,28 +2687,52 @@ def Contract(a,b):
     
                 tmpa = copy.deepcopy(a)
                 tmpb = copy.deepcopy(b)
-                tmpa.Permute(np.append(a_ind_no_combine,a_ind), N_rowrank=len(a.labels)-len(a_ind),by_label=False).Contiguous_()
-                tmpb.Permute(np.append(b_ind,b_ind_no_combine), N_rowrank=len(b_ind)              ,by_label=False).Contiguous_()
-    
+                tmpa.Permute(np.append(aind_no_combine,a_ind), N_rowrank=len(a.labels)-len(a_ind),by_label=False).Contiguous_()
+                tmpb.Permute(np.append(b_ind,bind_no_combine), N_rowrank=len(b_ind)              ,by_label=False).Contiguous_()
+   
+                #tmpa.Print_diagram()
+                #print(tmpa)
+                #print(tmpa.GetValidQnums(return_shape=True))
+                #tmpb.Print_diagram()
+                #print(tmpb)
+                #print(tmpb.GetValidQnums(return_shape=True))
+                #tmpa._ket_mapper_blks
+ 
+                aQ = tmpa.GetValidQnums()
+                bQ = tmpb.GetValidQnums()
+
+                #comm = _fx_GetCommRows(aQ,bQ)
+                
+
                 ## DEBUG >>>
-                if len(tmpa.Storage) != len(tmpb.Storage):
-                    raise Exception("[ERROR][Internal][DEBUG] FATAL two contract does not have same block layout!!")            
+                #if len(tmpa.Storage) != len(tmpb.Storage):
+                #    raise Exception("[ERROR][Internal][DEBUG] FATAL two contract does not have same block layout!!")            
                 ## <<<
                 
-                for b in range(len(tmpa.Storage)):
-                    tmpa.Storage[b] = torch.matmul(tmpa.Storage[b],tmpb.Storage[b])
+                out = UniTensor(bonds=np.append(tmpa.bonds[:tmpa.N_rowrank],tmpb.bonds[tmpb.N_rowrank:]),\
+                                labels = np.append(tmpa.labels[:tmpa.N_rowrank],tmpb.labels[tmpb.N_rowrank:]),\
+                                dtype=a.dtype,\
+                                device=a.device)
 
-                tmpa._accu_off_out = copy.deepcopy(tmpb.accu_off_out)
-                tmpa._ket_mapper_blks = copy.deepcopy(tmpb._ket_mapper_blks)
-                tmpa._ket_invmapper_blks= copy.deepcopy(tmpb._ket_invmapper_blks)
-                tmpa._mapper = np.arange(len(a_ind_no_combine)+len(b_ind_no_combine)).astype(np.int)
-                tmpa._inv_mapper = copy.copy(tmpa.mapper)
-                tmpa.name = ''
-                tmpa.bonds = np.concatenate((tmpa.bonds[:len(a_ind_no_combine)],tmpb.bonds[len(b_ind):]))
-                tmpa.labels= np.concatenate((tmpa.labels[:len(a_ind_no_combine)],tmpb.labels[len(b_ind):]))
-                tmpa.braket= np.concatenate((tmpa.braket[:len(a_ind_no_combine)],tmpb.braket[len(b_ind):]))
-                del tmpb
-                return tmpa
+                oQ = out.GetValidQnums()
+                 
+                for obid in range(len(oQ)):
+                    ab = None
+                    for abid in range(len(aQ)):
+                        if (oQ[obid] == aQ[abid]).all():
+                            ab = abid
+                            break
+
+                    bb = None
+                    for bbid in range(len(bQ)):
+                        if(oQ[obid] == bQ[bbid]).all():
+                            bb = bbid
+                            break
+
+                    if (ab is not None) and (bb is not None):
+                        out.Storage[obid] = torch.matmul(tmpa.Storage[ab],tmpb.Storage[bb])
+ 
+                return out
 
             else:
                 ## product!!

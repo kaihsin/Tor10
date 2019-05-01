@@ -365,6 +365,27 @@ y.Print_diagram()
 x2 = torch.ones(3,4,requires_grad=True)
 y2 = Tor10.From_torch(x2,N_rowrank=1)
 print(y2.requires_grad())
+
+## Contract for symm:
+bd_sym_1a = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])
+bd_sym_2a = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])
+bd_sym_3a = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[-1],[5],[1]])
+
+bd_sym_1b = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])
+bd_sym_2b = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
+bd_sym_3b = Tor10.Bond(7,Tor10.BD_BRA,qnums=[[1],[3],[-2],[2],[2],[2],[0]])
+
+sym_T = Tor10.UniTensor(bonds=[bd_sym_1a,bd_sym_2a,bd_sym_3a],N_rowrank=2,labels=[10,11,12],dtype=torch.float64)
+sym_T2 = Tor10.UniTensor(bonds=[bd_sym_2b,bd_sym_1b,bd_sym_3b],N_rowrank=1,labels=[11,10,7],dtype=torch.float64)
+
+sym_T.Print_diagram()
+sym_T2.Print_diagram()
+
+sym_out = Tor10.Contract(sym_T,sym_T2)
+sym_out.Print_diagram()
+print(sym_out)
+exit(1)
+
 # Network:
 #==============================
 ntwrk = Tor10.Network()
