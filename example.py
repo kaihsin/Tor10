@@ -346,7 +346,6 @@ print(tqin)
 print(tqout)
 block_1123 = sym_T.GetBlock(1,1,-2,3)
 print(block_1123)
-exit(1)
 
 
 ## Contract:
@@ -358,7 +357,6 @@ c = Tor10.Contract(x,y)
 c.Print_diagram()
 d = Tor10.Contract(y,x)
 d.Print_diagram()
-
 ## From_torch
 x = torch.ones(3,3)
 y = Tor10.From_torch(x,N_rowrank=1,labels=[4,5])
@@ -367,7 +365,6 @@ y.Print_diagram()
 x2 = torch.ones(3,4,requires_grad=True)
 y2 = Tor10.From_torch(x2,N_rowrank=1)
 print(y2.requires_grad())
-
 # Network:
 #==============================
 ntwrk = Tor10.Network()
@@ -384,6 +381,7 @@ ntwrk.Put("C",C)
 print(ntwrk)
 TOUT = ntwrk.Launch()
 TOUT.Print_diagram()
+exit(1)
 
 # linalg:
 #============================
@@ -394,6 +392,7 @@ core.Print_diagram()
 print(len(factors))
 factors[0].Print_diagram()
 factors[1].Print_diagram()
+
 
 rep_x = core
 for f in factors:

@@ -584,7 +584,7 @@ class UniTensor():
 
 
 
-    def Print_diagram(self):
+    def Print_diagram(self,bond_info=False):
         """
         This is the beauty print of the tensor diagram. Including the information for the placeing device
         ::
@@ -594,16 +594,12 @@ class UniTensor():
             4.if all the bra-bonds are in row-space (in-bonds), and all ket-bonds are in col-space (out-bonds), the tensor is in "braket_form". 
             5.if one permute bra-bonds that should be in-bonds to out-bonds, this will put the UniTensor in a "non-braket_form". the bond will have a "*" symbol on it. 
 
-            [ex:] Rank = 4.
-            shape: (1,2,3,6)
-            N_rowrank = 2
-            labels=[0,5,3,11]
 
-                        -----------
-                   0  --| 1     3 |-- 3
-                        |         |
-                   5  --| 2     6 |-- 11
-                        -----------
+        Args:
+        
+            bond_info [default: False]
+
+                if set to True, the info of each bond will be printed.
 
         """
         print("-----------------------")
@@ -678,9 +674,10 @@ class UniTensor():
             print("           ---------------     ")
 
 
-        for i in range(len(self.bonds)):
-            print("lbl:%d "%(self.labels[i]),end="")
-            print(self.bonds[i])
+        if bond_info:
+            for i in range(len(self.bonds)):
+                print("lbl:%d "%(self.labels[i]),end="")
+                print(self.bonds[i])
 
 
 
@@ -3352,8 +3349,9 @@ def From_torch(torch_tensor,N_rowrank,labels=None,is_tag=False):
     if N_rowrank > len(shape):
         raise ValueError("From_torch","[ERROR] N_rowrank exceed the rank of input torch tensor.")
 
-    if len(labels) != len(shape):
-        raise TypeError("From_torch","[ERROR] # of labels should match the rank of torch.Tensor")
+    if labels is not None:
+        if len(labels) != len(shape):
+            raise TypeError("From_torch","[ERROR] # of labels should match the rank of torch.Tensor")
 
     if is_tag:
         new_bonds = [Bond(shape[i],BD_BRA) for i in range(N_rowrank)]+\

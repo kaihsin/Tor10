@@ -341,7 +341,7 @@ class Network():
                     # apply contract                        
                     left = values.pop()
                     right = values.pop()
-                    values.append(Contract(left,right,permute_back=False))
+                    values.append(Contract(left,right))
                     top = peek(operators)
                 operators.pop() # Discard the '('
             elif token == ',':
@@ -352,7 +352,7 @@ class Network():
                     # apply contract
                     left = values.pop()
                     right = values.pop()
-                    values.append(Contract(left,right,permute_back=False))
+                    values.append(Contract(left,right))
                     
                     top = peek(operators)
                 operators.append(token)
@@ -367,7 +367,7 @@ class Network():
             # apply contract
             left = values.pop()
             right = values.pop()
-            values.append(Contract(left,right,permute_back=False))
+            values.append(Contract(left,right))
 
         for key in self.tensors.keys():
             self.instances[key].labels = old_labels[key]
@@ -404,7 +404,7 @@ class Network():
                 else:
                     old_labels = copy.copy(value.labels)
                     value.labels = np.array(self.tensors[key][0].tolist() + self.tensors[key][1].tolist())
-                    out = Contract(out,value,permute_back=False)
+                    out = Contract(out,value)
                     value.labels = old_labels
         else :
             out = self.__launch_by_order()            
