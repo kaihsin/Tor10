@@ -238,6 +238,9 @@ bd4 = Tor10.Bond(6 ,Tor10.BD_BRA,qnums=[[-1]]*3+[[ 1]]*3         )
 SN = Tor10.UniTensor(bonds=[bd1,bd2,bd3,bd4],labels=[1,2,3,4],N_rowrank=2,dtype=torch.float64)
 SN2 = Tor10.UniTensor(bonds=[bd1,bd3,bd2,bd4],labels=[1,3,2,4],N_rowrank=2,dtype=torch.float64)
 
+print(SN.dtype)
+print(SN.device)
+
 SN.Print_diagram()
 print(SN.GetValidQnums(return_shape=True))
 Bn1 = SN.GetBlock(-1)

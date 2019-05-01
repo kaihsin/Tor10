@@ -35,6 +35,8 @@
     8. change behavior of GetBlock and PutBlock on a non-symm tensor. in this version, it will return a rank-2 matrix.
     9. Add GetValidQnums() for symmetry tensor
     10. For symmtry, the bond order is relevant. The default fusion tree is in order of ((((0,1),2),3),4 ....
+    11. Add UniTensor.dtype() [@property]
+    12. Add UniTensor.device() [@property]
 
 ## Release version
     v0.2.2 -> v0.3 deving

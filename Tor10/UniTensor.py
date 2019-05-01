@@ -798,6 +798,36 @@ class UniTensor():
     def __ne__(self,other):
         return not (self == other)
 
+
+    @property
+    def device(self):
+        """
+            Return the device of UniTensor
+            
+            Return:
+
+                torch.device
+           
+        """
+
+        if self.is_symm:    
+            return self.Storage[0].device
+        else:
+            return self.Storage.device
+
+    @property
+    def dtype(self):
+        """
+            Return the device of UniTensor
+            
+            Return:
+                torch.type 
+        """
+        if self.is_symm:
+            return self.Storage[0].dtype
+        else:
+            return self.Storage.dtype
+
     @property
     def shape(self):
         """
@@ -1681,6 +1711,8 @@ class UniTensor():
                 out = UniTensor(bonds=self.bonds,\
                                 labels = self.labels,\
                                 N_rowrank=self.N_rowrank,\
+                                device = self.device,\
+                                dtype = self.dtype,\
                                 braket = self.braket)
                 out_bd_dims = np.array([out.bonds[x].dim for x in range(out.N_rowrank)],dtype=np.int)
 
@@ -2326,7 +2358,7 @@ class UniTensor():
                         idx_out= np.argwhere((b_tqout.qnums == self._block_qnums[s]).all(axis=1)).flatten()
 
                         ## Create only the block:
-                        Block = torch.zeros((len(idx_in),len(idx_out)),device=self.Storage[0].device,dtype=self.Storage[0].dtype)
+                        Block = torch.zeros((len(idx_in),len(idx_out)),device=self.device,dtype=self.dtype)
 
                         ## interface
                         new_bra_invmapper_blks = _fx_decompress_idx(idx_in,new_accu_off_in)
