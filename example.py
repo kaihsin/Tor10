@@ -276,7 +276,11 @@ y.Print_diagram()
 z.CombineBonds([4,3],new_label=8,permute_back=False)
 z.Print_diagram()
 
-
+SN3 = Tor10.UniTensor(bonds=[bd1,bd2,bd3,bd4],labels=[1,2,3,4],N_rowrank=2,dtype=torch.float64)
+SN3.Permute([0,2,1,3],N_rowrank=1)
+SN3.Print_diagram()
+SN3.CombineBonds([2,3],by_label=True)
+SN3.Print_diagram()
 exit(1)
 
 

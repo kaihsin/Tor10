@@ -208,10 +208,10 @@ class UniTensor():
 
 
             ## only activate when symmetry is on.
-            self._row_mapper_blks = None     ## this follow memory
-            self._col_mapper_blks = None     ## this follow memory
-            self._row_invmapper_blks = None  ## this follow memory
-            self._col_invmapper_blks = None  ## this follow memory
+            self._bra_mapper_blks = None     ## this follow memory
+            self._ket_mapper_blks = None     ## this follow memory
+            self._bra_invmapper_blks = None  ## this follow memory
+            self._ket_invmapper_blks = None  ## this follow memory
             self._mapper = None       ## memory idx to real idx
             self._inv_mapper = None   ## real idx to memory index
             self._contiguous = True   
@@ -244,10 +244,10 @@ class UniTensor():
                     raise TypeError("UniTensor.__init__","[ERROR] no vaild block in current Tensor. please check total qnums in total bra/ket bonds have at least one same set of qnums.")    
 
                 self.Storage = []
-                self._row_invmapper_blks = [] 
-                self._col_invmapper_blks = []
-                self._row_mapper_blks = -np.ones((b_tqin.dim,2)).astype(np.int)
-                self._col_mapper_blks = -np.ones((b_tqout.dim,2)).astype(np.int)
+                self._bra_invmapper_blks = [] 
+                self._ket_invmapper_blks = []
+                self._bra_mapper_blks = -np.ones((b_tqin.dim,2)).astype(np.int)
+                self._ket_mapper_blks = -np.ones((b_tqout.dim,2)).astype(np.int)
                 self._block_qnums = [] 
 
                 for b in range(len(C)):
@@ -257,24 +257,24 @@ class UniTensor():
                     self.Storage.append(torch.zeros((len(idx_in),len(idx_out)),device=device,dtype=dtype))
 
                     ## interface
-                    self._row_invmapper_blks.append(_fx_decompress_idx(idx_in,self._accu_off_in)) 
-                    self._row_mapper_blks[idx_in,0] = b
-                    self._row_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
+                    self._bra_invmapper_blks.append(_fx_decompress_idx(idx_in,self._accu_off_in)) 
+                    self._bra_mapper_blks[idx_in,0] = b
+                    self._bra_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
 
                     ## interface
-                    self._col_invmapper_blks.append(_fx_decompress_idx(idx_out,self._accu_off_out))
-                    self._col_mapper_blks[idx_out,0] = b
-                    self._col_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
+                    self._ket_invmapper_blks.append(_fx_decompress_idx(idx_out,self._accu_off_out))
+                    self._ket_mapper_blks[idx_out,0] = b
+                    self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
                 self._block_qnums = C
 
             else:
                 self._mapper = copy.deepcopy(sym_mappers[0])
                 self._inv_mapper = copy.deepcopy(sym_mappers[1])
 
-                self._row_mapper_blks = copy.deepcopy(sym_mappers[2])
-                self._row_invmapper_blks = copy.deepcopy(sym_mappers[3])
-                self._col_mapper_blks = copy.deepcopy(sym_mappers[4])
-                self._col_invmapper_blks = copy.deepcopy(sym_mappers[5])
+                self._bra_mapper_blks = copy.deepcopy(sym_mappers[2])
+                self._bra_invmapper_blks = copy.deepcopy(sym_mappers[3])
+                self._ket_mapper_blks = copy.deepcopy(sym_mappers[4])
+                self._ket_invmapper_blks = copy.deepcopy(sym_mappers[5])
                 self._contiguous = copy.deepcopy(sym_mappers[6])
                 self._accu_off_in  = copy.deepcopy(sym_mappers[7])  
                 self._accu_off_out = copy.deepcopy(sym_mappers[8])
@@ -868,8 +868,8 @@ class UniTensor():
                                     torch_tensor=[self.Storage[b]+other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
                                     sym_mappers=(self._mapper,self._inv_mapper,\
-                                                 self._row_mapper_blks,self._row_invmapper_blks,\
-                                                 self._col_mapper_blks,self._col_invmapper_blks,\
+                                                 self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                                 self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
                                                  self._accu_off_out,\
@@ -926,8 +926,8 @@ class UniTensor():
                                 torch_tensor=[self.Storage[b]+other for b in range(len(self.Storage))],\
                                 check=False,\
                                 sym_mappers=(self._mapper,self._inv_mapper,\
-                                             self._row_mapper_blks,self._row_invmapper_blks,\
-                                             self._col_mapper_blks,self._col_invmapper_blks,\
+                                             self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                             self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
                                              self._accu_off_out,\
@@ -953,8 +953,8 @@ class UniTensor():
                             torch_tensor=[other + self.Storage[b] for b in range(len(self.Storage))],\
                             check=False,\
                             sym_mappers=(self._mapper,self._inv_mapper,\
-                                         self._row_mapper_blks,self._row_invmapper_blks,\
-                                         self._col_mapper_blks,self._col_invmapper_blks,\
+                                         self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                         self._ket_mapper_blks,self._ket_invmapper_blks,\
                                          self._contiguous,\
                                          self._accu_off_in,\
                                          self._accu_off_out,\
@@ -987,8 +987,8 @@ class UniTensor():
                                     torch_tensor=[self.Storage[b]-other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
                                     sym_mappers=(self._mapper,self._inv_mapper,\
-                                                 self._row_mapper_blks,self._row_invmapper_blks,\
-                                                 self._col_mapper_blks,self._col_invmapper_blks,\
+                                                 self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                                 self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
                                                  self._accu_off_out,\
@@ -1042,8 +1042,8 @@ class UniTensor():
                                 torch_tensor=[self.Storage[b]-other for b in range(len(self.Storage))],\
                                 check=False,\
                                 sym_mappers=(self._mapper,self._inv_mapper,\
-                                             self._row_mapper_blks,self._row_invmapper_blks,\
-                                             self._col_mapper_blks,self._col_invmapper_blks,\
+                                             self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                             self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
                                              self._accu_off_out,\
@@ -1068,8 +1068,8 @@ class UniTensor():
                             torch_tensor=[other - self.Storage[b] for b in range(len(self.Storage))],\
                             check=False,\
                             sym_mappers=(self._mapper,self._inv_mapper,\
-                                         self._row_mapper_blks,self._row_invmapper_blks,\
-                                         self._col_mapper_blks,self._col_invmapper_blks,\
+                                         self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                         self._ket_mapper_blks,self._ket_invmapper_blks,\
                                          self._contiguous,\
                                          self._accu_off_in,\
                                          self._accu_off_out,\
@@ -1139,8 +1139,8 @@ class UniTensor():
                                     torch_tensor=[self.Storage[b]*other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
                                     sym_mappers=(self._mapper,self._inv_mapper,\
-                                                 self._row_mapper_blks,self._row_invmapper_blks,\
-                                                 self._col_mapper_blks,self._col_invmapper_blks,\
+                                                 self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                                 self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
                                                  self._accu_off_out,\
@@ -1192,8 +1192,8 @@ class UniTensor():
                                 torch_tensor=[self.Storage[b]*other for b in range(len(self.Storage))],\
                                 check=False,\
                                 sym_mappers=(self._mapper,self._inv_mapper,\
-                                             self._row_mapper_blks,self._row_invmapper_blks,\
-                                             self._col_mapper_blks,self._col_invmapper_blks,\
+                                             self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                             self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
                                              self._accu_off_out,\
@@ -1218,8 +1218,8 @@ class UniTensor():
                             torch_tensor=[other * self.Storage[b] for b in range(len(self.Storage))],\
                             check=False,\
                             sym_mappers=(self._mapper,self._inv_mapper,\
-                                         self._row_mapper_blks,self._row_invmapper_blks,\
-                                         self._col_mapper_blks,self._col_invmapper_blks,\
+                                         self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                         self._ket_mapper_blks,self._ket_invmapper_blks,\
                                          self._contiguous,\
                                          self._accu_off_in,\
                                          self._accu_off_out,\
@@ -1243,8 +1243,8 @@ class UniTensor():
                             N_rowrank=self.N_rowrank,\
                             check=False,\
                             sym_mappers=(self._mapper,self._inv_mapper,\
-                                         self._row_mapper_blks,self._row_invmapper_blks,\
-                                         self._col_mapper_blks,self._col_invmapper_blks,\
+                                         self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                         self._ket_mapper_blks,self._ket_invmapper_blks,\
                                          self._contiguous,self._accu_off_in,self._accu_off_out,self._block_qnums),\
                             braket = self.braket,\
                             torch_tensor=[self.Storage[b]**other for b in range(len(self.Storage))])
@@ -1274,8 +1274,8 @@ class UniTensor():
                                     torch_tensor=[self.Storage[b]/other.Storage[b] for b in range(len(self.Storage))],\
                                     check=False,\
                                     sym_mappers=(self._mapper,self._inv_mapper,\
-                                                 self._row_mapper_blks,self._row_invmapper_blks,\
-                                                 self._col_mapper_blks,self._col_invmapper_blks,\
+                                                 self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                                 self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                  self._contiguous,\
                                                  self._accu_off_in,\
                                                  self._accu_off_out,\
@@ -1329,8 +1329,8 @@ class UniTensor():
                                 torch_tensor=[self.Storage[b]/other for b in range(len(self.Storage))],\
                                 check=False,\
                                 sym_mappers=(self._mapper,self._inv_mapper,\
-                                             self._row_mapper_blks,self._row_invmapper_blks,\
-                                             self._col_mapper_blks,self._col_invmapper_blks,\
+                                             self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                             self._ket_mapper_blks,self._ket_invmapper_blks,\
                                              self._contiguous,\
                                              self._accu_off_in,\
                                              self._accu_off_out,\
@@ -1590,7 +1590,7 @@ class UniTensor():
                 idxs_to_combine.append(np.argwhere(self.labels==l).flatten()[0])
                 
             idxs_to_combine = np.array(idxs_to_combine,dtype=np.int)
-            #print(idxs_to_combine)
+            print(idxs_to_combine)
         else:
             if not all(X_to_combine<len(a.labels)):
                 raise Exception("[ERROR] index out of bound")
@@ -1633,7 +1633,7 @@ class UniTensor():
             else:
                 out = self.Contiguous()
                 out.name = self.name
-                self = out
+                self.__dict__.update(out.__dict__)
                 return self
             
         else:
@@ -1689,13 +1689,13 @@ class UniTensor():
                     oldshape = self.Storage[b].shape
                     for i in range(oldshape[0]):
                         for j in range(oldshape[1]):    
-                            oldidx = np.concatenate((self._row_invmapper_blks[b][i],self._col_invmapper_blks[b][j]))
+                            oldidx = np.concatenate((self._bra_invmapper_blks[b][i],self._ket_invmapper_blks[b][j]))
                             newidx = oldidx[self._mapper]
                             #
                             new_row = int(np.sum(out._accu_off_in*newidx[:out.N_rowrank]))
                             new_col = int(np.sum(out._accu_off_out*newidx[out.N_rowrank:]))
-                            b_id_in = out._row_mapper_blks[new_row]
-                            b_id_out  = out._col_mapper_blks[new_col]
+                            b_id_in = out._bra_mapper_blks[new_row]
+                            b_id_out  = out._ket_mapper_blks[new_col]
 
                             ## [DEBUG] >>>>
                             if b_id_in[0] < 0 or b_id_out[0]<0:
@@ -2146,7 +2146,7 @@ class UniTensor():
                 for s in range(len(self._block_qnums)):
                     if np.array(qnum) == self._block_qnums[s]:
                         ## get Nrowrank for the memory
-                        old_N_rowrank = len(self._row_invmapper_blks[0][0])
+                        old_N_rowrank = len(self._bra_invmapper_blks[0][0])
 
                         accu_off = []
                         tmp = 1
@@ -2165,28 +2165,28 @@ class UniTensor():
                         idx_out= np.argwhere((b_tqout.qnums == self._block_qnums[s]).all(axis=1)).flatten()
 
                         ## interface
-                        new_row_invmapper_blks = _fx_decompress_idx(idx_in,new_accu_off_in)
-                        #self._row_mapper_blks[idx_in,0] = b
-                        #self._row_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
+                        new_bra_invmapper_blks = _fx_decompress_idx(idx_in,new_accu_off_in)
+                        #self._bra_mapper_blks[idx_in,0] = b
+                        #self._bra_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
 
                         ## interface
-                        new_col_invmapper_blks = _fx_decompress_idx(idx_out,new_accu_off_out)
-                        #self._col_mapper_blks[idx_out,0] = b
-                        #self._col_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
+                        new_ket_invmapper_blks = _fx_decompress_idx(idx_out,new_accu_off_out)
+                        #self._ket_mapper_blks[idx_out,0] = b
+                        #self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
 
 
                         ## Get element only for this block from the right memory place:
-                        #old_rowrank = self._row_invmapper_blks[0].
+                        #old_rowrank = self._bra_invmapper_blks[0].
                         for i in range(len(idx_in)):
                             for j in range(len(idx_out)):
-                                newidx = np.concatenate((new_row_invmapper_blks[i],new_col_invmapper_blks[j]))
+                                newidx = np.concatenate((new_bra_invmapper_blks[i],new_ket_invmapper_blks[j]))
                                 oldidx = newidx[self._inv_mapper]
 
                                 old_row = int(np.sum(self._accu_off_in*oldidx[:old_N_rowrank]))
                                 old_col = int(np.sum(self._accu_off_out*oldidx[old_N_rowrank:]))
 
-                                b_id_in = self._row_mapper_blks[old_row]
-                                b_id_out = self._col_mapper_blks[old_col]
+                                b_id_in = self._bra_mapper_blks[old_row]
+                                b_id_out = self._ket_mapper_blks[old_col]
 
                                 if b_id_in[0] != b_id_out[0]:
                                     raise Exception("[ERROR] internal FATAL")
@@ -2307,7 +2307,7 @@ class UniTensor():
                 for s in range(len(self._block_qnums)):
                     if np.array(qnum) == self._block_qnums[s]:
                         ## get Nrowrank for the memory
-                        old_N_rowrank = len(self._row_invmapper_blks[0][0])
+                        old_N_rowrank = len(self._bra_invmapper_blks[0][0])
 
                         accu_off = []
                         tmp = 1
@@ -2329,28 +2329,28 @@ class UniTensor():
                         Block = torch.zeros((len(idx_in),len(idx_out)),device=self.Storage[0].device,dtype=self.Storage[0].dtype)
 
                         ## interface
-                        new_row_invmapper_blks = _fx_decompress_idx(idx_in,new_accu_off_in)
-                        #self._row_mapper_blks[idx_in,0] = b
-                        #self._row_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
+                        new_bra_invmapper_blks = _fx_decompress_idx(idx_in,new_accu_off_in)
+                        #self._bra_mapper_blks[idx_in,0] = b
+                        #self._bra_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)
 
                         ## interface
-                        new_col_invmapper_blks = _fx_decompress_idx(idx_out,new_accu_off_out)
-                        #self._col_mapper_blks[idx_out,0] = b
-                        #self._col_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
+                        new_ket_invmapper_blks = _fx_decompress_idx(idx_out,new_accu_off_out)
+                        #self._ket_mapper_blks[idx_out,0] = b
+                        #self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)
 
 
                         ## Get element only for this block from the right memory place:
-                        #old_rowrank = self._row_invmapper_blks[0].
+                        #old_rowrank = self._bra_invmapper_blks[0].
                         for i in range(len(idx_in)):
                             for j in range(len(idx_out)):
-                                newidx = np.concatenate((new_row_invmapper_blks[i],new_col_invmapper_blks[j]))
+                                newidx = np.concatenate((new_bra_invmapper_blks[i],new_ket_invmapper_blks[j]))
                                 oldidx = newidx[self._inv_mapper]
 
                                 old_row = int(np.sum(self._accu_off_in*oldidx[:old_N_rowrank]))
                                 old_col = int(np.sum(self._accu_off_out*oldidx[old_N_rowrank:]))
 
-                                b_id_in = self._row_mapper_blks[old_row]
-                                b_id_out = self._col_mapper_blks[old_col]
+                                b_id_in = self._bra_mapper_blks[old_row]
+                                b_id_out = self._ket_mapper_blks[old_col]
 
                                 ## [DEBUG] >>>
                                 if b_id_in[0] != b_id_out[0]:
@@ -2480,13 +2480,13 @@ class UniTensor():
         else:
             if self.is_symm:
                 
-                retur(bonds=self.bonds,\
+                return UniTensor(bonds=self.bonds,\
                                  labels=self.labels,\
                                  N_rowrank = self.N_rowrank,\
                                  braket = self.braket,\
                                  sym_mappers = (self._mapper,self._inv_mapper,\
-                                                self._row_mapper_blks,self._row_invmapper_blks,\
-                                                self._col_mapper_blks,self._col_invmapper_blks,\
+                                                self._bra_mapper_blks,self._bra_invmapper_blks,\
+                                                self._ket_mapper_blks,self._ket_invmapper_blks,\
                                                 self._contiguous,self._accu_off_in,self._accu_off_out),\
                                  torch_tensor=[self.Storage[s].grad for s in range(len(self.Storage))],\
                                  check=False)
@@ -2590,9 +2590,10 @@ def Contract(a,b):
     """
     Contract two tensors with the same labels.
 
-    1. two tensors must be the same type, if "a" is a symmetry tensor, "b" must also be a symmetry tensor.
+    1. two tensors must be the same type, if "a" is a symmetry/untagged/tagged tensor, "b" must also be a symmetry/untagged/tagged tensor.
     2. When contract two symmetry tensor, the bonds that to be contracted must have the same qnums.
-    3. Each in-bond(bra) can only contract with out-bond(ket), in terms of physical meaning, this means the contract traceing out the matched bra-ket.
+
+    3. For tagged tensor, Each bra-bond can only contract with ket-bond, in terms of physical meaning, this means the contract traceing out the matched bra-ket.
 
     [Note] the argument "a" and "b" tensor defines the order of the out-come bond. After contract,  the order of remaining bonds (both in-bond(bra) and out-bond(ket)) that appears in the new-tensor will follows the rule: a's in-bond will appears first, then the b's in-bond; a's out-bond will appears first, then b's out-bond (see example in below)
 
@@ -2629,26 +2630,191 @@ def Contract(a,b):
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
 
-        if a.is_symm or b.is_symm:
-            raise Exception("contract for symmetry tensor is under developing.")
+        ## check:
+        if (a.is_symm != b.is_symm) or ((a.braket is None)!=(b.braket is None)):
+            raise TypeError("Contract(a,b)","[ERROR] the tensors should be the same type to be contracted")
+
 
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
+        
+        aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
+        bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
+
+
+        ## master switch 
+        if a.is_symm:
+            ## contract symm tensor > 
+            if len(same):
+
+                for i in range(len(a_ind)):
+                    if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
+                        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
+
+                if False in np.unique((a.braket[a_ind]+b.braket[b_ind])==0):
+                    raise Exception("Contract(a,b)","[ERROR] bra-bond can only contract with ket-bond")
+    
+                tmpa = copy.deepcopy(a)
+                tmpb = copy.deepcopy(b)
+                tmpa.Permute(np.append(a_ind_no_combine,a_ind), N_rowrank=len(a.labels)-len(a_ind),by_label=False).Contiguous_()
+                tmpb.Permute(np.append(b_ind,b_ind_no_combine), N_rowrank=len(b_ind)              ,by_label=False).Contiguous_()
+    
+                ## DEBUG >>>
+                if len(tmpa.Storage) != len(tmpb.Storage):
+                    raise Exception("[ERROR][Internal][DEBUG] FATAL two contract does not have same block layout!!")            
+                ## <<<
+                
+                for b in range(len(tmpa.Storage)):
+                    tmpa.Storage[b] = torch.matmul(tmpa.Storage[b],tmpb.Storage[b])
+
+                tmpa._accu_off_out = copy.deepcopy(tmpb.accu_off_out)
+                tmpa._ket_mapper_blks = copy.deepcopy(tmpb._ket_mapper_blks)
+                tmpa._ket_invmapper_blks= copy.deepcopy(tmpb._ket_invmapper_blks)
+                tmpa._mapper = np.arange(len(a_ind_no_combine)+len(b_ind_no_combine)).astype(np.int)
+                tmpa._inv_mapper = copy.copy(tmpa.mapper)
+                tmpa.name = ''
+                tmpa.bonds = np.concatenate((tmpa.bonds[:len(a_ind_no_combine)],tmpb.bonds[len(b_ind):]))
+                tmpa.labels= np.concatenate((tmpa.labels[:len(a_ind_no_combine)],tmpb.labels[len(b_ind):]))
+                tmpa.braket= np.concatenate((tmpa.braket[:len(a_ind_no_combine)],tmpb.braket[len(b_ind):]))
+                del tmpb
+                return tmpa
+
+            else:
+                ## product!!
+                raise Exception("Developing")
+                                
+                
+
+
+        else:
+            ## contract non-sym tensor > 
+
+            if len(same):
+                if a.is_diag :
+
+                    tmpa = torch.diag(a.Storage).to(a.Storage.device)
+                else:
+                    tmpa = a.Storage
+
+                if b.is_diag :
+                    tmpb = torch.diag(b.Storage).to(b.Storage.device)
+                else:
+                    tmpb = b.Storage
+
+
+                if a.braket is None:
+                    ## contract untagged 
+                    tmp = torch.tensordot(tmpa,tmpb,dims=(a_ind.tolist(),b_ind.tolist()))
+
+                    new_bonds = np.concatenate([copy.deepcopy(a.bonds[aind_no_combine]),copy.deepcopy(b.bonds[bind_no_combine])])
+                    new_io = [ (aind_no_combine[x]>=a.N_rowrank) for x in range(len(aind_no_combine))] + [(bind_no_combine[x]>=b.N_rowrank)  for x in range(len(bind_no_combine))]
+                    new_labels = np.concatenate([copy.copy(a.labels[aind_no_combine]),copy.copy(b.labels[bind_no_combine])])
+
+                    new_io = np.array(new_io)
+                    #print(new_io)
+                    if len(new_bonds)>0:
+                        mapper = np.argsort(new_io)
+                        new_bonds = new_bonds[mapper]
+                        new_labels= new_labels[mapper]
+                        tmp = tmp.permute(*mapper)
+
+                    return UniTensor(bonds =new_bonds,\
+                                     labels=new_labels,\
+                                     N_rowrank=len(np.argwhere(new_io==0)),\
+                                     torch_tensor=tmp,\
+                                     check=False)
+
+                else:
+                    ## tagged
+                    if False in np.unique((a.braket[a_ind]+b.braket[b_ind])==0):
+                        raise Exception("Contract(a,b)","[ERROR] in-bond(bra) can only contract with out-bond (ket)")
+
+
+                    tmp = torch.tensordot(tmpa,tmpb,dims=(a_ind.tolist(),b_ind.tolist()))
+
+                    new_bonds = np.concatenate([copy.deepcopy(a.bonds[aind_no_combine]),copy.deepcopy(b.bonds[bind_no_combine])])
+                    new_io = [ (aind_no_combine[x]>=a.N_rowrank) for x in range(len(aind_no_combine))] + [(bind_no_combine[x]>=b.N_rowrank)  for x in range(len(bind_no_combine))]
+                    new_labels = np.concatenate([copy.copy(a.labels[aind_no_combine]),copy.copy(b.labels[bind_no_combine])])
+                    new_braket = np.concatenate([copy.copy(a.braket[aind_no_combine]),copy.copy(b.braket[bind_no_combine])])
+
+                    new_io = np.array(new_io)
+                    #print(new_io)
+                    if len(new_bonds)>0:
+                        mapper = np.argsort(new_io)
+                        new_bonds = new_bonds[mapper]
+                        new_labels= new_labels[mapper]
+                        new_braket= new_braket[mapper]
+                        tmp = tmp.permute(*mapper)
+
+                    return UniTensor(bonds =new_bonds,\
+                                     labels=new_labels,\
+                                     N_rowrank=len(np.argwhere(new_io==0)),\
+                                     torch_tensor=tmp,\
+                                     braket = new_braket,\
+                                     check=False)
+
+            else:
+                ## product!!
+                if a.is_diag :
+                    tmpa = torch.diag(a.Storage)
+                else:
+                    tmpa = a.Storage
+
+                if b.is_diag :
+                    tmpb = torch.diag(b.Storage)
+                else:
+                    tmpb = b.Storage
+
+                if a.braket is None:    
+                    ## untagged 
+                    tmp = torch.tensordot(tmpa,tmpb,dims=0)
+                    new_bonds = np.concatenate([copy.deepcopy(a.bonds),copy.deepcopy(b.bonds)])
+                    new_labels = np.concatenate([copy.copy(a.labels), copy.copy(b.labels)])
+                    new_io = [ (x>=a.N_rowrank) for x in range(len(a.bonds))] + [(x>=b.N_rowrank)  for x in range(len(b.bonds))]
+
+                    if len(new_bonds)>0:
+                        mapper = np.argsort(new_io)
+                        new_bonds = new_bonds[mapper]
+                        new_labels= new_labels[mapper]
+                        tmp = tmp.permute(*mapper)
+
+                    return UniTensor(bonds=new_bonds,\
+                                     labels=new_labels,\
+                                     N_rowrank=a.N_rowrank+b.N_rowrank,\
+                                     torch_tensor=tmp,\
+                                     check=False)
+
+
+                else: 
+                    ## tagged
+                    tmp = torch.tensordot(tmpa,tmpb,dims=0)
+                    new_bonds = np.concatenate([copy.deepcopy(a.bonds),copy.deepcopy(b.bonds)])
+                    new_labels = np.concatenate([copy.copy(a.labels), copy.copy(b.labels)])
+                    new_braket = np.concatenate([copy.copy(a.braket), copy.copy(b.braket)])
+                    new_io = [ (x>=a.N_rowrank) for x in range(len(a.bonds))] + [(x>=b.N_rowrank)  for x in range(len(b.bonds))]
+
+                    if len(new_bonds)>0:
+                        mapper = np.argsort(new_io)
+                        new_bonds = new_bonds[mapper]
+                        new_labels= new_labels[mapper]
+                        new_braket = new_braket[mapper]
+                        tmp = tmp.permute(*mapper)
+
+                    return UniTensor(bonds=new_bonds,\
+                                     labels=new_labels,\
+                                     N_rowrank=a.N_rowrank+b.N_rowrank,\
+                                     torch_tensor=tmp,\
+                                     braket=new_braket,\
+                                     check=False)
 
         if(len(same)):
 
 
-            ## Qnum_ipoint
-            if (a.is_symm)!=(b.is_symm):
-                raise Exception("Contract(a,b)","[ERROR] contract Symm TN with non-sym tensor")
 
-            if (a.braket is None) != (b.braket is None):
-                raise Exception("Contract(a,b)","[ERROR] contract untagged TN with tagged TN is not allowed")
-
-            if(a.is_symm):
-                for i in range(len(a_ind)):
-                    if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
-                        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
+            #if(a.is_symm):
+            #    for i in range(len(a_ind)):
+            #        if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
+            #            raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
 
             ## check bra-ket
             if a.braket is None:
@@ -2831,19 +2997,24 @@ def _CombineBonds(a,idxs,new_label,permute_back):
         a:
             UniTensor
 
-        label:
+        idxs:
 
-            labels that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined
+            index that to be combined. It should be a int list / numpy array of the label. All the bonds with specified labels in the current UniTensor  will be combined
 
         new_label:
-            the new_label of the UniTensor
+            the new_label of the combined bond 
+
+        permute_back:
+            Set if the current bond should be permute back
+
+            
 
     """
     if isinstance(a,UniTensor):
 
 
         idx_no_combine = np.setdiff1d(np.arange(len(a.labels)),idxs) ## idx_no_combine will be from small to large, sorted!
-        old_shape = np.array(a.Storage.shape)
+        old_shape = np.array(a.shape)
 
         combined_dim = old_shape[idxs]
         combined_dim = np.prod(combined_dim)
@@ -2862,7 +3033,8 @@ def _CombineBonds(a,idxs,new_label,permute_back):
         ## master switch 
         if a.is_symm:
             ## symmetry
-            raise Exception("[Develope]")
+            #raise Exception("[Develope]")
+
 
             ## check if the combine are BRA or KET
             contype_inout = np.unique(a.braket[idxs])
@@ -2870,13 +3042,13 @@ def _CombineBonds(a,idxs,new_label,permute_back):
                     raise Exception("_CombineBonds","[ERROR], label_to_combine should be all bra-bond or all ket-bond for Tensor with symmetry")
 
 
-            if idxs[0] < a.N_rowrank:
-                self.Permute(np.concatenate((idxs,idx_no_combine)),N_rowrank=len(idxs),by_label=False)
+            if idxs[0] <a.N_rowrank:
+                a.Permute(np.concatenate((idxs,idx_no_combine)),N_rowrank=len(idxs),by_label=False)
                 ## put it on the contiguous form:
-                self.Contiguous_()
+                a.Contiguous_()
 
                 ## DEBUG >>>
-                if not self.is_contiguous():
+                if not a.is_contiguous():
                     raise Exception("[ERROR][DEBUG][internal] non-contiguous!!")
                 ## <<<
 
@@ -2894,22 +3066,22 @@ def _CombineBonds(a,idxs,new_label,permute_back):
                 a.bonds = np.delete(a.bonds,del_pos)
 
                 ##house keeping mappers 
-                for b in range(len(self.Storage)):
-                    self._row_invmapper_blks[b] = np.sum(self._row_invmapper_blks[b]*self._accu_off_in,axis=1)
+                for b in range(len(a.Storage)):
+                    a._bra_invmapper_blks[b] = np.sum(a._bra_invmapper_blks[b]*a._accu_off_in,axis=1)
                 
-                self._accu_off_in = np.array([1],dtype=np.int)
-                self._mapper = np.arange(len(self.labels),dype=np.int) ## contiguous, so we just init 
-                self._inv_mapper = copy.copy(self._mapper)
+                a._accu_off_in = np.array([1],dtype=np.int)
+                a._mapper = np.arange(len(a.labels),dype=np.int) ## contiguous, so we just init 
+                a._inv_mapper = copy.copy(a._mapper)
 
-                self.N_rowrank = 1
+                a.N_rowrank = 1
 
             else:
-                self.Permute(np.concatenate((idx_no_combine,idxs[::-1])),N_rowrank=len(a.labels)-len(idxs),by_label=False)
+                a.Permute(np.concatenate((idx_no_combine,idxs[::-1])),N_rowrank=len(a.labels)-len(idxs),by_label=False)
                 ## put it on the contiguous form:
-                self.Contiguous_()
-
+                a.Contiguous_()
+                print(a.labels)
                 ## DEBUG >>>
-                if not self.is_contiguous():
+                if not a.is_contiguous():
                     raise Exception("[ERROR][DEBUG][internal] non-contiguous!!")
                 ## <<<
 
@@ -2921,24 +3093,24 @@ def _CombineBonds(a,idxs,new_label,permute_back):
                     a.bonds[-1].combine(a.bonds[-2-i])
                 ## <<<
 
-                del_pos = np.arange(-len(idxs),-1,1).astype(np.int)
+                del_pos = np.arange(len(a.labels)-len(idxs),len(a.labels)-1,1).astype(np.int)
+                print(del_pos)
                 a.labels = np.delete(a.labels,del_pos)
                 a.braket = np.delete(a.braket,del_pos)
                 a.bonds = np.delete(a.bonds,del_pos)
 
                 ##house keeping mappers 
-                for b in range(len(self.Storage)):
-                    self._col_invmapper_blks[b] = np.sum(self._col_invmapper_blks[b]*self._accu_off_out,axis=1)
+                for b in range(len(a.Storage)):
+                    a._ket_invmapper_blks[b] = np.sum(a._ket_invmapper_blks[b]*a._accu_off_out,axis=1)
 
-                self._accu_off_out = np.array([1],dtype=np.int)
-                self._mapper = np.arange(len(self.labels),dype=np.int) ## contiguous, so we just init
-                self._inv_mapper = copy.copy(self._mapper)
+                a._accu_off_out = np.array([1],dtype=np.int)
+                a._mapper = np.arange(len(a.labels),dtype=np.int) ## contiguous, so we just init
+                a._inv_mapper = copy.copy(a._mapper)
 
-                self.N_rowrank = len(self.labels) - 1
-
+                a.N_rowrank = len(a.labels) - 1
 
             if permute_back:
-                self.braket_form()
+                a.braket_form()
 
 
         else:
