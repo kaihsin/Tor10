@@ -382,7 +382,9 @@ sym_T.Print_diagram()
 sym_T2.Print_diagram()
 
 sym_out = Tor10.Contract(sym_T,sym_T2)
+sym_out2 = Tor10.Contract(sym_T2,sym_T)
 sym_out.Print_diagram()
+sym_out2.Print_diagram()
 print(sym_out)
 exit(1)
 
