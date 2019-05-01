@@ -62,12 +62,6 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
     if not (isinstance(order,list) or isinstance(order,np.array)):
         raise TypeError("Hosvd(UniTensor,order,bonds_group,*args)","[ERROR] the order should be a python list or 1d numpy array")
 
-
-    ## master switch
-    if a.is_symm :
-        raise Exception("Developing")
-    
-
     ## checking:
     if len(order) != len(a.labels):
         raise ValueError("Hosvd","[ERROR] the size of order should be equal to the rank of input UniTensor. size of order:%d; rank of UniTensor:%d"%(len(order),len(a.labels)))
@@ -81,57 +75,65 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
 
         raise ValueError("Hosvd","[ERROR] bonds_group cannot have elements <=0")
 
-    old_labels = copy.copy(a.labels)
-    old_bonds  = copy.deepcopy(a.bonds)
 
-    if by_label:
-        mapper = copy.copy(order)
+
+    ## master switch
+    if a.is_symm :
+        raise Exception("Hosvd can only operate on non-symmetry tensor")
+
     else:
-        if not all(id<len(a.labels) for id in order):
-            raise ValueError("Hosvd","[ERROR] by_label=False but the input 'order' exceed the rank of UniTensor")
-        mapper = a.labels[order]
+    
+        old_labels = copy.copy(a.labels)
+        old_bonds  = copy.deepcopy(a.bonds)
 
-    iod = [np.argwhere(a.labels==mapper[x])[0]>=a.N_rowrank for x in range(len(mapper))]
-    old_Nin = a.N_rowrank
-    factors = []
-    start_label = np.min(a.labels)
-    start_label = start_label-1 if start_label<=0 else -1
-    for bg in bonds_group:
-        a._Permute(mapper,N_rowrank=bg,by_label=True)
+        if by_label:
+            mapper = copy.copy(order)
+        else:
+            if not all(id<len(a.labels) for id in order):
+                raise ValueError("Hosvd","[ERROR] by_label=False but the input 'order' exceed the rank of UniTensor")
+            mapper = a.labels[order]
 
-        ## manipulate only the Storage, keep the shell of UniTensor unchange.
-        old_shape = a.Storage.shape
-        a.Contiguous()
-        a.Storage = a.Storage.view(np.prod(a.Storage.shape[:bg]),-1)
-        u,_,_ = torch.svd(a.Storage)
+        iod = [np.argwhere(a.labels==mapper[x])[0]>=a.N_rowrank for x in range(len(mapper))]
+        old_Nin = a.N_rowrank
+        factors = []
+        start_label = np.min(a.labels)
+        start_label = start_label-1 if start_label<=0 else -1
+        for bg in bonds_group:
+            a._Permute(mapper,N_rowrank=bg,by_label=True)
 
-        new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(u.shape[-1]))
-        new_labels= np.append(copy.copy(a.labels[:bg]),start_label)
-        iiod = np.append(iod[:bg],1)
-        factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),N_rowrank=1,check=False) )
-        x = np.argsort(iiod)       
-        factors[-1]._Permute(x,N_rowrank=len(np.where(iiod==0)[0]))
+            ## manipulate only the Storage, keep the shell of UniTensor unchange.
+            old_shape = a.Storage.shape
+            a.Contiguous()
+            a.Storage = a.Storage.view(np.prod(a.Storage.shape[:bg]),-1)
+            u,_,_ = torch.svd(a.Storage)
 
-        a.Storage = a.Storage.view(old_shape)
-        start_label -= 1
-        mapper = np.roll(mapper,-bg)
-        iod   = np.roll(iod,-bg)
+            new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(u.shape[-1]))
+            new_labels= np.append(copy.copy(a.labels[:bg]),start_label)
+            iiod = np.append(iod[:bg],1)
+            factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),N_rowrank=1,check=False) )
+            x = np.argsort(iiod)       
+            factors[-1]._Permute(x,N_rowrank=len(np.where(iiod==0)[0]))
 
-    a._Permute(old_labels,N_rowrank=old_Nin,by_label=True)
-    a.bonds = old_bonds
+            a.Storage = a.Storage.view(old_shape)
+            start_label -= 1
+            mapper = np.roll(mapper,-bg)
+            iod   = np.roll(iod,-bg)
 
-    ## if compute core?
+        a._Permute(old_labels,N_rowrank=old_Nin,by_label=True)
+        a.bonds = old_bonds
 
-    if not core:
-        return factors
-    else:
-        out = a
-        for n in factors:
-            n.Whole_transpose()
-            out = Contract(out,n)
-            n.Whole_transpose()
-        
-        return factors,out
+        ## if compute core?
+
+        if not core:
+            return factors
+        else:
+            out = a
+            for n in factors:
+                n.Whole_transpose()
+                out = Contract(out,n)
+                n.Whole_transpose()
+            
+            return factors,out
 
 
 

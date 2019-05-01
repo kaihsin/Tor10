@@ -291,8 +291,8 @@ class Network():
             raise TypeError("Network.put","[ERROR] Network can only accept UniTensor")
 
         ## tmp check blockform:
-        if tensor.is_blockform:
-            raise TypeError("Network.put","[ERROR] currently Network does not support sparse blockform UniTensor") 
+        if tensor.braket is not None:
+            raise TypeError("Network.put","[ERROR] currently Network can only accept untagged UniTensor") 
 
         ## check if the name in the Network
         ## remaining thing: how to deal with in, out bond?
@@ -341,7 +341,7 @@ class Network():
                     # apply contract                        
                     left = values.pop()
                     right = values.pop()
-                    values.append(Contract(left,right))
+                    values.append(Contract(left,right,permute_back=False))
                     top = peek(operators)
                 operators.pop() # Discard the '('
             elif token == ',':
@@ -352,7 +352,7 @@ class Network():
                     # apply contract
                     left = values.pop()
                     right = values.pop()
-                    values.append(Contract(left,right))
+                    values.append(Contract(left,right,permute_back=False))
                     
                     top = peek(operators)
                 operators.append(token)
@@ -367,7 +367,7 @@ class Network():
             # apply contract
             left = values.pop()
             right = values.pop()
-            values.append(Contract(left,right))
+            values.append(Contract(left,right,permute_back=False))
 
         for key in self.tensors.keys():
             self.instances[key].labels = old_labels[key]
@@ -404,7 +404,7 @@ class Network():
                 else:
                     old_labels = copy.copy(value.labels)
                     value.labels = np.array(self.tensors[key][0].tolist() + self.tensors[key][1].tolist())
-                    out = Contract(out,value)
+                    out = Contract(out,value,permute_back=False)
                     value.labels = old_labels
         else :
             out = self.__launch_by_order()            
@@ -412,7 +412,7 @@ class Network():
 
  
         per_lbl = self.TOUT[0].tolist() + self.TOUT[1].tolist()
-        #out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
+        out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
         ## this is temporary, not finished!!!
         #print("Network.Launch is currently under developing.")
 
