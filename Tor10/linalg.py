@@ -190,7 +190,7 @@ def Mean(a):
     if a.is_symm:
         raise Exception("Mean(UniTensor)","[ERROR] cannot get mean for a symmetry tensor. GetBlock first")
     
-    return UniTensor(bonds=[],labels=[],N_rowrank=0,braket=[],torch_tensor=torch.mean(a.Storage),check=False)
+    return UniTensor(bonds=[],labels=[],N_rowrank=0,torch_tensor=torch.mean(a.Storage),check=False)
 
 def Otimes(a,b):
     """

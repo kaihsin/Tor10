@@ -2619,6 +2619,29 @@ class UniTensor():
 
 
     def GetValidQnums(self,physical=False,return_shape=False):
+        """
+            Return the quatum number set that has a valid block.
+
+            Args:
+                
+                physical [default: False]:
+                    
+                    if set to True, return the unique quantum number sets defined by BD_BRA and BD_KET.
+
+                    The return 2D array has shape (# of blocks,qnum set)
+
+                return_shape [default: False]:
+            
+                    if set to True, return a 2D array with shape (# of blocks, size of each block)
+
+            Return 
+                
+                if return_shape == False: return [qnum sets, 2D ndarray]  
+                if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]
+                    
+                    
+
+        """
         if physical:
             b_tqin,b_tqout = self.GetTotalQnums(physical=True)
             tqin_uni = b_tqin.GetUniqueQnums()
@@ -2784,40 +2807,94 @@ class UniTensor():
 
                 bd_sym_1 = Tor10.Bond(3,qnums=[[0],[1],[2]])
                 bd_sym_2 = Tor10.Bond(4,qnums=[[-1],[2],[0],[2]])
-                bd_sym_3 = Tor10.Bond(5,qnums=[[4],[2],[-1],[5],[1]])
+                bd_sym_3 = Tor10.Bond(5,qnums=[[4],[2],[2],[5],[1]])
                 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[10,11,12],dtype=torch.float64)
 
             >>> sym_T.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: True
+            on device     : cpu
+            braket_form : True
+                   <bra|             |ket> 
+                       ---------------     
+                       |             |     
+                10 < __| 3         5 |__ > 12 
+                       |             |     
+                11 < __| 4           |        
+                       |             |     
+                       --------------- 
 
             >>> q_in, q_out = sym_T.GetTotalQnums()
             >>> print(q_in)
+            Dim = 12 |
+            BRA     : U1::  +4 +4 +2 +1 +3 +3 +1 +0 +2 +2 +0 -1
+
+            >>> print(q_out)
+            Dim = 5 |
+            KET     : U1::  +5 +4 +2 +2 +1
+
+            >>> bk2 = sym_T.GetBlock(2)
+            >>> bk2.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 2
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 0 ____| 3         2 |____ 1  
+                       \             /     
+                        -------------  
+ 
+            >>> print(bk2)
+            Tensor name: 
+            is_diag    : False
+            tensor([[0., 0.],
+                    [0., 0.],
+                    [0., 0.]], dtype=torch.float64)
 
             * Multiple Symmetry::
 
                 ## multiple Qnum:
                 ## U1 x U1 x U1 x U1
-                ## U1 = {-2,-1,0,1,2}
-                ## U1 = {-1,1}
-                ## U1 = {0,1,2,3}
-                bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],
-                                               [1, 1,-1, 1],
-                                               [2,-1, 1, 0]])
-                bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],
-                                               [ 0, 0,-1, 2],
-                                               [ 1, 0, 1, 0],
-                                               [ 2,-2,-1, 1]])
-                bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
-                                               [ 1, 1, -2,3]])
+                bd_sym_1 = Tor10.Bond(3,Tor10.BRA,qnums=[[0, 2, 1, 0],
+                                                         [1, 1,-1, 1],
+                                                         [2,-1, 1, 0]])
+                bd_sym_2 = Tor10.Bond(4,Tor10.BRA,qnums=[[-1, 0,-1, 3],
+                                                         [ 0, 0,-1, 2],
+                                                         [ 1, 0, 1, 0],
+                                                         [ 2,-2,-1, 1]])
+                bd_sym_3 = Tor10.Bond(2,Tor10.KET,qnums=[[-1,-2,-1,2],
+                                                         [ 1, 1, -2,3]])
 
                 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[1,2,3],dtype=torch.float64)
 
             >>> tqin, tqout = sym_T.GetTotalQnums()
             >>> print(tqin)
+            Dim = 12 |
+            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1
+                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2
+                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0
+                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3
 
             >>> print(tqout)
+            Dim = 2 |
+            KET     : U1::  +1 -1
+                      U1::  +1 -2
+                      U1::  -2 -1
+                      U1::  +3 +2
 
             >>> block_1123 = sym_T.GetBlock(1,1,-2,3)
             >>> print(block_1123)
+            Tensor name: 
+            is_diag    : False
+            tensor([[0.]], dtype=torch.float64)
+
+
+
 
         """
         if not self.is_symm:
@@ -3038,7 +3115,7 @@ class UniTensor():
             tensor(16., dtype=torch.float64, grad_fn=<MeanBackward1>)
 
             >>> out.backward()
-            >>> print(x.grad)
+            >>> print(x.grad())
             Tensor name:
             is_diag    : False
             tensor([[2., 2.],
@@ -3158,44 +3235,174 @@ def Load(filename):
 
 def Contract(a,b):
     """
-    Contract two tensors with the same labels.
+        Contract two tensors with the same labels.
 
-    1. two tensors must be the same type, if "a" is a symmetry/untagged/tagged tensor, "b" must also be a symmetry/untagged/tagged tensor.
-    2. When contract two symmetry tensor, the bonds that to be contracted must have the same qnums.
+        1. two tensors must be the same type, if "a" is a symmetry/untagged/tagged tensor, "b" must also be a symmetry/untagged/tagged tensor.
+        2. When contract two symmetry tensor, the bonds that to be contracted must have the same qnums.
 
-    3. For tagged tensor, Each bra-bond can only contract with ket-bond, in terms of physical meaning, this means the contract traceing out the matched bra-ket.
+        3. For tagged tensor, Each bra-bond can only contract with ket-bond, in terms of physical meaning, this means the contract traceing out the matched bra-ket.
 
-    [Note] the argument "a" and "b" tensor defines the order of the out-come bond. After contract,  the order of remaining bonds (both in-bond(bra) and out-bond(ket)) that appears in the new-tensor will follows the rule: a's in-bond will appears first, then the b's in-bond; a's out-bond will appears first, then b's out-bond (see example in below)
+        [Note] the argument "a" and "b" tensor defines the order of the out-come bond. After contract,  the order of remaining bonds (both in-bond(bra) and out-bond(ket)) that appears in the new-tensor will follows the rule: a's in-bond will appears first, then the b's in-bond; a's out-bond will appears first, then b's out-bond (see example in below)
 
 
-    Args:
-        a:
+        Args:
+            a:
+                UniTensor
+
+            b:
+                UniTensor
+
+
+        Return:
             UniTensor
 
-        b:
-            UniTensor
+        Example:
+        ::
+            x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], N_rowrank=2,labels=[6,1,7,8])
+            y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(2),Tor10.Bond(3),Tor10.Bond(6)], N_rowrank=2,labels=[7,2,10,9])
 
 
-    Return:
-        UniTensor
+        >>> x.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 4
+        has_symmetry: False
+        on device     : cpu
+        is_diag       : False
+                    -------------      
+                   /             \     
+             6 ____| 5         4 |____ 7  
+                   |             |     
+             1 ____| 2         3 |____ 8  
+                   \             /     
+                    -------------   
 
-    Example:
-    ::
-        x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], N_rowrank=2,labels=[6,1,7,8])
-        y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(2),Tor10.Bond(3),Tor10.Bond(6)], N_rowrank=2,labels=[7,2,10,9])
+        >>> y.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 4
+        has_symmetry: False
+        on device     : cpu
+        is_diag       : False
+                    -------------      
+                   /             \     
+             7 ____| 4         3 |____ 10 
+                   |             |     
+             2 ____| 2         6 |____ 9  
+                   \             /     
+                    -------------  
+
+        >>> c = Tor10.Contract(x,y)
+        >>> c.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 6
+        has_symmetry: False
+        on device     : cpu
+        is_diag       : False
+                    -------------      
+                   /             \     
+             6 ____| 5         3 |____ 8  
+                   |             |     
+             1 ____| 2         3 |____ 10 
+                   |             |     
+             2 ____| 2         6 |____ 9  
+                   \             /     
+                    -------------  
+
+        >>> d = Tor10.Contract(y,x)
+        >>> d.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 6
+        has_symmetry: False
+        on device     : cpu
+        is_diag       : False
+                    -------------      
+                   /             \     
+             2 ____| 2         3 |____ 10 
+                   |             |     
+             6 ____| 5         6 |____ 9  
+                   |             |     
+             1 ____| 2         3 |____ 8  
+                   \             /     
+                    -------------  
 
 
-    >>> x.Print_diagram()
+        Note that you can also contract for UniTensor with symmetry, even when they are not in the bra-ket form. As long as the quantum number on the to-be-contract bonds and the bond type matches (bra can only contract with ket)
+        ::
+            bd_sym_1a = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])
+            bd_sym_2a = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])
+            bd_sym_3a = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[-1],[5],[1]])
 
-    >>> y.Print_diagram()
+            bd_sym_1b = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])
+            bd_sym_2b = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
+            bd_sym_3b = Tor10.Bond(7,Tor10.BD_BRA,qnums=[[1],[3],[-2],[2],[2],[2],[0]])
 
-    >>> c = Tor10.Contract(x,y)
-    >>> c.Print_diagram()
-
-    >>> d = Tor10.Contract(y,x)
-    >>> d.Print_diagram()
+            sym_A = Tor10.UniTensor(bonds=[bd_sym_1a,bd_sym_2a,bd_sym_3a],N_rowrank=2,labels=[10,11,12])
+            sym_B = Tor10.UniTensor(bonds=[bd_sym_2b,bd_sym_1b,bd_sym_3b],N_rowrank=1,labels=[11,10,7])
 
 
+        >>> sym_A.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 3
+        has_symmetry: True
+        on device     : cpu
+        braket_form : True
+               <bra|             |ket> 
+                   ---------------     
+                   |             |     
+            10 < __| 3         5 |__ > 12 
+                   |             |     
+            11 < __| 4           |        
+                   |             |     
+                   --------------- 
+        >>> sym_B.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 3
+        has_symmetry: True
+        on device     : cpu
+        braket_form : False
+               <bra|             |ket> 
+                   ---------------     
+                   |             |     
+            11 >*__| 4         3 |__ > 10 
+                   |             |     
+                   |           7 |__*< 7  
+                   |             |     
+                   --------------- 
+
+        >>> sym_AB = Tor10.Contract(sym_A,sym_B)
+        >>> sym_BA = Tor10.Contract(sym_B,sym_A)
+        >>> sym_AB.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 2
+        has_symmetry: True
+        on device     : cpu
+        braket_form : False
+               <bra|             |ket> 
+                   ---------------     
+                   |             |     
+            12 >*__| 5         7 |__*< 7  
+                   |             |     
+                   ---------------   
+     
+        >>> sym_BA.Print_diagram()
+        -----------------------
+        tensor Name : 
+        tensor Rank : 2
+        has_symmetry: True
+        on device     : cpu
+        braket_form : True
+               <bra|             |ket> 
+                   ---------------     
+                   |             |     
+             7 < __| 7         5 |__ > 12 
+                   |             |     
+                   ---------------  
 
     """
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
@@ -3478,95 +3685,6 @@ def Contract(a,b):
 
     else:
         raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
-
-
-#def Contract_old(a,b):
-#    """
-#    """
-#    if isinstance(a,UniTensor) and isinstance(b,UniTensor):
-#
-#
-#        ## get same vector:
-#        same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
-#
-#        ## -v
-#        #print(a_ind,b_ind)
-#
-#        if(len(same)):
-#            ## check dim:
-#            #for i in range(len(a_ind)):
-#            #    if a.bonds[a_ind[i]].dim != b.bonds[b_ind[i]].dim:
-#            #        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has different dim.")
-#
-#
-#            ## Qnum_ipoint
-#            if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):
-#                raise Exception("Contract(a,b)","[ERROR] contract Symm TN with non-sym tensor")
-#
-#            if(a.bonds[0].qnums is not None):
-#                for i in range(len(a_ind)):
-#                    if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
-#                        raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
-#
-#            aind_no_combine = np.setdiff1d(np.arange(len(a.labels)),a_ind)
-#            bind_no_combine = np.setdiff1d(np.arange(len(b.labels)),b_ind)
-#
-#            #print(aind_no_combine,bind_no_combine)
-#
-#            mapper_a = np.concatenate([aind_no_combine,a_ind])
-#            mapper_b = np.concatenate([b_ind,bind_no_combine])
-#
-#            old_shape = np.array(a.Storage.shape) if a.is_diag==False else np.array([a.Storage.shape[0],a.Storage.shape[0]])
-#            combined_dim = np.prod(old_shape[a_ind])
-#
-#            if a.is_diag :
-#                tmpa = torch.diag(a.Storage).to(a.Storage.device)
-#            else:
-#                tmpa = a.Storage
-#
-#            if b.is_diag :
-#                tmpb = torch.diag(b.Storage).to(b.Storage.device)
-#            else:
-#                tmpb = b.Storage
-#
-#            tmp = torch.matmul(tmpa.permute(mapper_a.tolist()).reshape(-1,combined_dim),\
-#                               tmpb.permute(mapper_b.tolist()).reshape(combined_dim,-1))
-#            new_shape = [ bd.dim for bd in a.bonds[aind_no_combine]] + [ bd.dim for bd in b.bonds[bind_no_combine]]
-#            return UniTensor(bonds =np.concatenate([a.bonds[aind_no_combine],b.bonds[bind_no_combine]]),\
-#                             labels=np.concatenate([a.labels[aind_no_combine],b.labels[bind_no_combine]]),\
-#                             torch_tensor=tmp.view(new_shape),\
-#                             check=False)
-#
-#        else:
-#            ## direct product
-#            Nin_a = len([1 for i in range(len(a.labels)) if a.bonds[i].bondType is BD_IN])
-#            Nin_b = len([1 for i in range(len(b.labels)) if b.bonds[i].bondType is BD_IN])
-#            Nout_a = len(a.labels) - Nin_a
-#            Nout_b = len(b.labels) - Nin_b
-#
-#            new_label = np.concatenate([a.labels, b.labels])
-#            DALL = [a.bonds[i].dim for i in range(len(a.bonds))] + [b.bonds[i].dim for i in range(len(b.bonds))]
-#
-#            mapper = np.concatenate([np.arange(Nin_a), len(a.labels) + np.arange(Nin_b), np.arange(Nout_a) + Nin_a, len(a.labels) + Nin_b + np.arange(Nout_b)])
-#
-#            if a.is_diag :
-#                tmpa = torch.diag(a.Storage)
-#            else:
-#                tmpa = a.Storage
-#
-#            if b.is_diag :
-#                tmpb = torch.diag(b.Storage)
-#            else:
-#                tmpb = b.Storage
-#
-#
-#            return UniTensor(bonds=np.concatenate([a.bonds[:Nin_a],b.bonds[:Nin_b],a.bonds[Nin_a:],b.bonds[Nin_b:]]),\
-#                            labels=np.concatenate([a.labels[:Nin_a], b.labels[:Nin_b], a.labels[Nin_a:], b.labels[Nin_b:]]),\
-#                            torch_tensor=torch.ger(tmpa.view(-1),tmpb.view(-1)).reshape(DALL).permute(mapper.tolist()),\
-#                            check=False)
-#
-#    else:
-#        raise Exception('Contract(a,b)', "[ERROR] a and b both have to be UniTensor")
 
 
 
@@ -3866,21 +3984,17 @@ def From_torch(torch_tensor,N_rowrank,labels=None,is_tag=False):
 
         >>> y = Tor10.From_torch(x,N_rowrank=1,labels=[4,5])
         >>> y.Print_diagram()
-        tensor Name :
+        -----------------------
+        tensor Name : 
         tensor Rank : 2
-        on device   : cpu
-        is_diag     : False
-                ---------------
-                |             |
-            4 __| 3         3 |__ 5
-                |             |
-                ---------------
-        lbl:4 Dim = 3 |
-        REGULAR :
-        _
-        lbl:5 Dim = 3 |
-        REGULAR :
-
+        has_symmetry: False
+        on device     : cpu
+        is_diag       : False
+                    -------------      
+                   /             \     
+             4 ____| 3         3 |____ 5  
+                   \             /     
+                    -------------  
 
         >>> print(y)
         Tensor name:

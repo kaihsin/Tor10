@@ -208,7 +208,6 @@ print(tqin2_phy == tqin)
 print(tqout2_phy == tqout)
 
 
-exit(1)
 tqin,tqout=sym_T2.GetTotalQnums()
 sym_T.Print_diagram()
 sym_T2.Print_diagram()
@@ -314,7 +313,6 @@ bd_sym_3 = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[-1],[5],[1]])
 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[10,11,12],dtype=torch.float64)
 print("================================")
 sym_T.Print_diagram(bond_info=True)
-exit(1)
 q_in, q_out = sym_T.GetTotalQnums()
 print(q_in)
 print(q_out)
@@ -369,6 +367,18 @@ print(tqout)
 block_1123 = sym_T.GetBlock(1,1,-2,3)
 print(block_1123)
 
+bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])
+bd_sym_2 = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])
+bd_sym_3 = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[2],[5],[1]])
+sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[10,11,12],dtype=torch.float64)
+
+sym_T.Print_diagram()
+q_in, q_out = sym_T.GetTotalQnums()
+print(q_in)
+print(q_out)
+bk2 = sym_T.GetBlock(2)
+print(bk2)
+bk2.Print_diagram()
 
 ## Contract:
 x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], N_rowrank=2,labels=[6,1,7,8])
@@ -379,6 +389,7 @@ c = Tor10.Contract(x,y)
 c.Print_diagram()
 d = Tor10.Contract(y,x)
 d.Print_diagram()
+
 ## From_torch
 x = torch.ones(3,3)
 y = Tor10.From_torch(x,N_rowrank=1,labels=[4,5])
@@ -389,6 +400,7 @@ y2 = Tor10.From_torch(x2,N_rowrank=1)
 print(y2.requires_grad())
 
 ## Contract for symm:
+print("xxxxxxxxx")
 bd_sym_1a = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])
 bd_sym_2a = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])
 bd_sym_3a = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[-1],[5],[1]])
@@ -409,6 +421,7 @@ sym_out.Print_diagram()
 sym_out2.Print_diagram()
 print(sym_out)
 exit(1)
+           
 
 # Network:
 #==============================
