@@ -23,7 +23,7 @@ if(CvgCrit<=0):
 
 
 ## Create onsite-Op.
-Sz = Tt.UniTensor(bonds=[Tt.Bond(2),Tt.Bond(2)],N_inbond=1,dtype=tor.float64,device=tor.device("cpu"))
+Sz = Tt.UniTensor(bonds=[Tt.Bond(2),Tt.Bond(2)],N_rowrank=1,dtype=tor.float64,device=tor.device("cpu"))
 Sx = copy.deepcopy(Sz)
 I  = copy.deepcopy(Sz)
 Sz.SetElem([1, 0,\
@@ -45,11 +45,11 @@ del Sz,Sx,I
 H = TFterm + ZZterm
 del TFterm,ZZterm
 
-H = H.Reshape([4,4],new_labels=[0,1],N_inbond=1)
+H = H.Reshape([4,4],new_labels=[0,1],N_rowrank=1)
 ## Create Evov Op.
 eH = Tt.ExpH(H*-0.1)
-eH = eH.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2)
-H = H.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2) # this is estimator.
+eH = eH.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_rowrank=2)
+H = H.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_rowrank=2) # this is estimator.
 
 
 ## Create MPS:
@@ -58,15 +58,15 @@ H = H.Reshape([2,2,2,2],new_labels=[0,1,2,3],N_inbond=2) # this is estimator.
 #   --A-la-B-lb-- 
 #
 A = Tt.UniTensor(bonds=[Tt.Bond(chi),Tt.Bond(2),Tt.Bond(chi)],
-                 N_inbond=1,
+                 N_rowrank=1,
                  labels=[-1,0,-2]).Rand()
-B = Tt.UniTensor(bonds=A.bonds,N_inbond=1,labels=[-3,1,-4]).Rand()
+B = Tt.UniTensor(bonds=A.bonds,N_rowrank=1,labels=[-3,1,-4]).Rand()
 
 la = Tt.UniTensor(bonds=[Tt.Bond(chi),Tt.Bond(chi)],
-                N_inbond=1,
+                N_rowrank=1,
               labels=[-2,-3],is_diag=True).Rand()
 lb = Tt.UniTensor(bonds=[Tt.Bond(chi),Tt.Bond(chi)],
-              N_inbond=1,
+              N_rowrank=1,
               labels=[-4,-5],is_diag=True).Rand()
 
 
@@ -89,7 +89,7 @@ for i in range(100000):
     #
     #X.Print_diagram()
     Xt = copy.deepcopy(X)
-    Xt.Whole_transpose()
+    #Xt.Whole_transpose()
     XNorm = Tt.Contract(X, Xt)
     XH = Tt.Contract(X, H)
     XH.SetLabels([-4,-5,0,1]) ## JJ, this is your bug.
@@ -104,17 +104,17 @@ for i in range(100000):
 
     Elast = E
     print("Energy = {:.6f}".format(E))
-
-    XeH.Permute(out_mapper=[2,3,-5],by_label=True)
+    #XeH.Print_diagram()
+    XeH.Permute([-4,2,3,-5],by_label=True)
     XeH.Contiguous()
-    XeH = XeH.Reshape([chi*2,chi*2],N_inbond=1)
+    XeH = XeH.Reshape([chi*2,chi*2],N_rowrank=1)
 
     A,la,B = Tt.Svd_truncate(XeH,chi)
 
     la *= la.Norm()**-1
 
-    A = A.Reshape([chi,2,chi], new_labels=[-1,0,-2], N_inbond=1)
-    B = B.Reshape([chi,2,chi], new_labels=[-3,1,-4], N_inbond=1)
+    A = A.Reshape([chi,2,chi], new_labels=[-1,0,-2], N_rowrank=1)
+    B = B.Reshape([chi,2,chi], new_labels=[-3,1,-4], N_rowrank=1)
 
     # de-contract the lb tensor , so it returns to 
     #             

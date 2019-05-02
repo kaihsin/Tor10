@@ -152,95 +152,107 @@
 <span id="tor10-bond"></span><h1>Tor10.Bond<a class="headerlink" href="#module-Tor10.Bond" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="Tor10.Bond.Bond">
-<em class="property">class </em><code class="descclassname">Tor10.Bond.</code><code class="descname">Bond</code><span class="sig-paren">(</span><em>dim</em>, <em>bondType=&lt;class 'Tor10.Bond.BD_REGULAR'&gt;</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">Tor10.Bond.</code><code class="descname">Bond</code><span class="sig-paren">(</span><em>dim</em>, <em>bondType=&lt;class 'Tor10.Bond.BD_REG'&gt;</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="Tor10.Bond.Bond.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>dim</em>, <em>bondType=&lt;class 'Tor10.Bond.BD_REGULAR'&gt;</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>dim</em>, <em>bondType=&lt;class 'Tor10.Bond.BD_REG'&gt;</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor of the Bond, it calls the member function Bond.assign().</p>
 <p>Args:</p>
 <blockquote>
 <div><dl class="docutils">
 <dt>dim:</dt>
-<dd>The dimension of the bond. 
+<dd>The dimension of the bond.
 It should be larger than 0 (&gt;0)</dd>
 <dt>bondType:</dt>
-<dd>The type of the bond. 
-It can be BD_REGULAR in current version. [BD_INWARD , BD_OUTWARD for brading is under developing.]
-default [BD_REGULAR]</dd>
+<dd><p class="first">The type of the bond. It can be one of the following three types in current version.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>BD_REG : regular bond</li>
+<li>BD_BRA : tag, indicating the basis space of the bond is a “bra” <a href="#id1"><span class="problematic" id="id2">|</span></a>v&gt;</li>
+<li>BD_KET : tag, indicating the basis space of the bond os a “ket” &lt;v|</li>
+</ol>
+</div></blockquote>
+<p class="last">[Note] For the bond with symmetry, it should always being tagged with either BD_BRA or BD_KET. A bond cannot be BD_REG with symmetry.</p>
+</dd>
 <dt>qnums:</dt>
-<dd>The quantum number(s) specify to the bond. 
-The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.</dd>
+<dd><p class="first">The quantum number(s) specify to the bond.
+The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.</p>
+<p class="last">[Note] the input qnums will be lexsort from large to small, and from first typs of symmetry to last typs of symmetry.</p>
+</dd>
 <dt>sym_types:</dt>
 <dd>The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1.</dd>
 </dl>
 </div></blockquote>
 <p>Example:</p>
 <blockquote>
-<div><p>Create an non-symmetry bond with dimension=3:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_in</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_REGULAR</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_in</span><span class="p">)</span>
+<div><p>Create an simple bond with dimension=4:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_r</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># this is equivalent as &quot;bd_r = Tor10.Bond(3,Tor10.BD_REG)&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_r</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
-<span class="go">REGULAR :</span>
+<span class="go">REG     :</span>
 </pre></div>
 </div>
-<p>The above example is equivalent to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_in</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<p>Create a bond with tag: BD_KET (ket-bond) with dimension=3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_ket</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_ket</span><span class="p">)</span>
+<span class="go">Dim = 3 |</span>
+<span class="go">KET :</span>
 </pre></div>
 </div>
-<p>Create an symmetry bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_U1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
+<p>Create an ket-bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_U1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_U1</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
-<span class="go">REGULAR : U1::  -1 +0 +1</span>
+<span class="go">KET     : U1::  +1 +0 -1</span>
 </pre></div>
 </div>
 <p>The above example is equivalent to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_U1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_U1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 </pre></div>
 </div>
-<p>Create an symmetry bond of dimension=3 with single Zn symmetry (n can be arbitrary Integer).</p>
+<p>Create an symmetry bra-bond of dimension=3 with single Zn symmetry (n can be arbitrary positive Integer).</p>
 <ol class="arabic simple">
-<li>Z2 with quantum numbers=[0,1,0] for each dimension:</li>
+<li>bra-bond with Z2 symmetry, with quantum numbers=[0,1,0] for each dimension:</li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_Z2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_Z2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_Z2</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
-<span class="go">REGULAR : Z2::  +0 +1 +0</span>
+<span class="go">BRA     : Z2::  +1 +0 +0</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li>Z4 with quantum numbers=[0,2,3] for each dimension:</li>
+<li>ket-bond with Z4 symmetry, with quantum numbers=[0,2,3] for each dimension:</li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_Z4</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_Z4</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_Z4</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
-<span class="go">REGULAR : Z4::  +0 +2 +3</span>
+<span class="go">KET     : Z4::  +3 +2 +0</span>
 </pre></div>
 </div>
-<p>Create an symmetry bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with 
+<p>Create a ket-bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with
 1st dimension quantum number = [-2,-1,0,-1],
 2nd dimension quantum number = [1 ,-4,0, 0],
 3rd dimension quantum number = [-8,-3,1, 5].</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_out_mulsym</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                                     <span class="p">[</span><span class="mi">1</span> <span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                                     <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_out_mulsym</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                                 <span class="p">[</span><span class="mi">1</span> <span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                                 <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_out_mulsym</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
-<span class="go">REGULAR : U1::  -2 +1 -8</span>
-<span class="go">          U1::  -1 -4 -3</span>
+<span class="go">KET     : U1::  +1 -2 -8</span>
+<span class="go">          U1::  -4 -1 -3</span>
 <span class="go">          U1::  +0 +0 +1</span>
-<span class="go">          U1::  -1 +0 +5</span>
+<span class="go">          U1::  +0 -1 +5</span>
 </pre></div>
 </div>
 <p>Create an symmetry bond of dimension=3 with U1 x Z2 x Z4 symmetry (here, U1 x Z2 x Z4, so the No. of symmetry = 3), with
 1st dimension quantum number = [-2,0,0],
 2nd dimension quantum number = [-1,1,3],
 3rd dimension quantum number = [ 1,0,2].</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_out_mulsym</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                                    <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
-                                    <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_out_mulsym</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                                 <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                                                 <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]],</span>
                              <span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span>
                                         <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
                                         <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
@@ -248,18 +260,41 @@ The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmet
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bd_out_mulsym</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
-<span class="go">REGULAR : U1::  -2 -1 +1</span>
+<span class="go">BRA     : U1::  +1 -1 -2</span>
 <span class="go">          Z2::  +0 +1 +0</span>
-<span class="go">          Z4::  +0 +3 +2</span>
+<span class="go">          Z4::  +2 +3 +0</span>
 </pre></div>
 </div>
 </div></blockquote>
 </dd></dl>
 
 <dl class="method">
+<dt id="Tor10.Bond.Bond.GetDegenerate">
+<code class="descname">GetDegenerate</code><span class="sig-paren">(</span><em>*qnums</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.GetDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.GetDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return degenracy of a specify quantum number set. If can only be call on a bond with symmetry.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><a href="#id3"><span class="problematic" id="id4">*</span></a>qnums: </dt>
+<dd>The quantum number set</dd>
+</dl>
+</div></blockquote>
+<p>Return:</p>
+<blockquote>
+<div>int, degeneracy of the quantum number set</div></blockquote>
+</dd></dl>
+
+<dl class="method">
 <dt id="Tor10.Bond.Bond.GetUniqueQnums">
-<code class="descname">GetUniqueQnums</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.GetUniqueQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.GetUniqueQnums" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get The Unique Qnums by remove the duplicates</p>
+<code class="descname">GetUniqueQnums</code><span class="sig-paren">(</span><em>return_degeneracy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.GetUniqueQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.GetUniqueQnums" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a (sorted) Unique Qnums by remove the duplicates. It can only be call on a bond with symmetry.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>return_degeneracy [default: False]: </dt>
+<dd>return the defeneracy of each qnums:</dd>
+</dl>
+</div></blockquote>
 <dl class="docutils">
 <dt>return:</dt>
 <dd>2D numpy.array with shape (# of unique qnum-set, # of symmetry)</dd>
@@ -268,20 +303,19 @@ The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmet
 
 <dl class="method">
 <dt id="Tor10.Bond.Bond.assign">
-<code class="descname">assign</code><span class="sig-paren">(</span><em>dim</em>, <em>bondType=&lt;class 'Tor10.Bond.BD_REGULAR'&gt;</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.assign" title="Permalink to this definition">¶</a></dt>
+<code class="descname">assign</code><span class="sig-paren">(</span><em>dim</em>, <em>bondType=&lt;class 'Tor10.Bond.BD_REG'&gt;</em>, <em>qnums=None</em>, <em>sym_types=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.assign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.assign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign a new property for the Bond.</p>
 <p>Args:</p>
 <blockquote>
 <div><dl class="docutils">
 <dt>dim:</dt>
-<dd>The dimension of the bond. 
+<dd>The dimension of the bond.
 It should be larger than 0 (&gt;0)</dd>
 <dt>bondType:</dt>
-<dd>The type of the bond. 
-It can be BD_REGULAR in current version. [BD_INWARD , BD_OUTWARD for brading is under developing.]
-default [BD_REGULAR]</dd>
+<dd>The type of the bond.
+It can be BD_BRA or BD_KET or BD_REG in current version.</dd>
 <dt>qnums:</dt>
-<dd>The quantum number(s) specify to the bond. 
+<dd>The quantum number(s) specify to the bond.
 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.</dd>
 <dt>sym_types:</dt>
 <dd>The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1.</dd>
@@ -289,24 +323,24 @@ The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmet
 </div></blockquote>
 <p>Example:</p>
 <blockquote>
-<div><p>For a bond with dim=4, U1 x U1 x U1; there are 3 of U1 symmetry.
+<div><p>For a ket-bond with dim=4, U1 x U1 x U1; there are 3 of U1 symmetry.
 The Bond can be initialize as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># create instance</span>
-<span class="n">a</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="mi">4</span> <span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-                   <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                   <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                   <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)</span> <span class="c1"># create instance</span>
+<span class="n">a</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                               <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                               <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                               <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
 
-                     <span class="o">^</span>  <span class="o">^</span>  <span class="o">^</span>
-                    <span class="n">U1</span> <span class="n">U1</span> <span class="n">U1</span>
+                                 <span class="o">^</span>  <span class="o">^</span>  <span class="o">^</span>
+                                <span class="n">U1</span> <span class="n">U1</span> <span class="n">U1</span>
 </pre></div>
 </div>
-<p>For a bond with dim=3, U1 x Z2 x Z4; there are 3 symmetries.
+<p>For a bra-bond with dim=3, U1 x Z2 x Z4; there are 3 symmetries.
 The Bond should be initialize as :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">b</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span>
-                      <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
-                      <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span>
+                                   <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+                                   <span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span>
                             <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
                                    <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
                                    <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
@@ -320,10 +354,11 @@ The Bond should be initialize as :</p>
 <dl class="method">
 <dt id="Tor10.Bond.Bond.change">
 <code class="descname">change</code><span class="sig-paren">(</span><em>new_bondType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Bond.html#Bond.change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Bond.Bond.change" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the type of the bond</p>
+<dd><p>Change the type of the bond.</p>
+<p>[Note] if the current bond has symmetry, it cannot be changed to BD_REG</p>
 <p>Args:</p>
 <blockquote>
-<div>new_bondType: The new bond type to be changed. In current version, only</div></blockquote>
+<div>new_bondType: The new bond type to be changed. In current version, only BD_KET or BD_BRA or BD_REG.</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -333,20 +368,22 @@ The Bond should be initialize as :</p>
 <p>Args:</p>
 <blockquote>
 <div><dl class="docutils">
-<dt>bds: </dt>
+<dt>bds:</dt>
 <dd>the bond that is going to be combine with self.
-1. A non-symmetry bond cannot combine with a symmetry bond, and vice versa.
+1. two bonds can only be combined when both have the same type. 
 2. two symmetry bonds can only be combined when both of the No. of symmetry are the same.</dd>
 <dt>new_type:</dt>
-<dd>the type of the new combined bond, it can only be BD_REGULAR in current version. [BD_INWARD , BD_OUTWARD is currently under developing for brading/fermionic system] If not specify, the bond Type will remains the same.</dd>
+<dd><p class="first">the type of the new combined bond, it can only be BD_BRA, BD_KET or BD_REG in current version. If not specify, the bond Type will remains the same.</p>
+<p class="last">[Note] if the combined bond has symmetry, it cannot be changed to BD_REG</p>
+</dd>
 </dl>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span> 
-<span class="n">e</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
 </pre></div>
 </div>
 <dl class="docutils">
@@ -354,7 +391,7 @@ The Bond should be initialize as :</p>
 <dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="go">Dim = 12 |</span>
-<span class="go">REGULAR :</span>
+<span class="go">BRA      :</span>
 </pre></div>
 </div>
 </dd>
@@ -362,9 +399,9 @@ The Bond should be initialize as :</p>
 <dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 <span class="go">Dim = 4 |</span>
-<span class="go">REGULAR : U1::  +1 +1 +2 +2</span>
+<span class="go">BRA     : U1::  +2 +2 +1 +1</span>
 <span class="go">          U1::  +1 +1 +1 +1</span>
-<span class="go">          U1::  -2 -1 -1 +0</span>
+<span class="go">          U1::  +0 -1 -1 -2</span>
 </pre></div>
 </div>
 </dd>

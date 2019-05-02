@@ -2,6 +2,31 @@ import numpy as np
 import torch as tor
 
 class U1:
+    """
+        U1 Symmetry class. 
+        The U1 symmetry can have quantum number represent as arbitrary unsigned integer.
+
+        Fusion rule for combine two quantum number:
+            
+            q1 + q2
+
+
+        >>> b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[0],[1 ]     ],sym_types=[Tor10.Symmetry.U1()])
+        >>> b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[-3],[-1]],sym_types=[Tor10.Symmetry.U1()])
+        >>> print(b1)
+        Dim = 3 |
+        BRA     : U1::  +1 +0 +0
+
+        >>> print(b2)
+        Dim = 4 |
+        BRA     : U1::  +2 +0 -1 -3
+
+        >>> b1.combine(b2)
+        >>> print(b1)
+        Dim = 12 |
+        BRA     : U1::  +3 +1 +0 -2 +2 +0 -1 -3 +2 +0 -1 -3
+
+    """
     def __init__(self):
         pass 
 
@@ -23,6 +48,32 @@ class U1:
         
 
 class Zn:
+    """
+        Z(n) Symmetry class. 
+        The Z(n) symmetry can have integer quantum number, with n > 1.
+
+        Fusion rule for combine two quantum number:
+            
+            (q1 + q2)%n
+
+        
+        >>> b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[2],[1 ]     ],sym_types=[Tor10.Symmetry.Zn(4)])
+        >>> b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[3],[1]  ],sym_types=[Tor10.Symmetry.Zn(4)])
+        >>> print(b1)
+        Dim = 3 |
+        BRA     : Z4::  +2 +1 +0
+
+        >>> print(b2)
+        Dim = 4 |
+        BRA     : Z4::  +3 +2 +1 +0
+
+        >>> b1.combine(b2)
+        >>> print(b1)
+        Dim = 12 |
+        BRA     : Z4::  +1 +0 +3 +2 +0 +3 +2 +1 +3 +2 +1 +0
+
+
+    """
     def __init__(self,n):
         if n < 2:
             raise ValueError("Symmetry.Zn","[ERROR] discrete symmetry Zn must have n >= 2.")

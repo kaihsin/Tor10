@@ -25,14 +25,13 @@ def Parameter(data,requires_grad=True):
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
  
             def forward(self,x):
                 y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
                 return y
 
-    >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)])
     >>> md = Model()
     >>> print(list(md.parameters()))
     [Parameter containing:
@@ -45,6 +44,10 @@ def Parameter(data,requires_grad=True):
 
     if not isinstance(data,UniTensor):
         raise TypeError("nn.Parameter","[ERROR] data should be an UniTensor")
+
+    if data.braket is not None:
+        raise TypeError("nn.Parameter","[ERROR] data can only be an untagged uniTensor")
+    
 
     data.Storage = torch.nn.Parameter(data.Storage,requires_grad=requires_grad)
 
@@ -106,9 +109,9 @@ class Linear():
     Examples::
 
         >>> m = Tor10.nn.Linear(20, 30)
-        >>> iput = Tor10.From_torch(torch.randn(128, 20),N_inbond=1)
+        >>> iput = Tor10.From_torch(torch.randn(128, 20),N_rowrank=1)
         >>> oput = m(iput)
-        >>> print(oput.shape())
+        >>> print(oput.shape)
         torch.Size([128, 30])
     
     """
@@ -146,7 +149,7 @@ class Linear():
     
         out = self.tnn(ipt.Storage)
         
-        return UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),N_inbond=len(ipt.bonds[:-1]),torch_tensor=out,check=False)
+        return UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),N_rowrank=len(ipt.bonds[:-1]),torch_tensor=out,check=False)
 
     def extra_repr(self):
         return 'in_features={}, out_features={}, bias={}'.format(\
@@ -162,7 +165,7 @@ class Linear():
         Return:
             UniTensor, rank-2
         """
-        return UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],N_inbond=1,torch_tensor=self.tnn.weight,check=False)
+        return UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],N_rowrank=1,torch_tensor=self.tnn.weight,check=False)
 
     def bias(self):
         """
@@ -178,6 +181,6 @@ class Linear():
         if self.tnn.bias is None:
             return None
         else:
-            return UniTensor(bonds=[Bond(self.bias.shape[0])],N_inbond=0,torch_tensor=self.tnn.bias,check=False) 
+            return UniTensor(bonds=[Bond(self.bias.shape[0])],N_rowrank=0,torch_tensor=self.tnn.bias,check=False) 
 
 
