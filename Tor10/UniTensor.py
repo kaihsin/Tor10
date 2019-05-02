@@ -639,6 +639,7 @@ class UniTensor():
                 raise Exception("[ERRROR]","Invalid Rowrank. Must >=0 and <= rank of tensor for non-symmetry UniTensor")
             self.N_rowrank = int(new_rowrank)
 
+        self._check_braket()
         return self
                 
 
@@ -2094,6 +2095,9 @@ class UniTensor():
     def Permute(self,mapper,N_rowrank=None,by_label=False):
         """
         Permute the bonds of the UniTensor.
+            
+            [Note] the computation complexity of Permute is O(1) which is very fast. The permute will not change the underlying memory layout. It will put the tensor into a "non-contiguous" status. Call Contiguous() or Contiguous_() when actually need to move memory.
+
 
         Args:
             mapper:
@@ -2113,15 +2117,81 @@ class UniTensor():
 
             >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]
             >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=3,labels=[1,3,5,7,8])
-            >>> y = Tor10.UniTensor(bonds=bds_x, N_rowrank=3,labels=[1,3,5,7,8])
+            >>> y = copy.deepcopy(x)
+            >>> z = copy.deepcopy(x)
             >>> x.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 5
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 1 ____| 6         3 |____ 7  
+                       |             |     
+                 3 ____| 5         2 |____ 8  
+                       |             |     
+                 5 ____| 4           |        
+                       \             /     
+                        ------------- 
 
-            >>> x.Permute(in_mapper=[0,2,1],out_mapper=[4,3])
+            >>> x.Permute([0,2,1,4,3])
             >>> x.Print_diagram()
-
-            >>> y.Permute(in_mapper=[3,1,5],by_label=True)
+            -----------------------
+            tensor Name : 
+            tensor Rank : 5
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 1 ____| 6         2 |____ 8  
+                       |             |     
+                 5 ____| 4         3 |____ 7  
+                       |             |     
+                 3 ____| 5           |        
+                       \             /     
+                        -------------
+ 
+            >>> y.Permute([3,1,5,7,8],by_label=True)
             >>> y.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 5
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 3 ____| 5         3 |____ 7  
+                       |             |     
+                 1 ____| 6         2 |____ 8  
+                       |             |     
+                 5 ____| 4           |        
+                       \             /     
+                        -------------
 
+            >>> z.Permute([3,1,5,7,8],N_rowrank=2,by_label=True)
+            >>> z.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 5
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 3 ____| 5         4 |____ 5  
+                       |             |     
+                 1 ____| 6         3 |____ 7  
+                       |             |     
+                       |           2 |____ 8  
+                       \             /     
+                        -------------
+
+
+ 
         """
         ## check
         if not (isinstance(mapper,list) or isinstance(mapper,np.ndarray)):
@@ -2197,7 +2267,7 @@ class UniTensor():
 
         [Note] 
 
-            1.Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.
+            1.Reshaping a UniTensor physically re-define the new basis, which construct a new physical definition tensor that has the same element.
 
             2.Reshape can only operate on an untagged tensor.
 
@@ -2221,11 +2291,35 @@ class UniTensor():
             >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
             >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
             >>> x.Print_diagram()
-
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 6         5 |____ 3  
+                       |             |     
+                       |           3 |____ 5  
+                       \             /     
+                        ------------- 
 
             >>> y = x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
             >>> y.Print_diagram()
-
+            -----------------------
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 1 ____| 2         5 |____ 3  
+                       |             |     
+                 2 ____| 3         3 |____ -1 
+                       \             /     
+                        -------------  
 
 
         """
@@ -2291,11 +2385,35 @@ class UniTensor():
             >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
             >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
             >>> x.Print_diagram()
-
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 6         5 |____ 3  
+                       |             |     
+                       |           3 |____ 5  
+                       \             /     
+                        ------------- 
 
             >>> x.Reshape_([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
             >>> x.Print_diagram()
-
+            -----------------------
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 1 ____| 2         5 |____ 3  
+                       |             |     
+                 2 ____| 3         3 |____ -1 
+                       \             /     
+                        -------------
 
 
         """
@@ -2333,6 +2451,17 @@ class UniTensor():
         """
         Return two combined bond objects that has the information for the total qnums at bra and ket bonds.
 
+        Args:
+
+            physical [default: False]:
+
+                Return the physical total qnums.
+                
+                If True, the return qnums_brabonds will be the physical qnums of all bonds tagged by BD_BRA, and qnums_ketbonds will be the physical qnums of all bonds tagged by BD_KET. 
+    
+                If False, the return qnums will be the qnums of all bonds in row-space, the mismatch bond will have reversed qnums upon combined. This will match the layout of current blocks. 
+
+
         Return:
             qnums_brabonds, qnums_ketbonds:
 
@@ -2352,35 +2481,107 @@ class UniTensor():
                 ## U1 = {-2,-1,0,1,2}
                 ## U1 = {-1,1}
                 ## U1 = {0,1,2,3}
-                bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],
-                                                     [1, 1,-1, 1],
-                                                     [2,-1, 1, 0]])
-                bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],
-                                                     [ 0, 0,-1, 2],
-                                                     [ 1, 0, 1, 0],
-                                                     [ 2,-2,-1, 1]])
-                bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],
-                                                      [ 1, 1, -2,3]])
+                bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0, 2, 1, 0],
+                                                            [1, 1,-1, 1],
+                                                            [2,-1, 1, 0]])
+                bd_sym_2 = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1, 0,-1, 3],
+                                                            [ 0, 0,-1, 2],
+                                                            [ 1, 0, 1, 0],
+                                                            [ 2,-2,-1, 1]])
+                bd_sym_3 = Tor10.Bond(2,Tor10.BD_KET,qnums=[[-4, 3, 0,-1],
+                                                            [ 1, 1, -2,3]])
 
                 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[1,2,3],dtype=torch.float64)
-
+            >>> sym_T.Pring_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: True
+            on device     : cpu
+            braket_form : True
+                   <bra|             |ket> 
+                       ---------------     
+                       |             |     
+                 1 < __| 3         2 |__ > 3  
+                       |             |     
+                 2 < __| 4           |        
+                       |             |     
+                       ---------------
+ 
             >>> tqin, tqout = sym_T.GetTotalQnums()
             >>> print(tqin)
             Dim = 12 |
-            REGULAR : U1::  -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4
-                      U1::  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3
-                      U1::  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0
-                      U1::  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1
-
+            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1
+                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2
+                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0
+                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3
 
             >>> print(tqout)
             Dim = 2 |
-            REGULAR : U1::  -1 +1
+            KET     : U1::  +1 -4
+                      U1::  +1 +3
+                      U1::  -2 +0
+                      U1::  +3 -1
+
+
+            >>> sym_T.SetRowRank(1)
+            >>> sym_T.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: True
+            on device     : cpu
+            braket_form : False
+                   <bra|             |ket> 
+                       ---------------     
+                       |             |     
+                 1 < __| 3         4 |__*< 2  
+                       |             |     
+                       |           2 |__ > 3  
+                       |             |     
+                       ---------------            
+
+            >>> tqin2,tqout2 =  sym_T.GetTotalQnums()
+            >>> print(tqin2)
+            Dim = 2 |
+            BRA     : U1::  -1 +1
                       U1::  -2 +1
                       U1::  -1 -2
                       U1::  +2 +3
 
+            >>> print(tqout2)
+            Dim = 8 |
+            KET     : U1::  -1 -6 +0 -5 +1 -4 +2 -3
+                      U1::  +3 +5 +1 +3 +1 +3 +1 +3
+                      U1::  -1 +1 -3 -1 -1 +1 -1 +1
+                      U1::  +2 -2 +3 -1 +1 -3 +0 -4
+ 
+            >>> tqin2_phy, tqout2_phy = sym_T.GetTotalQnums(physical=True)
+            >>> print(tqin2_phy)
+            Dim = 12 |
+            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1
+                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2
+                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0
+                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3
 
+            >>> print(tqout2_phy)
+            Dim = 2 |
+            KET     : U1::  +1 -4
+                      U1::  +1 +3
+                      U1::  -2 +0
+                      U1::  +3 -1
+          
+            >>> print(tqin2 == tqin  ) ## this should be False
+            False
+
+            >>> print(tqout2 == tqout) ## this should be False
+            False
+
+            >>> print(tqin2_phy == tqin) ## this should be true
+            True
+        
+            >>> print(tqout2_phy == tqout) ## this should be true
+            True
 
         """
         if not self.is_symm:
@@ -2410,6 +2611,9 @@ class UniTensor():
             if len(cb_outbonds)>1:
                 out_all.combine(cb_outbonds[1:])
                 
+
+        in_all.bondType = BD_BRA
+        out_all.bondType = BD_KET
 
         return in_all,out_all
 
@@ -3545,7 +3749,7 @@ def _CombineBonds(a,idxs,new_label,permute_back):
                         mapper = np.concatenate([idx_no_combine,idxs])
                         a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[idxs[0]])
                         a.labels = np.append(a.labels[idx_no_combine], a.labels[idxs[0]])
-                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(no_combined_dim,combine_dims).tolist())
+                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(no_combine_dims,combined_dim).tolist())
                         a.N_rowrank = len(a.labels)-1
                     else:
                         mapper = np.concatenate([idxs,idx_no_combine])
@@ -3599,7 +3803,7 @@ def _CombineBonds(a,idxs,new_label,permute_back):
                         a.bonds = np.append(a.bonds[idx_no_combine],a.bonds[idxs[0]])
                         a.labels = np.append(a.labels[idx_no_combine], a.labels[idxs[0]])
                         a.braket = np.append(a.braket[idx_no_combine], a.braket[idxs[0]])
-                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(no_combined_dim,combine_dims).tolist())
+                        a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(np.append(no_combined_dims,combine_dim).tolist())
                         a.N_rowrank = len(a.labels)-1
                     else:
                         mapper = np.concatenate([idxs,idx_no_combine])

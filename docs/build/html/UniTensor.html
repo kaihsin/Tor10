@@ -825,6 +825,15 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <dt id="Tor10.UniTensor.UniTensor.GetTotalQnums">
 <code class="descname">GetTotalQnums</code><span class="sig-paren">(</span><em>physical=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.GetTotalQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.GetTotalQnums" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return two combined bond objects that has the information for the total qnums at bra and ket bonds.</p>
+<p>Args:</p>
+<blockquote>
+<div><p>physical [default: False]:</p>
+<blockquote>
+<div><p>Return the physical total qnums.</p>
+<p>If True, the return qnums_brabonds will be the physical qnums of all bonds tagged by BD_BRA, and qnums_ketbonds will be the physical qnums of all bonds tagged by BD_KET.</p>
+<p>If False, the return qnums will be the qnums of all bonds in row-space, the mismatch bond will have reversed qnums upon combined. This will match the layout of current blocks.</p>
+</div></blockquote>
+</div></blockquote>
 <dl class="docutils">
 <dt>Return:</dt>
 <dd><p class="first">qnums_brabonds, qnums_ketbonds:</p>
@@ -845,36 +854,121 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <span class="c1">## U1 = {-2,-1,0,1,2}</span>
 <span class="c1">## U1 = {-1,1}</span>
 <span class="c1">## U1 = {0,1,2,3}</span>
-<span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                                     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-                                     <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
-<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
-                                     <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
-                                     <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                                     <span class="p">[</span> <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
-                                      <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
+<span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                            <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                                            <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                                            <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                            <span class="p">[</span> <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                            <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 
 <span class="n">sym_T</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
 </ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sym_T</span><span class="o">.</span><span class="n">Pring_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">has_symmetry: True</span>
+<span class="go">on device     : cpu</span>
+<span class="go">braket_form : True</span>
+<span class="go">       &lt;bra|             |ket&gt; </span>
+<span class="go">           ---------------     </span>
+<span class="go">           |             |     </span>
+<span class="go">     1 &lt; __| 3         2 |__ &gt; 3  </span>
+<span class="go">           |             |     </span>
+<span class="go">     2 &lt; __| 4           |        </span>
+<span class="go">           |             |     </span>
+<span class="go">           ---------------</span>
+</pre></div>
+</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tqin</span><span class="p">,</span> <span class="n">tqout</span> <span class="o">=</span> <span class="n">sym_T</span><span class="o">.</span><span class="n">GetTotalQnums</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqin</span><span class="p">)</span>
 <span class="go">Dim = 12 |</span>
-<span class="go">REGULAR : U1::  -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
-<span class="go">          U1::  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
-<span class="go">          U1::  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
-<span class="go">          U1::  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
+<span class="go">BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
+<span class="go">          U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2</span>
+<span class="go">          U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0</span>
+<span class="go">          U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqout</span><span class="p">)</span>
 <span class="go">Dim = 2 |</span>
-<span class="go">REGULAR : U1::  -1 +1</span>
+<span class="go">KET     : U1::  +1 -4</span>
+<span class="go">          U1::  +1 +3</span>
+<span class="go">          U1::  -2 +0</span>
+<span class="go">          U1::  +3 -1</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sym_T</span><span class="o">.</span><span class="n">SetRowRank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sym_T</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">has_symmetry: True</span>
+<span class="go">on device     : cpu</span>
+<span class="go">braket_form : False</span>
+<span class="go">       &lt;bra|             |ket&gt; </span>
+<span class="go">           ---------------     </span>
+<span class="go">           |             |     </span>
+<span class="go">     1 &lt; __| 3         4 |__*&lt; 2  </span>
+<span class="go">           |             |     </span>
+<span class="go">           |           2 |__ &gt; 3  </span>
+<span class="go">           |             |     </span>
+<span class="go">           ---------------            </span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tqin2</span><span class="p">,</span><span class="n">tqout2</span> <span class="o">=</span>  <span class="n">sym_T</span><span class="o">.</span><span class="n">GetTotalQnums</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqin2</span><span class="p">)</span>
+<span class="go">Dim = 2 |</span>
+<span class="go">BRA     : U1::  -1 +1</span>
 <span class="go">          U1::  -2 +1</span>
 <span class="go">          U1::  -1 -2</span>
 <span class="go">          U1::  +2 +3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqout2</span><span class="p">)</span>
+<span class="go">Dim = 8 |</span>
+<span class="go">KET     : U1::  -1 -6 +0 -5 +1 -4 +2 -3</span>
+<span class="go">          U1::  +3 +5 +1 +3 +1 +3 +1 +3</span>
+<span class="go">          U1::  -1 +1 -3 -1 -1 +1 -1 +1</span>
+<span class="go">          U1::  +2 -2 +3 -1 +1 -3 +0 -4</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tqin2_phy</span><span class="p">,</span> <span class="n">tqout2_phy</span> <span class="o">=</span> <span class="n">sym_T</span><span class="o">.</span><span class="n">GetTotalQnums</span><span class="p">(</span><span class="n">physical</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqin2_phy</span><span class="p">)</span>
+<span class="go">Dim = 12 |</span>
+<span class="go">BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
+<span class="go">          U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2</span>
+<span class="go">          U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0</span>
+<span class="go">          U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqout2_phy</span><span class="p">)</span>
+<span class="go">Dim = 2 |</span>
+<span class="go">KET     : U1::  +1 -4</span>
+<span class="go">          U1::  +1 +3</span>
+<span class="go">          U1::  -2 +0</span>
+<span class="go">          U1::  +3 -1</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqin2</span> <span class="o">==</span> <span class="n">tqin</span>  <span class="p">)</span> <span class="c1">## this should be False</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqout2</span> <span class="o">==</span> <span class="n">tqout</span><span class="p">)</span> <span class="c1">## this should be False</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqin2_phy</span> <span class="o">==</span> <span class="n">tqin</span><span class="p">)</span> <span class="c1">## this should be true</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tqout2_phy</span> <span class="o">==</span> <span class="n">tqout</span><span class="p">)</span> <span class="c1">## this should be true</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -896,6 +990,8 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <dt id="Tor10.UniTensor.UniTensor.Permute">
 <code class="descname">Permute</code><span class="sig-paren">(</span><em>mapper</em>, <em>N_rowrank=None</em>, <em>by_label=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Permute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Permute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Permute the bonds of the UniTensor.</p>
+<blockquote>
+<div>[Note] the computation complexity of Permute is O(1) which is very fast. The permute will not change the underlying memory layout. It will put the tensor into a “non-contiguous” status. Call Contiguous() or Contiguous_() when actually need to move memory.</div></blockquote>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
@@ -914,16 +1010,81 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">N_rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">N_rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 5</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     1 ____| 6         3 |____ 7  </span>
+<span class="go">           |             |     </span>
+<span class="go">     3 ____| 5         2 |____ 8  </span>
+<span class="go">           |             |     </span>
+<span class="go">     5 ____| 4           |        </span>
+<span class="go">           \             /     </span>
+<span class="go">            ------------- </span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">in_mapper</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">out_mapper</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 5</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     1 ____| 6         2 |____ 8  </span>
+<span class="go">           |             |     </span>
+<span class="go">     5 ____| 4         3 |____ 7  </span>
+<span class="go">           |             |     </span>
+<span class="go">     3 ____| 5           |        </span>
+<span class="go">           \             /     </span>
+<span class="go">            -------------</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">in_mapper</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 5</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     3 ____| 5         3 |____ 7  </span>
+<span class="go">           |             |     </span>
+<span class="go">     1 ____| 6         2 |____ 8  </span>
+<span class="go">           |             |     </span>
+<span class="go">     5 ____| 4           |        </span>
+<span class="go">           \             /     </span>
+<span class="go">            -------------</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 5</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     3 ____| 5         4 |____ 5  </span>
+<span class="go">           |             |     </span>
+<span class="go">     1 ____| 6         3 |____ 7  </span>
+<span class="go">           |             |     </span>
+<span class="go">           |           2 |____ 8  </span>
+<span class="go">           \             /     </span>
+<span class="go">            -------------</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -970,7 +1131,7 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <dd><p>Return a new reshaped UniTensor into the shape specified as [dimer], with the first [N_rowrank] Bonds as bra-bond and other bonds as ket-bond.</p>
 <p>[Note]</p>
 <blockquote>
-<div><p>1.Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.</p>
+<div><p>1.Reshaping a UniTensor physically re-define the new basis, which construct a new physical definition tensor that has the same element.</p>
 <p>2.Reshape can only operate on an untagged tensor.</p>
 </div></blockquote>
 <p>Args:</p>
@@ -991,10 +1152,36 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">N_rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     4 ____| 6         5 |____ 3  </span>
+<span class="go">           |             |     </span>
+<span class="go">           |           3 |____ 5  </span>
+<span class="go">           \             /     </span>
+<span class="go">            ------------- </span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">Reshape</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">new_labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 4</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     1 ____| 2         5 |____ 3  </span>
+<span class="go">           |             |     </span>
+<span class="go">     2 ____| 3         3 |____ -1 </span>
+<span class="go">           \             /     </span>
+<span class="go">            -------------  </span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1027,10 +1214,36 @@ Reshape UniTensor into the shape specified as [dimer], with the first [N_rowrank
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">N_rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 3</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     4 ____| 6         5 |____ 3  </span>
+<span class="go">           |             |     </span>
+<span class="go">           |           3 |____ 5  </span>
+<span class="go">           \             /     </span>
+<span class="go">            ------------- </span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Reshape_</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">new_labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="go">-----------------------</span>
+<span class="go">tensor Name : </span>
+<span class="go">tensor Rank : 4</span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">     1 ____| 2         5 |____ 3  </span>
+<span class="go">           |             |     </span>
+<span class="go">     2 ____| 3         3 |____ -1 </span>
+<span class="go">           \             /     </span>
+<span class="go">            -------------</span>
 </pre></div>
 </div>
 </dd></dl>

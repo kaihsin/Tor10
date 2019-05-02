@@ -788,6 +788,7 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[ERRROR]&quot;</span><span class="p">,</span><span class="s2">&quot;Invalid Rowrank. Must &gt;=0 and &lt;= rank of tensor for non-symmetry UniTensor&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_rowrank</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_braket</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
                 
 
@@ -2243,6 +2244,9 @@
 <div class="viewcode-block" id="UniTensor.Permute"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Permute">[docs]</a>    <span class="k">def</span> <span class="nf">Permute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mapper</span><span class="p">,</span><span class="n">N_rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Permute the bonds of the UniTensor.</span>
+<span class="sd">            </span>
+<span class="sd">            [Note] the computation complexity of Permute is O(1) which is very fast. The permute will not change the underlying memory layout. It will put the tensor into a &quot;non-contiguous&quot; status. Call Contiguous() or Contiguous_() when actually need to move memory.</span>
+
 
 <span class="sd">        Args:</span>
 <span class="sd">            mapper:</span>
@@ -2262,15 +2266,81 @@
 
 <span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]</span>
 <span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, N_rowrank=3,labels=[1,3,5,7,8])</span>
-<span class="sd">            &gt;&gt;&gt; y = Tor10.UniTensor(bonds=bds_x, N_rowrank=3,labels=[1,3,5,7,8])</span>
+<span class="sd">            &gt;&gt;&gt; y = copy.deepcopy(x)</span>
+<span class="sd">            &gt;&gt;&gt; z = copy.deepcopy(x)</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 5</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 1 ____| 6         3 |____ 7  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 3 ____| 5         2 |____ 8  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 5 ____| 4           |        </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        ------------- </span>
 
-<span class="sd">            &gt;&gt;&gt; x.Permute(in_mapper=[0,2,1],out_mapper=[4,3])</span>
+<span class="sd">            &gt;&gt;&gt; x.Permute([0,2,1,4,3])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
-
-<span class="sd">            &gt;&gt;&gt; y.Permute(in_mapper=[3,1,5],by_label=True)</span>
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 5</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 1 ____| 6         2 |____ 8  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 5 ____| 4         3 |____ 7  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 3 ____| 5           |        </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        -------------</span>
+<span class="sd"> </span>
+<span class="sd">            &gt;&gt;&gt; y.Permute([3,1,5,7,8],by_label=True)</span>
 <span class="sd">            &gt;&gt;&gt; y.Print_diagram()</span>
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 5</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 3 ____| 5         3 |____ 7  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 1 ____| 6         2 |____ 8  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 5 ____| 4           |        </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        -------------</span>
 
+<span class="sd">            &gt;&gt;&gt; z.Permute([3,1,5,7,8],N_rowrank=2,by_label=True)</span>
+<span class="sd">            &gt;&gt;&gt; z.Print_diagram()</span>
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 5</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 3 ____| 5         4 |____ 5  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 1 ____| 6         3 |____ 7  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                       |           2 |____ 8  </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        -------------</span>
+
+
+<span class="sd"> </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">## check</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
@@ -2346,7 +2416,7 @@
 
 <span class="sd">        [Note] </span>
 
-<span class="sd">            1.Reshapeing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.</span>
+<span class="sd">            1.Reshaping a UniTensor physically re-define the new basis, which construct a new physical definition tensor that has the same element.</span>
 
 <span class="sd">            2.Reshape can only operate on an untagged tensor.</span>
 
@@ -2370,11 +2440,35 @@
 <span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
 <span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
-
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 3</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 4 ____| 6         5 |____ 3  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                       |           3 |____ 5  </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        ------------- </span>
 
 <span class="sd">            &gt;&gt;&gt; y = x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)</span>
 <span class="sd">            &gt;&gt;&gt; y.Print_diagram()</span>
-
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 4</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 1 ____| 2         5 |____ 3  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 2 ____| 3         3 |____ -1 </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        -------------  </span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2440,11 +2534,35 @@
 <span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
 <span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
-
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 3</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 4 ____| 6         5 |____ 3  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                       |           3 |____ 5  </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        ------------- </span>
 
 <span class="sd">            &gt;&gt;&gt; x.Reshape_([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
-
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 4</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       /             \     </span>
+<span class="sd">                 1 ____| 2         5 |____ 3  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 2 ____| 3         3 |____ -1 </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        -------------</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2482,6 +2600,17 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return two combined bond objects that has the information for the total qnums at bra and ket bonds.</span>
 
+<span class="sd">        Args:</span>
+
+<span class="sd">            physical [default: False]:</span>
+
+<span class="sd">                Return the physical total qnums.</span>
+<span class="sd">                </span>
+<span class="sd">                If True, the return qnums_brabonds will be the physical qnums of all bonds tagged by BD_BRA, and qnums_ketbonds will be the physical qnums of all bonds tagged by BD_KET. </span>
+<span class="sd">    </span>
+<span class="sd">                If False, the return qnums will be the qnums of all bonds in row-space, the mismatch bond will have reversed qnums upon combined. This will match the layout of current blocks. </span>
+
+
 <span class="sd">        Return:</span>
 <span class="sd">            qnums_brabonds, qnums_ketbonds:</span>
 
@@ -2501,35 +2630,107 @@
 <span class="sd">                ## U1 = {-2,-1,0,1,2}</span>
 <span class="sd">                ## U1 = {-1,1}</span>
 <span class="sd">                ## U1 = {0,1,2,3}</span>
-<span class="sd">                bd_sym_1 = Tor10.Bond(3,qnums=[[0, 2, 1, 0],</span>
-<span class="sd">                                                     [1, 1,-1, 1],</span>
-<span class="sd">                                                     [2,-1, 1, 0]])</span>
-<span class="sd">                bd_sym_2 = Tor10.Bond(4,qnums=[[-1, 0,-1, 3],</span>
-<span class="sd">                                                     [ 0, 0,-1, 2],</span>
-<span class="sd">                                                     [ 1, 0, 1, 0],</span>
-<span class="sd">                                                     [ 2,-2,-1, 1]])</span>
-<span class="sd">                bd_sym_3 = Tor10.Bond(2,qnums=[[-1,-2,-1,2],</span>
-<span class="sd">                                                      [ 1, 1, -2,3]])</span>
+<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                                                            [1, 1,-1, 1],</span>
+<span class="sd">                                                            [2,-1, 1, 0]])</span>
+<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                                                            [ 0, 0,-1, 2],</span>
+<span class="sd">                                                            [ 1, 0, 1, 0],</span>
+<span class="sd">                                                            [ 2,-2,-1, 1]])</span>
+<span class="sd">                bd_sym_3 = Tor10.Bond(2,Tor10.BD_KET,qnums=[[-4, 3, 0,-1],</span>
+<span class="sd">                                                            [ 1, 1, -2,3]])</span>
 
 <span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[1,2,3],dtype=torch.float64)</span>
-
+<span class="sd">            &gt;&gt;&gt; sym_T.Pring_diagram()</span>
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 3</span>
+<span class="sd">            has_symmetry: True</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            braket_form : True</span>
+<span class="sd">                   &lt;bra|             |ket&gt; </span>
+<span class="sd">                       ---------------     </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 1 &lt; __| 3         2 |__ &gt; 3  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 2 &lt; __| 4           |        </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                       ---------------</span>
+<span class="sd"> </span>
 <span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            REGULAR : U1::  -1 +0 +1 +2 +0 +1 +2 +3 +1 +2 +3 +4</span>
-<span class="sd">                      U1::  +2 +2 +2 +0 +1 +1 +1 -1 -1 -1 -1 -3</span>
-<span class="sd">                      U1::  +0 +0 +2 +0 -2 -2 +0 -2 +0 +0 +2 +0</span>
-<span class="sd">                      U1::  +3 +2 +0 +1 +4 +3 +1 +2 +3 +2 +0 +1</span>
-
+<span class="sd">            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
+<span class="sd">                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2</span>
+<span class="sd">                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0</span>
+<span class="sd">                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3</span>
 
 <span class="sd">            &gt;&gt;&gt; print(tqout)</span>
 <span class="sd">            Dim = 2 |</span>
-<span class="sd">            REGULAR : U1::  -1 +1</span>
+<span class="sd">            KET     : U1::  +1 -4</span>
+<span class="sd">                      U1::  +1 +3</span>
+<span class="sd">                      U1::  -2 +0</span>
+<span class="sd">                      U1::  +3 -1</span>
+
+
+<span class="sd">            &gt;&gt;&gt; sym_T.SetRowRank(1)</span>
+<span class="sd">            &gt;&gt;&gt; sym_T.Print_diagram()</span>
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 3</span>
+<span class="sd">            has_symmetry: True</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            braket_form : False</span>
+<span class="sd">                   &lt;bra|             |ket&gt; </span>
+<span class="sd">                       ---------------     </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                 1 &lt; __| 3         4 |__*&lt; 2  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                       |           2 |__ &gt; 3  </span>
+<span class="sd">                       |             |     </span>
+<span class="sd">                       ---------------            </span>
+
+<span class="sd">            &gt;&gt;&gt; tqin2,tqout2 =  sym_T.GetTotalQnums()</span>
+<span class="sd">            &gt;&gt;&gt; print(tqin2)</span>
+<span class="sd">            Dim = 2 |</span>
+<span class="sd">            BRA     : U1::  -1 +1</span>
 <span class="sd">                      U1::  -2 +1</span>
 <span class="sd">                      U1::  -1 -2</span>
 <span class="sd">                      U1::  +2 +3</span>
 
+<span class="sd">            &gt;&gt;&gt; print(tqout2)</span>
+<span class="sd">            Dim = 8 |</span>
+<span class="sd">            KET     : U1::  -1 -6 +0 -5 +1 -4 +2 -3</span>
+<span class="sd">                      U1::  +3 +5 +1 +3 +1 +3 +1 +3</span>
+<span class="sd">                      U1::  -1 +1 -3 -1 -1 +1 -1 +1</span>
+<span class="sd">                      U1::  +2 -2 +3 -1 +1 -3 +0 -4</span>
+<span class="sd"> </span>
+<span class="sd">            &gt;&gt;&gt; tqin2_phy, tqout2_phy = sym_T.GetTotalQnums(physical=True)</span>
+<span class="sd">            &gt;&gt;&gt; print(tqin2_phy)</span>
+<span class="sd">            Dim = 12 |</span>
+<span class="sd">            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
+<span class="sd">                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2</span>
+<span class="sd">                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0</span>
+<span class="sd">                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3</span>
 
+<span class="sd">            &gt;&gt;&gt; print(tqout2_phy)</span>
+<span class="sd">            Dim = 2 |</span>
+<span class="sd">            KET     : U1::  +1 -4</span>
+<span class="sd">                      U1::  +1 +3</span>
+<span class="sd">                      U1::  -2 +0</span>
+<span class="sd">                      U1::  +3 -1</span>
+<span class="sd">          </span>
+<span class="sd">            &gt;&gt;&gt; print(tqin2 == tqin  ) ## this should be False</span>
+<span class="sd">            False</span>
+
+<span class="sd">            &gt;&gt;&gt; print(tqout2 == tqout) ## this should be False</span>
+<span class="sd">            False</span>
+
+<span class="sd">            &gt;&gt;&gt; print(tqin2_phy == tqin) ## this should be true</span>
+<span class="sd">            True</span>
+<span class="sd">        </span>
+<span class="sd">            &gt;&gt;&gt; print(tqout2_phy == tqout) ## this should be true</span>
+<span class="sd">            True</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_symm</span><span class="p">:</span>
@@ -2559,6 +2760,9 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">out_all</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
                 
+
+        <span class="n">in_all</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_BRA</span>
+        <span class="n">out_all</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
 
         <span class="k">return</span> <span class="n">in_all</span><span class="p">,</span><span class="n">out_all</span></div>
 
@@ -3694,7 +3898,7 @@
                         <span class="n">mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idx_no_combine</span><span class="p">,</span><span class="n">idxs</span><span class="p">])</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-                        <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">mapper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combined_dim</span><span class="p">,</span><span class="n">combine_dims</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                        <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">mapper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combine_dims</span><span class="p">,</span><span class="n">combined_dim</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idxs</span><span class="p">,</span><span class="n">idx_no_combine</span><span class="p">])</span>
@@ -3748,7 +3952,7 @@
                         <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">braket</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-                        <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">mapper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combined_dim</span><span class="p">,</span><span class="n">combine_dims</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                        <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">mapper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combined_dims</span><span class="p">,</span><span class="n">combine_dim</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idxs</span><span class="p">,</span><span class="n">idx_no_combine</span><span class="p">])</span>

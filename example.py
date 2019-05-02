@@ -175,6 +175,7 @@ y = x.Reshape([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
 y.Print_diagram()
 x.Print_diagram()
 ""
+
 ## GetTotalQnums
 bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0, 2, 1, 0],
                                             [1, 1,-1, 1],
@@ -188,6 +189,26 @@ bd_sym_3 = Tor10.Bond(2,Tor10.BD_KET,qnums=[[-4,3,0,-1],
 
 sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],labels=[1,2,3],N_rowrank=2,dtype=torch.float64)
 sym_T2 = Tor10.UniTensor(bonds=[bd_sym_2,bd_sym_1,bd_sym_3],labels=[2,1,3],N_rowrank=2,dtype=torch.float64)
+sym_T.Print_diagram()
+tqin,tqout=sym_T.GetTotalQnums()
+print(tqin)
+print(tqout)
+sym_T.SetRowRank(1)
+sym_T.Print_diagram()
+
+tqin2,tqout2 = sym_T.GetTotalQnums()
+tqin2_phy,tqout2_phy = sym_T.GetTotalQnums(physical=True)
+print(tqin2)
+print(tqout2)
+print(tqin2_phy)
+print(tqout2_phy)
+print(tqin2 == tqin)
+print(tqout2 == tqout)
+print(tqin2_phy == tqin)
+print(tqout2_phy == tqout)
+
+
+exit(1)
 tqin,tqout=sym_T2.GetTotalQnums()
 sym_T.Print_diagram()
 sym_T2.Print_diagram()
