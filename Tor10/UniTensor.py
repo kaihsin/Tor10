@@ -2341,7 +2341,7 @@ class UniTensor():
 
         new_Storage = copy.deepcopy(self.Storage)
 
-        new_Storage = new_Storage.view(dimer)
+        new_Storage = new_Storage.reshape(dimer)
         if new_labels is None:
             new_labels = np.arange(len(dimer))
 
