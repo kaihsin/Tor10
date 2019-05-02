@@ -17,7 +17,7 @@
     13. nn , some linalg can only accept non-symm, untagged tensor. 
     
 ## Release version
-    v0.3 deving
+    v0.3 alpha
 
 ## Known issue
     1. HOSVD is not functional

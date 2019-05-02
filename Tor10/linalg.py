@@ -143,7 +143,7 @@ def Abs(a):
     Take the absolute value for all the elements in the UniTensor
     Args:
         a:
-            UniTensor, can be [regular][regular-tagged][symm]
+            UniTensor, can be [untagged][tagged][symm]
 
     Return:
         UniTensor, same shape and type as the input.
@@ -179,7 +179,7 @@ def Mean(a):
 
     Args:
         a:
-            UniTensor, can be [regular][regular-tagged]
+            UniTensor, can be [untagged][tagged]
 
     Return:
         UniTensor, 0-rank (constant)
@@ -200,13 +200,13 @@ def Otimes(a,b):
 
     Args:
         a:
-            UniTensor, must be rank-2, [regular], with 1-inbond and 1-outbond
+            UniTensor, must be rank-2, [untagged], with 1-inbond and 1-outbond
 
         b:
-            UniTensor, must be rank-2, [regular], with 1-inbond and 1-outbond
+            UniTensor, must be rank-2, [untagged], with 1-inbond and 1-outbond
 
     Return:
-        UniTensor, rank-2, one in-bond one out-bond. [regular]
+        UniTensor, rank-2, one in-bond one out-bond. [untagged]
         If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be a diagonal tensor.
 
         If one of the input tensor is diagonal matrix and the other is not, the return UniTensor will be densed.
@@ -215,8 +215,9 @@ def Otimes(a,b):
     """
 
     if isinstance(a,UniTensor) and isinstance(b,UniTensor):
-        if a.is_symm or b.is_symm:
-            raise Exception("Otimes(UniTensor,UniTensor)","Cannot accept symmetry tensors")
+
+        if a.braket is not None or b.braket is not None:
+            raise TypeError("linalg.Otimes","Otimes can only accept untagged tensor.") 
 
         if len(a.labels)==2 and len(b.labels)==2 and a.N_rowrank==1 and b.N_rowrank==1:
             if a.is_diag and b.is_diag:
@@ -264,11 +265,11 @@ def ExpH(a):
     Args:
 
         a :
-            UniTensor, Must be a rank-2 [regular], with one inbond, one outbond. If pass a non-rank2 tensor, tagged tensor, or pass a non-hermitian rank2 tensor; it will raise Error.
+            UniTensor, Must be a rank-2 [untagged], with one inbond, one outbond. If pass a non-rank2 tensor, tagged tensor, or pass a non-hermitian rank2 tensor; it will raise Error.
 
     Return:
 
-        UniTensor, rank-2 [regular], same bonds and labels and braket form as the original H
+        UniTensor, rank-2 [unregular], same bonds and labels and braket form as the original H
     """
 
     if isinstance(a,UniTensor):
@@ -278,7 +279,7 @@ def ExpH(a):
 
         else:
             if a.braket is not None:
-                raise Exception("ExpH(a)","can only accept un-tagged [regular] type UniTensor")
+                raise Exception("ExpH(a)","can only accept [untagged] type UniTensor")
 
             if a.is_diag:   
                 u = torch.exp(a.Storage)
@@ -318,12 +319,12 @@ def Qr(a):
 
         :math:`a = q \cdot r`
 
-    to the input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2.
+    to the input UniTensor. The UniTensor should be rank-2, untagged. each bond's dim should be >=2.
 
 
     Args:
 
-        a : UniTensor[regular], it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.
+        a : UniTensor[untagged], it is required to be a non-diagonal rank-2 tensor. If pass a non rank-2 tensor or diagonal matrix, it will throw Exception.
 
     Return:
 
@@ -337,14 +338,14 @@ def Qr(a):
     if isinstance(a,UniTensor):
 
         ## Qnum_ipoint
-        if a.is_symm is not None:
+        if a.is_symm:
             raise Exception("Qr(a)","don't support symm tensor. GetBlock() first")
 
         if a.is_diag:
             raise Exception("Qr(UniTensor)","[Aboart] Currently not support diagonal tensors.")
 
         if a.braket is not None:
-            raise Exception("Qr(UniTensor)","Can only accept untagged [regular] tensor")
+            raise Exception("Qr(UniTensor)","Can only accept [untagged] tensor")
 
         if a.N_rowrank != 1:
             raise Exception("Qr(UniTensor)","Should have 1 in-bond, 1 out-bond")
@@ -380,25 +381,25 @@ def Qdr(a):
 
         :math:`a = q \cdot d \cdot r`
 
-    to input UniTensor. The UniTensor should be rank-2 with eachbond's dim should be >=2.
+    to input UniTensor. The UniTensor should be rank-2, untagged. with eachbond's dim should be >=2.
 
     Args:
         a :
-            UniTensor , rank-2, 1 inbond 1 outbond.
+            UniTensor [untagged], rank-2, 1 inbond 1 outbond.
 
     Return: q , r
         q :
-            UniTensor, rank-2, 1 inbond 1 outbond, the unitary matrix
+            UniTensor [untagged], rank-2, 1 inbond 1 outbond, the unitary matrix
 
         d :
-            The diagonal matrix. It is a diagonal rank-2 UniTensor with 1 inbond 1 outbond and is_diag=True.
+            The diagonal matrix [untagged]. It is a diagonal rank-2 UniTensor with 1 inbond 1 outbond and is_diag=True.
         r :
-            UniTensor, rank-2, 1 inbond 1 outbond, the upper triangular matrix
+            UniTensor [untagged], rank-2, 1 inbond 1 outbond, the upper triangular matrix
     """
     if isinstance(a,UniTensor):
 
         ## Qnum_ipoint
-        if a.is_symm is not None:
+        if a.is_symm:
             raise Exception("Qdr(a)","[Abort] curretly don't support symm tensor.")
 
         if a.is_diag:
@@ -447,26 +448,26 @@ def Svd(a):
 
         :math:`a = u \cdot s \cdot vt`
 
-    to input UniTensor. The UniTensor should be rank-2. each bond's dim should be >=2.
+    to input UniTensor. The UniTensor should be rank-2,untagged. each bond's dim should be >=2.
 
     Args:
         a :
-            UniTensor[regular], rank-2.
+            UniTensor[untagged], rank-2.
 
     Return: u , s , vt
         u :
-            UniTensor[regular], rank-2, 1 inbond 1 outbond, the unitary matrix
+            UniTensor[untagged], rank-2, 1 inbond 1 outbond, the unitary matrix
 
         s :
-            UniTensor[regular], rank-2, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True
+            UniTensor[untagged], rank-2, 1 inbond 1 outbond, the diagonal, singular matrix, with is_diag=True
 
         vt:
-            UniTensor[regular], rank-2, 1 inbond 1 outbond, the transposed right unitary matrix
+            UniTensor[untagged], rank-2, 1 inbond 1 outbond, the transposed right unitary matrix
 
 
     Example:
     ::
-        y = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,4)])
+        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
         y.SetElem([1,1,0,1,
                    0,0,0,1,
                    1,1,0,0]
@@ -479,7 +480,7 @@ def Svd(a):
             [0., 0., 0., 1.],
             [1., 1., 0., 0.]], dtype=torch.float64)
 
-    >>> u,s,v = Tor10.linalg.Svd(y)
+    >>> u,s,vt = Tor10.linalg.Svd(y)
     >>> print(u)
     Tensor name:
     is_diag    : False
@@ -492,7 +493,7 @@ def Svd(a):
     is_diag    : True
     tensor([2.1753e+00, 1.1260e+00, 1.0164e-16], dtype=torch.float64)
 
-    >>> print(v)
+    >>> print(vt)
     Tensor name:
     is_diag    : False
     tensor([[-6.2796e-01, -6.2796e-01,  0.0000e+00, -4.5970e-01],
@@ -504,7 +505,7 @@ def Svd(a):
     if isinstance(a,UniTensor):
 
         ## Qnum_ipoint
-        if a.is_symm is not None:
+        if a.is_symm:
             raise Exception("svd(a)","[Abort] svd curretly don't support symm tensor.")
 
 
@@ -557,7 +558,7 @@ def Svd_truncate(a, keepdim=None):
 
     Args:
         a :
-            UniTensor[regular], rank-2, 1 inbond 1 outbond.
+            UniTensor[untagged], rank-2, 1 inbond 1 outbond.
 
         keepdim:
             integer, the keeping dimension. When set, it will keep only the largest "keepdim" singular values and their corresponding eigenvectors.
@@ -565,13 +566,13 @@ def Svd_truncate(a, keepdim=None):
 
     Return: u , s , vt
         u :
-            UniTensor[regular], rank-2, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
+            UniTensor[untagged], rank-2, 1 inbond 1 outbond, the truncated unitary matrix with shape (a.shape()[0], truncate)
 
         s :
-            UniTensor[regular], rank-2, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)
+            UniTensor[untagged], rank-2, 1 inbond 1 outbond, the diagonal, truncated singular matrix with shape (truncate,truncate)
 
         vt:
-            UniTensor[regular], rank-2, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
+            UniTensor[untagged], rank-2, 1 inbond 1 outbond, the transposed right unitary matrix with shape (truncate,a.shape()[1])
 
 
     Example:
@@ -588,7 +589,7 @@ def Svd_truncate(a, keepdim=None):
             [0., 0., 0., 1.],
             [1., 1., 0., 0.]], dtype=torch.float64)
 
-    >>> u,s,v = Tor10.linalg.Svd_truncate(y,keepdim=2)
+    >>> u,s,vt = Tor10.linalg.Svd_truncate(y,keepdim=2)
     >>> print(u)
     Tensor name:
     is_diag    : False
@@ -601,7 +602,7 @@ def Svd_truncate(a, keepdim=None):
     is_diag    : True
     tensor([2.1753, 1.1260], dtype=torch.float64)
 
-    >>> print(v)
+    >>> print(vt)
     Tensor name:
     is_diag    : False
     tensor([[-0.6280, -0.6280,  0.0000, -0.4597],
@@ -611,7 +612,7 @@ def Svd_truncate(a, keepdim=None):
     if isinstance(a,UniTensor):
 
         ## Qnum_ipoint
-        if a.bonds[0].qnums is not None:
+        if a.is_symm:
             raise Exception("Qdr(a)","[Abort] curretly don't support symm tensor.")
 
         if a.is_diag:
@@ -664,16 +665,16 @@ def Matmul(a,b):
 
         :math:`A \cdot B`
 
-    Note that both the UniTensors should be rank-2, and dimension should be matched.
+    Note that both the UniTensors should be rank-2,untagged, and dimension should be matched.
 
     If a and b are both diagonal matrix, the return will be a diagonal matrix. If one (or both) of them are non-diagonal matrix and the other is diagonal matrix, the return will be a dense matrix.
 
     Args:
         a:
-            The UniTensors that will be matrix-multiply, UniTensor should be [regular]
+            The UniTensors that will be matrix-multiply, UniTensor should be [untagged]
 
         b:
-            The UniTensors that will be matrix-multiply, UniTensor should be [regular]
+            The UniTensors that will be matrix-multiply, UniTensor should be [untagged]
 
     Return:
         UniTensor,rank-2 tensor with 1 inbond 1 outbond.
@@ -727,16 +728,16 @@ def Chain_matmul(*args):
 
     Note that
 
-    1. all the UniTensors should be rank-2, and dimension should be matched.
+    1. all the UniTensors should be rank-2,untagged, and dimension should be matched.
 
     2. The input UniTensors can have some of them are diagonal matrix (is_diag=True). The return will always be a rank-2 UniTensor with is_diag=False
 
     Args:
         *args:
-            The UniTensors that will be matrix-multiply. Each UniTensor should be [regular] (untagged) and with 1 inbond and 1 outbond
+            The UniTensors that will be matrix-multiply. Each UniTensor should be [untagged] and with 1 inbond and 1 outbond
 
     Return:
-        UniTensor,rank-2 tensor with 1 inbond 1 outbond.
+        UniTensor,rank-2 tensor with 1 inbond, 1 outbond, and default labels.
 
     Example:
     ::
@@ -747,20 +748,17 @@ def Chain_matmul(*args):
 
     >>> f = Tor10.Chain_matmul(a,b,c,d)
     >>> f.Print_diagram()
-    tensor Name :
+    -----------------------
+    tensor Name : 
     tensor Rank : 2
-    on device   : cpu
-    is_diag     : False
-            ---------------
-            |             |
-        0 __| 3         2 |__ 1
-            |             |
-            ---------------
-    lbl:0 Dim = 3 |
-    REGULAR :
-    _
-    lbl:1 Dim = 2 |
-    REGULAR :
+    has_symmetry: False
+    on device     : cpu
+    is_diag       : False
+                -------------      
+               /             \     
+         0 ____| 3         2 |____ 1  
+               \             /     
+                -------------
 
     """
     f = lambda x,idiag: torch.diag(x) if idiag else x
@@ -809,7 +807,7 @@ def Inverse(a):
 
     Args:
         a :
-            A rank-2 UniTensor[regular] (matrix), with 1-inbond. 1-outbond. Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued.
+            A rank-2 UniTensor[untagged] (matrix), with 1-inbond. 1-outbond. Note that if the matrix is not inversable, error will be issued. passing a non-rank2 UniTensor, error will be issued.
 
     Return:
         UniTensor
@@ -852,17 +850,17 @@ def Det(a):
 
     Args:
         a :
-            a rank-2 UniTensor[regular] (matrix) with 1 inbond 1 outbond.
+            a rank-2 UniTensor [untagged] (matrix) with 1 inbond 1 outbond.
     Return:
         UniTensor, 0-rank (constant)
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)])
+        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)])
         a.SetElem([4,-3,0,
                    2,-1,2,
                    1, 5,7])
-        b = Tor10.UniTensor(bonds=[Tor10.Bond(Tor10.BD_IN,3),Tor10.Bond(Tor10.BD_OUT,3)],is_diag=True)
+        b = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],is_diag=True)
         b.SetElem([1,2,3])
 
     >>> print(a)
@@ -912,13 +910,14 @@ def Det(a):
 
 def Norm(a):
     """
-    Returns the matrix norm of the UniTensor.
+    Returns the matrix norm of the UniTensor. The input tensor should be untagged. 
 
-    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension.
+    If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension. 
+
 
     Args:
         a :
-            a UniTensor[regular] with 1-inbond 1-outbond.
+            a UniTensor[untagged]
 
     Return:
         UniTensor, 0-rank (constant)
@@ -932,9 +931,14 @@ def Norm(a):
         if a.braket is not None:
             raise Exception("Norm","[ERROR] Norm can only operate on untagged UniTensor")
 
-        if a.N_rowrank != 1:
+        if a.N_rowrank != 1 or len(a.labels)!=2:
             raise Exception("Norm","[ERROR] the input UniTensor should be rank-2, untagged with N_rowrank=1")
-        
+
+
+        #tmp = torch.norm(a.Storage)
+        #if len(tmp.shape) != 0:
+        #    return UniTensor(bonds=[Tor10.Bond(tmp.shape[i]) for i in range(len(tmp.shape))],N_rowrank=1,torch_tensor=tmp,check=False)
+        #else:
         return UniTensor(bonds=[],labels=[],N_rowrank=0,torch_tensor=torch.norm(a.Storage),check=False)
 
     else:
