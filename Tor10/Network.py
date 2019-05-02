@@ -31,7 +31,7 @@ class Network():
             
             * Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. 
         
-            * The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.
+            * The semicolon seperates the row-space and col-space, it is equivalent as "N_rowrank" property of the UniTensor. The left side of semicolon is defined as row-space, and right side of semicolon is degined as col-space.
         
             [Note] that there are two preserved tensor name "TOUT" and "Order". The "TOUT" specify the output tensor, and "Order" defineds how the Tensors in the Network will be contracted. 
 
@@ -196,23 +196,23 @@ class Network():
 
     def Put(self,name,tensor):
         """
-        Put the UniTensor into the tensor named [name] in the Network.
+        Put the UniTensor into the tensor named [name] in the Network. To use the Network, only untagged tensor can be put into the Network.
 
         Args:
             name: 
                 The name of the tensor defines in the Network to put the UniTensor.
 
             tensor:
-                A UniTensor that is to be put into the Network.
+                A UniTensor that is to be put into the Network. It should be untagged.
 
             
         Example:
         ::
             ntwrk = Tor10.Network()
             ntwrk.Fromfile("test.net")
-            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],N_inbond=2)
-            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],N_inbond=1)
-            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],N_inbond=1)
+            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=2)
+            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],N_rowrank=1)
+            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],N_rowrank=1)
 
 
         >>> print(ntwrk)
@@ -255,29 +255,31 @@ class Network():
 
 
         >>> TOUT = ntwrk.Launch()
-        >>> TOUT.Print_diagram()
+        >>> TOUT.Print_diagram(bond_info=True)
+        -----------------------
         tensor Name : 
         tensor Rank : 4
-        on device   : cpu
-        is_diag     : False
-                ---------------     
-                |             |     
-           -1 __| 3         2 |__ 3  
-                |             |     
-           -2 __| 4         4 |__ 4  
-                |             |     
-                ---------------     
+        has_symmetry: False
+        on device     : cpu
+        is_diag       : False
+                    -------------      
+                   /             \     
+            -1 ____| 3         2 |____ 3  
+                   |             |     
+            -2 ____| 4         4 |____ 4  
+                   \             /     
+                    -------------      
         lbl:-1 Dim = 3 |
-        REGULAR :
+        REG     :
         _
         lbl:-2 Dim = 4 |
-        REGULAR :
+        REG     :
         _
         lbl:3 Dim = 2 |
-        REGULAR :
+        REG     :
         _
         lbl:4 Dim = 4 |
-        REGULAR :
+        REG     :
 
 
         """

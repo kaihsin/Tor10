@@ -99,8 +99,8 @@
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
  
             def forward(self,x):
                 y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)

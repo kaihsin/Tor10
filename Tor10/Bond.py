@@ -68,9 +68,18 @@ class Bond():
             dim:
                 The dimension of the bond.
                 It should be larger than 0 (>0)
+
             bondType:
-                The type of the bond.
-                It can be BD_BRA or BD_KET in current version.
+                The type of the bond. It can be one of the following three types in current version. 
+                    
+                    1. BD_REG : regular bond 
+                    2. BD_BRA : tag, indicating the basis space of the bond is a "bra" |v> 
+                    3. BD_KET : tag, indicating the basis space of the bond os a "ket" <v| 
+    
+
+                [Note] For the bond with symmetry, it should always being tagged with either BD_BRA or BD_KET. A bond cannot be BD_REG with symmetry. 
+    
+
             qnums:
                 The quantum number(s) specify to the bond.
                 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.
@@ -78,18 +87,25 @@ class Bond():
                 [Note] the input qnums will be lexsort from large to small, and from first typs of symmetry to last typs of symmetry.
 
             sym_types:
-                The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1.
+                The Symmetry types specify to each Symmetry. if qnums is set, the default symmetry type is U1. 
 
         Example:
 
-            Create an non-symmetry ket-bond with dimension=3:
+            Create an simple bond with dimension=4:
 
-            >>> bd_in = Tor10.Bond(3,Tor10.BD_KET)
-            >>> print(bd_in)
+            >>> bd_r = Tor10.Bond(3) # this is equivalent as "bd_r = Tor10.Bond(3,Tor10.BD_REG)"
+            >>> print(bd_r)
+            Dim = 3 |
+            REG     :
+
+            Create a bond with tag: BD_KET (ket-bond) with dimension=3:
+
+            >>> bd_ket = Tor10.Bond(3,Tor10.BD_KET)
+            >>> print(bd_ket)
             Dim = 3 |
             KET :
 
-            Create an symmetry ket-bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:
+            Create an ket-bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:
 
             >>> bd_sym_U1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[-1],[0],[1]])
             >>> print(bd_sym_U1)
@@ -100,23 +116,23 @@ class Bond():
 
             >>> bd_sym_U1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[-1],[0],[1]],sym_types=[Tor10.Symmetry.U1()])
 
-            Create an symmetry bra-bond of dimension=3 with single Zn symmetry (n can be arbitrary Integer).
+            Create an symmetry bra-bond of dimension=3 with single Zn symmetry (n can be arbitrary positive Integer).
 
-            1. Z2 with quantum numbers=[0,1,0] for each dimension:
+            1. bra-bond with Z2 symmetry, with quantum numbers=[0,1,0] for each dimension:
 
             >>> bd_sym_Z2 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[0]],sym_types=[Tor10.Symmetry.Zn(2)])
             >>> print(bd_sym_Z2)
             Dim = 3 |
             BRA     : Z2::  +1 +0 +0
 
-            2. Z4 with quantum numbers=[0,2,3] for each dimension:
+            2. ket-bond with Z4 symmetry, with quantum numbers=[0,2,3] for each dimension:
 
             >>> bd_sym_Z4 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[2],[3]],sym_types=[Tor10.Symmetry.Zn(4)])
             >>> print(bd_sym_Z4)
             Dim = 3 |
             KET     : Z4::  +3 +2 +0
 
-            Create an symmetry ket-bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with
+            Create a ket-bond of dimension=3 with multiple U1 symmetry (here we consider U1 x U1 x U1 x U1, so the No. of symmetry =4), with
             1st dimension quantum number = [-2,-1,0,-1],
             2nd dimension quantum number = [1 ,-4,0, 0],
             3rd dimension quantum number = [-8,-3,1, 5].
@@ -170,9 +186,11 @@ class Bond():
             dim:
                 The dimension of the bond.
                 It should be larger than 0 (>0)
+
             bondType:
                 The type of the bond.
-                It can be BD_BRA or BD_KET in current version. 
+                It can be BD_BRA or BD_KET or BD_REG in current version. 
+
             qnums:
                 The quantum number(s) specify to the bond.
                 The qnums should be a 2D numpy array or 2D list, with shape=(dim , No. of Symmetry). The No. of Symmetry can be arbitrary.
@@ -268,11 +286,13 @@ class Bond():
 
     def change(self, new_bondType):
         """
-        Change the type of the bond
+        Change the type of the bond. 
+
+        [Note] if the current bond has symmetry, it cannot be changed to BD_REG 
 
         Args:
 
-            new_bondType: The new bond type to be changed. In current version, only
+            new_bondType: The new bond type to be changed. In current version, only BD_KET or BD_BRA or BD_REG. 
 
         """
         if (self.bondType is not new_bondType):
@@ -293,11 +313,14 @@ class Bond():
 
             bds:
                 the bond that is going to be combine with self.
-                1. A non-symmetry bond cannot combine with a symmetry bond, and vice versa.
+                1. two bonds can only be combined when both have the same type. 
                 2. two symmetry bonds can only be combined when both of the No. of symmetry are the same.
 
             new_type:
-                the type of the new combined bond, it can only be BD_BRA or BD_KET in current version. If not specify, the bond Type will remains the same.
+                the type of the new combined bond, it can only be BD_BRA, BD_KET or BD_REG in current version. If not specify, the bond Type will remains the same.
+
+                [Note] if the combined bond has symmetry, it cannot be changed to BD_REG
+
 
         Example:
         ::
@@ -397,13 +420,13 @@ class Bond():
 
     def GetUniqueQnums(self,return_degeneracy=False):
         """
-            Get The Unique Qnums by remove the duplicates
+            Return a (sorted) Unique Qnums by remove the duplicates. It can only be call on a bond with symmetry.
+
             Args:
                 
                 return_degeneracy [default: False]: 
                     return the defeneracy of each qnums:
                 
-
             return:
                 2D numpy.array with shape (# of unique qnum-set, # of symmetry)
 
@@ -422,6 +445,18 @@ class Bond():
             return np.unique(self.qnums, axis=0)
 
     def GetDegenerate(self,*qnums):
+        """
+            Return degenracy of a specify quantum number set. If can only be call on a bond with symmetry.
+            
+            Args:
+
+                *qnums: 
+                    The quantum number set
+
+            Return:
+
+                int, degeneracy of the quantum number set
+        """
         if self.qnums is None:
             raise TypeError("Bond.GetDegenerate","[ERROR] cannot get degenerate from a non-sym bond.")
 
@@ -430,6 +465,9 @@ class Bond():
 
 
     def __mul__(self,val):
+        """ 
+            This is use to reverse the quantum numbers ( for calculate unmatched bra/ket bond blocks )
+        """
         if (val != -1) and (val != 1):
             raise Exception("[ERROR] val can only be +1 or -1")
        
@@ -454,7 +492,8 @@ class Bond():
                 for idim in range(len(self.qnums)):
                     print(" %+d" % (self.qnums[idim, n]), end='')
                 print("\n         ", end='')
-        print("\n", end="")
+        else:
+            print("\n", end="")
 
     def __str__(self):
         self.__print()

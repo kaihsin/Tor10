@@ -1,3 +1,4 @@
+DEBUG = True
 import torch 
 import copy,os
 import numpy as np
@@ -5,6 +6,7 @@ import pickle as pkl
 from .Bond import *
 from .Bond import _fx_GetCommRows
 from . import linalg
+
 
 ## Developer Note:
 ## [KHW]
@@ -34,9 +36,9 @@ class UniTensor():
                 It should be an list or np.ndarray with len(list) being the number of bonds.
 
             N_rowrank:
-                The number of in-bond.
-                The first [N_rowrank] bonds will be define as the in-bond (which is the row space when flatten as Matrix), and the other bonds will be defined as the out-bond (which is the column space when flatten as Matrix).
-                When interprete the memory layout as Matrix, the combine of first N_rowrank will be the row and the other bond will be column.
+                The number of bonds in row-space.
+                The first [N_rowrank] bonds will be define as the row-space (which means the row space when flatten as Matrix), and the other bonds will be defined as in the col-space (which is the column space when flatten as Matrix).
+                When interprete the memory layout as Matrix, the combine of first N_rowrank bonds will be the row and the other bond will be column.
 
 
             labels:
@@ -63,8 +65,6 @@ class UniTensor():
 
         Private Args:
 
-        self.labels = np.roll(self.labels,-self.N_rowrank)
-        self.bonds  = np.roll(self.bonds, -self.N_rowrank)
 
            ** [Warning] Private Args should not be call directly **
 
@@ -77,14 +77,97 @@ class UniTensor():
             check :
                 This is the internal arguments. It should not be directly use. If False, all the checking across bonds/labels/Storage.shape will be ignore.
 
+            braket :
+                This is the internal arguments. It should not be directly use. If set, the braket +1 or -1 indicate the bond are BD_BRA or BD_KET. it is handy for calculate reverse quantum flow / blocks when bra-bond is permute to col-space (unmatched braket)
+
+            sym_mappers:
+                This is the internal arguments. It should not be directly use. It is a tuple, use to pass the shallow permute informations / block mapping information.
 
         Example for how to create a UniTensor:
 
-            * create a rank-2 UniTensor (matrix) with shape (3,4):
+            * create a rank-2 untagged UniTensor (matrix) with shape (3,4):
             >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
+            >>> a.Print_diagram(bond_info=True)
+            -----------------------
+            tensor Name : 
+            tensor Rank : 2
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 0 ____| 3         4 |____ 1  
+                       \             /     
+                        -------------      
+            lbl:0 Dim = 3 |
+            REG     :
+            _
+            lbl:1 Dim = 4 |
+            REG     :
 
-            * create a rank-3 UniTensor with one inbond and two outbond, shape (3,4,5) and set labels [-3,4,1] for each bond:
+            * create a rank-3 untagged UniTensor with one bond in row-space and two bonds in col-space, shape (3,4,5) and set labels [-3,4,1] for each bond:
             >>> c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_rowrank=1,labels=[-3,4,1])
+            >>> c.Print_diagram(bond_info=True)
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                -3 ____| 3         4 |____ 4  
+                       |             |     
+                       |           5 |____ 1  
+                       \             /     
+                        -------------      
+            lbl:-3 Dim = 3 |
+            REG     :
+            _
+            lbl:4 Dim = 4 |
+            REG     :
+            _
+            lbl:1 Dim = 5 |
+            REG     :
+
+            * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)
+            >>> bds  = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_KET)]
+            >>> o = Tor10.UniTensor(bonds=bds,N_rowrank=2)
+            >>> o.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+            braket_form : True
+                   <bra|             |ket> 
+                       ---------------     
+                       |             |     
+                 0 < __| 2         4 |__ > 2  
+                       |             |     
+                 1 < __| 3         5 |__ > 3  
+                       |             |     
+                       ---------------   
+
+            * note that if the BRA bond is not in the row-space, or KET bond is not in the col-space, the tensor is in the so called "non-braket_form, which will have a * symbol indicating the mismatch."
+            >>> bd2 = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_BRA)]
+            >>> c_mismatch = Tor10.UniTensor(bonds=bd2,N_rowrank=2)
+            >>> c_mismatch.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+            braket_form : False
+                   <bra|             |ket> 
+                       ---------------     
+                       |             |     
+                 0 < __| 2         4 |__ > 2  
+                       |             |     
+                 1 >*__| 5         3 |__*< 3  
+                       |             |     
+                       ---------------
 
             * create a rank-2 UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:
             >>> d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1,device=torch.device("cuda:0"))
@@ -95,9 +178,37 @@ class UniTensor():
 
             Note that when is_diag is set to True, the UniTensor should be a square matrix.
 
-            * crate a rank-3 UniTensor with two in-bond and one-outbond, and single precision:
+            * create a rank-3 UniTensor with two bonds in row-space and one bond in col-space, and single precision:
             >>> f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_rowrank=2,labels=[-3,4,1],dtype=torch.float32)
 
+            * create a rank-3 UniTensor with U1 symmetry:
+            >>> bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])
+            >>> bd_sym_2 = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])
+            >>> bd_sym_3 = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[-1],[5],[1]])
+            >>> symT = Tor10.UniTensor(bonds=[bd_sym1,bd_sym2,bd_sym3],N_rowrank=2,labels=[10,11,12])
+            >>> symT.Print_diagram(bond_info=True)
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: True
+            on device     : cpu
+            braket_form : True
+                   <bra|             |ket> 
+                       ---------------     
+                       |             |     
+                10 < __| 3         5 |__ > 12 
+                       |             |     
+                11 < __| 4           |        
+                       |             |     
+                       ---------------     
+            lbl:10 Dim = 3 |
+            BRA     : U1::  +2 +1 +0
+            _
+            lbl:11 Dim = 4 |
+            BRA     : U1::  +2 +2 +0 -1
+            _        
+            lbl:12 Dim = 5 |
+            KET     : U1::  +5 +4 +2 +1 -1
 
 
         """
@@ -338,6 +449,15 @@ class UniTensor():
                 self.is_braket = False
 
     def is_braket_form(self):
+        """ 
+        Return if the current tensor is in braket_form. It can only be called on a tagged UniTensor (with or without symmetry)
+
+        Return:
+
+            bool.     
+                
+
+        """
         if self.braket is None:
             raise Exception("[ERROR] for a tensor with regular bonds, there is no property of barket.")
 
@@ -347,10 +467,10 @@ class UniTensor():
         """
         Permute the UniTensor to bra-ket form. 
 
-        [Tech.Note] that the permuted UniTensor can be non-contiguous depending on the underlying memory layout. 
+        [Tech.Note] the permuted UniTensor can be non-contiguous depending on the underlying memory layout. 
 
-        return :
-            self.
+        Return :
+            self
 
         """
         if self.braket is None:
@@ -455,7 +575,7 @@ class UniTensor():
 
             elem:
                 The elements to be replace the content of the current UniTensor. It should be a 1D array.
-                **Note** if the UniTensor is a symmetric tensor, one should use UniTensor.PutBlock to set the elements.
+                **Note** if the UniTensor is a tensor with symmetry, one should use UniTensor.PutBlock to set the elements.
 
         Example:
         ::
@@ -467,6 +587,10 @@ class UniTensor():
 
 
         >>> print(Sz)
+        Tensor name: 
+        is_diag    : False
+        tensor([[ 1.,  0.],
+                [ 0., -1.]], dtype=torch.float64)
 
         """
         if not isinstance(elem,list) and not isinstance(elem,np.ndarray):
@@ -491,12 +615,14 @@ class UniTensor():
 
     def SetRowRank(self,new_rowrank):
         """
-            Set the RowRank while keep the tensor indices.
+        Set the RowRank while keep the tensor indices.
             
             Args:
             
                 new_rowrank: 
                     should be a unsigned int. 
+                
+                    [Note] for UniTensor with symmetry, it should have at least one bond in row-space and one bond in col-space. which means rowrank must >=1 and <= (rank of UniTensor)-1 
 
             Return:
 
@@ -517,9 +643,9 @@ class UniTensor():
                 
 
 
-    def Todense(self):
+    def Todense_(self):
         """
-        Set the UniTensor to dense matrix.
+        Set the current UniTensor to dense matrix.
             [v0.3+] This only affect on UniTensor with non-symmetry with diag=True.
 
         Return:
@@ -528,17 +654,25 @@ class UniTensor():
         Example:
 
             >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],N_rowrank=1,is_diag=True)
+            >>> a.SetElem([1,2,3])
             >>> print(a.is_diag)
             True
 
             >>> print(a)
+            Tensor name: 
+            is_diag    : True
+            tensor([1., 2., 3.], dtype=torch.float64)
 
-            >>> a.Todense()
+            >>> a.Todense_()
             >>> print(a.is_diag)
             False
 
             >>> print(a)
-
+            Tensor name: 
+            is_diag    : False
+            tensor([[1., 0., 0.],
+                    [0., 2., 0.],
+                    [0., 0., 3.]], dtype=torch.float64)
 
         """
         if self.is_symm:
@@ -550,9 +684,45 @@ class UniTensor():
 
         return self
 
-    def to(self,device):
+    def Todense(self):
         """
-        Set the UniTensor to device
+        Return a densed version of current UniTensor. This only affect on UniTensor with non-symmetry with is_diag=True.
+        
+            [Note] for UniTensor with Symmetry, Todense cannot be called.
+
+        Return:
+            new UniTensor if current tensor is_diag=True, otherwise return self.
+
+        Example:
+
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],N_rowrank=1,is_diag=True)
+            >>> print(a.is_diag)
+            True
+
+            >>> dense_a = a.Todense()
+            >>> print(dense_a.is_diag)
+            False
+
+            >>> print(a.is_diag)
+            True
+
+
+        """
+        if self.is_symm:
+            raise Exception("UniTensor.Todense()","[ERROR] cannot transform to dense for UniTensor with symmetry")
+
+        if self.is_diag==True:
+            out = copy.deepcopy(self)
+            out.Todense_()
+            return out
+        else:
+            return self
+
+
+
+    def to_(self,device):
+        """
+        Set the current UniTensor to device
 
         Args:
 
@@ -560,6 +730,10 @@ class UniTensor():
                 This should be an [torch.device]
                 torch.device("cpu") for put the tensor on host (cpu)
                 torch.device("cuda:x") for put the tensor on GPU with index x
+
+        Return:
+            
+            self
 
         Example:
 
@@ -569,19 +743,65 @@ class UniTensor():
 
             Set to GPU.
 
-            >>> a.to(torch.device("cuda:0"))
+            >>> a.to_(torch.device("cuda:0"))
 
 
         """
         if not isinstance(device,torch.device):
             raise TypeError("[ERROR] UniTensor.to()","only support device argument in this version as torch.device")
 
-        if self.is_symm:
-            for s in range(len(self.Storage)):
-                self.Storage[s].to(device)
-        else:
-            self.Storage = self.Storage.to(device)
+        if self.device != device:
+            if self.is_symm:
+                for s in range(len(self.Storage)):
+                    self.Storage[s] = self.Storage[s].to(device)
+            else:
+                self.Storage = self.Storage.to(device)
 
+        return self
+
+
+    def to(self,device):
+        """
+        Set the current UniTensor to device. If device is not the same with current tensor, return a new UniTensor, otherwise return self.
+
+        Args:
+
+            device:
+                This should be an [torch.device]
+                torch.device("cpu") for put the tensor on host (cpu)
+                torch.device("cuda:x") for put the tensor on GPU with index x
+
+        Return:
+            
+            self if the device if the same as current UniTensor. Otherwise, return a new UniTensor
+
+        Example:
+
+            Construct a tensor (default is on cpu)
+
+            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
+
+            Set to GPU.
+
+            >>> b = a.to(torch.device("cuda:0"))
+            >>> print(b is a)
+            False
+
+            >>> b = a.to(torch.device("cpu"))
+            >>> print(b is a)
+            True
+
+
+        """
+        if not isinstance(device,torch.device):
+            raise TypeError("[ERROR] UniTensor.to()","only support device argument in this version as torch.device")
+
+        if self.device != device:
+            out = copy.deepcopy(self)
+            out.to_(device)
+            return out
+        else:
+            return self
 
 
     def Print_diagram(self,bond_info=False):
@@ -649,7 +869,7 @@ class UniTensor():
             print("           |             |     ")
             print("           ---------------     ")
         else:
-            print("           ---------------     ")
+            print("            -------------      ")
             for i in range(vl):
                 if i==0: 
                     print("           /             \     ")
@@ -671,7 +891,7 @@ class UniTensor():
                     rlbl = "   "
                 print("   %s| %s     %s |%s"%(l,llbl,rlbl,r))
             print("           \             /     ")
-            print("           ---------------     ")
+            print("            -------------      ")
 
 
         if bond_info:
@@ -700,11 +920,13 @@ class UniTensor():
                 del out
                 
                 ## DEBUG >>>
-                print("xxxxxxxxxxxxxxxxxxxxxx")
-                print("Real memory:")
-                for b in range(len(self.Storage)):
-                    print(self.Storage[b])
-                print("xxxxxxxxxxxxxxxxxxxxxx")
+                if DEBUG:
+                    print("xxxxxxxxxxxxxxxxxxxxxx")
+                    print("[DEBUG]")
+                    print("Real memory:")
+                    for b in range(len(self.Storage)):
+                        print(self.Storage[b])
+                    print("xxxxxxxxxxxxxxxxxxxxxx")
                 ## <<<
 
         else:
@@ -730,11 +952,12 @@ class UniTensor():
                 del out
 
                 ## DEBUG >>>
-                print("xxxxxxxxxxxxxxxxxxxxxx")
-                print("Real memory:")
-                for b in range(len(self.Storage)):
-                    print(self.Storage[b])
-                print("xxxxxxxxxxxxxxxxxxxxxx")
+                if DEBUG:
+                    print("xxxxxxxxxxxxxxxxxxxxxx")
+                    print("Real memory:")
+                    for b in range(len(self.Storage)):
+                        print(self.Storage[b])
+                    print("xxxxxxxxxxxxxxxxxxxxxx")
                 ## <<<
 
         else:
@@ -832,11 +1055,7 @@ class UniTensor():
 
             Return:
 
-                1. for non-symmetry tensor:
-                    torch.Size object, using np.array() or list() to convert to numpy array and python list.
-                2. for symmetry tensor:
-                    python list of torch.Size objects. the length of list == # of vaild blocks in the system.
-
+                torch.Size
         """
         if self.is_symm:
             ## what to return ?
@@ -1558,7 +1777,7 @@ class UniTensor():
 
         return self
 
-    def CombineBonds(self,X_to_combine,new_label=None,permute_back=True,by_label=True):
+    def CombineBonds(self,X_to_combine,new_label=None,permute_back=False,by_label=True):
         """
         This function combines the bonds in input UniTensor [a] by the specified labels [label].
 
@@ -1576,7 +1795,7 @@ class UniTensor():
 
                 if new_label is set, the combined bond will have label [new_label]
         
-            permuted_back[True]:
+            permuted_back[False]:
                 this state if the combine bond should be permuted back or not. If false, the combined bond will always presented as the first bond.
 
 
@@ -1587,19 +1806,125 @@ class UniTensor():
             >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
             >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=2, labels=[4,3,5])
             >>> y = Tor10.UniTensor(bonds=bds_x, N_rowrank=2, labels=[4,3,5])
-            >>> z = Tor10.UniTensor(bonds=bds_x, N_rowrank=2, labels=[4,3,5])
             >>> x.Print_diagram()
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 5         3 |____ 5  
+                       |             |     
+                 3 ____| 5           |        
+                       \             /     
+                        -------------      
+            lbl:4 Dim = 5 |
+            REG     :
+            _
+            lbl:3 Dim = 5 |
+            REG     :
+            _
+            lbl:5 Dim = 3 |
+            REG     :
 
-            >>> x.CombineBonds([4,3])
+
+            * combine bond with label "3" into "5"
+            
+            >>> x.CombineBonds([5,3])
             >>> x.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 2
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 5        15 |____ 5  
+                       \             /     
+                        -------------      
+            lbl:4 Dim = 5 |
+            REG     :
+            _
+            lbl:5 Dim = 15 |
+            REG     :
 
 
-            >>> y.CombineBonds([4,3],new_label=8)
+            * combine bond with label "5" into "3"
+
+            >>> y.CombineBonds([3,5])
             >>> y.Print_diagram()
+            tensor Name : 
+            tensor Rank : 2
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 5           |        
+                       |             |     
+                 3 ____| 15          |        
+                       \             /     
+                        -------------      
+            lbl:4 Dim = 5 |
+            REG     :
+            _
+            lbl:3 Dim = 15 |
+            REG     :
 
+            
+            >>> z  = Tor10.UniTensor(bonds=bds_x*2, N_rowrank=3, labels=[4,3,5,6,7,8])
+            >>> z2 = Tor10.UniTensor(bonds=bds_x*2, N_rowrank=3, labels=[4,3,5,6,7,8])
+            >>> z.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 6
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 5         5 |____ 6  
+                       |             |     
+                 3 ____| 5         5 |____ 7  
+                       |             |     
+                 5 ____| 3         3 |____ 8  
+                       \             /     
+                        ------------- 
+            
+            >>> z.CombineBonds([4,5,6])
+            >>> z.Print_diagram()
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 225       5 |____ 3  
+                       |             |     
+                       |           5 |____ 7  
+                       |             |     
+                       |           3 |____ 8  
+                       \             /     
+                        -------------   
 
-
-
+            >>> z2.CombineBonds([4,5,6],permute_back=True)
+            >>> z2.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 225       5 |____ 7  
+                       |             |     
+                 3 ____| 5         3 |____ 8  
+                       \             /     
+                        -------------
         """
         if len(X_to_combine)<2:
             raise ValueError("CombineBonds","[ERROR] the number of bonds to combine should be greater than one.")
@@ -1617,7 +1942,7 @@ class UniTensor():
                 idxs_to_combine.append(np.argwhere(self.labels==l).flatten()[0])
                 
             idxs_to_combine = np.array(idxs_to_combine,dtype=np.int)
-            print(idxs_to_combine)
+            #print(idxs_to_combine)
         else:
             if not all(X_to_combine<len(a.labels)):
                 raise Exception("[ERROR] index out of bound")
@@ -1727,12 +2052,13 @@ class UniTensor():
                             b_id_out  = out._ket_mapper_blks[new_col]
 
                             ## [DEBUG] >>>>
-                            if b_id_in[0] < 0 or b_id_out[0]<0:
-                                raise Exception("[ERRRO]")
-                            if b_id_in[0] != b_id_out[0]:
-                                print(b_id_in[0],b_id_out[0])
-                                print("[ERROR!]")
-                                exit(1)
+                            if DEBUG:
+                                if b_id_in[0] < 0 or b_id_out[0]<0:
+                                    raise Exception("[ERROR][DEBUG][Internal check neg pos]")
+                                if b_id_in[0] != b_id_out[0]:
+                                    print(b_id_in[0],b_id_out[0])
+                                    print("[ERROR!][DEBUG][Internal check un-matched block]")
+                                    exit(1)
                             ## <<<<
                             out.Storage[b_id_in[0]][b_id_in[1],b_id_out[1]] = self.Storage[b][i,j]
                 #out._contiguous = True
@@ -2384,15 +2710,17 @@ class UniTensor():
                                 b_id_out = self._ket_mapper_blks[old_col]
 
                                 ## [DEBUG] >>>
-                                if b_id_in[0] != b_id_out[0]:
-                                    raise Exception("[ERROR] internal FATAL")
+                                if DEBUG:
+                                    if b_id_in[0] != b_id_out[0]:
+                                        raise Exception("[ERROR] internal FATAL")
                                 ## <<<
 
                                 if b_id_in[0] >= 0 and b_id_out[0] >= 0:
                                     Block[i,j] = self.Storage[b_id_in[0]][b_id_in[1],b_id_out[1]]
                                 else:                                    
                                     ## [DEBUG] >>>
-                                    print("[ERROR] unphys pos!")
+                                    if DEBUG:
+                                        print("[ERROR] unphys pos!")
                                     ## <<<<
 
                             
@@ -2407,10 +2735,17 @@ class UniTensor():
 
     def torch():
         """
-        Transform a UniTensor to torch.Tensor.
+        Transform a UniTensor to torch.Tensor. 
+
+            [Note]
+                
+                1. this cannot be operate on a UniTensor with symmetry.
+                2. the return tensor will not share the same memory with the UniTensor.
 
         Return:
-            a cloned torch.Tensor, note that the return tensor will not share the same memory with the UniTensor.
+            
+            torch.Tensor
+
 
         """
         if self.is_symm:
@@ -2702,11 +3037,6 @@ def Contract(a,b):
                 bQ = tmpb.GetValidQnums()
 
                 
-
-                ## DEBUG >>>
-                #if len(tmpa.Storage) != len(tmpb.Storage):
-                #    raise Exception("[ERROR][Internal][DEBUG] FATAL two contract does not have same block layout!!")            
-                ## <<<
                 
                 out = UniTensor(bonds=np.append(tmpa.bonds[:tmpa.N_rowrank],tmpb.bonds[tmpb.N_rowrank:]),\
                                 labels = np.append(tmpa.labels[:tmpa.N_rowrank],tmpb.labels[tmpb.N_rowrank:]),\
@@ -3102,8 +3432,9 @@ def _CombineBonds(a,idxs,new_label,permute_back):
                 a.Contiguous_()
 
                 ## DEBUG >>>
-                if not a.is_contiguous():
-                    raise Exception("[ERROR][DEBUG][internal] non-contiguous!!")
+                if DEBUG:
+                    if not a.is_contiguous():
+                        raise Exception("[ERROR][DEBUG][internal] non-contiguous!!")
                 ## <<<
 
                 ##[Fusion tree] >>>
@@ -3135,8 +3466,9 @@ def _CombineBonds(a,idxs,new_label,permute_back):
                 a.Contiguous_()
                 print(a.labels)
                 ## DEBUG >>>
-                if not a.is_contiguous():
-                    raise Exception("[ERROR][DEBUG][internal] non-contiguous!!")
+                if DEBUG:
+                    if not a.is_contiguous():
+                        raise Exception("[ERROR][DEBUG][internal] non-contiguous!!")
                 ## <<<
 
                 ##[Fusion tree] >>>

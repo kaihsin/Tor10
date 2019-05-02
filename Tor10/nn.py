@@ -25,14 +25,13 @@ def Parameter(data,requires_grad=True):
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)]))
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
  
             def forward(self,x):
                 y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
                 return y
 
-    >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)])
     >>> md = Model()
     >>> print(list(md.parameters()))
     [Parameter containing:
@@ -112,7 +111,7 @@ class Linear():
         >>> m = Tor10.nn.Linear(20, 30)
         >>> iput = Tor10.From_torch(torch.randn(128, 20),N_rowrank=1)
         >>> oput = m(iput)
-        >>> print(oput.shape())
+        >>> print(oput.shape)
         torch.Size([128, 30])
     
     """

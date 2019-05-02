@@ -151,6 +151,31 @@
 <span class="kn">import</span> <span class="nn">torch</span> <span class="k">as</span> <span class="nn">tor</span>
 
 <div class="viewcode-block" id="U1"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.U1">[docs]</a><span class="k">class</span> <span class="nc">U1</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        U1 Symmetry class. </span>
+<span class="sd">        The U1 symmetry can have quantum number represent as arbitrary unsigned integer.</span>
+
+<span class="sd">        Fusion rule for combine two quantum number:</span>
+<span class="sd">            </span>
+<span class="sd">            q1 + q2</span>
+
+
+<span class="sd">        &gt;&gt;&gt; b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[0],[1 ]     ],sym_types=[Tor10.Symmetry.U1()])</span>
+<span class="sd">        &gt;&gt;&gt; b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[-3],[-1]],sym_types=[Tor10.Symmetry.U1()])</span>
+<span class="sd">        &gt;&gt;&gt; print(b1)</span>
+<span class="sd">        Dim = 3 |</span>
+<span class="sd">        BRA     : U1::  +1 +0 +0</span>
+
+<span class="sd">        &gt;&gt;&gt; print(b2)</span>
+<span class="sd">        Dim = 4 |</span>
+<span class="sd">        BRA     : U1::  +2 +0 -1 -3</span>
+
+<span class="sd">        &gt;&gt;&gt; b1.combine(b2)</span>
+<span class="sd">        &gt;&gt;&gt; print(b1)</span>
+<span class="sd">        Dim = 12 |</span>
+<span class="sd">        BRA     : U1::  +3 +1 +0 -2 +2 +0 -1 -3 +2 +0 -1 -3</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="U1.__init__"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.U1.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span> </div>
 
@@ -172,6 +197,32 @@
         
 
 <div class="viewcode-block" id="Zn"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.Zn">[docs]</a><span class="k">class</span> <span class="nc">Zn</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Z(n) Symmetry class. </span>
+<span class="sd">        The Z(n) symmetry can have integer quantum number, with n &gt; 1.</span>
+
+<span class="sd">        Fusion rule for combine two quantum number:</span>
+<span class="sd">            </span>
+<span class="sd">            (q1 + q2)%n</span>
+
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[2],[1 ]     ],sym_types=[Tor10.Symmetry.Zn(4)])</span>
+<span class="sd">        &gt;&gt;&gt; b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[3],[1]  ],sym_types=[Tor10.Symmetry.Zn(4)])</span>
+<span class="sd">        &gt;&gt;&gt; print(b1)</span>
+<span class="sd">        Dim = 3 |</span>
+<span class="sd">        BRA     : Z4::  +2 +1 +0</span>
+
+<span class="sd">        &gt;&gt;&gt; print(b2)</span>
+<span class="sd">        Dim = 4 |</span>
+<span class="sd">        BRA     : Z4::  +3 +2 +1 +0</span>
+
+<span class="sd">        &gt;&gt;&gt; b1.combine(b2)</span>
+<span class="sd">        &gt;&gt;&gt; print(b1)</span>
+<span class="sd">        Dim = 12 |</span>
+<span class="sd">        BRA     : Z4::  +1 +0 +3 +2 +0 +3 +2 +1 +3 +2 +1 +0</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Zn.__init__"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.Zn.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Symmetry.Zn&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] discrete symmetry Zn must have n &gt;= 2.&quot;</span><span class="p">)</span>

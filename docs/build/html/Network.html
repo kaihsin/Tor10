@@ -178,7 +178,7 @@
 </div>
 <ul class="simple">
 <li>Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds.</li>
-<li>The semicolon seperates the in-bond and out-bond, where the left side of semicolon is defined as in-bonds.</li>
+<li>The semicolon seperates the row-space and col-space, it is equivalent as “N_rowrank” property of the UniTensor. The left side of semicolon is defined as row-space, and right side of semicolon is degined as col-space.</li>
 </ul>
 <p>[Note] that there are two preserved tensor name “TOUT” and “Order”. The “TOUT” specify the output tensor, and “Order” defineds how the Tensors in the Network will be contracted.</p>
 <p>[Note] The “Order” is not required. If not specify, the tensors will contract one by one accroding to the sequence as they appears in the Network file.</p>
@@ -235,23 +235,23 @@
 <dl class="method">
 <dt id="Tor10.Network.Network.Put">
 <code class="descname">Put</code><span class="sig-paren">(</span><em>name</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.Put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.Put" title="Permalink to this definition">¶</a></dt>
-<dd><p>Put the UniTensor into the tensor named [name] in the Network.</p>
+<dd><p>Put the UniTensor into the tensor named [name] in the Network. To use the Network, only untagged tensor can be put into the Network.</p>
 <dl class="docutils">
 <dt>Args:</dt>
 <dd><dl class="first last docutils">
 <dt>name: </dt>
 <dd>The name of the tensor defines in the Network to put the UniTensor.</dd>
 <dt>tensor:</dt>
-<dd>A UniTensor that is to be put into the Network.</dd>
+<dd>A UniTensor that is to be put into the Network. It should be untagged.</dd>
 </dl>
 </dd>
 </dl>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ntwrk</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
 <span class="n">ntwrk</span><span class="o">.</span><span class="n">Fromfile</span><span class="p">(</span><span class="s2">&quot;test.net&quot;</span><span class="p">)</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">N_inbond</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ntwrk</span><span class="p">)</span>
@@ -294,29 +294,31 @@
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TOUT</span> <span class="o">=</span> <span class="n">ntwrk</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">TOUT</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TOUT</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">(</span><span class="n">bond_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
 <span class="go">tensor Rank : 4</span>
-<span class="go">on device   : cpu</span>
-<span class="go">is_diag     : False</span>
-<span class="go">        ---------------     </span>
-<span class="go">        |             |     </span>
-<span class="go">   -1 __| 3         2 |__ 3  </span>
-<span class="go">        |             |     </span>
-<span class="go">   -2 __| 4         4 |__ 4  </span>
-<span class="go">        |             |     </span>
-<span class="go">        ---------------     </span>
+<span class="go">has_symmetry: False</span>
+<span class="go">on device     : cpu</span>
+<span class="go">is_diag       : False</span>
+<span class="go">            -------------      </span>
+<span class="go">           /             \     </span>
+<span class="go">    -1 ____| 3         2 |____ 3  </span>
+<span class="go">           |             |     </span>
+<span class="go">    -2 ____| 4         4 |____ 4  </span>
+<span class="go">           \             /     </span>
+<span class="go">            -------------      </span>
 <span class="go">lbl:-1 Dim = 3 |</span>
-<span class="go">REGULAR :</span>
+<span class="go">REG     :</span>
 <span class="go">_</span>
 <span class="go">lbl:-2 Dim = 4 |</span>
-<span class="go">REGULAR :</span>
+<span class="go">REG     :</span>
 <span class="go">_</span>
 <span class="go">lbl:3 Dim = 2 |</span>
-<span class="go">REGULAR :</span>
+<span class="go">REG     :</span>
 <span class="go">_</span>
 <span class="go">lbl:4 Dim = 4 |</span>
-<span class="go">REGULAR :</span>
+<span class="go">REG     :</span>
 </pre></div>
 </div>
 </dd></dl>
