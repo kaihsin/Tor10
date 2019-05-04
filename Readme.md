@@ -15,9 +15,11 @@
     11. Add UniTensor.dtype() [@property]
     12. Add UniTensor.device() [@property]
     13. nn , some linalg can only accept non-symm, untagged tensor. 
-    
+    v0.3.1    
+    1. Fix cannot create rank-0 UniTensor bug.
+
 ## Release version
-    v0.3 alpha
+    v0.3.1 alpha
 
 ## Known issue
     1. HOSVD is not functional

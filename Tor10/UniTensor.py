@@ -129,6 +129,25 @@ class UniTensor():
             lbl:1 Dim = 5 |
             REG     :
 
+
+            * create a rank-0 UniTensor
+            >>> rk0t = Tor10.UniTensor(bonds=[])
+            >>> rk0t.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 0
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       \             /     
+                        -------------  
+
+            >>> print(rk0t)
+            Tensor name: 
+            is_diag    : False
+            tensor([0.], dtype=torch.float64) 
+
             * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)
             >>> bds  = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_KET)]
             >>> o = Tor10.UniTensor(bonds=bds,N_rowrank=2)
@@ -222,7 +241,10 @@ class UniTensor():
 
         # labels: 
         if labels is None:
-            self.labels = np.arange(len(self.bonds))
+            if len(self.bonds)==0:
+                self.labels = np.array([],dtype=np.int)
+            else:
+                self.labels = np.arange(len(self.bonds))
         else:
             self.labels = np.array(copy.deepcopy(labels),dtype=np.int)
 
@@ -230,26 +252,28 @@ class UniTensor():
 
         ## checking :
         if check:
+            # check # of labels consist with bond.
+            if not len(self.labels) == (len(self.bonds)):
+                raise Exception("UniTensor.__init__","labels size is not consistence with the rank")
             # Bonds:
             if N_rowrank is not None:
                 if N_rowrank < 0 or N_rowrank > len(self.bonds):
                     raise Exception("UniTensor.__init__","the N_rowrank should be >=0 and < # of bonds")
 
-            # Labels:
-            # check # of labels consist with bond.
-            if not len(self.labels) == (len(self.bonds)):
-                raise Exception("UniTensor.__init__","labels size is not consistence with the rank")
+            if len(self.bonds)!=0:
 
-            ## check duplicate label
-            if not len(np.unique(self.labels)) == len(self.labels):
-                raise Exception("UniTensor.__init__","labels contain duplicate element.")
- 
-            ## check qnums:
-            isSymm = np.unique([ (bd.qnums is None) for bd in self.bonds])
-            if len(isSymm) != 1:
-                raise TypeError("UniTensor.__init__","the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).")
-            
-            
+                ## check duplicate label
+                if not len(np.unique(self.labels)) == len(self.labels):
+                    raise Exception("UniTensor.__init__","labels contain duplicate element.")
+     
+                ## check qnums:
+                isSymm = np.unique([ (bd.qnums is None) for bd in self.bonds])
+                if len(isSymm) != 1:
+                    raise TypeError("UniTensor.__init__","the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).")
+            else:
+                if is_diag:
+                    raise Exception("UniTensor.__init__","the scalar tensor (rank-0) cannot have is_diag=True.")
+
 
         ## braket, is_braket:
         
@@ -263,11 +287,15 @@ class UniTensor():
 
         
         if N_rowrank is None:
-            if self.braket is not None:
-                self.N_rowrank = len(np.argwhere(self.braket==BondType[BD_BRA]))
+            if len(self.bonds)==0:
+                self.N_rowrank = 0
             else:
-                raise Exception("[ERROR] for UniTensor init with all the bond are regular, N_rowrank should be provided")
+                if self.braket is not None:
+                    self.N_rowrank = len(np.argwhere(self.braket==BondType[BD_BRA]))
+                else:
+                    raise Exception("[ERROR] for UniTensor init with all the bond are regular, N_rowrank should be provided")
         else:
+            
             self.N_rowrank = int(N_rowrank)
  
 
@@ -298,9 +326,13 @@ class UniTensor():
                 if self.is_diag:
                     self.Storage = torch.zeros(self.bonds[0].dim,device=device,dtype=dtype)
                 else:
-                    DALL = [self.bonds[i].dim for i in range(len(self.bonds))]
-                    self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
-                    del DALL
+                    if len(self.bonds)!=0:
+                        DALL = [self.bonds[i].dim for i in range(len(self.bonds))]
+                        self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
+                        del DALL
+                    else:
+                        self.Storage = torch.zeros(1,device=device,dtype=dtype)
+                        
             else:
                 self.Storage = torch_tensor
 
@@ -2255,6 +2287,8 @@ class UniTensor():
                     raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True must have N_rowrank==1\n"+"Suggest, call Todense()")
                     
             else:        
+                print(idx_mapper)
+                print(self.Storage)
                 self.Storage = self.Storage.permute(tuple(idx_mapper))
         
     
