@@ -278,6 +278,25 @@
 <span class="sd">            lbl:1 Dim = 5 |</span>
 <span class="sd">            REG     :</span>
 
+
+<span class="sd">            * create a rank-0 UniTensor</span>
+<span class="sd">            &gt;&gt;&gt; rk0t = Tor10.UniTensor(bonds=[])</span>
+<span class="sd">            &gt;&gt;&gt; rk0t.Print_diagram()</span>
+<span class="sd">            -----------------------</span>
+<span class="sd">            tensor Name : </span>
+<span class="sd">            tensor Rank : 0</span>
+<span class="sd">            has_symmetry: False</span>
+<span class="sd">            on device     : cpu</span>
+<span class="sd">            is_diag       : False</span>
+<span class="sd">                        -------------      </span>
+<span class="sd">                       \             /     </span>
+<span class="sd">                        -------------  </span>
+
+<span class="sd">            &gt;&gt;&gt; print(rk0t)</span>
+<span class="sd">            Tensor name: </span>
+<span class="sd">            is_diag    : False</span>
+<span class="sd">            tensor([0.], dtype=torch.float64) </span>
+
 <span class="sd">            * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)</span>
 <span class="sd">            &gt;&gt;&gt; bds  = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_KET)]</span>
 <span class="sd">            &gt;&gt;&gt; o = Tor10.UniTensor(bonds=bds,N_rowrank=2)</span>
@@ -371,7 +390,10 @@
 
         <span class="c1"># labels: </span>
         <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
 
@@ -379,26 +401,28 @@
 
         <span class="c1">## checking :</span>
         <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
+            <span class="c1"># check # of labels consist with bond.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;labels size is not consistence with the rank&quot;</span><span class="p">)</span>
             <span class="c1"># Bonds:</span>
             <span class="k">if</span> <span class="n">N_rowrank</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">N_rowrank</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">N_rowrank</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;the N_rowrank should be &gt;=0 and &lt; # of bonds&quot;</span><span class="p">)</span>
 
-            <span class="c1"># Labels:</span>
-            <span class="c1"># check # of labels consist with bond.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;labels size is not consistence with the rank&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
 
-            <span class="c1">## check duplicate label</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;labels contain duplicate element.&quot;</span><span class="p">)</span>
- 
-            <span class="c1">## check qnums:</span>
-            <span class="n">isSymm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span> <span class="p">(</span><span class="n">bd</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">])</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">isSymm</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).&quot;</span><span class="p">)</span>
-            
-            
+                <span class="c1">## check duplicate label</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;labels contain duplicate element.&quot;</span><span class="p">)</span>
+     
+                <span class="c1">## check qnums:</span>
+                <span class="n">isSymm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span> <span class="p">(</span><span class="n">bd</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">bd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">])</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">isSymm</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;the bonds are not consistent. Cannot have mixing bonds of with and without symmetry (qnums).&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_diag</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;the scalar tensor (rank-0) cannot have is_diag=True.&quot;</span><span class="p">)</span>
+
 
         <span class="c1">## braket, is_braket:</span>
         
@@ -412,11 +436,15 @@
 
         
         <span class="k">if</span> <span class="n">N_rowrank</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[ERROR] for UniTensor init with all the bond are regular, N_rowrank should be provided&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[ERROR] for UniTensor init with all the bond are regular, N_rowrank should be provided&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            
             <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N_rowrank</span><span class="p">)</span>
  
 
@@ -447,9 +475,13 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_diag</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">DALL</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">))]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">DALL</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">)</span>
-                    <span class="k">del</span> <span class="n">DALL</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="n">DALL</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">))]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">DALL</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">)</span>
+                        <span class="k">del</span> <span class="n">DALL</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+                        
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch_tensor</span>
 
@@ -1504,6 +1536,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1">## untagged tensor</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">),</span><span class="o">-</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">)</span>
                 <span class="n">out</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">N_rowrank</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">-</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">out</span>
             <span class="k">else</span><span class="p">:</span>
@@ -2403,6 +2436,8 @@
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Permute&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] UniTensor.is_diag=True must have N_rowrank==1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;Suggest, call Todense()&quot;</span><span class="p">)</span>
                     
             <span class="k">else</span><span class="p">:</span>        
+                <span class="nb">print</span><span class="p">(</span><span class="n">idx_mapper</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">idx_mapper</span><span class="p">))</span>
         
     
@@ -2490,7 +2525,7 @@
 
         <span class="n">new_Storage</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
 
-        <span class="n">new_Storage</span> <span class="o">=</span> <span class="n">new_Storage</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dimer</span><span class="p">)</span>
+        <span class="n">new_Storage</span> <span class="o">=</span> <span class="n">new_Storage</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dimer</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">new_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">new_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimer</span><span class="p">))</span>
 
