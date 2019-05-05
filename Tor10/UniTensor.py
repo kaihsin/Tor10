@@ -2287,8 +2287,8 @@ class UniTensor():
                     raise Exception("UniTensor.Permute","[ERROR] UniTensor.is_diag=True must have N_rowrank==1\n"+"Suggest, call Todense()")
                     
             else:        
-                print(idx_mapper)
-                print(self.Storage)
+                #print(idx_mapper)
+                #print(self.Storage)
                 self.Storage = self.Storage.permute(tuple(idx_mapper))
         
     

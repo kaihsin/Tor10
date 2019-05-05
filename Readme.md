@@ -17,9 +17,11 @@
     13. nn , some linalg can only accept non-symm, untagged tensor. 
     v0.3.1    
     1. Fix cannot create rank-0 UniTensor bug.
+    v0.3.2
+    1. Fix Permute will print tensor elements bug.
 
 ## Release version
-    v0.3.1 alpha
+    v0.3.2 alpha
 
 ## Known issue
     1. HOSVD is not functional
