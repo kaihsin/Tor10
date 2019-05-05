@@ -62,11 +62,13 @@ print(c)
 ## UniTensor:
 #=========================================================
 # Create Tensor
+a2 = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
+a2.Print_diagram()
+
 a = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA)])
 a.Print_diagram()
 print(a.is_braket)
 print(a)
-
 a2 = Tor10.UniTensor(bonds=[Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA)],N_rowrank=1)
 a2.Print_diagram()
 print(a2.is_braket)
