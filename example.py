@@ -62,6 +62,22 @@ print(c)
 ## UniTensor:
 #=========================================================
 # Create Tensor
+bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
+x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
+x.Print_diagram()
+x.Permute([0,2,1])
+x.Contiguous_()
+
+y = x.View([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
+y.Print_diagram()
+
+x.View_([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
+x.Print_diagram()
+
+rk0t = Tor10.UniTensor(bonds=[])
+rk0t.Print_diagram()
+
+
 a2 = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)
 a2.Print_diagram()
 

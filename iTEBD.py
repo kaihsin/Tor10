@@ -104,10 +104,12 @@ for i in range(100000):
 
     Elast = E
     print("Energy = {:.6f}".format(E))
-    #XeH.Print_diagram()
     XeH.Permute([-4,2,3,-5],by_label=True)
-    XeH.Contiguous_()
-    XeH = XeH.Reshape([chi*2,chi*2],N_rowrank=1)
+
+    #XeH.Contiguous_()
+    #XeH.View_([chi*2,chi*2],N_rowrank=1)
+
+    XeH.Reshape_([chi*2,chi*2],N_rowrank=1)
 
     A,la,B = Tt.Svd_truncate(XeH,chi)
 

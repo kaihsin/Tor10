@@ -315,8 +315,9 @@ class UniTensor():
         self.N_rowrank = N_rowrank
 
         if check:
-            if self.bonds[0].bondType !=BD_REG :
-                self.braket = np.array([ BondType[self.bonds[i].bondType] for i in range(len(self.bonds))],dtype=np.int)
+            if len(self.bonds)!=0:
+                if self.bonds[0].bondType !=BD_REG :
+                    self.braket = np.array([ BondType[self.bonds[i].bondType] for i in range(len(self.bonds))],dtype=np.int)
 
                          
             if self.N_rowrank is None:
@@ -2414,8 +2415,6 @@ class UniTensor():
         if new_labels is None:
             new_labels = np.arange(len(dimer))
 
-        np.array([Bond(dimer[i]) for i in range(len(dimer))])
-
         tmp = UniTensor(bonds=np.array([Bond(dimer[i]) for i in range(len(dimer))]),\
                          labels=new_labels,\
                          N_rowrank=N_rowrank,\
@@ -2504,18 +2503,221 @@ class UniTensor():
             raise TypeError("UniTensor.Reshape","[ERROR] mapper should be an python list.")
 
 
-        #new_Storage = copy.deepcopy(self.Storage)
+
+        self.Storage = self.Storage.reshape(dimer)
+
+        if new_labels is None:
+            new_labels = np.arange(len(dimer))
+
+        self.labels = new_labels
+        self.bonds = np.array([Bond(dimer[i]) for i in range(len(dimer))])
+        self.N_rowrank = N_rowrank
+
+        return self
+
+
+
+    def View(self,dimer,N_rowrank,new_labels=None):
+        """
+        Return a new view of UniTensor into the shape specified as [dimer], with the first [N_rowrank] Bonds as bra-bond and other bonds as ket-bond.
+
+        The View() can only operate on a contiguous tensor, otherwise, Contiguous_() or Contiguous() need to be called before the tensor can be viewed. This is the same as pytorch.view().
+
+        [Note] 
+
+            1.View a UniTensor physically re-define the new basis, which construct a new physical definition tensor that has the same element.
+
+            2.View can only operate on an untagged tensor.
+            
+            3.View requires a contiguous tensor. 
+
+        Args:
+
+            dimer:
+                The new shape of the UniTensor. This should be a python list.
+
+            N_rowrank:
+                The number of bonds in row space.
+
+            new_labels:
+                The new labels that will be set for new bonds after reshape.
+
+        reture:
+
+            UniTensor
+
+        Example:
+
+            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
+            >>> x.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 6         5 |____ 3  
+                       |             |     
+                       |           3 |____ 5  
+                       \             /     
+                        ------------- 
+
+            >>> x.Permute([0,2,1])
+            >>> x.Contiguous_() # this is needed. 
+            >>> y = x.View([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
+            >>> y.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 1 ____| 2         5 |____ 3  
+                       |             |     
+                 2 ____| 3         3 |____ -1 
+                       \             /     
+                        -------------  
+
+
+        """
+        if self.is_symm:
+            raise TypeError("UniTensor.View","[ERROR] Cannot perform View on a symmetry Tensor")
+
+        if self.is_diag:
+            raise Exception("UniTensor.View","[ERROR] UniTensor.is_diag=True cannot be View.\n"+
+                                                "[Suggest] Call UniTensor.Todense()")
+        
+        if not self.is_contiguous():
+            raise Exception("UniTensor.View","[ERROR] UniTensor is not contiguous. Call Contiguous_() or Contiguous() before .View()")
+        
+        if self.braket is not None:
+            raise Exception("UniTensor.View","[ERROR] UniTensor.View can only operate on a [untagged] tensor with regular bonds (BD_REG).")
+
+
+        if not isinstance(dimer,list):
+            raise TypeError("UniTensor.View","[ERROR] mapper should be an python list.")
+
+
+        new_Storage = copy.deepcopy(self.Storage)
 
         new_Storage = new_Storage.view(dimer)
+        if new_labels is None:
+            new_labels = np.arange(len(dimer))
+
+
+        tmp = UniTensor(bonds=np.array([Bond(dimer[i]) for i in range(len(dimer))]),\
+                         labels=new_labels,\
+                         N_rowrank=N_rowrank,\
+                         check=False)
+
+        tmp._UniTensor__mac(torch_tensor=new_Storage)
+
+        return tmp
+
+
+
+    def View_(self,dimer,N_rowrank,new_labels=None):
+        """
+        Inplace version of View. 
+        View UniTensor into the shape specified as [dimer], with the first [N_rowrank] Bonds as bra-bond and other bonds as ket-bond.
+
+        The View_() can only operate on a contiguous tensor, otherwise, Contiguous_() or Contiguous() need to be called before the tensor can be viewed. This is the inplace version of pytorch.view().
+ 
+
+        [Note] 
+
+            1.Viewing a UniTensor physically re-define the bra-ket basis space, which construct a new physical definition tensor that has the same element.
+
+            2.Viewing can only operate on an untagged tensor.
+
+            3. View_() requires a contiguous tensor.
+
+        Args:
+
+            dimer:
+                The new shape of the UniTensor. This should be a python list.
+
+            N_rowrank:
+                The number of bonds in row space.
+
+            new_labels [option]:
+                The new labels that will be set for new bonds after reshape. If not set, the label will be initialize using default enumerate rule.
+
+        Return:
+
+            self
+    
+        Example:
+
+            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
+            >>> x.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 3
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 4 ____| 6         5 |____ 3  
+                       |             |     
+                       |           3 |____ 5  
+                       \             /     
+                        -------------
+ 
+            >>> x.Permute([0,2,1])
+            >>> x.Contiguous_() # this is needed
+            >>> x.Reshape_([2,3,5,3],new_labels=[1,2,3,-1],N_rowrank=2)
+            >>> x.Print_diagram()
+            -----------------------
+            tensor Name : 
+            tensor Rank : 4
+            has_symmetry: False
+            on device     : cpu
+            is_diag       : False
+                        -------------      
+                       /             \     
+                 1 ____| 2         5 |____ 3  
+                       |             |     
+                 2 ____| 3         3 |____ -1 
+                       \             /     
+                        -------------
+
+
+        """
+        if self.is_symm:
+            raise TypeError("UniTensor.View_()","[ERROR] Cannot perform View_ on a symmetry Tensor")
+
+        if self.is_diag:
+            raise Exception("UniTensor.View_()","[ERROR] UniTensor.is_diag=True cannot be View_.\n"+
+                                                "[Suggest] Call UniTensor.Todense()")
+        
+
+        if self.braket is not None:
+            raise Exception("UniTensor.View_()","[ERROR] UniTensor.View_ can only operate on a [untagged] tensor with regular bonds (BD_REG).")
+
+
+        if not isinstance(dimer,list):
+            raise TypeError("UniTensor.View_()","[ERROR] mapper should be an python list.")
+
+
         self.Storage = self.Storage.view(dimer)
 
         if new_labels is None:
             new_labels = np.arange(len(dimer))
 
+        self.labels = new_labels
         self.bonds = np.array([Bond(dimer[i]) for i in range(len(dimer))])
-        self.N_rowrank = rowrank
+        self.N_rowrank = N_rowrank
 
         return self
+
 
     ## Symmetric Tensor function
     def GetTotalQnums(self,physical=False):

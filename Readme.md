@@ -32,6 +32,12 @@
     1. Fix Svd, Svd_truncate, Qr, Qdr crash bug. Originated from the variable change of v0.3.3a 
     2. From 1., iTEBD.py cannot work is fixed. 
 
+    v0.3.5
+    1. Fix create Rank-0 Tensor crash bug.
+    2. Fix Reshape_() labels are not set bug, and remove redundancy code in the Reshape_()
+    3. Add View() and View_, which is the same functionality as pytorch 
+  
+
 ## Release version
     v0.3.4 alpha
 
