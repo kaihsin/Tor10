@@ -374,7 +374,7 @@ def Qr(a):
 
         tr = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
                       N_rowrank=1,\
-                      labels=[tq.labels[1],a.labels[1]],\
+                      labels=[q.labels[1],a.labels[1]],\
                       check=False)
         tr._UniTensor__mac(torch_tensor = r)
 
@@ -437,7 +437,7 @@ def Qdr(a):
                       check=False)
         tq._UniTensor__mac(torch_tensor = q)
 
-        td = UniTensor(bonds =[Bond(d.shape[0]),Bond(d.shape[0])],\
+        td = UniTensor(bonds =[Bond(td.shape[0]),Bond(td.shape[0])],\
                       N_rowrank=1,\
                       labels=[tmp-1,tmp-2],\
                       is_diag=True,
@@ -446,7 +446,7 @@ def Qdr(a):
 
         tr = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
                       N_rowrank=1,\
-                      labels=[td.labels[1],a.labels[1]],\
+                      labels=[d.labels[1],a.labels[1]],\
                       check=False)
         tr._UniTensor__mac(torch_tensor = r)
 

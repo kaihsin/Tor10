@@ -28,8 +28,12 @@
     3. Remove unrelated arguments in documentation
     4. Change the order of functions appears in documentation Tor10.UniTensor
 
+    v0.3.4
+    1. Fix Svd, Svd_truncate, Qr, Qdr crash bug. Originated from the variable change of v0.3.3a 
+    2. From 1., iTEBD.py cannot work is fixed. 
+
 ## Release version
-    v0.3.3 alpha
+    v0.3.4 alpha
 
 ## Known issue
     1. HOSVD is not functional
