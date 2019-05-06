@@ -62,6 +62,7 @@ print(c)
 ## UniTensor:
 #=========================================================
 # Create Tensor
+
 bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
 x = Tor10.UniTensor(bonds=bds_x, N_rowrank=1,labels=[4,3,5])
 x.Print_diagram()
@@ -76,6 +77,14 @@ x.Print_diagram()
 
 rk0t = Tor10.UniTensor(bonds=[])
 rk0t.Print_diagram()
+print(rk0t)
+exit(1)
+t0t = torch.tensor(1)
+#print(t0t.shape)
+#tt = torch.tensor(1,dtype=torch.float64,device=torch.device("cpu"))
+
+t = Tor10.From_torch(t0t)
+t.Print_diagram()
 
 
 a2 = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1)

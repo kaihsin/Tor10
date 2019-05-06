@@ -256,7 +256,7 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rk0t</span><span class="p">)</span>
 <span class="go">Tensor name: </span>
 <span class="go">is_diag    : False</span>
-<span class="go">tensor([0.], dtype=torch.float64) </span>
+<span class="go">tensor(0., dtype=torch.float64) </span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -1927,7 +1927,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 
 <dl class="function">
 <dt id="Tor10.UniTensor.From_torch">
-<code class="descclassname">Tor10.UniTensor.</code><code class="descname">From_torch</code><span class="sig-paren">(</span><em>torch_tensor</em>, <em>N_rowrank</em>, <em>labels=None</em>, <em>is_tag=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#From_torch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.From_torch" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Tor10.UniTensor.</code><code class="descname">From_torch</code><span class="sig-paren">(</span><em>torch_tensor</em>, <em>N_rowrank=None</em>, <em>labels=None</em>, <em>is_tag=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#From_torch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.From_torch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct UniTensor from torch.Tensor.</p>
 <p>If the input torch_tensor belongs to a autograd graph, the contructed UniTensor will preserve the role of the input torch_tensor in the computational graph.</p>
 <dl class="docutils">

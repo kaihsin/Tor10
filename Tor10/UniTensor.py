@@ -179,7 +179,7 @@ class UniTensor():
             >>> print(rk0t)
             Tensor name: 
             is_diag    : False
-            tensor([0.], dtype=torch.float64) 
+            tensor(0., dtype=torch.float64) 
 
             * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)
             >>> bds  = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_KET)]
@@ -363,7 +363,7 @@ class UniTensor():
                         self.Storage = torch.zeros(tuple(DALL), device=device, dtype = dtype)
                         del DALL
                     else:
-                        self.Storage = torch.zeros(1,device=device,dtype=dtype)
+                        self.Storage = torch.tensor(0,device=device,dtype=dtype)
                         
             #self.Storage = torch_tensor
 
@@ -4237,7 +4237,7 @@ def _Randomize(a):
         raise Exception("_Randomize(UniTensor)","[ERROR] _Randomize can only accept UniTensor")
 
 
-def From_torch(torch_tensor,N_rowrank,labels=None,is_tag=False):
+def From_torch(torch_tensor,N_rowrank=None,labels=None,is_tag=False):
     """
     Construct UniTensor from torch.Tensor.
 
@@ -4303,14 +4303,21 @@ def From_torch(torch_tensor,N_rowrank,labels=None,is_tag=False):
 
     shape = torch_tensor.shape
 
-    if N_rowrank > len(shape):
-        raise ValueError("From_torch","[ERROR] N_rowrank exceed the rank of input torch tensor.")
+
+    if N_rowrank is not None:    
+        if N_rowrank > len(shape) or N_rowrank < 0:
+            raise ValueError("From_torch","[ERROR] N_rowrank exceed the rank of input torch tensor.")
+    else:
+        if len(shape) != 0:
+            raise ValueError("From_torch","[ERROR] N_rowrank must be set for a non rank-0 tensor")
 
     if labels is not None:
         if len(labels) != len(shape):
             raise TypeError("From_torch","[ERROR] # of labels should match the rank of torch.Tensor")
 
+
     if is_tag:
+        
         new_bonds = [Bond(shape[i],BD_BRA) for i in range(N_rowrank)]+\
                     [Bond(shape[i],BD_KET) for i in np.arange(N_rowrank,len(shape),1)]
     else:

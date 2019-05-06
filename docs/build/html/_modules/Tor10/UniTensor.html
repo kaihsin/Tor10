@@ -328,7 +328,7 @@
 <span class="sd">            &gt;&gt;&gt; print(rk0t)</span>
 <span class="sd">            Tensor name: </span>
 <span class="sd">            is_diag    : False</span>
-<span class="sd">            tensor([0.], dtype=torch.float64) </span>
+<span class="sd">            tensor(0., dtype=torch.float64) </span>
 
 <span class="sd">            * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)</span>
 <span class="sd">            &gt;&gt;&gt; bds  = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_KET)]</span>
@@ -512,7 +512,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">DALL</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">)</span>
                         <span class="k">del</span> <span class="n">DALL</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
                         
             <span class="c1">#self.Storage = torch_tensor</span>
 
@@ -4386,7 +4386,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;_Randomize(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] _Randomize can only accept UniTensor&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="From_torch"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.From_torch">[docs]</a><span class="k">def</span> <span class="nf">From_torch</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">,</span><span class="n">N_rowrank</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">is_tag</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="From_torch"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.From_torch">[docs]</a><span class="k">def</span> <span class="nf">From_torch</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">,</span><span class="n">N_rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">is_tag</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct UniTensor from torch.Tensor.</span>
 
@@ -4452,14 +4452,21 @@
 
     <span class="n">shape</span> <span class="o">=</span> <span class="n">torch_tensor</span><span class="o">.</span><span class="n">shape</span>
 
-    <span class="k">if</span> <span class="n">N_rowrank</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;From_torch&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] N_rowrank exceed the rank of input torch tensor.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">N_rowrank</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>    
+        <span class="k">if</span> <span class="n">N_rowrank</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="ow">or</span> <span class="n">N_rowrank</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;From_torch&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] N_rowrank exceed the rank of input torch tensor.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;From_torch&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] N_rowrank must be set for a non rank-0 tensor&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;From_torch&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] # of labels should match the rank of torch.Tensor&quot;</span><span class="p">)</span>
 
+
     <span class="k">if</span> <span class="n">is_tag</span><span class="p">:</span>
+        
         <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">BD_BRA</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_rowrank</span><span class="p">)]</span><span class="o">+</span>\
                     <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">BD_KET</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_rowrank</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span><span class="mi">1</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>

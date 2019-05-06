@@ -33,10 +33,10 @@
     2. From 1., iTEBD.py cannot work is fixed. 
 
     v0.3.5
-    1. Fix create Rank-0 Tensor crash bug.
+    1. Fix create Rank-0 Tensor crash bug, also change to real rank-0 tensor
     2. Fix Reshape_() labels are not set bug, and remove redundancy code in the Reshape_()
     3. Add View() and View_, which is the same functionality as pytorch 
-  
+    4. Can now create rank-0 tensor from torch.tensor(). 
 
 ## Release version
     v0.3.5 alpha
