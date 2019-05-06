@@ -110,7 +110,9 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
             new_bonds = np.append(copy.deepcopy(a.bonds[:bg]),Bond(u.shape[-1]))
             new_labels= np.append(copy.copy(a.labels[:bg]),start_label)
             iiod = np.append(iod[:bg],1)
-            factors.append( UniTensor(bonds=new_bonds,labels=new_labels,torch_tensor=u.view(*list(old_shape[:bg]),-1),N_rowrank=1,check=False) )
+            tmpt = UniTensor(bonds=new_bonds,labels=new_labels,N_rowrank=1,check=False)
+            tmpt._UniTensor__mac(torch_tensor = u.view(*list(old_shape[:bg]),-1))
+            factors.append( tmpt )
             x = np.argsort(iiod)       
             factors[-1]._Permute(x,N_rowrank=len(np.where(iiod==0)[0]))
 
@@ -153,25 +155,26 @@ def Abs(a):
 
     
     if a.is_symm:
-        return UniTensor(bonds=a.bonds,\
+        tmp =  UniTensor(bonds=a.bonds,\
                          N_rowrank=a.N_rowrank,\
                          labels = a.labels,\
-                         braket = a.braket,\
-                         sym_mappers=(self._mapper,self._inv_mapper,\
+                         check=False)
+        tmp._UniTensor__mac(torch_tensor = [torch.abs(self.Storage[b]) for b in range(len(self.Storage))],\
+                           braket = a.braket,\
+                           sym_mappers=(self._mapper,self._inv_mapper,\
                                       self._bra_mapper_blks,self._bra_invmapper_blks,\
                                       self._ket_mapper_blks,self._ket_invmapper_blks,\
-                                      self._contiguous,self._accu_off_in,self._accu_off_out),\
-                         torch_tensor=[torch.abs(self.Storage[b]) for b in range(len(self.Storage))],\
-                         check=False)
+                                      self._contiguous,self._accu_off_in,self._accu_off_out))
                          
     else:
-        return UniTensor(bonds=a.bonds,\
+        tmp =  UniTensor(bonds=a.bonds,\
                          N_rowrank=a.N_rowrank,\
                          labels=a.labels,\
                          is_diag=a.is_diag,\
-                         braket=a.braket,\
-                         torch_tensor= torch.abs(a.Storage),check=False)
-
+                         check=False)
+        tmp._UniTensor__mac(braket = a.braket,\
+                            torch_tensor = torch.abs(a.Storage))
+    return tmp
 def Mean(a):
     ## v0.3 OK
     """
@@ -190,8 +193,9 @@ def Mean(a):
     if a.is_symm:
         raise Exception("Mean(UniTensor)","[ERROR] cannot get mean for a symmetry tensor. GetBlock first")
     
-    return UniTensor(bonds=[],labels=[],N_rowrank=0,torch_tensor=torch.mean(a.Storage),check=False)
-
+    tmp = UniTensor(bonds=[],labels=[],N_rowrank=0,check=False)
+    tmp._UniTensor__mac(torch_tensor = torch.mean(a.Storage))
+    return tmp
 def Otimes(a,b):
     """
     Perform matrix product for two rank-2 tensors.
@@ -222,11 +226,11 @@ def Otimes(a,b):
         if len(a.labels)==2 and len(b.labels)==2 and a.N_rowrank==1 and b.N_rowrank==1:
             if a.is_diag and b.is_diag:
 
-                return UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[0])],\
+                tmp =  UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[0])],\
                                  N_rowrank=1,\
-                                 torch_tensor=torch.ger(a.Storage,b.Storage),\
                                  is_diag=True,check=False)
-
+                tmp._UniTensor__mac(torch_tensor = torch.ger(a.Storage,b.Storage))
+                return tmp
 
             if a.is_diag:
                 tmpa = torch.diag(a.Storage)
@@ -239,10 +243,11 @@ def Otimes(a,b):
                 tmpb = b.Storage
 
             out = torch.tensordot(a.Storage,b.Storage,dims=0).permute(0,2,1,3).reshape(a.Storage.shape[0]*b.Storage.shape[0],-1)
-            return UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[1])],\
+            tmp =  UniTensor(bonds=[Bond(out.shape[0]),Bond(out.shape[1])],\
                              N_rowrank=1,\
-                             torch_tensor=out,\
                              check=False)
+            tmp._UniTensor__mac(torch_tensor=out)
+            return tmp
 
         else:
             raise TypeError("Otimes","[ERROR], Otimes only accept rank-2 UniTensors as arguments.")
@@ -283,12 +288,14 @@ def ExpH(a):
 
             if a.is_diag:   
                 u = torch.exp(a.Storage)
-                return UniTensor(bonds=a.bonds,\
+                
+                tmp =  UniTensor(bonds=a.bonds,\
                                  labels=a.labels,\
                                  N_rowrank=a.N_rowrank,\
-                                 torch_tensor=u,\
                                  is_diag=True,\
                                  check=False)
+                tmp._UniTensor__mac(torch_tensor = u)
+                return tmp
             else:
                 if a.N_rowrank != 1:
                     raise Exception("ExpH(a)","a should be rank-2 tensor with 1 inbond 1 outbond")
@@ -301,11 +308,12 @@ def ExpH(a):
                 u = torch.matmul(u*s,u.transpose(0,1))
                 del s
 
-                return UniTensor(bonds=a.bonds,\
+                tmp =  UniTensor(bonds=a.bonds,\
                                 labels=a.labels,\
                                 N_rowrank=a.N_rowrank,\
-                                torch_tensor=u,\
                                 check=False)
+                tmp._UniTensor__mac(torch_tensor = u)
+                return tmp
 
     else:
         raise Exception("ExpH(UniTensor)","[ERROR] ExpH can only accept UniTensor")
@@ -358,18 +366,19 @@ def Qr(a):
         else:
             tmp = np.min(tmp)
 
-        q = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
+        tq = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
                       N_rowrank=1,\
                       labels=[a.labels[0],tmp-1],\
-                      torch_tensor=q,\
                       check=False)
-        r = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
+        tq._UniTensor__mac(torch_tensor=q)
+
+        tr = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
                       N_rowrank=1,\
                       labels=[q.labels[1],a.labels[1]],\
-                      torch_tensor=r,\
                       check=False)
+        tr._UniTensor__mac(torch_tensor = r)
 
-        return q,r
+        return tq,tr
     else:
         raise Exception("Qr(UniTensor)","[ERROR] Qr can only accept UniTensor")
 
@@ -422,23 +431,26 @@ def Qdr(a):
         else:
             tmp = np.min(tmp)
 
-        q = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
+        tq = UniTensor(bonds =[Bond(q.shape[0]),Bond(q.shape[1])],\
                       N_rowrank=1,\
                       labels=[a.labels[0],tmp-1],\
-                      torch_tensor=q,\
                       check=False)
-        d = UniTensor(bonds =[Bond(d.shape[0]),Bond(d.shape[0])],\
+        tq._UniTensor__mac(torch_tensor = q)
+
+        td = UniTensor(bonds =[Bond(d.shape[0]),Bond(d.shape[0])],\
                       N_rowrank=1,\
                       labels=[tmp-1,tmp-2],\
-                      torch_tensor=d,\
                       is_diag=True,
                       check=False)
-        r = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
+        td._UniTensor__mac(torch_tensor = d)
+
+        tr = UniTensor(bonds =[Bond(r.shape[0]),Bond(r.shape[1])],\
                       N_rowrank=1,\
                       labels=[d.labels[1],a.labels[1]],\
-                      torch_tensor=r,\
                       check=False)
-        return q,d,r
+        tr._UniTensor__mac(torch_tensor = r)
+
+        return tq,td,tr
     else:
         raise Exception("Qdr(UniTensor)","[ERROR] Qdr can only accept UniTensor")
 
@@ -528,23 +540,26 @@ def Svd(a):
 
        
 
-        u = UniTensor(bonds =[Bond(u.shape[0]),Bond(u.shape[1])],\
+        tu = UniTensor(bonds =[Bond(u.shape[0]),Bond(u.shape[1])],\
                       N_rowrank=1,\
                       labels=[a.labels[0],tmp-1],\
-                      torch_tensor=u,\
                       check=False)
-        v = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
+        tu._UniTensor__mac(torch_tensor=u)
+
+        tv = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
                       N_rowrank=1,\
                       labels=[tmp-2,a.labels[1]],\
-                      torch_tensor=v.transpose(0,1),\
                       check=False)
-        s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
+        tv._UniTensor__mac(torch_tensor=v.transpose(0,1))
+
+        ts = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
                       labels =[u.labels[1],v.labels[0]],\
                       N_rowrank=1,\
-                      torch_tensor=s,\
                       check=False,\
                       is_diag=True)
-        return u,s,v
+        ts._UniTensor__mac(torch_tensor=s)
+
+        return tu,ts,tv
     else:
         raise Exception("Svd(UniTensor)","[ERROR] Svd can only accept UniTensor")
 
@@ -639,23 +654,26 @@ def Svd_truncate(a, keepdim=None):
             s = s[:keepdim]
             v = v[:, :keepdim]
 
-        u = UniTensor(bonds =[Bond(u.shape[0]),Bond(u.shape[1])],\
+        tu = UniTensor(bonds =[Bond(u.shape[0]),Bond(u.shape[1])],\
                       N_rowrank=1,\
                       labels=[a.labels[0],tmp-1],\
-                      torch_tensor=u,\
                       check=False)
-        v = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
+        tu._UniTensor__mac(torch_tensor=u)
+
+        tv = UniTensor(bonds =[Bond(v.shape[1]),Bond(v.shape[0])],\
                       N_rowrank=1,\
                       labels=[tmp-2,a.labels[1]],\
-                      torch_tensor=v.transpose(0,1),\
                       check=False)
-        s = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
+        tv._UniTensor__mac(torch_tensor=v.transpose(0,1))
+
+        ts = UniTensor(bonds  =[u.bonds[1],v.bonds[0]],\
                       labels =[u.labels[1],v.labels[0]],\
                       N_rowrank=1,\
-                      torch_tensor=s,\
                       check=False,\
                       is_diag=True)
-        return u,s,v
+        ts._UniTensor__mac(torch_tensor=s)
+
+        return tu,ts,tv
     else:
         raise Exception("Svd_truncate(UniTensor,int)","[ERROR] Svd_truncate can only accept UniTensor")
 
@@ -698,22 +716,21 @@ def Matmul(a,b):
 
         if a.is_diag == b.is_diag:
             tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
-                            torch_tensor=torch.matmul(a.Storage,b.Storage),\
                             N_rowrank=1,\
                             check=False,\
                             is_diag=a.is_diag)
+            tmp._UniTensor__mac(torch_tensor=torch.matmul(a.Storage,b.Storage))
         else:
             if a.is_diag:
                 tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
                                 N_rowrank=1,\
-                                torch_tensor=torch.matmul(torch.diag(a.Storage),b.Storage),\
                                 check=False)
+                tmp._UniTensor__mac(torch_tensor=torch.matmul(torch.diag(a.Storage),b.Storage))
             if b.is_diag:
                 tmp = UniTensor(bonds =[a.bonds[0],b.bonds[1]],\
                                 N_rowrank=1,\
-                                torch_tensor=torch.matmul(a.Storage,torch.diag(b.Storage)),\
                                 check=False)
-
+                tmp._UniTensor__mac(torch_tensor = torch.matmul(a.Storage,torch.diag(b.Storage)))
         return tmp
 
     else:
@@ -783,10 +800,11 @@ def Chain_matmul(*args):
 
         tmp_args = [f(args[i].Storage,args[i].is_diag) for i in range(len(args))]
 
-        return UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
+        tmp = UniTensor(bonds =[args[0].bonds[0],args[-1].bonds[1]],\
                          N_rowrank=1,\
-                         torch_tensor=torch.chain_matmul(*tmp_args),\
                          check=False)
+        tmp._UniTensor__mac(torch_tensor = torch.chain_matmul(*tmp_args))
+        return tmp
 
     else:
         raise TypeError("_Chain_matmul(*args)", "[ERROR] _Chain_matmul can only accept UniTensors for all elements in args")
@@ -827,15 +845,16 @@ def Inverse(a):
             a_inv = UniTensor(bonds = a.bonds,\
                           labels=a.labels,\
                           N_rowrank=1,\
-                          torch_tensor=a.Storage**-1,\
                           is_diag=True,\
                           check=False)
+            a_inv._UniTensor__mac(torch_tensor = a.Storage**-1)
+
         else:
             a_inv = UniTensor(bonds = a.bonds,\
                               labels=a.labels,\
                               N_rowrank=1,\
-                              torch_tensor=torch.inverse(a.Storage),\
                               check=False)
+            a_inv._UniTensor__mac(torch_tensor=torch.inverse(a.Storage))
         return a_inv
     else:
         raise Exception("Inverse(UniTensor)","[ERROR] Inverse can only accept UniTensor")
@@ -903,7 +922,9 @@ def Det(a):
         else:
             tmp = torch.det(a.Storage)
 
-        return UniTensor(bonds=[],labels=[],N_rowrank=0,torch_tensor=tmp,check=False)
+        out =  UniTensor(bonds=[],labels=[],N_rowrank=0,check=False)
+        out._UniTensor__mac(torch_tensor=tmp)
+        return out
 
     else:
         raise Exception("Det(UniTensor)","[ERROR] Det can only accept UniTensor")
@@ -939,7 +960,8 @@ def Norm(a):
         #if len(tmp.shape) != 0:
         #    return UniTensor(bonds=[Tor10.Bond(tmp.shape[i]) for i in range(len(tmp.shape))],N_rowrank=1,torch_tensor=tmp,check=False)
         #else:
-        return UniTensor(bonds=[],labels=[],N_rowrank=0,torch_tensor=torch.norm(a.Storage),check=False)
-
+        tmp = UniTensor(bonds=[],labels=[],N_rowrank=0,check=False)
+        tmp._UniTensor__mac(torch_tensor = torch.norm(a.Storage))
+        return tmp
     else:
         raise Exception("Norm(UniTensor)","[ERROR] Norm can only accept UniTensor")

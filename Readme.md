@@ -18,10 +18,15 @@
     v0.3.1    
     1. Fix cannot create rank-0 UniTensor bug.
     v0.3.2
-    1. Fix Permute will print tensor elements bug.
+    1. Fix Permute() will print the tensor elements bug.
+    v0.3.3
+    1. Remove the private args in UniTensor.__init__, in place, they are move to private member function __mac() 
+    2. Fix UniTensor.__pow__ does not return anything bug. 
+    3. Remove unrelated arguments in documentation
+    4. Change the order of functions appears in documentation Tor10.UniTensor
 
 ## Release version
-    v0.3.2 alpha
+    v0.3.3 alpha
 
 ## Known issue
     1. HOSVD is not functional
