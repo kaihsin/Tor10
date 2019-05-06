@@ -39,7 +39,7 @@
   
 
 ## Release version
-    v0.3.4 alpha
+    v0.3.5 alpha
 
 ## Known issue
     1. HOSVD is not functional
