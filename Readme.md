@@ -15,10 +15,13 @@
     11. Add UniTensor.dtype() [@property]
     12. Add UniTensor.device() [@property]
     13. nn , some linalg can only accept non-symm, untagged tensor. 
+
     v0.3.1    
     1. Fix cannot create rank-0 UniTensor bug.
+
     v0.3.2
     1. Fix Permute() will print the tensor elements bug.
+
     v0.3.3
     1. Remove the private args in UniTensor.__init__, in place, they are move to private member function __mac() 
     2. Fix UniTensor.__pow__ does not return anything bug. 
