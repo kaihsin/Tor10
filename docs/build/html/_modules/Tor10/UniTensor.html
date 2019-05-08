@@ -196,7 +196,7 @@
 <span class="sd">                This is the internal arguments. It should not be directly use. If False, all the checking across bonds/labels/Storage.shape will be ignore.</span>
 
 <span class="sd">            braket :</span>
-<span class="sd">                This is the internal arguments. It should not be directly use. If set, the braket +1 or -1 indicate the bond are BD_BRA or BD_KET. it is handy for calculate reverse quantum flow / blocks when bra-bond is permute to col-space (unmatched braket)</span>
+<span class="sd">                This is the internal arguments. It should not be directly use. If set, the braket -1 or +1 indicate the bond are BD_KET or BD_BRA. it is handy for calculate reverse quantum flow / blocks when bra-bond is permute to col-space (unmatched braket)</span>
 
 <span class="sd">            sym_mappers:</span>
 <span class="sd">                This is the internal arguments. It should not be directly use. It is a tuple, use to pass the shallow permute informations / block mapping information.</span>
@@ -210,10 +210,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span>  <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>  
             <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sym_mappers</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
@@ -331,7 +331,7 @@
 <span class="sd">            tensor(0., dtype=torch.float64) </span>
 
 <span class="sd">            * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)</span>
-<span class="sd">            &gt;&gt;&gt; bds  = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_KET)]</span>
+<span class="sd">            &gt;&gt;&gt; bds  = [Tor10.Bond(2,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_BRA)]</span>
 <span class="sd">            &gt;&gt;&gt; o = Tor10.UniTensor(bonds=bds,N_rowrank=2)</span>
 <span class="sd">            &gt;&gt;&gt; o.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
@@ -341,17 +341,18 @@
 <span class="sd">            on device     : cpu</span>
 <span class="sd">            is_diag       : False</span>
 <span class="sd">            braket_form : True</span>
-<span class="sd">                   &lt;bra|             |ket&gt; </span>
-<span class="sd">                       ---------------     </span>
+<span class="sd">                  |ket&gt;               &lt;bra| </span>
+<span class="sd">                       ---------------      </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                 0 &lt; __| 2         4 |__ &gt; 2  </span>
+<span class="sd">                 0 &gt; __| 2         4 |__ &lt; 2  </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                 1 &lt; __| 3         5 |__ &gt; 3  </span>
+<span class="sd">                 1 &gt; __| 3         5 |__ &lt; 3  </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                       ---------------   </span>
+<span class="sd">                       ---------------  </span>
 
-<span class="sd">            * note that if the BRA bond is not in the row-space, or KET bond is not in the col-space, the tensor is in the so called &quot;non-braket_form, which will have a * symbol indicating the mismatch.&quot;</span>
-<span class="sd">            &gt;&gt;&gt; bd2 = [Tor10.Bond(2,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_BRA)]</span>
+
+<span class="sd">            * note that if the BRA bond is not in the col-space, or KET bond is not in the row-space, the tensor is in the so called &quot;non-braket_form, which will have a * symbol indicating the mismatch.&quot;</span>
+<span class="sd">            &gt;&gt;&gt; bd2 = [Tor10.Bond(2,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)]</span>
 <span class="sd">            &gt;&gt;&gt; c_mismatch = Tor10.UniTensor(bonds=bd2,N_rowrank=2)</span>
 <span class="sd">            &gt;&gt;&gt; c_mismatch.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
@@ -361,14 +362,15 @@
 <span class="sd">            on device     : cpu</span>
 <span class="sd">            is_diag       : False</span>
 <span class="sd">            braket_form : False</span>
-<span class="sd">                   &lt;bra|             |ket&gt; </span>
-<span class="sd">                       ---------------     </span>
+<span class="sd">                  |ket&gt;               &lt;bra| </span>
+<span class="sd">                       ---------------      </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                 0 &lt; __| 2         4 |__ &gt; 2  </span>
+<span class="sd">                 0 &gt; __| 2         4 |__ &lt; 2  </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                 1 &gt;*__| 5         3 |__*&lt; 3  </span>
+<span class="sd">                 1 &lt;*__| 5         3 |__*&gt; 3  </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                       ---------------</span>
+<span class="sd">                       ---------------  </span>
+
 
 <span class="sd">            * create a rank-2 UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:</span>
 <span class="sd">            &gt;&gt;&gt; d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=1,device=torch.device(&quot;cuda:0&quot;))</span>
@@ -383,10 +385,10 @@
 <span class="sd">            &gt;&gt;&gt; f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],N_rowrank=2,labels=[-3,4,1],dtype=torch.float32)</span>
 
 <span class="sd">            * create a rank-3 UniTensor with U1 symmetry:</span>
-<span class="sd">            &gt;&gt;&gt; bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])</span>
-<span class="sd">            &gt;&gt;&gt; bd_sym_2 = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">            &gt;&gt;&gt; bd_sym_3 = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[-1],[5],[1]])</span>
-<span class="sd">            &gt;&gt;&gt; symT = Tor10.UniTensor(bonds=[bd_sym1,bd_sym2,bd_sym3],N_rowrank=2,labels=[10,11,12])</span>
+<span class="sd">            &gt;&gt;&gt; bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])</span>
+<span class="sd">            &gt;&gt;&gt; bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">            &gt;&gt;&gt; bd_sym_3 = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])</span>
+<span class="sd">            &gt;&gt;&gt; symT = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[10,11,12])</span>
 <span class="sd">            &gt;&gt;&gt; symT.Print_diagram(bond_info=True)</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -394,22 +396,22 @@
 <span class="sd">            has_symmetry: True</span>
 <span class="sd">            on device     : cpu</span>
 <span class="sd">            braket_form : True</span>
-<span class="sd">                   &lt;bra|             |ket&gt; </span>
-<span class="sd">                       ---------------     </span>
+<span class="sd">                  |ket&gt;               &lt;bra| </span>
+<span class="sd">                       ---------------      </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                10 &lt; __| 3         5 |__ &gt; 12 </span>
+<span class="sd">                10 &gt; __| 3         5 |__ &lt; 12 </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                11 &lt; __| 4           |        </span>
+<span class="sd">                11 &gt; __| 4           |        </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                       ---------------     </span>
+<span class="sd">                       ---------------    </span>
 <span class="sd">            lbl:10 Dim = 3 |</span>
-<span class="sd">            BRA     : U1::  +2 +1 +0</span>
+<span class="sd">            KET     : U1::  +2 +1 +0</span>
 <span class="sd">            _</span>
 <span class="sd">            lbl:11 Dim = 4 |</span>
-<span class="sd">            BRA     : U1::  +2 +2 +0 -1</span>
+<span class="sd">            KET     : U1::  +2 +2 +0 -1</span>
 <span class="sd">            _        </span>
 <span class="sd">            lbl:12 Dim = 5 |</span>
-<span class="sd">            KET     : U1::  +5 +4 +2 +1 -1</span>
+<span class="sd">            BRA     : U1::  +5 +4 +2 +1 -1</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -474,7 +476,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]))</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">]))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[ERROR] for UniTensor init with all the bond are regular, N_rowrank should be provided&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -525,16 +527,16 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] tensor with symmetry must have at least one rank for row space and one rank for column space&quot;</span><span class="p">)</span>
                 
-                <span class="n">nket</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+                <span class="n">nket</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
                 <span class="k">if</span> <span class="n">nket</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">nket</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] tensor with symmetry must have at least one bra-bond and one ket-bond&quot;</span><span class="p">)</span>
 
 
             <span class="c1">## only activate when symmetry is on.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1">## this follow memory</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1">## this follow memory</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1">## this follow memory</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1">## this follow memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1">## this follow memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1">## this follow memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1">## this follow memory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1">## this follow memory</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span> <span class="o">=</span> <span class="kc">None</span>       <span class="c1">## memory idx to real idx</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1">## real idx to memory index</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span> <span class="o">=</span> <span class="kc">True</span>   
@@ -570,10 +572,10 @@
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.__init__&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] no vaild block in current Tensor. please check total qnums in total bra/ket bonds have at least one same set of qnums.&quot;</span><span class="p">)</span>    
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span> <span class="o">=</span> <span class="p">[]</span> 
-                <span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">b_tqin</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">b_tqout</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span> <span class="o">=</span> <span class="p">[]</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">b_tqin</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">b_tqout</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span> <span class="o">=</span> <span class="p">[]</span> 
 
                 <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)):</span>
@@ -583,14 +585,14 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_in</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_out</span><span class="p">)),</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">))</span>
 
                     <span class="c1">## interface</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_in</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">))</span> 
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">[</span><span class="n">idx_in</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">[</span><span class="n">idx_in</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_in</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_in</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">))</span> 
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">[</span><span class="n">idx_in</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">[</span><span class="n">idx_in</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_in</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
 
                     <span class="c1">## interface</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_out</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">[</span><span class="n">idx_out</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">[</span><span class="n">idx_out</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_out</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_out</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">[</span><span class="n">idx_out</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">[</span><span class="n">idx_out</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_out</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span> <span class="o">=</span> <span class="n">C</span>
 
         <span class="k">if</span> <span class="n">check</span><span class="p">:</span>
@@ -604,11 +606,11 @@
             <span class="k">if</span> <span class="n">tags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">b_in</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b_in</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_BRA</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">])</span>
-                <span class="k">for</span> <span class="n">b_out</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b_out</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b_in</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">b_out</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b_out</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_BRA</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1">#check:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">):</span>
@@ -641,7 +643,7 @@
 <span class="sd">            This is internal function!!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">:]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">:]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">is_braket</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">is_braket</span> <span class="o">=</span> <span class="kc">False</span>
@@ -674,7 +676,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[ERROR] for a tensor with regular bonds, there is no property of barket.&quot;</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">)</span>
-        <span class="n">Nin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]))</span>
+        <span class="n">Nin</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">N_rowrank</span><span class="o">=</span><span class="n">Nin</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span> </div>
             
@@ -1040,25 +1042,25 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;braket_form : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="s2">&quot;True&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_braket</span> <span class="k">else</span> <span class="s2">&quot;False&quot;</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;       &lt;bra|             |ket&gt; &quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;           ---------------     &quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      |ket&gt;               &lt;bra| &quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;           ---------------      &quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vl</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;           |             |     &quot;</span><span class="p">)</span>
                 <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">Nin</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]:</span>
-                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot;&lt; &quot;</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">]:</span>
+                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot;&gt; &quot;</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot;&gt;*&quot;</span>
+                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot;&lt;*&quot;</span>
                     <span class="n">l</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%3d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">__&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">bks</span><span class="p">)</span>
                     <span class="n">llbl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%-3d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">l</span> <span class="o">=</span> <span class="s2">&quot;        &quot;</span>
                     <span class="n">llbl</span> <span class="o">=</span> <span class="s2">&quot;   &quot;</span>
                 <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">Nout</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="n">Nin</span><span class="o">+</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]:</span>
-                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot;*&lt;&quot;</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="n">Nin</span><span class="o">+</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">]:</span>
+                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot;*&gt;&quot;</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot; &gt;&quot;</span>
+                        <span class="n">bks</span> <span class="o">=</span> <span class="s2">&quot; &lt;&quot;</span>
                     <span class="n">r</span> <span class="o">=</span> <span class="s2">&quot;__</span><span class="si">%s</span><span class="s2"> </span><span class="si">%-3d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">bks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">Nin</span><span class="o">+</span><span class="n">i</span><span class="p">])</span>
                     <span class="n">rlbl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%3d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">Nin</span><span class="o">+</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1314,8 +1316,8 @@
                     <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">torch_tensor</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">+</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                          <span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                          <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1375,8 +1377,8 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">torch_tensor</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">+</span><span class="n">other</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                      <span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                      <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1401,8 +1403,8 @@
             <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                  <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="n">other</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                  <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1438,8 +1440,8 @@
                     <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                          <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">-</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                          <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1494,8 +1496,8 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                      <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">-</span><span class="n">other</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                      <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1523,8 +1525,8 @@
             <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                 <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="n">other</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                 <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1552,10 +1554,10 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_symm</span><span class="p">:</span>
             <span class="c1">## symmetry Tensor:</span>
             <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_BRA</span><span class="p">:</span>
-                    <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
-                <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_KET</span><span class="p">:</span>
                     <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_BRA</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
             <span class="n">out</span><span class="o">.</span><span class="n">braket</span><span class="o">*=-</span><span class="mi">1</span>
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">),</span><span class="o">-</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">)</span>
             <span class="n">out</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">N_rowrank</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">-</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">)</span>
@@ -1569,10 +1571,10 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1">## tagged nonsymm Tensor:                </span>
                 <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">)):</span>
-                    <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_BRA</span><span class="p">:</span>
-                        <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
-                    <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span><span class="o">==</span><span class="n">BD_KET</span><span class="p">:</span>
                         <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_BRA</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
                 <span class="n">out</span><span class="o">.</span><span class="n">braket</span><span class="o">*=-</span><span class="mi">1</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">),</span><span class="o">-</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">)</span>
                 <span class="n">out</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">N_rowrank</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">bonds</span><span class="p">)</span><span class="o">-</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">)</span>
@@ -1596,8 +1598,8 @@
                     <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                         <span class="n">torch_tensor</span> <span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                         <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1648,8 +1650,8 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">*</span><span class="n">other</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                     <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1675,8 +1677,8 @@
             <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                 <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="n">other</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                 <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1702,8 +1704,8 @@
             <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                 <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">**</span><span class="n">other</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                 <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                          <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">tmp</span>
         <span class="k">else</span><span class="p">:</span> 
@@ -1734,8 +1736,8 @@
                     <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                         <span class="n">torch_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">/</span><span class="n">other</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                         <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -1792,8 +1794,8 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                     <span class="n">torch_tensor</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">/</span><span class="n">other</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                     <span class="n">sym_mappers</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span>\
                                              <span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span>\
@@ -2260,13 +2262,13 @@
                     <span class="n">oldshape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">oldshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
                         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">oldshape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>    
-                            <span class="n">oldidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">j</span><span class="p">]))</span>
+                            <span class="n">oldidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">j</span><span class="p">]))</span>
                             <span class="n">newidx</span> <span class="o">=</span> <span class="n">oldidx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">]</span>
                             <span class="c1">#</span>
                             <span class="n">new_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="o">*</span><span class="n">newidx</span><span class="p">[:</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">]))</span>
                             <span class="n">new_col</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="o">*</span><span class="n">newidx</span><span class="p">[</span><span class="n">out</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">:]))</span>
-                            <span class="n">b_id_in</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">[</span><span class="n">new_row</span><span class="p">]</span>
-                            <span class="n">b_id_out</span>  <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">[</span><span class="n">new_col</span><span class="p">]</span>
+                            <span class="n">b_id_in</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">[</span><span class="n">new_row</span><span class="p">]</span>
+                            <span class="n">b_id_out</span>  <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">[</span><span class="n">new_col</span><span class="p">]</span>
 
                             <span class="c1">## [DEBUG] &gt;&gt;&gt;&gt;</span>
                             <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
@@ -2903,14 +2905,14 @@
 <span class="sd">                ## U1 = {-2,-1,0,1,2}</span>
 <span class="sd">                ## U1 = {-1,1}</span>
 <span class="sd">                ## U1 = {0,1,2,3}</span>
-<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0, 2, 1, 0],</span>
 <span class="sd">                                                            [1, 1,-1, 1],</span>
 <span class="sd">                                                            [2,-1, 1, 0]])</span>
-<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1, 0,-1, 3],</span>
 <span class="sd">                                                            [ 0, 0,-1, 2],</span>
 <span class="sd">                                                            [ 1, 0, 1, 0],</span>
 <span class="sd">                                                            [ 2,-2,-1, 1]])</span>
-<span class="sd">                bd_sym_3 = Tor10.Bond(2,Tor10.BD_KET,qnums=[[-4, 3, 0,-1],</span>
+<span class="sd">                bd_sym_3 = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[-4, 3, 0,-1],</span>
 <span class="sd">                                                            [ 1, 1, -2,3]])</span>
 
 <span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[1,2,3],dtype=torch.float64)</span>
@@ -2921,26 +2923,27 @@
 <span class="sd">            has_symmetry: True</span>
 <span class="sd">            on device     : cpu</span>
 <span class="sd">            braket_form : True</span>
-<span class="sd">                   &lt;bra|             |ket&gt; </span>
-<span class="sd">                       ---------------     </span>
+<span class="sd">                  |ket&gt;               &lt;bra| </span>
+<span class="sd">                       ---------------      </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                 1 &lt; __| 3         2 |__ &gt; 3  </span>
+<span class="sd">                 1 &gt; __| 3         2 |__ &lt; 3  </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                 2 &lt; __| 4           |        </span>
+<span class="sd">                 2 &gt; __| 4           |        </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                       ---------------</span>
+<span class="sd">                       --------------- </span>
+
 <span class="sd"> </span>
 <span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
+<span class="sd">            KET     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
 <span class="sd">                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2</span>
 <span class="sd">                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0</span>
 <span class="sd">                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3</span>
 
 <span class="sd">            &gt;&gt;&gt; print(tqout)</span>
 <span class="sd">            Dim = 2 |</span>
-<span class="sd">            KET     : U1::  +1 -4</span>
+<span class="sd">            BRA     : U1::  +1 -4</span>
 <span class="sd">                      U1::  +1 +3</span>
 <span class="sd">                      U1::  -2 +0</span>
 <span class="sd">                      U1::  +3 -1</span>
@@ -2954,26 +2957,26 @@
 <span class="sd">            has_symmetry: True</span>
 <span class="sd">            on device     : cpu</span>
 <span class="sd">            braket_form : False</span>
-<span class="sd">                   &lt;bra|             |ket&gt; </span>
-<span class="sd">                       ---------------     </span>
+<span class="sd">                  |ket&gt;               &lt;bra| </span>
+<span class="sd">                       ---------------      </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                 1 &lt; __| 3         4 |__*&lt; 2  </span>
+<span class="sd">                 1 &gt; __| 3         4 |__*&gt; 2  </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                       |           2 |__ &gt; 3  </span>
-<span class="sd">                       |             |     </span>
-<span class="sd">                       ---------------            </span>
+<span class="sd">                       |           2 |__ &lt; 3  </span>
+<span class="sd">                       |             |   </span>
+<span class="sd">                       --------------- </span>
 
 <span class="sd">            &gt;&gt;&gt; tqin2,tqout2 =  sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin2)</span>
 <span class="sd">            Dim = 2 |</span>
-<span class="sd">            BRA     : U1::  -1 +1</span>
+<span class="sd">            KET     : U1::  -1 +1</span>
 <span class="sd">                      U1::  -2 +1</span>
 <span class="sd">                      U1::  -1 -2</span>
 <span class="sd">                      U1::  +2 +3</span>
 
 <span class="sd">            &gt;&gt;&gt; print(tqout2)</span>
 <span class="sd">            Dim = 8 |</span>
-<span class="sd">            KET     : U1::  -1 -6 +0 -5 +1 -4 +2 -3</span>
+<span class="sd">            BRA     : U1::  -1 -6 +0 -5 +1 -4 +2 -3</span>
 <span class="sd">                      U1::  +3 +5 +1 +3 +1 +3 +1 +3</span>
 <span class="sd">                      U1::  -1 +1 -3 -1 -1 +1 -1 +1</span>
 <span class="sd">                      U1::  +2 -2 +3 -1 +1 -3 +0 -4</span>
@@ -2981,14 +2984,14 @@
 <span class="sd">            &gt;&gt;&gt; tqin2_phy, tqout2_phy = sym_T.GetTotalQnums(physical=True)</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin2_phy)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
+<span class="sd">            KET     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
 <span class="sd">                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2</span>
 <span class="sd">                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0</span>
 <span class="sd">                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3</span>
 
 <span class="sd">            &gt;&gt;&gt; print(tqout2_phy)</span>
 <span class="sd">            Dim = 2 |</span>
-<span class="sd">            KET     : U1::  +1 -4</span>
+<span class="sd">            BRA     : U1::  +1 -4</span>
 <span class="sd">                      U1::  +1 +3</span>
 <span class="sd">                      U1::  -2 +0</span>
 <span class="sd">                      U1::  +3 -1</span>
@@ -3013,29 +3016,29 @@
         <span class="c1">#    raise Exception(&quot;UniTensor.GetTotalQnums&quot;,&quot;[ERROR] The TN symmetry structure is incorrect, without either any in-bond or any-outbond&quot;)</span>
         <span class="k">if</span> <span class="n">physical</span><span class="p">:</span>
             <span class="c1">#virtual_cb-in</span>
-            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span>
+            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span>
             <span class="n">in_all</span> <span class="o">=</span> <span class="n">cb_inbonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">in_all</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
-            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span>
+            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="o">==</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span>
             <span class="n">out_all</span> <span class="o">=</span> <span class="n">cb_outbonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">out_all</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1">#virtual_cb-in</span>
-            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">])</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">]</span><span class="o">*</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]</span>
+            <span class="n">cb_inbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">])</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">]</span><span class="o">*</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">]</span>
             <span class="n">in_all</span> <span class="o">=</span> <span class="n">cb_inbonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">in_all</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">cb_inbonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">:])</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">:]</span><span class="o">*</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_KET</span><span class="p">]</span>
+            <span class="n">cb_outbonds</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">:])</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">N_rowrank</span><span class="p">:]</span><span class="o">*</span><span class="n">BondType</span><span class="p">[</span><span class="n">BD_BRA</span><span class="p">]</span>
             <span class="n">out_all</span> <span class="o">=</span> <span class="n">cb_outbonds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">out_all</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">cb_outbonds</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
                 
 
-        <span class="n">in_all</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_BRA</span>
-        <span class="n">out_all</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
+        <span class="n">in_all</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_KET</span>
+        <span class="n">out_all</span><span class="o">.</span><span class="n">bondType</span> <span class="o">=</span> <span class="n">BD_BRA</span>
 
         <span class="k">return</span> <span class="n">in_all</span><span class="p">,</span><span class="n">out_all</span></div>
 
@@ -3152,7 +3155,7 @@
                 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">qnum</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                         <span class="c1">## get Nrowrank for the memory</span>
-                        <span class="n">old_N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">old_N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
                         <span class="n">accu_off</span> <span class="o">=</span> <span class="p">[]</span>
                         <span class="n">tmp</span> <span class="o">=</span> <span class="mi">1</span>
@@ -3171,28 +3174,28 @@
                         <span class="n">idx_out</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">b_tqout</span><span class="o">.</span><span class="n">qnums</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
                         <span class="c1">## interface</span>
-                        <span class="n">new_bra_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_in</span><span class="p">,</span><span class="n">new_accu_off_in</span><span class="p">)</span>
-                        <span class="c1">#self._bra_mapper_blks[idx_in,0] = b</span>
-                        <span class="c1">#self._bra_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)</span>
+                        <span class="n">new_Ket_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_in</span><span class="p">,</span><span class="n">new_accu_off_in</span><span class="p">)</span>
+                        <span class="c1">#self._Ket_mapper_blks[idx_in,0] = b</span>
+                        <span class="c1">#self._Ket_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)</span>
 
                         <span class="c1">## interface</span>
-                        <span class="n">new_ket_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_out</span><span class="p">,</span><span class="n">new_accu_off_out</span><span class="p">)</span>
-                        <span class="c1">#self._ket_mapper_blks[idx_out,0] = b</span>
-                        <span class="c1">#self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)</span>
+                        <span class="n">new_Bra_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_out</span><span class="p">,</span><span class="n">new_accu_off_out</span><span class="p">)</span>
+                        <span class="c1">#self._Bra_mapper_blks[idx_out,0] = b</span>
+                        <span class="c1">#self._Bra_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)</span>
 
 
                         <span class="c1">## Get element only for this block from the right memory place:</span>
-                        <span class="c1">#old_rowrank = self._bra_invmapper_blks[0].</span>
+                        <span class="c1">#old_rowrank = self._Ket_invmapper_blks[0].</span>
                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_in</span><span class="p">)):</span>
                             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_out</span><span class="p">)):</span>
-                                <span class="n">newidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">new_bra_invmapper_blks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">new_ket_invmapper_blks</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+                                <span class="n">newidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">new_Ket_invmapper_blks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">new_Bra_invmapper_blks</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
                                 <span class="n">oldidx</span> <span class="o">=</span> <span class="n">newidx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">]</span>
 
                                 <span class="n">old_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="o">*</span><span class="n">oldidx</span><span class="p">[:</span><span class="n">old_N_rowrank</span><span class="p">]))</span>
                                 <span class="n">old_col</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="o">*</span><span class="n">oldidx</span><span class="p">[</span><span class="n">old_N_rowrank</span><span class="p">:]))</span>
 
-                                <span class="n">b_id_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">[</span><span class="n">old_row</span><span class="p">]</span>
-                                <span class="n">b_id_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">[</span><span class="n">old_col</span><span class="p">]</span>
+                                <span class="n">b_id_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">[</span><span class="n">old_row</span><span class="p">]</span>
+                                <span class="n">b_id_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">[</span><span class="n">old_col</span><span class="p">]</span>
 
                                 <span class="k">if</span> <span class="n">b_id_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">b_id_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[ERROR] internal FATAL&quot;</span><span class="p">)</span>
@@ -3227,9 +3230,9 @@
 <span class="sd">        Example:</span>
 <span class="sd">            * Single Symmetry::</span>
 
-<span class="sd">                bd_sym_1 = Tor10.Bond(3,qnums=[[0],[1],[2]])</span>
-<span class="sd">                bd_sym_2 = Tor10.Bond(4,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">                bd_sym_3 = Tor10.Bond(5,qnums=[[4],[2],[2],[5],[1]])</span>
+<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])</span>
+<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">                bd_sym_3 = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[2],[5],[1]])</span>
 <span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[10,11,12],dtype=torch.float64)</span>
 
 <span class="sd">            &gt;&gt;&gt; sym_T.Print_diagram()</span>
@@ -3239,23 +3242,23 @@
 <span class="sd">            has_symmetry: True</span>
 <span class="sd">            on device     : cpu</span>
 <span class="sd">            braket_form : True</span>
-<span class="sd">                   &lt;bra|             |ket&gt; </span>
-<span class="sd">                       ---------------     </span>
+<span class="sd">                  |ket&gt;               &lt;bra| </span>
+<span class="sd">                       ---------------      </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                10 &lt; __| 3         5 |__ &gt; 12 </span>
+<span class="sd">                10 &gt; __| 3         5 |__ &lt; 12 </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                11 &lt; __| 4           |        </span>
+<span class="sd">                11 &gt; __| 4           |        </span>
 <span class="sd">                       |             |     </span>
-<span class="sd">                       --------------- </span>
+<span class="sd">                       ---------------  </span>
 
 <span class="sd">            &gt;&gt;&gt; q_in, q_out = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(q_in)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            BRA     : U1::  +4 +4 +2 +1 +3 +3 +1 +0 +2 +2 +0 -1</span>
+<span class="sd">            KET     : U1::  +4 +4 +2 +1 +3 +3 +1 +0 +2 +2 +0 -1</span>
 
 <span class="sd">            &gt;&gt;&gt; print(q_out)</span>
 <span class="sd">            Dim = 5 |</span>
-<span class="sd">            KET     : U1::  +5 +4 +2 +2 +1</span>
+<span class="sd">            BRA     : U1::  +5 +4 +2 +2 +1</span>
 
 <span class="sd">            &gt;&gt;&gt; bk2 = sym_T.GetBlock(2)</span>
 <span class="sd">            &gt;&gt;&gt; bk2.Print_diagram()</span>
@@ -3282,29 +3285,29 @@
 
 <span class="sd">                ## multiple Qnum:</span>
 <span class="sd">                ## U1 x U1 x U1 x U1</span>
-<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BRA,qnums=[[0, 2, 1, 0],</span>
-<span class="sd">                                                         [1, 1,-1, 1],</span>
-<span class="sd">                                                         [2,-1, 1, 0]])</span>
-<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BRA,qnums=[[-1, 0,-1, 3],</span>
-<span class="sd">                                                         [ 0, 0,-1, 2],</span>
-<span class="sd">                                                         [ 1, 0, 1, 0],</span>
-<span class="sd">                                                         [ 2,-2,-1, 1]])</span>
-<span class="sd">                bd_sym_3 = Tor10.Bond(2,Tor10.KET,qnums=[[-1,-2,-1,2],</span>
-<span class="sd">                                                         [ 1, 1, -2,3]])</span>
+<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                                                            [1, 1,-1, 1],</span>
+<span class="sd">                                                            [2,-1, 1, 0]])</span>
+<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                                                            [ 0, 0,-1, 2],</span>
+<span class="sd">                                                            [ 1, 0, 1, 0],</span>
+<span class="sd">                                                            [ 2,-2,-1, 1]])</span>
+<span class="sd">                bd_sym_3 = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[-1,-2,-1,2],</span>
+<span class="sd">                                                            [ 1, 1, -2,3]])</span>
 
 <span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],N_rowrank=2,labels=[1,2,3],dtype=torch.float64)</span>
 
 <span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin)</span>
 <span class="sd">            Dim = 12 |</span>
-<span class="sd">            BRA     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
+<span class="sd">            KET     : U1::  +4 +3 +2 +1 +3 +2 +1 +0 +2 +1 +0 -1</span>
 <span class="sd">                      U1::  -3 -1 -1 -1 -1 +1 +1 +1 +0 +2 +2 +2</span>
 <span class="sd">                      U1::  +0 +2 +0 +0 -2 +0 -2 -2 +0 +2 +0 +0</span>
 <span class="sd">                      U1::  +1 +0 +2 +3 +2 +1 +3 +4 +1 +0 +2 +3</span>
 
 <span class="sd">            &gt;&gt;&gt; print(tqout)</span>
 <span class="sd">            Dim = 2 |</span>
-<span class="sd">            KET     : U1::  +1 -1</span>
+<span class="sd">            BRA     : U1::  +1 -1</span>
 <span class="sd">                      U1::  +1 -2</span>
 <span class="sd">                      U1::  -2 -1</span>
 <span class="sd">                      U1::  +3 +2</span>
@@ -3374,7 +3377,7 @@
                 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">qnum</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_qnums</span><span class="p">[</span><span class="n">s</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                         <span class="c1">## get Nrowrank for the memory</span>
-                        <span class="n">old_N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">old_N_rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
                         <span class="n">accu_off</span> <span class="o">=</span> <span class="p">[]</span>
                         <span class="n">tmp</span> <span class="o">=</span> <span class="mi">1</span>
@@ -3396,28 +3399,28 @@
                         <span class="n">Block</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_in</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_out</span><span class="p">)),</span><span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
                         <span class="c1">## interface</span>
-                        <span class="n">new_bra_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_in</span><span class="p">,</span><span class="n">new_accu_off_in</span><span class="p">)</span>
-                        <span class="c1">#self._bra_mapper_blks[idx_in,0] = b</span>
-                        <span class="c1">#self._bra_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)</span>
+                        <span class="n">new_Ket_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_in</span><span class="p">,</span><span class="n">new_accu_off_in</span><span class="p">)</span>
+                        <span class="c1">#self._Ket_mapper_blks[idx_in,0] = b</span>
+                        <span class="c1">#self._Ket_mapper_blks[idx_in,1] = np.arange(len(idx_in)).astype(np.int)</span>
 
                         <span class="c1">## interface</span>
-                        <span class="n">new_ket_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_out</span><span class="p">,</span><span class="n">new_accu_off_out</span><span class="p">)</span>
-                        <span class="c1">#self._ket_mapper_blks[idx_out,0] = b</span>
-                        <span class="c1">#self._ket_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)</span>
+                        <span class="n">new_Bra_invmapper_blks</span> <span class="o">=</span> <span class="n">_fx_decompress_idx</span><span class="p">(</span><span class="n">idx_out</span><span class="p">,</span><span class="n">new_accu_off_out</span><span class="p">)</span>
+                        <span class="c1">#self._Bra_mapper_blks[idx_out,0] = b</span>
+                        <span class="c1">#self._Bra_mapper_blks[idx_out,1] = np.arange(len(idx_out)).astype(np.int)</span>
 
 
                         <span class="c1">## Get element only for this block from the right memory place:</span>
-                        <span class="c1">#old_rowrank = self._bra_invmapper_blks[0].</span>
+                        <span class="c1">#old_rowrank = self._Ket_invmapper_blks[0].</span>
                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_in</span><span class="p">)):</span>
                             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_out</span><span class="p">)):</span>
-                                <span class="n">newidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">new_bra_invmapper_blks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">new_ket_invmapper_blks</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+                                <span class="n">newidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">new_Ket_invmapper_blks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">new_Bra_invmapper_blks</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
                                 <span class="n">oldidx</span> <span class="o">=</span> <span class="n">newidx</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">]</span>
 
                                 <span class="n">old_row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="o">*</span><span class="n">oldidx</span><span class="p">[:</span><span class="n">old_N_rowrank</span><span class="p">]))</span>
                                 <span class="n">old_col</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="o">*</span><span class="n">oldidx</span><span class="p">[</span><span class="n">old_N_rowrank</span><span class="p">:]))</span>
 
-                                <span class="n">b_id_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">[</span><span class="n">old_row</span><span class="p">]</span>
-                                <span class="n">b_id_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">[</span><span class="n">old_col</span><span class="p">]</span>
+                                <span class="n">b_id_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">[</span><span class="n">old_row</span><span class="p">]</span>
+                                <span class="n">b_id_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">[</span><span class="n">old_col</span><span class="p">]</span>
 
                                 <span class="c1">## [DEBUG] &gt;&gt;&gt;</span>
                                 <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
@@ -3563,8 +3566,8 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">torch_tensor</span><span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">grad</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">))],</span>\
                                     <span class="n">braket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                                     <span class="n">sym_mappers</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapper</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_inv_mapper</span><span class="p">,</span>\
-                                                <span class="bp">self</span><span class="o">.</span><span class="n">_bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">,</span>\
-                                                <span class="bp">self</span><span class="o">.</span><span class="n">_ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">,</span>\
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_Ket_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">,</span>\
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_Bra_mapper_blks</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">,</span>\
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">_contiguous</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">))</span> 
                 <span class="c1">#raise Exception(&quot;Developing&quot;)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -3759,13 +3762,13 @@
 
 <span class="sd">        Note that you can also contract for UniTensor with symmetry, even when they are not in the bra-ket form. As long as the quantum number on the to-be-contract bonds and the bond type matches (bra can only contract with ket)</span>
 <span class="sd">        ::</span>
-<span class="sd">            bd_sym_1a = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])</span>
-<span class="sd">            bd_sym_2a = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">            bd_sym_3a = Tor10.Bond(5,Tor10.BD_KET,qnums=[[4],[2],[-1],[5],[1]])</span>
+<span class="sd">            bd_sym_1a = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])</span>
+<span class="sd">            bd_sym_2a = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">            bd_sym_3a = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])</span>
 
-<span class="sd">            bd_sym_1b = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])</span>
-<span class="sd">            bd_sym_2b = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">            bd_sym_3b = Tor10.Bond(7,Tor10.BD_BRA,qnums=[[1],[3],[-2],[2],[2],[2],[0]])</span>
+<span class="sd">            bd_sym_1b = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])</span>
+<span class="sd">            bd_sym_2b = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">            bd_sym_3b = Tor10.Bond(7,Tor10.BD_KET,qnums=[[1],[3],[-2],[2],[2],[2],[0]])</span>
 
 <span class="sd">            sym_A = Tor10.UniTensor(bonds=[bd_sym_1a,bd_sym_2a,bd_sym_3a],N_rowrank=2,labels=[10,11,12])</span>
 <span class="sd">            sym_B = Tor10.UniTensor(bonds=[bd_sym_2b,bd_sym_1b,bd_sym_3b],N_rowrank=1,labels=[11,10,7])</span>
@@ -3778,14 +3781,16 @@
 <span class="sd">        has_symmetry: True</span>
 <span class="sd">        on device     : cpu</span>
 <span class="sd">        braket_form : True</span>
-<span class="sd">               &lt;bra|             |ket&gt; </span>
-<span class="sd">                   ---------------     </span>
+<span class="sd">              |ket&gt;               &lt;bra| </span>
+<span class="sd">                   ---------------      </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">            10 &lt; __| 3         5 |__ &gt; 12 </span>
+<span class="sd">            10 &gt; __| 3         5 |__ &lt; 12 </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">            11 &lt; __| 4           |        </span>
+<span class="sd">            11 &gt; __| 4           |        </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">                   --------------- </span>
+<span class="sd">                   ---------------  </span>
+
+
 <span class="sd">        &gt;&gt;&gt; sym_B.Print_diagram()</span>
 <span class="sd">        -----------------------</span>
 <span class="sd">        tensor Name : </span>
@@ -3793,14 +3798,14 @@
 <span class="sd">        has_symmetry: True</span>
 <span class="sd">        on device     : cpu</span>
 <span class="sd">        braket_form : False</span>
-<span class="sd">               &lt;bra|             |ket&gt; </span>
-<span class="sd">                   ---------------     </span>
+<span class="sd">              |ket&gt;               &lt;bra| </span>
+<span class="sd">                   ---------------      </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">            11 &gt;*__| 4         3 |__ &gt; 10 </span>
+<span class="sd">            11 &lt;*__| 4         3 |__ &lt; 10 </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">                   |           7 |__*&lt; 7  </span>
+<span class="sd">                   |           7 |__*&gt; 7  </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">                   --------------- </span>
+<span class="sd">                   ---------------  </span>
 
 <span class="sd">        &gt;&gt;&gt; sym_AB = Tor10.Contract(sym_A,sym_B)</span>
 <span class="sd">        &gt;&gt;&gt; sym_BA = Tor10.Contract(sym_B,sym_A)</span>
@@ -3811,12 +3816,12 @@
 <span class="sd">        has_symmetry: True</span>
 <span class="sd">        on device     : cpu</span>
 <span class="sd">        braket_form : False</span>
-<span class="sd">               &lt;bra|             |ket&gt; </span>
-<span class="sd">                   ---------------     </span>
+<span class="sd">              |ket&gt;               &lt;bra| </span>
+<span class="sd">                   ---------------      </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">            12 &gt;*__| 5         7 |__*&lt; 7  </span>
+<span class="sd">            12 &lt;*__| 5         7 |__*&gt; 7  </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">                   ---------------   </span>
+<span class="sd">                   ---------------  </span>
 <span class="sd">     </span>
 <span class="sd">        &gt;&gt;&gt; sym_BA.Print_diagram()</span>
 <span class="sd">        -----------------------</span>
@@ -3825,12 +3830,12 @@
 <span class="sd">        has_symmetry: True</span>
 <span class="sd">        on device     : cpu</span>
 <span class="sd">        braket_form : True</span>
-<span class="sd">               &lt;bra|             |ket&gt; </span>
-<span class="sd">                   ---------------     </span>
+<span class="sd">              |ket&gt;               &lt;bra| </span>
+<span class="sd">                   ---------------      </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">             7 &lt; __| 7         5 |__ &gt; 12 </span>
+<span class="sd">             7 &gt; __| 7         5 |__ &lt; 12 </span>
 <span class="sd">                   |             |     </span>
-<span class="sd">                   ---------------  </span>
+<span class="sd">                   --------------- </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
@@ -3870,7 +3875,7 @@
                 <span class="c1">#tmpb.Print_diagram()</span>
                 <span class="c1">#print(tmpb)</span>
                 <span class="c1">#print(tmpb.GetValidQnums(return_shape=True))</span>
-                <span class="c1">#tmpa._ket_mapper_blks</span>
+                <span class="c1">#tmpa._Bra_mapper_blks</span>
  
                 <span class="n">aQ</span> <span class="o">=</span> <span class="n">tmpa</span><span class="o">.</span><span class="n">GetValidQnums</span><span class="p">()</span>
                 <span class="n">bQ</span> <span class="o">=</span> <span class="n">tmpb</span><span class="o">.</span><span class="n">GetValidQnums</span><span class="p">()</span>
@@ -4205,7 +4210,7 @@
 
                 <span class="c1">##house keeping mappers </span>
                 <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)):</span>
-                    <span class="n">a</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_bra_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">a</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_Ket_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">_accu_off_in</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 
                 <span class="n">a</span><span class="o">.</span><span class="n">_accu_off_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">_mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">),</span><span class="n">dype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span> <span class="c1">## contiguous, so we just init </span>
@@ -4240,7 +4245,7 @@
 
                 <span class="c1">##house keeping mappers </span>
                 <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">)):</span>
-                    <span class="n">a</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_ket_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">a</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_Bra_invmapper_blks</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">_accu_off_out</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
                 <span class="n">a</span><span class="o">.</span><span class="n">_accu_off_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
                 <span class="n">a</span><span class="o">.</span><span class="n">_mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span> <span class="c1">## contiguous, so we just init</span>
@@ -4467,8 +4472,8 @@
 
     <span class="k">if</span> <span class="n">is_tag</span><span class="p">:</span>
         
-        <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">BD_BRA</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_rowrank</span><span class="p">)]</span><span class="o">+</span>\
-                    <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">BD_KET</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_rowrank</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">BD_KET</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_rowrank</span><span class="p">)]</span><span class="o">+</span>\
+                    <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">BD_BRA</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_rowrank</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span><span class="mi">1</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">))]</span>
 
