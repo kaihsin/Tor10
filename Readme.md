@@ -38,8 +38,11 @@
     3. Add View() and View_, which is the same functionality as pytorch 
     4. Can now create rank-0 tensor from torch.tensor(). 
 
+    v0.3.6
+    1. Exchange BRA and KET. KET is now row-space and BRA is now col-space
+
 ## Release version
-    v0.3.5 alpha
+    v0.3.6 alpha
 
 ## Known issue
     1. HOSVD is not functional
