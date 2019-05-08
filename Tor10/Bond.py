@@ -37,7 +37,7 @@ class BD_REG:
     pass
 
 
-BondType = {BD_KET:1,BD_BRA:-1, BD_REG:0}
+BondType = {BD_BRA:1,BD_KET:-1, BD_REG:0}
 #BondType = {BD_KET:1,BD_BRA:-1,BD_REG:0}
 
 ## [For developer] Append this to extend the symmetry:
