@@ -40,7 +40,7 @@
 
     v0.3.6
     1. Exchange BRA and KET. KET is now row-space and BRA is now col-space
-
+    2. Change `N_rowrank` to `rowrank`
 ## Release version
     v0.3.6 alpha
 
