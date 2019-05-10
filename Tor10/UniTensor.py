@@ -32,11 +32,7 @@ class UniTensor():
 
     def _mac(self,torch_tensor=None,braket=None,sym_mappers=None):
         """
-        Private Args:
-
-
-           ** [Warning] Private Args should not be call directly **
-
+        Memory Allocation and Check (_mac)
 
             torch_tensor :
                 This is the internal arguments in current version. It should not be directly use, otherwise may cause inconsistence with Bonds and memory layout.
