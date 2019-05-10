@@ -49,7 +49,7 @@ SymmetryTypes = {'U1': Symm.U1, 'Zn': Symm.Zn}
 
 
 # noinspection PyStringFormat
-class Bond():
+class Bond:
 
     #
     # [0] bondType
@@ -296,7 +296,7 @@ class Bond():
             new_bondType: The new bond type to be changed. In current version, only BD_KET or BD_BRA or BD_REG. 
 
         """
-        if (self.bondType is not new_bondType):
+        if self.bondType is not new_bondType:
             if not new_bondType in BondType:
                 raise TypeError("Bond.change", "[ERROR] the bondtype can only be", BondType)
             if self.qnums is not None:
@@ -383,7 +383,7 @@ class Bond():
             ## combine a list of bonds:
             for i in range(len(bds)):
                 if not isinstance(bds[i], self.__class__):
-                    raise TypeError("Bond.combine(bds)", "bds[%d] is not Bond class" % (i))
+                    raise TypeError("Bond.combine(bds)", "bds[%d] is not Bond class" % i)
                 else:
                     self.dim *= bds[i].dim
                     if (self.qnums is None) != (bds[i].qnums is None):
@@ -477,12 +477,12 @@ class Bond():
 
     ## Print layout
     def __print(self):
-        print("Dim = %d |" % (self.dim), end="\n")
-        if (self.bondType is BD_REG):
+        print("Dim = %d |" % self.dim, end="\n")
+        if self.bondType is BD_REG:
             print("REG     :", end='')
-        elif (self.bondType is BD_BRA):
+        elif self.bondType is BD_BRA:
             print("BRA     :", end='')
-        elif (self.bondType is BD_KET):
+        elif self.bondType is BD_KET:
             print("KET     :", end='')
         else:
             raise Exception("[Internal error][Invalid bondType of current Bond.]")

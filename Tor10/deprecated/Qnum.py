@@ -1,13 +1,13 @@
 import torch, copy
 import numpy as np
 
-class Qnum_list():
+class Qnum_list:
 	"""List of qauntum numbers"""
 	def __init__(self,qnstring):
 		self.__qnstring=qnstring
 
 
-class Qnum_base():
+class Qnum_base:
 	"""Quantum number base class"""
 	def __init__(self):
 		self._q=0
@@ -52,7 +52,7 @@ class Zn(Qnum_base):
 	def mod(self):
 		return self._mod
 	def __add__(self, zn):
-		if (isinstance(zn,Zn) and zn.mod==Zn.mod) :
+		if isinstance(zn, Zn) and zn.mod==Zn.mod:
 			return Zn(self.q+zn.q)
 		else:
 			raise TypeError("Cannot add quantum numbers of differe types!")

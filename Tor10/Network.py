@@ -5,7 +5,7 @@ import pickle as pkl
 import re
 from .UniTensor import *
 
-class Network():
+class Network:
     def __init__(self,nwfile=None,delimiter=None):
         """
         Constructor of the Network
@@ -100,7 +100,7 @@ class Network():
             ## decomp :
             tmp = line.split(':')
             if len(tmp) != 2:
-                raise TypeError("Network.fromfile","[ERROR] The network file have wrong format at line [%d]"%(i))
+                raise TypeError("Network.fromfile","[ERROR] The network file have wrong format at line [%d]" % i)
             Name = tmp[0].strip()
             if Name == 'Order':
                 if self.Order is not None:
@@ -109,7 +109,7 @@ class Network():
 
                 ## check if the parenthese are matching.
                 if not self.__is_matched(tmp):
-                    raise TypeError("Network.fromfile","[ERROR] The parentheses mismatch happend for the [Order] at line [%d]"%(i))
+                    raise TypeError("Network.fromfile","[ERROR] The parentheses mismatch happend for the [Order] at line [%d]" % i)
                 
                 self.Order = tmp                
                 
@@ -167,18 +167,18 @@ class Network():
 
                 print("[%s] %s : "%(status,key),end="")
                 for i in val[0]:
-                    print("%d "%(i),end="")
+                    print("%d " % i, end="")
                 print("; ",end="")
                 for i in val[1]:
-                    print("%d "%(i),end="")
+                    print("%d " % i, end="")
                 print("")
 
             print("TOUT : ",end="")
             for i in self.TOUT[0]:
-                print("%d "%(i),end="")
+                print("%d " % i, end="")
             print("; ",end="")
             for i in self.TOUT[1]:
-                print("%d "%(i),end="")
+                print("%d " % i, end="")
             print("")
         print("=================")
     
@@ -301,13 +301,13 @@ class Network():
         if name in self.tensors:
             ##checking:
             if len(tensor.shape) != len(self.tensors[name][0]) + len(self.tensors[name][1]):
-                raise TypeError("Network.put","[ERROR] Trying to put tensor %s that has different rank"%(name))
+                raise TypeError("Network.put","[ERROR] Trying to put tensor %s that has different rank" % name)
             if self.instances is None:
                 self.instances = {name:tensor}
             else:
                 self.instances[name] = tensor
         else:
-            raise ValueError("Network.put","[ERROR] Network does not contain the tensor with name [%s]"%(name)) 
+            raise ValueError("Network.put","[ERROR] Network does not contain the tensor with name [%s]" % name)
     
     
     def __launch_by_order(self):
@@ -359,7 +359,7 @@ class Network():
                     top = peek(operators)
                 operators.append(token)
             elif len(re.findall("\W+",token)) > 0:
-                raise ValueError("String Contain invalid symbol [%s]"%(token))
+                raise ValueError("String Contain invalid symbol [%s]" % token)
             else:
                 #print(token)
                 values.append(self.instances[token])
@@ -394,7 +394,7 @@ class Network():
 
         for key in self.tensors.keys():
             if not key in self.instances:
-                raise Exception("Network","[ERROR] The [%s] tensor is not put in the Network"%(key))
+                raise Exception("Network","[ERROR] The [%s] tensor is not put in the Network" % key)
 
         out = None
         if self.Order is None:

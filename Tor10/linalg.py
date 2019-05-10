@@ -649,7 +649,7 @@ def Svd_truncate(a, keepdim=None):
 
         if keepdim is not None:
             if keepdim < 0 or keepdim > len(s):
-                raise ValueError("Svd_truncate", "[ERROR] the keepdim=%d is invalid, must larger than 0 and smaller than the total number of eigenvalues."%(keepdim))
+                raise ValueError("Svd_truncate", "[ERROR] the keepdim=%d is invalid, must larger than 0 and smaller than the total number of eigenvalues." % keepdim)
             u = u[:, :keepdim]
             s = s[:keepdim]
             v = v[:, :keepdim]

@@ -31,7 +31,7 @@ class U1:
         pass 
 
     def CombineRule(self,A,B):
-        return (A+B)
+        return A + B
 
     def __repr__(self):
         return 'U1'
@@ -84,13 +84,13 @@ class Zn:
         return (A+B)%self.n
 
     def __repr__(self):
-        return 'Z%d'%(self.n)
+        return 'Z%d' % self.n
 
     def __str__(self):
-        return 'Z%d'%(self.n)
+        return 'Z%d' % self.n
 
     def __eq__(self,rhs):
-        if (self.__class__ == rhs.__class__):
+        if self.__class__ == rhs.__class__:
             if self.n == rhs.n:
                 return True
             else:

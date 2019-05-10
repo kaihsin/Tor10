@@ -16,9 +16,9 @@ J   = float(sys.argv[1])
 CvgCrit = float(sys.argv[4])
 
 ## check:
-if(chi<1):
+if chi<1:
     raise ValueError("[ERROR] bond dimension should be >=1")
-if(CvgCrit<=0):
+if CvgCrit<=0:
     raise ValueError("[ERROR] converge should be >0")
 
 

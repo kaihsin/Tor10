@@ -21,7 +21,7 @@ def _fx_decompress_idx(x,accu_offsets):
         x = x%accu_offsets[i]
     return np.array(y).swapaxes(0,1)
 
-class UniTensor():
+class UniTensor:
 
     def __init__(self, bonds, N_inbond=None ,labels=None, device=torch.device("cpu"),dtype=torch.float64,torch_tensor=None,check=True, is_diag=False, requires_grad=False, name="",braket=None,sym_mappers=None):
         """
@@ -331,7 +331,7 @@ class UniTensor():
             raise ValueError("UniTensor.SetLabel","idx exceed the number of bonds.")
 
         if newLabel in self.labels:
-            raise ValueError("UniTensor.SetLabel","newLabel [%d] already exists in the current UniTensor."%(newLabel))
+            raise ValueError("UniTensor.SetLabel","newLabel [%d] already exists in the current UniTensor." % newLabel)
 
         self.labels[idx] = newLabel
 
@@ -518,14 +518,14 @@ class UniTensor():
 
         """
         print("-----------------------")
-        print("tensor Name : %s"%(self.name))
+        print("tensor Name : %s" % self.name)
         print("tensor Rank : %d"%(len(self.labels)))
         print("braket_form : %s"%("True" if self.is_braket else "False"))
         print("has_symmetry: %s"%("True" if self.is_braket else "False"))
         if self.is_symm:
-            print("on device     : %s"%(self.Storage[0].device))
+            print("on device     : %s" % self.Storage[0].device)
         else:
-            print("on device     : %s"%(self.Storage.device))
+            print("on device     : %s" % self.Storage.device)
             print("is_diag       : %s"%("True" if self.is_diag else "False"))
 
         Nin = self.N_inbond
@@ -540,23 +540,23 @@ class UniTensor():
         print("           ---------------     ")
         for i in range(vl):
             print("           |             |     ")
-            if(i<Nin):
+            if i<Nin:
                 if self.braket[i]==BondType[BD_BRA]:
                     bks = "< "
                 else:
                     bks = ">*"
                 l = "%3d %s__"%(self.labels[i],bks)
-                llbl = "%-3d"%(self.bonds[i].dim)
+                llbl = "%-3d" % self.bonds[i].dim
             else:
                 l = "        "
                 llbl = "   "
-            if(i<Nout):
+            if i<Nout:
                 if self.braket[Nin+i]==BondType[BD_BRA]:
                     bks = "*<"
                 else:
                     bks = " >"
                 r = "__%s %-3d"%(bks,self.labels[Nin+i])
-                rlbl = "%3d"%(self.bonds[Nin+i].dim)
+                rlbl = "%3d" % self.bonds[Nin + i].dim
             else:
                 r = "        "
                 rlbl = "   "
@@ -572,7 +572,7 @@ class UniTensor():
 
 
     def __str__(self):
-        print("Tensor name: %s"%( self.name))
+        print("Tensor name: %s" % self.name)
         print("braket_form : %s"%("True" if self.is_braket else "False"))
         if self.is_symm:
             print("[Symmetry]")
@@ -591,7 +591,7 @@ class UniTensor():
         return ""
 
     def __repr__(self):
-        print("Tensor name: %s"%( self.name))
+        print("Tensor name: %s" % self.name)
         print("braket_form : %s"%("True" if self.is_braket else "False"))
         if self.is_symm:
             print("[Symmetry]")
@@ -2277,7 +2277,7 @@ def Contract(a,b):
         ## get same vector:
         same, a_ind, b_ind = np.intersect1d(a.labels,b.labels,return_indices=True)
 
-        if(len(same)):
+        if len(same):
 
             ## check bra-ket
             if False in np.unique((a_ind<a.N_inbond)^(b_ind<b.N_inbond)):
@@ -2287,7 +2287,7 @@ def Contract(a,b):
             if (a.bonds[0].qnums is not None)^(b.bonds[0].qnums is not None):
                 raise Exception("Contract(a,b)","[ERROR] contract Symm TN with non-sym tensor")
 
-            if(a.bonds[0].qnums is not None):
+            if a.bonds[0].qnums is not None:
                 for i in range(len(a_ind)):
                     if not a.bonds[a_ind[i]].qnums.all() == b.bonds[b_ind[i]].qnums.all():
                         raise ValueError("Contact(a,b)","[ERROR] contract Bonds that has qnums mismatch.")
@@ -2513,7 +2513,7 @@ def _CombineBonds(a,label,new_label):
             if new_label is not None:
                 newlbl = int(new_label)
                 if newlbl in a.labels[idx_no_combine] or newlbl in a.labels[x_ind[1:]]:
-                    raise Exception("_CombineBonds","[ERROR], cannot set new_label to %d as there will be duplicate bond with this label after combined"%(newlbl))
+                    raise Exception("_CombineBonds","[ERROR], cannot set new_label to %d as there will be duplicate bond with this label after combined" % newlbl)
 
                 a.labels[x_ind[0]] = newlbl
 

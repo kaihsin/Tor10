@@ -67,17 +67,17 @@ def Parameter(data,requires_grad=True):
             #print("OK module")
             
             n=0
-            while(1):
-                if hasattr(instance,'param_%d'%(n)):
+            while 1:
+                if hasattr(instance,'param_%d' % n):
                     n+=1
                 else:
-                    setattr(instance,'param_%d'%(n),data.Storage)
+                    setattr(instance,'param_%d' % n, data.Storage)
                     break
  
     return data
         
 
-class Linear():
+class Linear:
     """
     Applies a linear transformation to the incoming data: :math:`y = xA^T + b`
 
@@ -133,11 +133,11 @@ class Linear():
                 #print("OK module")
 
                 n=0
-                while(1):
-                    if hasattr(instance,'param_%d'%(n)):
+                while 1:
+                    if hasattr(instance,'param_%d' % n):
                         n+=1
                     else:
-                        setattr(instance,'param_%d'%(n),self.tnn)
+                        setattr(instance,'param_%d' % n, self.tnn)
                         break
 
     def __call__(self,ipt):
