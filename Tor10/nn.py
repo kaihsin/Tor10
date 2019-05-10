@@ -25,8 +25,8 @@ def Parameter(data,requires_grad=True):
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
  
             def forward(self,x):
                 y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
@@ -109,7 +109,7 @@ class Linear():
     Examples::
 
         >>> m = Tor10.nn.Linear(20, 30)
-        >>> iput = Tor10.From_torch(torch.randn(128, 20),N_rowrank=1)
+        >>> iput = Tor10.From_torch(torch.randn(128, 20),rowrank=1)
         >>> oput = m(iput)
         >>> print(oput.shape)
         torch.Size([128, 30])
@@ -149,7 +149,7 @@ class Linear():
     
         out = self.tnn(ipt.Storage)
         
-        tmp = UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),N_rowrank=len(ipt.bonds[:-1]),check=False)
+        tmp = UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),rowrank=len(ipt.bonds[:-1]),check=False)
         tmp._UniTensor__mac(torch_tensor = out)
 
         return tmp
@@ -167,7 +167,7 @@ class Linear():
         Return:
             UniTensor, rank-2
         """
-        tmp = UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],N_rowrank=1,check=False)
+        tmp = UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],rowrank=1,check=False)
         tmp._UniTensor__mac(torch_tensor=self.tnn.weight)
         return tmp
 
@@ -185,7 +185,7 @@ class Linear():
         if self.tnn.bias is None:
             return None
         else:
-            tmp = UniTensor(bonds=[Bond(self.bias.shape[0])],N_rowrank=0,check=False) 
+            tmp = UniTensor(bonds=[Bond(self.bias.shape[0])],rowrank=0,check=False)
             tmp._UniTensor__mac(torch_tensor=self.tnn.bias)
             return tmp
 

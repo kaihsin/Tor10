@@ -174,8 +174,8 @@
 <span class="sd">            def __init__(self):</span>
 <span class="sd">                super(Model,self).__init__()</span>
 <span class="sd">                ## Customize and register the parameter.</span>
-<span class="sd">                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))</span>
-<span class="sd">                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))</span>
+<span class="sd">                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))</span>
+<span class="sd">                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))</span>
 <span class="sd"> </span>
 <span class="sd">            def forward(self,x):</span>
 <span class="sd">                y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)</span>
@@ -258,7 +258,7 @@
 <span class="sd">    Examples::</span>
 
 <span class="sd">        &gt;&gt;&gt; m = Tor10.nn.Linear(20, 30)</span>
-<span class="sd">        &gt;&gt;&gt; iput = Tor10.From_torch(torch.randn(128, 20),N_rowrank=1)</span>
+<span class="sd">        &gt;&gt;&gt; iput = Tor10.From_torch(torch.randn(128, 20),rowrank=1)</span>
 <span class="sd">        &gt;&gt;&gt; oput = m(iput)</span>
 <span class="sd">        &gt;&gt;&gt; print(oput.shape)</span>
 <span class="sd">        torch.Size([128, 30])</span>
@@ -298,7 +298,7 @@
     
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="p">(</span><span class="n">ipt</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
         
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">ipt</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">out_features</span><span class="p">)),</span><span class="n">N_rowrank</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">ipt</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">ipt</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">out_features</span><span class="p">)),</span><span class="n">rowrank</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">ipt</span><span class="o">.</span><span class="n">bonds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">torch_tensor</span> <span class="o">=</span> <span class="n">out</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">tmp</span>
@@ -316,7 +316,7 @@
 <span class="sd">        Return:</span>
 <span class="sd">            UniTensor, rank-2</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">out_features</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">in_features</span><span class="p">)],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">out_features</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">in_features</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tmp</span></div>
 
@@ -334,7 +334,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span><span class="n">N_rowrank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Bond</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">tmp</span><span class="o">.</span><span class="n">_UniTensor__mac</span><span class="p">(</span><span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">tmp</span></div></div>
 

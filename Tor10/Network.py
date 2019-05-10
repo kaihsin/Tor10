@@ -31,7 +31,7 @@ class Network():
             
             * Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. 
         
-            * The semicolon seperates the row-space and col-space, it is equivalent as "N_rowrank" property of the UniTensor. The left side of semicolon is defined as row-space, and right side of semicolon is degined as col-space.
+            * The semicolon seperates the row-space and col-space, it is equivalent as "rowrank" property of the UniTensor. The left side of semicolon is defined as row-space, and right side of semicolon is degined as col-space.
         
             [Note] that there are two preserved tensor name "TOUT" and "Order". The "TOUT" specify the output tensor, and "Order" defineds how the Tensors in the Network will be contracted. 
 
@@ -210,9 +210,9 @@ class Network():
         ::
             ntwrk = Tor10.Network()
             ntwrk.Fromfile("test.net")
-            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=2)
-            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],N_rowrank=1)
-            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],N_rowrank=1)
+            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],rowrank=2)
+            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],rowrank=1)
+            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],rowrank=1)
 
 
         >>> print(ntwrk)

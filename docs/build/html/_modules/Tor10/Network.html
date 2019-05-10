@@ -180,7 +180,7 @@
 <span class="sd">            </span>
 <span class="sd">            * Each line defines a Tensor with the left side of the colon is the name of the tensor. The right side of the colon defines the labels of each bonds. </span>
 <span class="sd">        </span>
-<span class="sd">            * The semicolon seperates the row-space and col-space, it is equivalent as &quot;N_rowrank&quot; property of the UniTensor. The left side of semicolon is defined as row-space, and right side of semicolon is degined as col-space.</span>
+<span class="sd">            * The semicolon seperates the row-space and col-space, it is equivalent as &quot;rowrank&quot; property of the UniTensor. The left side of semicolon is defined as row-space, and right side of semicolon is degined as col-space.</span>
 <span class="sd">        </span>
 <span class="sd">            [Note] that there are two preserved tensor name &quot;TOUT&quot; and &quot;Order&quot;. The &quot;TOUT&quot; specify the output tensor, and &quot;Order&quot; defineds how the Tensors in the Network will be contracted. </span>
 
@@ -359,9 +359,9 @@
 <span class="sd">        ::</span>
 <span class="sd">            ntwrk = Tor10.Network()</span>
 <span class="sd">            ntwrk.Fromfile(&quot;test.net&quot;)</span>
-<span class="sd">            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],N_rowrank=2)</span>
-<span class="sd">            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],N_rowrank=1)</span>
-<span class="sd">            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],N_rowrank=1)</span>
+<span class="sd">            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],rowrank=2)</span>
+<span class="sd">            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],rowrank=1)</span>
+<span class="sd">            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],rowrank=1)</span>
 
 
 <span class="sd">        &gt;&gt;&gt; print(ntwrk)</span>

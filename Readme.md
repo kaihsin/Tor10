@@ -6,7 +6,7 @@
     2. The Bond can be tagged with bra/ket or untagged (regular)
     3. Now change the storage of symmetry to blockform. the dense storage for symmetry is deprecated.
     4. Add braketform() to coalesce the bra/ket with row/col(in/out)
-    5. N_rowrank defines the row/col space. 
+    5. rowrank defines the row/col space. 
     6. Enhanced Print_diagram
     7. Seperate Contiguous() and Contiguous\_() for inplace and return type function.
     8. change behavior of GetBlock and PutBlock on a non-symm tensor. in this version, it will return a rank-2 matrix.
@@ -124,8 +124,8 @@
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],N_rowrank=1))
+                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
+                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
  
             def forward(self,x):
                 y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
