@@ -48,6 +48,7 @@ SymmetryTypes = {'U1': Symm.U1, 'Zn': Symm.Zn}
 #######################
 
 
+# noinspection PyStringFormat
 class Bond():
 
     #
@@ -526,7 +527,7 @@ class Bond():
         """
         if isinstance(rhs, self.__class__):
             iSame = (self.dim == rhs.dim) and (self.bondType == rhs.bondType)
-            if iSame == False:
+            if not iSame:
                return False
 
             if self.qnums is None:

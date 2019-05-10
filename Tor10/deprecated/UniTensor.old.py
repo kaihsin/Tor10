@@ -455,7 +455,7 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Todense()","[ERROR] cannot transform to dense for UniTensor with symmetry")
         
-        if self.is_diag==True:
+        if self.is_diag:
             self.Storage = torch.diag(self.Storage)
             self.is_diag=False
 
@@ -1719,7 +1719,7 @@ class UniTensor():
 
         #if (self.N_inbond==0) or (self.N_inbond==len(self.bonds)):
         #    raise Exception("UniTensor.GetTotalQnums","[ERROR] The TN symmetry structure is incorrect, without either any in-bond or any-outbond")
-        if include_braket==False:
+        if not include_braket:
             #virtual_cb-in
             cb_inbonds = copy.deepcopy(self.bonds[np.argwhere(self.braket==BondType[BD_BRA]).flatten()])
             in_all = cb_inbonds[0]

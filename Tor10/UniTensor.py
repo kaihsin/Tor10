@@ -726,7 +726,7 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Todense()","[ERROR] cannot transform to dense for UniTensor with symmetry")
         
-        if self.is_diag==True:
+        if self.is_diag:
             self.Storage = torch.diag(self.Storage)
             self.is_diag=False
 
@@ -759,7 +759,7 @@ class UniTensor():
         if self.is_symm:
             raise Exception("UniTensor.Todense()","[ERROR] cannot transform to dense for UniTensor with symmetry")
 
-        if self.is_diag==True:
+        if self.is_diag:
             out = copy.deepcopy(self)
             out.Todense_()
             return out
@@ -3293,7 +3293,7 @@ class UniTensor():
                 raise TypeError("UniTensor.GetBlock","[ERROR] No block has qnums:",qnum)
  
 
-    def torch():
+    def torch(self):
         """
         Transform a UniTensor to torch.Tensor. 
 
