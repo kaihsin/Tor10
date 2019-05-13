@@ -150,7 +150,7 @@ class Linear:
         out = self.tnn(ipt.Storage)
         
         tmp = UniTensor(bonds=np.append(copy.deepcopy(ipt.bonds[:-1]),Bond(self.tnn.out_features)),rowrank=len(ipt.bonds[:-1]),check=False)
-        tmp._UniTensor__mac(torch_tensor = out)
+        tmp._mac(torch_tensor = out)
 
         return tmp
     def extra_repr(self):
@@ -168,7 +168,7 @@ class Linear:
             UniTensor, rank-2
         """
         tmp = UniTensor(bonds=[Bond(self.tnn.out_features),Bond(self.tnn.in_features)],rowrank=1,check=False)
-        tmp._UniTensor__mac(torch_tensor=self.tnn.weight)
+        tmp._mac(torch_tensor=self.tnn.weight)
         return tmp
 
     def bias(self):
@@ -186,6 +186,6 @@ class Linear:
             return None
         else:
             tmp = UniTensor(bonds=[Bond(self.bias.shape[0])],rowrank=0,check=False)
-            tmp._UniTensor__mac(torch_tensor=self.tnn.bias)
+            tmp._mac(torch_tensor=self.tnn.bias)
             return tmp
 
