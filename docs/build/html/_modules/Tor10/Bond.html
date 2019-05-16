@@ -197,7 +197,8 @@
 <span class="c1">#######################</span>
 
 
-<div class="viewcode-block" id="Bond"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond">[docs]</a><span class="k">class</span> <span class="nc">Bond</span><span class="p">():</span>
+<span class="c1"># noinspection PyStringFormat</span>
+<div class="viewcode-block" id="Bond"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond">[docs]</a><span class="k">class</span> <span class="nc">Bond</span><span class="p">:</span>
 
     <span class="c1">#</span>
     <span class="c1"># [0] bondType</span>
@@ -444,7 +445,7 @@
 <span class="sd">            new_bondType: The new bond type to be changed. In current version, only BD_KET or BD_BRA or BD_REG. </span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">new_bondType</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">new_bondType</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">new_bondType</span> <span class="ow">in</span> <span class="n">BondType</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.change&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] the bondtype can only be&quot;</span><span class="p">,</span> <span class="n">BondType</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -531,7 +532,7 @@
             <span class="c1">## combine a list of bonds:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bds</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.combine(bds)&quot;</span><span class="p">,</span> <span class="s2">&quot;bds[</span><span class="si">%d</span><span class="s2">] is not Bond class&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.combine(bds)&quot;</span><span class="p">,</span> <span class="s2">&quot;bds[</span><span class="si">%d</span><span class="s2">] is not Bond class&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">*=</span> <span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span>
                     <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">bds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
@@ -625,12 +626,12 @@
 
     <span class="c1">## Print layout</span>
     <span class="k">def</span> <span class="nf">__print</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dim = </span><span class="si">%d</span><span class="s2"> |&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_REG</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dim = </span><span class="si">%d</span><span class="s2"> |&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_REG</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;REG     :&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_BRA</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_BRA</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BRA     :&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_KET</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="ow">is</span> <span class="n">BD_KET</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KET     :&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[Internal error][Invalid bondType of current Bond.]&quot;</span><span class="p">)</span>
@@ -675,7 +676,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="n">iSame</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bondType</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">bondType</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">iSame</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">iSame</span><span class="p">:</span>
                <span class="k">return</span> <span class="kc">False</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

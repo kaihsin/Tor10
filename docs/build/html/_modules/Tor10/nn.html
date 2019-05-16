@@ -216,17 +216,17 @@
             <span class="c1">#print(&quot;OK module&quot;)</span>
             
             <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
-            <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+            <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">):</span>
                     <span class="n">n</span><span class="o">+=</span><span class="mi">1</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">data</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
                     <span class="k">break</span>
  
     <span class="k">return</span> <span class="n">data</span></div>
         
 
-<div class="viewcode-block" id="Linear"><a class="viewcode-back" href="../../nn.html#Tor10.nn.Linear">[docs]</a><span class="k">class</span> <span class="nc">Linear</span><span class="p">():</span>
+<div class="viewcode-block" id="Linear"><a class="viewcode-back" href="../../nn.html#Tor10.nn.Linear">[docs]</a><span class="k">class</span> <span class="nc">Linear</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Applies a linear transformation to the incoming data: :math:`y = xA^T + b`</span>
 
@@ -282,11 +282,11 @@
                 <span class="c1">#print(&quot;OK module&quot;)</span>
 
                 <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
-                <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+                <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">):</span>
                         <span class="n">n</span><span class="o">+=</span><span class="mi">1</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="p">)</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;param_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="p">)</span>
                         <span class="k">break</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ipt</span><span class="p">):</span>
