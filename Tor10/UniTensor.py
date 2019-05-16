@@ -1662,15 +1662,15 @@ class UniTensor:
 
         return linalg.Svd(self)
 
-    def Svd_truncate(self):
+    def Svd_truncate(self,keepdim=None):
         """
-            This is the member function of Svd_truncate, see Tor10.Svd_truncate()
+            This is the member function of Svd_truncate, see Tor10.linalg.Svd_truncate()
         """
         if self.is_symm:
             raise Exception("UniTensor.Svd_truncate",
                             "[ERROR] cannot perform Svd on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
 
-        return Svd_truncate(self)
+        return Svd_truncate(self,keepdim)
 
     def Norm(self):
         """

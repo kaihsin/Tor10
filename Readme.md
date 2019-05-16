@@ -40,9 +40,15 @@
 
     v0.3.6
     1. Exchange BRA and KET. KET is now row-space and BRA is now col-space
-    2. Change `N_rowrank` to `rowrank`
+
+    v0.3.7
+    1. Change `N_rowrank` to `rowrank`
+    2. Fix T.Svd_truncate missing argument bug
+
+
+
 ## Release version
-    v0.3.6 alpha
+    v0.3.7 alpha
 
 ## Known issue
     1. HOSVD is not functional
