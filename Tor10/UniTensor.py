@@ -2909,6 +2909,16 @@ class UniTensor:
 
     def PutBlock(self, block, *qnum):
         """
+        Put the block into the UniTensor. If the UniTensor is symmetry tensor, the block should be specify by the quantum number. 
+       
+        Args:
+            block:
+                A UniTensor with rank-2
+            
+            *qnum:
+                The quantum number set that specify the block.
+
+        
         """
         if not isinstance(block, self.__class__):
             raise TypeError("[ERROR] PutBlock can only accept a untagged UniTensor ")
@@ -2944,7 +2954,9 @@ class UniTensor:
                                     "does not match the shape of current block", curr_shape_2d)
 
             ## memcpy low-lv-api
-            self.Storage.storage().copy_(block.Storage.storage())
+            #self.Storage.storage().copy_(block.Storage.storage())
+            shp = self.Storage.shape
+            self.Storage = block.Storage.clone().reshape(shp)
             # raise Exception("[Warning] PutBlock cannot be use for non-symmetry TN. Use SetElem instead.")
 
         else:
@@ -2964,7 +2976,9 @@ class UniTensor:
                         if self.Storage[s].shape != block.shape:
                             raise TypeError("UniTensor.PutBlock", "[ERROR] the input block with shape", block.shape,
                                             "does not match the current block's shape", self.Storage[s].shape)
-                        self.Storage[s].storage().copy_(block.Storage.storage())
+                        #self.Storage[s].storage().copy_(block.Storage.storage())
+                        shp = self.Storage[s].shape
+                        self.Storage[s] = block.Storage.clone().reshape(shp)
                         is_set = True
                         break
                 if not is_set:
@@ -3022,7 +3036,7 @@ class UniTensor:
                                     raise Exception("[ERROR] internal FATAL")
 
                                 if b_id_in[0] >= 0 and b_id_out[0] >= 0:
-                                    self.Storage[b_id_in[0]][b_id_in[1], b_id_out[1]] = block.Storage[i, j]
+                                    self.Storage[b_id_in[0]][b_id_in[1], b_id_out[1]] = block.Storage[i, j].clone()
                                 else:
                                     print("[unphys pos]")
 

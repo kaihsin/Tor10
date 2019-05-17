@@ -1819,7 +1819,7 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Svd_truncate&quot;</span><span class="p">,</span>
                             <span class="s2">&quot;[ERROR] cannot perform Svd on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">Svd_truncate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">keepdim</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">keepdim</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UniTensor.Norm"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Norm">[docs]</a>    <span class="k">def</span> <span class="nf">Norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3058,6 +3058,16 @@
 
 <div class="viewcode-block" id="UniTensor.PutBlock"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.PutBlock">[docs]</a>    <span class="k">def</span> <span class="nf">PutBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="o">*</span><span class="n">qnum</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Put the block into the UniTensor. If the UniTensor is symmetry tensor, the block should be specify by the quantum number. </span>
+<span class="sd">       </span>
+<span class="sd">        Args:</span>
+<span class="sd">            block:</span>
+<span class="sd">                A UniTensor with rank-2</span>
+<span class="sd">            </span>
+<span class="sd">            *qnum:</span>
+<span class="sd">                The quantum number set that specify the block.</span>
+
+<span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;[ERROR] PutBlock can only accept a untagged UniTensor &quot;</span><span class="p">)</span>
@@ -3093,7 +3103,9 @@
                                     <span class="s2">&quot;does not match the shape of current block&quot;</span><span class="p">,</span> <span class="n">curr_shape_2d</span><span class="p">)</span>
 
             <span class="c1">## memcpy low-lv-api</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">storage</span><span class="p">()</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">storage</span><span class="p">())</span>
+            <span class="c1">#self.Storage.storage().copy_(block.Storage.storage())</span>
+            <span class="n">shp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">shape</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span>
             <span class="c1"># raise Exception(&quot;[Warning] PutBlock cannot be use for non-symmetry TN. Use SetElem instead.&quot;)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -3113,7 +3125,9 @@
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">block</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.PutBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] the input block with shape&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
                                             <span class="s2">&quot;does not match the current block&#39;s shape&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">storage</span><span class="p">()</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">storage</span><span class="p">())</span>
+                        <span class="c1">#self.Storage[s].storage().copy_(block.Storage.storage())</span>
+                        <span class="n">shp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span>
                         <span class="n">is_set</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">break</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">is_set</span><span class="p">:</span>
@@ -3171,7 +3185,7 @@
                                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;[ERROR] internal FATAL&quot;</span><span class="p">)</span>
 
                                 <span class="k">if</span> <span class="n">b_id_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">b_id_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b_id_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">b_id_in</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b_id_out</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">b_id_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">b_id_in</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b_id_out</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[unphys pos]&quot;</span><span class="p">)</span>
 

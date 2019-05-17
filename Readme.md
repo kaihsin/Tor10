@@ -45,7 +45,8 @@
     1. Change `N_rowrank` to `rowrank`
     2. Fix T.Svd_truncate missing argument bug
     3. Fix T.Svd_truncate missing linalg. bug
-
+    4. Fix PutBlock cause mismatch on non-contiguous tensors
+    5. Update docs for PutBlock
 
 ## Release version
     v0.3.7 alpha
