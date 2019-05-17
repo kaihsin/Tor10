@@ -1670,7 +1670,7 @@ class UniTensor:
             raise Exception("UniTensor.Svd_truncate",
                             "[ERROR] cannot perform Svd on a symmetry,block-form tensor. use GetBlock() first and perform svd on the Block.")
 
-        return Svd_truncate(self,keepdim)
+        return linalg.Svd_truncate(self,keepdim)
 
     def Norm(self):
         """

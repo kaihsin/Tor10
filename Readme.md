@@ -44,7 +44,7 @@
     v0.3.7
     1. Change `N_rowrank` to `rowrank`
     2. Fix T.Svd_truncate missing argument bug
-
+    3. Fix T.Svd_truncate missing linalg. bug
 
 
 ## Release version
