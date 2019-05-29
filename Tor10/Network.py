@@ -115,12 +115,17 @@ class Network:
                 
             else:
                 tmp = tmp[1].split(';')
-                if delimiter is None:
-                    Inbonds = np.array(tmp[0].strip().split(),dtype=np.int)
-                    Outbonds= np.array(tmp[1].strip().split(),dtype=np.int)
+                if(len(tmp)!=2):
+                    if Name != 'TOUT':
+                        raise Exception("Network.fromfile","[ERROR] syntax error for Network file.");
+                    Inbonds, Outbonds = None,None
                 else:
-                    Inbonds = np.array(tmp[0].strip().split(delimiter),dtype=np.int)
-                    Outbonds= np.array(tmp[1].strip().split(delimiter),dtype=np.int)
+                    if delimiter is None:
+                        Inbonds = np.array(tmp[0].strip().split(),dtype=np.int)
+                        Outbonds= np.array(tmp[1].strip().split(),dtype=np.int)
+                    else:
+                        Inbonds = np.array(tmp[0].strip().split(delimiter),dtype=np.int)
+                        Outbonds= np.array(tmp[1].strip().split(delimiter),dtype=np.int)
                 tn_shell = [Inbonds,Outbonds]
                 if Name == 'TOUT':
                     if self.TOUT is not None:
@@ -411,14 +416,13 @@ class Network:
         else :
             out = self.__launch_by_order()            
 
+        if(len(out.shape)==0):
+            return out
+        else:
+            per_lbl = self.TOUT[0].tolist() + self.TOUT[1].tolist()
+            out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
+            ## this is temporary, not finished!!!
+            #print("Network.Launch is currently under developing.")
 
- 
-        per_lbl = self.TOUT[0].tolist() + self.TOUT[1].tolist()
-        out.Permute(per_lbl,len(self.TOUT[0]),by_label=True)
-        ## this is temporary, not finished!!!
-        #print("Network.Launch is currently under developing.")
-
-
-
-        return out
+            return out
     

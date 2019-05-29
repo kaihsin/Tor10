@@ -48,8 +48,11 @@
     4. Fix PutBlock cause mismatch on non-contiguous tensors
     5. Update docs for PutBlock
 
+    v0.3.8
+    1. Fix Network trace out all bonds will raise error bug.
+
 ## Release version
-    v0.3.7 alpha
+    v0.3.8 alpha
 
 ## Known issue
     1. HOSVD is not functional
