@@ -266,7 +266,7 @@ class UniTensor:
         self.name = name
 
         ## bonds:
-        self.bonds = np.array(copy.deepcopy(bonds))
+        self.bonds = np.array([copy.deepcopy(bonds[i]) for i in range(len(bonds))])
 
         # labels: 
         if labels is None:
@@ -4106,7 +4106,7 @@ def _CombineBonds(a, idxs, new_label, permute_back):
                     f_label = a.labels[idxs[0]]
                     a.bonds = np.delete(a.bonds, idxs[1:])
                     a.labels = np.delete(a.labels, idxs[1:])
-
+                    
                     x = np.argwhere(a.labels == f_label)
                     final_mapper = np.insert(np.arange(1, len(a.bonds), 1).astype(np.int), x[0], 0)
                     a.Stoarge = a.Storage.permute(final_mapper.tolist())
@@ -4114,12 +4114,10 @@ def _CombineBonds(a, idxs, new_label, permute_back):
                     a.rowrank = new_Nin
 
                 else:
-
                     ##[Fusion tree] >>>
                     for i in range(len(idxs) - 1):
                         a.bonds[idxs[0]].combine(a.bonds[idxs[1 + i]])
                     ## <<<
-
                     if idxs[0] >= a.rowrank:
                         mapper = np.concatenate([idx_no_combine, idxs])
                         a.bonds = np.append(a.bonds[idx_no_combine], a.bonds[idxs[0]])
@@ -4134,7 +4132,6 @@ def _CombineBonds(a, idxs, new_label, permute_back):
                         a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(
                             np.append(combined_dim, no_combine_dims).tolist())
                         a.rowrank = 1
-
             else:
 
                 ## if the combine are BRA or KET
@@ -4175,7 +4172,7 @@ def _CombineBonds(a, idxs, new_label, permute_back):
                     for i in range(len(idxs) - 1):
                         a.bonds[idxs[0]].combine(a.bonds[idxs[1 + i]])
                     ## <<<
-
+                    
                     if idxs[0] >= a.rowrank:
                         mapper = np.concatenate([idx_no_combine, idxs])
                         a.bonds = np.append(a.bonds[idx_no_combine], a.bonds[idxs[0]])
@@ -4184,6 +4181,7 @@ def _CombineBonds(a, idxs, new_label, permute_back):
                         a.Storage = a.Storage.permute(mapper.tolist()).contiguous().view(
                             np.append(no_combined_dims, combine_dim).tolist())
                         a.rowrank = len(a.labels) - 1
+                       
                     else:
                         mapper = np.concatenate([idxs, idx_no_combine])
                         a.bonds = np.append(a.bonds[idxs[0]], a.bonds[idx_no_combine])

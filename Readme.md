@@ -51,8 +51,11 @@
     v0.3.8
     1. Fix Network trace out all bonds will raise error bug.
 
+    v0.3.9
+    1. Change the behaviour of Bonds when initialize a UniTensor. All the bonds will be deepcopy now
+
 ## Release version
-    v0.3.8 alpha
+    v0.3.9 alpha
 
 ## Known issue
     1. HOSVD is not functional

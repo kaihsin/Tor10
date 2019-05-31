@@ -58,7 +58,7 @@ print(a)
 
 c.combine(d)
 print(c)
-
+exit(1)
 ## UniTensor:
 #=========================================================
 # Create Tensor
