@@ -16,6 +16,7 @@ def _fx_GetCommRows(A, B):
     # 1. A and B should be 2D numpy array
     # 2. the number of col should be the same for A and B
 
+    # Source: https://stackoverflow.com/questions/8317022/get-intersecting-rows-across-two-2d-numpy-arrays
     dtype = {'names': ['f{}'.format(i) for i in range(A.shape[1])],
              'formats': A.shape[1] * [A.dtype]}
 
