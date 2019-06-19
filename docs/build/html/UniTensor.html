@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.UniTensor &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.UniTensor &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tor10.Network" href="Network.html" />
-    <link rel="prev" title="Tor10.Bond" href="Bond.html" /> 
+    <link rel="next" title="tor10.Network" href="Network.html" />
+    <link rel="prev" title="tor10.Bond" href="Bond.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -80,12 +80,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Tor10.UniTensor</li>
+      <li>tor10.UniTensor</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -149,13 +149,13 @@
            <div itemprop="articleBody">
             
   <div class="section" id="tor10-unitensor">
-<h1>Tor10.UniTensor<a class="headerlink" href="#tor10-unitensor" title="Permalink to this headline">¶</a></h1>
+<h1>tor10.UniTensor<a class="headerlink" href="#tor10-unitensor" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="Tor10.UniTensor.UniTensor">
-<em class="property">class </em><code class="descclassname">Tor10.UniTensor.</code><code class="descname">UniTensor</code><span class="sig-paren">(</span><em>self</em>, <em>bonds</em>, <em>rowrank=None</em>, <em>labels=None</em>, <em>device=torch.device(&quot;cpu&quot;)</em>, <em>dtype=torch.float64</em>, <em>is_diag=False</em>, <em>requires_grad=False</em>, <em>name=&quot;&quot;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor">
+<em class="property">class </em><code class="descclassname">tor10.UniTensor.</code><code class="descname">UniTensor</code><span class="sig-paren">(</span><em>self</em>, <em>bonds</em>, <em>rowrank=None</em>, <em>labels=None</em>, <em>device=torch.device(&quot;cpu&quot;)</em>, <em>dtype=torch.float64</em>, <em>is_diag=False</em>, <em>requires_grad=False</em>, <em>name=&quot;&quot;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self</em>, <em>bonds</em>, <em>rowrank=None</em>, <em>labels=None</em>, <em>device=torch.device(&quot;cpu&quot;)</em>, <em>dtype=torch.float64</em>, <em>is_diag=False</em>, <em>requires_grad=False</em>, <em>name=&quot;&quot;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>self</em>, <em>bonds</em>, <em>rowrank=None</em>, <em>labels=None</em>, <em>device=torch.device(&quot;cpu&quot;)</em>, <em>dtype=torch.float64</em>, <em>is_diag=False</em>, <em>requires_grad=False</em>, <em>name=&quot;&quot;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the constructor of UniTensor.</p>
 <p>Public Args:</p>
 <blockquote>
@@ -190,7 +190,7 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <div><ul class="simple">
 <li>create a rank-2 untagged UniTensor (matrix) with shape (3,4):</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">(</span><span class="n">bond_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -213,7 +213,7 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <ul class="simple">
 <li>create a rank-3 untagged UniTensor with one bond in row-space and two bonds in col-space, shape (3,4,5) and set labels [-3,4,1] for each bond:</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">(</span><span class="n">bond_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">tensor Name : </span>
 <span class="go">tensor Rank : 3</span>
@@ -240,7 +240,7 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <ul class="simple">
 <li>create a rank-0 UniTensor</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rk0t</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rk0t</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rk0t</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -262,8 +262,8 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <ul class="simple">
 <li>create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds</span>  <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds</span>  <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">o</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -285,8 +285,8 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <ul class="simple">
 <li>note that if the BRA bond is not in the col-space, or KET bond is not in the row-space, the tensor is in the so called “non-braket_form, which will have a * symbol indicating the mismatch.”</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd2</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">c_mismatch</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bd2</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd2</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c_mismatch</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bd2</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c_mismatch</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -308,30 +308,30 @@ Note that if is_diag=True, then the UniTensor is strictly required to be a squar
 <ul class="simple">
 <li>create a rank-2 UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>create a diagonal 6x6 rank-2 tensor(matrix):
 Note that if is_diag is True, rowrank must be 1.</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note that when is_diag is set to True, the UniTensor should be a square matrix.</p>
 <ul class="simple">
 <li>create a rank-3 UniTensor with two bonds in row-space and one bond in col-space, and single precision:</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>create a rank-3 UniTensor with U1 symmetry:</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">symT</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">symT</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">symT</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">(</span><span class="n">bond_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -361,8 +361,8 @@ Note that if is_diag is True, rowrank must be 1.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.__eq__">
-<code class="descname">__eq__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.__eq__" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>rhs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.__eq__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.__eq__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare two UniTensor.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
 </pre></div>
@@ -372,8 +372,8 @@ Note that if is_diag is True, rowrank must be 1.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.CombineBonds">
-<code class="descname">CombineBonds</code><span class="sig-paren">(</span><em>X_to_combine</em>, <em>new_label=None</em>, <em>permute_back=False</em>, <em>by_label=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.CombineBonds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.CombineBonds" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.CombineBonds">
+<code class="descname">CombineBonds</code><span class="sig-paren">(</span><em>X_to_combine</em>, <em>new_label=None</em>, <em>permute_back=False</em>, <em>by_label=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.CombineBonds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.CombineBonds" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function combines the bonds in input UniTensor [a] by the specified labels [label].</p>
 <p>[Note][v0.3+] that ket-bonds can only be combine with ket-bonds, bra-bonds can only combine with bra-bonds.</p>
 <p>Args:</p>
@@ -395,9 +395,9 @@ Note that if is_diag is True, rowrank must be 1.</li>
 <div><ol class="arabic simple">
 <li>Combine Bond for an non-symmetric tensor.</li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">tensor Name : </span>
 <span class="go">tensor Rank : 3</span>
@@ -468,8 +468,8 @@ Note that if is_diag is True, rowrank must be 1.</li>
 <span class="go">REG     :</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span>  <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span>  <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -527,8 +527,8 @@ Note that if is_diag is True, rowrank must be 1.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Contiguous">
-<code class="descname">Contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Contiguous" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Contiguous">
+<code class="descname">Contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Contiguous" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the memory to be contiguous. This is similar as pytorch’s contiguous().
 Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called “non-contiguous” tensor.
 When call the Contiguous(), the memory will be moved to match the shape of UniTensor.</p>
@@ -538,7 +538,7 @@ When call the Contiguous(), the memory will be moved to match the shape of UniTe
 <dd>self</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">is_contiguous</span><span class="p">())</span>
 <span class="go">True</span>
@@ -561,8 +561,8 @@ When call the Contiguous(), the memory will be moved to match the shape of UniTe
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Contiguous_">
-<code class="descname">Contiguous_</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Contiguous_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Contiguous_" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Contiguous_">
+<code class="descname">Contiguous_</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Contiguous_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Contiguous_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the memory to be contiguous. This is similar as pytorch’s contiguous_().
 Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called “non-contiguous” tensor.
 When call the Contiguous_(), the memory will be moved to match the shape of UniTensor.
@@ -572,7 +572,7 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <dd>self</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tt</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">is_contiguous</span><span class="p">())</span>
 <span class="go">True</span>
@@ -591,14 +591,14 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Det">
-<code class="descname">Det</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Det"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Det" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the member function of Det, see Tor10.linalg.Det</p>
+<dt id="tor10.UniTensor.UniTensor.Det">
+<code class="descname">Det</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Det"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Det" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Det, see tor10.linalg.Det</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.GetBlock">
-<code class="descname">GetBlock</code><span class="sig-paren">(</span><em>*qnum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.GetBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.GetBlock" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.GetBlock">
+<code class="descname">GetBlock</code><span class="sig-paren">(</span><em>*qnum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.GetBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.GetBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Block specify by the quantum number(s). If the UniTensor is non-symmetry, return self.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -616,10 +616,10 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <dt>Example:</dt>
 <dd><ul class="first">
 <li><p class="first">Single Symmetry:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
-<span class="n">sym_T</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">sym_T</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -679,17 +679,17 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <li><p class="first">Multiple Symmetry:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## multiple Qnum:</span>
 <span class="c1">## U1 x U1 x U1 x U1</span>
-<span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
                                             <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
                                             <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
-<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 
-<span class="n">sym_T</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">sym_T</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -723,8 +723,8 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.GetTotalQnums">
-<code class="descname">GetTotalQnums</code><span class="sig-paren">(</span><em>physical=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.GetTotalQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.GetTotalQnums" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.GetTotalQnums">
+<code class="descname">GetTotalQnums</code><span class="sig-paren">(</span><em>physical=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.GetTotalQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.GetTotalQnums" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return two combined bond objects that has the information for the total qnums at bra and ket bonds.</p>
 <p>Args:</p>
 <blockquote>
@@ -740,9 +740,9 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <dd><p class="first">qnums_brabonds, qnums_ketbonds:</p>
 <dl class="last docutils">
 <dt>qnums_brabonds:</dt>
-<dd>a Tor10.Bond, the combined bra-bond</dd>
+<dd>a tor10.Bond, the combined bra-bond</dd>
 <dt>qnums_ketbonds:</dt>
-<dd>a Tor10.Bond, the combined ket-bond.</dd>
+<dd>a tor10.Bond, the combined ket-bond.</dd>
 </dl>
 </dd>
 </dl>
@@ -755,17 +755,17 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 <span class="c1">## U1 = {-2,-1,0,1,2}</span>
 <span class="c1">## U1 = {-1,1}</span>
 <span class="c1">## U1 = {0,1,2,3}</span>
-<span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="n">bd_sym_1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
                                             <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
                                             <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
-<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="n">bd_sym_2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+<span class="n">bd_sym_3</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
                                             <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 
-<span class="n">sym_T</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">sym_T</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1</span><span class="p">,</span><span class="n">bd_sym_2</span><span class="p">,</span><span class="n">bd_sym_3</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -876,8 +876,8 @@ When call the Contiguous_(), the memory will be moved to match the shape of UniT
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.GetValidQnums">
-<code class="descname">GetValidQnums</code><span class="sig-paren">(</span><em>physical=False</em>, <em>return_shape=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.GetValidQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.GetValidQnums" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.GetValidQnums">
+<code class="descname">GetValidQnums</code><span class="sig-paren">(</span><em>physical=False</em>, <em>return_shape=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.GetValidQnums"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.GetValidQnums" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the quatum number set that has a valid block.</p>
 <p>Args:</p>
 <blockquote>
@@ -897,20 +897,20 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Matmul">
-<code class="descname">Matmul</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Matmul" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the member function of Matmul, see Tor10.linalg.Matmul</p>
+<dt id="tor10.UniTensor.UniTensor.Matmul">
+<code class="descname">Matmul</code><span class="sig-paren">(</span><em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Matmul" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Matmul, see tor10.linalg.Matmul</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Norm">
-<code class="descname">Norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Norm" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the member function of Norm, see Tor10.linalg.Norm</p>
+<dt id="tor10.UniTensor.UniTensor.Norm">
+<code class="descname">Norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Norm, see tor10.linalg.Norm</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Permute">
-<code class="descname">Permute</code><span class="sig-paren">(</span><em>mapper</em>, <em>rowrank=None</em>, <em>by_label=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Permute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Permute" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Permute">
+<code class="descname">Permute</code><span class="sig-paren">(</span><em>mapper</em>, <em>rowrank=None</em>, <em>by_label=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Permute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Permute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Permute the bonds of the UniTensor.</p>
 <blockquote>
 <div>[Note] the computation complexity of Permute is O(1) which is very fast. The permute will not change the underlying memory layout. It will put the tensor into a “non-contiguous” status. Call Contiguous() or Contiguous_() when actually need to move memory.</div></blockquote>
@@ -930,8 +930,8 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 <blockquote>
 <div>self</div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
@@ -1012,8 +1012,8 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Print_diagram">
-<code class="descname">Print_diagram</code><span class="sig-paren">(</span><em>bond_info=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Print_diagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Print_diagram" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Print_diagram">
+<code class="descname">Print_diagram</code><span class="sig-paren">(</span><em>bond_info=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Print_diagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Print_diagram" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the beauty print of the tensor diagram. Including the information for the placeing device</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span><span class="n">The</span> <span class="n">left</span> <span class="n">hand</span> <span class="n">side</span> <span class="ow">is</span> <span class="n">always</span> <span class="n">the</span> <span class="ow">in</span><span class="o">-</span><span class="n">bonds</span><span class="p">,</span><span class="n">representing</span> <span class="n">the</span> <span class="n">row</span><span class="o">-</span><span class="n">space</span> <span class="n">when</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">Matrix</span><span class="p">;</span> <span class="n">the</span> <span class="n">right</span> <span class="n">hand</span> <span class="n">side</span> <span class="ow">is</span> <span class="n">always</span> <span class="n">the</span> <span class="n">Out</span><span class="o">-</span><span class="n">bonds</span><span class="p">,</span> <span class="n">representing</span> <span class="n">the</span> <span class="n">column</span><span class="o">-</span><span class="n">space</span> <span class="n">when</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">Matrix</span><span class="o">.</span>
 <span class="mf">2.</span><span class="n">The</span> <span class="n">number</span> <span class="n">attach</span> <span class="n">to</span> <span class="n">the</span> <span class="n">out</span><span class="o">-</span><span class="n">side</span> <span class="n">of</span> <span class="n">each</span> <span class="n">leg</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">Bond</span><span class="o">-</span><span class="n">dimension</span><span class="o">.</span>
@@ -1031,8 +1031,8 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.PutBlock">
-<code class="descname">PutBlock</code><span class="sig-paren">(</span><em>block</em>, <em>*qnum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.PutBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.PutBlock" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.PutBlock">
+<code class="descname">PutBlock</code><span class="sig-paren">(</span><em>block</em>, <em>*qnum</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.PutBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.PutBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put the block into the UniTensor. If the UniTensor is symmetry tensor, the block should be specify by the quantum number.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -1047,8 +1047,8 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Rand">
-<code class="descname">Rand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Rand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Rand" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Rand">
+<code class="descname">Rand</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Rand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Rand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomize the UniTensor.</p>
 <blockquote>
 <div>Note that in current version, only a UniTensor without symmetry quantum numbers can be randomized.</div></blockquote>
@@ -1059,8 +1059,8 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Reshape">
-<code class="descname">Reshape</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Reshape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Reshape" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Reshape">
+<code class="descname">Reshape</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Reshape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Reshape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a new reshaped UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</p>
 <p>[Note]</p>
 <blockquote>
@@ -1082,8 +1082,8 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 <blockquote>
 <div>UniTensor</div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1120,8 +1120,8 @@ if return_shape == True : return [qnum sets, 2D ndarray], [shape (2D ndarray)]</
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Reshape_">
-<code class="descname">Reshape_</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Reshape_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Reshape_" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Reshape_">
+<code class="descname">Reshape_</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Reshape_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Reshape_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inplace version of Reshape. 
 Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</p>
 <p>[Note]</p>
@@ -1144,8 +1144,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 <blockquote>
 <div>self</div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1182,8 +1182,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.SetElem">
-<code class="descname">SetElem</code><span class="sig-paren">(</span><em>elem</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetElem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetElem" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.SetElem">
+<code class="descname">SetElem</code><span class="sig-paren">(</span><em>elem</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.SetElem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.SetElem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given 1D array of elements, set the elements stored in tensor as the same as the given ones. Note that elem can only be python-list or numpy</p>
 <p>Args:</p>
 <blockquote>
@@ -1194,7 +1194,7 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dl>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sz</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sz</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                   <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
                   <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">))</span>
 <span class="n">Sz</span><span class="o">.</span><span class="n">SetElem</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
@@ -1211,8 +1211,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.SetLabel">
-<code class="descname">SetLabel</code><span class="sig-paren">(</span><em>newLabel</em>, <em>idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetLabel" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.SetLabel">
+<code class="descname">SetLabel</code><span class="sig-paren">(</span><em>newLabel</em>, <em>idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.SetLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.SetLabel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a new label for the bond at index :idx:</p>
 <p>Args:</p>
 <blockquote>
@@ -1221,7 +1221,7 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </div></blockquote>
 <p>Example:</p>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">labels</span>
 <span class="go">[5 6]</span>
 </pre></div>
@@ -1236,15 +1236,15 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.SetLabels">
-<code class="descname">SetLabels</code><span class="sig-paren">(</span><em>newlabels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetLabels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetLabels" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.SetLabels">
+<code class="descname">SetLabels</code><span class="sig-paren">(</span><em>newlabels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.SetLabels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.SetLabels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set new labels for all the bonds.</p>
 <p>Args:</p>
 <blockquote>
 <div>newLabels: The list of new labels, it should be a list or numpy array with size equal to the number of bonds of the UniTensor.</div></blockquote>
 <p>Example:</p>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="o">.</span><span class="n">labels</span>
 <span class="go">[5 6]</span>
 </pre></div>
@@ -1260,8 +1260,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.SetName">
-<code class="descname">SetName</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetName" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.SetName">
+<code class="descname">SetName</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.SetName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.SetName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the name of the UniTensor</p>
 <p>Args:</p>
 <blockquote>
@@ -1273,8 +1273,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.SetRowRank">
-<code class="descname">SetRowRank</code><span class="sig-paren">(</span><em>new_rowrank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.SetRowRank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.SetRowRank" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.SetRowRank">
+<code class="descname">SetRowRank</code><span class="sig-paren">(</span><em>new_rowrank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.SetRowRank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.SetRowRank" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the RowRank while keep the tensor indices.</p>
 <blockquote>
 <div><p>Args:</p>
@@ -1293,20 +1293,20 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Svd">
-<code class="descname">Svd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Svd" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the member function of Svd, see Tor10.linalg.Svd()</p>
+<dt id="tor10.UniTensor.UniTensor.Svd">
+<code class="descname">Svd</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Svd" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Svd, see tor10.linalg.Svd()</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Svd_truncate">
-<code class="descname">Svd_truncate</code><span class="sig-paren">(</span><em>keepdim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Svd_truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Svd_truncate" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the member function of Svd_truncate, see Tor10.linalg.Svd_truncate()</p>
+<dt id="tor10.UniTensor.UniTensor.Svd_truncate">
+<code class="descname">Svd_truncate</code><span class="sig-paren">(</span><em>keepdim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Svd_truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Svd_truncate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the member function of Svd_truncate, see tor10.linalg.Svd_truncate()</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Todense">
-<code class="descname">Todense</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Todense"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Todense" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Todense">
+<code class="descname">Todense</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Todense"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Todense" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a densed version of current UniTensor. This only affect on UniTensor with non-symmetry with is_diag=True.</p>
 <blockquote>
 <div>[Note] for UniTensor with Symmetry, Todense cannot be called.</div></blockquote>
@@ -1315,7 +1315,7 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 <dd>new UniTensor if current tensor is_diag=True, otherwise return self.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
@@ -1332,8 +1332,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Todense_">
-<code class="descname">Todense_</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Todense_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Todense_" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Todense_">
+<code class="descname">Todense_</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Todense_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Todense_" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Set the current UniTensor to dense matrix.</dt>
 <dd>[v0.3+] This only affect on UniTensor with non-symmetry with diag=True.</dd>
@@ -1341,7 +1341,7 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 <dd>self</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">SetElem</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">is_diag</span><span class="p">)</span>
 <span class="go">True</span>
@@ -1369,8 +1369,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.View">
-<code class="descname">View</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.View"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.View" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.View">
+<code class="descname">View</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.View"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.View" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a new view of UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</p>
 <p>The View() can only operate on a contiguous tensor, otherwise, Contiguous_() or Contiguous() need to be called before the tensor can be viewed. This is the same as pytorch.view().</p>
 <p>[Note]</p>
@@ -1394,8 +1394,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 <blockquote>
 <div>UniTensor</div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1434,8 +1434,8 @@ Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] 
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.View_">
-<code class="descname">View_</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.View_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.View_" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.View_">
+<code class="descname">View_</code><span class="sig-paren">(</span><em>dimer</em>, <em>rowrank</em>, <em>new_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.View_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.View_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inplace version of View. 
 View UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</p>
 <p>The View_() can only operate on a contiguous tensor, otherwise, Contiguous_() or Contiguous() need to be called before the tensor can be viewed. This is the inplace version of pytorch.view().</p>
@@ -1462,8 +1462,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 <blockquote>
 <div>self</div></blockquote>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1502,8 +1502,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.Whole_transpose">
-<code class="descname">Whole_transpose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.Whole_transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.Whole_transpose" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.Whole_transpose">
+<code class="descname">Whole_transpose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.Whole_transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.Whole_transpose" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the UniTensor is tagged, exchange the bra/ket tags on each bond, and transpose (rowspace and colspace) by referencing to the “rowrank”.</p>
 <dl class="docutils">
 <dt>Return:</dt>
@@ -1512,14 +1512,14 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.backward">
-<code class="descname">backward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.backward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.backward" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.backward">
+<code class="descname">backward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.backward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.backward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Backward the gradient flow in the contructed autograd graph. This is the same as torch.Tensor.backward</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.braket_form">
-<code class="descname">braket_form</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.braket_form"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.braket_form" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.braket_form">
+<code class="descname">braket_form</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.braket_form"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.braket_form" title="Permalink to this definition">¶</a></dt>
 <dd><p>Permute the UniTensor to bra-ket form.</p>
 <p>[Tech.Note] the permuted UniTensor can be non-contiguous depending on the underlying memory layout.</p>
 <dl class="docutils">
@@ -1529,8 +1529,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.detach">
-<code class="descname">detach</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.detach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.detach" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.detach">
+<code class="descname">detach</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.detach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.detach" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detach the current tensor from the current graph, making it a leaf. This is the same as torch.Tensor.detach_()</p>
 <dl class="docutils">
 <dt>Return:</dt>
@@ -1539,8 +1539,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="attribute">
-<dt id="Tor10.UniTensor.UniTensor.device">
-<code class="descname">device</code><a class="headerlink" href="#Tor10.UniTensor.UniTensor.device" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.device">
+<code class="descname">device</code><a class="headerlink" href="#tor10.UniTensor.UniTensor.device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the device of UniTensor</p>
 <p>Return:</p>
 <blockquote>
@@ -1548,8 +1548,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="attribute">
-<dt id="Tor10.UniTensor.UniTensor.dtype">
-<code class="descname">dtype</code><a class="headerlink" href="#Tor10.UniTensor.UniTensor.dtype" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.dtype">
+<code class="descname">dtype</code><a class="headerlink" href="#tor10.UniTensor.UniTensor.dtype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the device of UniTensor</p>
 <dl class="docutils">
 <dt>Return:</dt>
@@ -1558,8 +1558,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.grad">
-<code class="descname">grad</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.grad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.grad" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.grad">
+<code class="descname">grad</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.grad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.grad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the gradient tensors subject to x where x is the current UniTensor. The return is None by default and becomes a UniTensor the first time a call backward(). The future calls to backward() will accumulate (add) gradient into it.</p>
 <p>This is the same as torch.Tensor.grad</p>
 <p><span class="math notranslate nohighlight">\(d/dx\)</span></p>
@@ -1568,7 +1568,7 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 <dd>UniTensor, the shape of the return UniTensor and it’s bonds are the same as the original UniTensor, but with default labels.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
@@ -1584,7 +1584,7 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 <span class="go">        [16., 16.]], dtype=torch.float64, grad_fn=&lt;PowBackward0&gt;)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 <span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
@@ -1602,8 +1602,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.is_braket_form">
-<code class="descname">is_braket_form</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.is_braket_form"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.is_braket_form" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.is_braket_form">
+<code class="descname">is_braket_form</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.is_braket_form"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.is_braket_form" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return if the current tensor is in braket_form. It can only be called on a tagged UniTensor (with or without symmetry)</p>
 <p>Return:</p>
 <blockquote>
@@ -1611,8 +1611,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.is_contiguous">
-<code class="descname">is_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.is_contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.is_contiguous" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.is_contiguous">
+<code class="descname">is_contiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.is_contiguous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.is_contiguous" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the status of memory contiguous.</p>
 <dl class="docutils">
 <dt>Return:</dt>
@@ -1621,8 +1621,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.item">
-<code class="descname">item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.item" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.item">
+<code class="descname">item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.item" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the python scalar from a UniTensor with one element</p>
 <dl class="docutils">
 <dt>Return:</dt>
@@ -1631,8 +1631,8 @@ View UniTensor into the shape specified as [dimer], with the first [rowrank] Bon
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.requires_grad">
-<code class="descname">requires_grad</code><span class="sig-paren">(</span><em>is_grad=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.requires_grad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.requires_grad" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.requires_grad">
+<code class="descname">requires_grad</code><span class="sig-paren">(</span><em>is_grad=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.requires_grad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.requires_grad" title="Permalink to this definition">¶</a></dt>
 <dd><p>The status for the autograd property.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -1646,8 +1646,8 @@ If the argument is not set, it will return the current autograd status.</dd>
 <dd>bool, return only when is_grad argument is ignored.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bds_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bds_x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">())</span>
@@ -1667,8 +1667,8 @@ If the argument is not set, it will return the current autograd status.</dd>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="Tor10.UniTensor.UniTensor.shape">
-<code class="descname">shape</code><a class="headerlink" href="#Tor10.UniTensor.UniTensor.shape" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.shape">
+<code class="descname">shape</code><a class="headerlink" href="#tor10.UniTensor.UniTensor.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the shape of UniTensor</p>
 <p>Return:</p>
 <blockquote>
@@ -1676,8 +1676,8 @@ If the argument is not set, it will return the current autograd status.</dd>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.to">
-<code class="descname">to</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.to" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.to">
+<code class="descname">to</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.to" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current UniTensor to device. If device is not the same with current tensor, return a new UniTensor, otherwise return self.</p>
 <p>Args:</p>
 <blockquote>
@@ -1694,7 +1694,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <p>Example:</p>
 <blockquote>
 <div><p>Construct a tensor (default is on cpu)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Set to GPU.</p>
@@ -1712,8 +1712,8 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.to_">
-<code class="descname">to_</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.to_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.to_" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.to_">
+<code class="descname">to_</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.to_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.to_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current UniTensor to device</p>
 <p>Args:</p>
 <blockquote>
@@ -1730,7 +1730,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <p>Example:</p>
 <blockquote>
 <div><p>Construct a tensor (default is on cpu)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Set to GPU.</p>
@@ -1741,8 +1741,8 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.UniTensor.UniTensor.torch">
-<code class="descname">torch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#UniTensor.torch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.UniTensor.torch" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.UniTensor.torch">
+<code class="descname">torch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#UniTensor.torch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.UniTensor.torch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a UniTensor to torch.Tensor.</p>
 <blockquote>
 <div><p>[Note]</p>
@@ -1760,9 +1760,9 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 
 </dd></dl>
 
-<span class="target" id="module-Tor10.UniTensor"></span><dl class="function">
-<dt id="Tor10.UniTensor.Contract">
-<code class="descclassname">Tor10.UniTensor.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Contract" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-tor10.UniTensor"></span><dl class="function">
+<dt id="tor10.UniTensor.Contract">
+<code class="descclassname">tor10.UniTensor.</code><code class="descname">Contract</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#Contract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.Contract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contract two tensors with the same labels.</p>
 <ol class="arabic simple">
 <li>two tensors must be the same type, if “a” is a symmetry/untagged/tagged tensor, “b” must also be a symmetry/untagged/tagged tensor.</li>
@@ -1783,8 +1783,8 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <dd>UniTensor</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span> <span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
@@ -1819,7 +1819,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <span class="go">            -------------  </span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1838,7 +1838,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <span class="go">            -------------  </span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1858,16 +1858,16 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 </pre></div>
 </div>
 <p>Note that you can also contract for UniTensor with symmetry, even when they are not in the bra-ket form. As long as the quantum number on the to-be-contract bonds and the bond type matches (bra can only contract with ket)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_sym_1a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="n">bd_sym_2a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="n">bd_sym_3a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bd_sym_1a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_2a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_3a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">]])</span>
 
-<span class="n">bd_sym_1b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="n">bd_sym_2b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
-<span class="n">bd_sym_3b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">3</span><span class="p">],[</span><span class="o">-</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">bd_sym_1b</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_2b</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">bd_sym_3b</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span><span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">3</span><span class="p">],[</span><span class="o">-</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">]])</span>
 
-<span class="n">sym_A</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1a</span><span class="p">,</span><span class="n">bd_sym_2a</span><span class="p">,</span><span class="n">bd_sym_3a</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">])</span>
-<span class="n">sym_B</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_2b</span><span class="p">,</span><span class="n">bd_sym_1b</span><span class="p">,</span><span class="n">bd_sym_3b</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span>
+<span class="n">sym_A</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_1a</span><span class="p">,</span><span class="n">bd_sym_2a</span><span class="p">,</span><span class="n">bd_sym_3a</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">])</span>
+<span class="n">sym_B</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">bd_sym_2b</span><span class="p">,</span><span class="n">bd_sym_1b</span><span class="p">,</span><span class="n">bd_sym_3b</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sym_A</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
@@ -1904,8 +1904,8 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <span class="go">           ---------------  </span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sym_AB</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">sym_A</span><span class="p">,</span><span class="n">sym_B</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sym_BA</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">sym_B</span><span class="p">,</span><span class="n">sym_A</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sym_AB</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">sym_A</span><span class="p">,</span><span class="n">sym_B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sym_BA</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">sym_B</span><span class="p">,</span><span class="n">sym_A</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sym_AB</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1939,8 +1939,8 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.UniTensor.From_torch">
-<code class="descclassname">Tor10.UniTensor.</code><code class="descname">From_torch</code><span class="sig-paren">(</span><em>torch_tensor</em>, <em>rowrank=None</em>, <em>labels=None</em>, <em>is_tag=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#From_torch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.From_torch" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.From_torch">
+<code class="descclassname">tor10.UniTensor.</code><code class="descname">From_torch</code><span class="sig-paren">(</span><em>torch_tensor</em>, <em>rowrank=None</em>, <em>labels=None</em>, <em>is_tag=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#From_torch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.From_torch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct UniTensor from torch.Tensor.</p>
 <p>If the input torch_tensor belongs to a autograd graph, the contructed UniTensor will preserve the role of the input torch_tensor in the computational graph.</p>
 <dl class="docutils">
@@ -1949,7 +1949,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <dt>torch_tensor:</dt>
 <dd>Torch.Tensor</dd>
 <dt>rowrank:</dt>
-<dd>int, The number of inbond. Note that the first [rowrank] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT</dd>
+<dd>int, The number of inbond. Note that the first [rowrank] bonds will be set to tor10.BD_IN, and the remaining bonds will be set to tor10.BD_OUT</dd>
 <dt>labels:</dt>
 <dd>python list or 1d numpy array, The labels for each bonds. If ignore, the constucted UniTensor will using the default labels for each bond.</dd>
 </dl>
@@ -1965,7 +1965,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <span class="go">        [1., 1., 1.]])</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -1995,7 +1995,7 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <span class="go">        [1., 1., 1., 1.]], requires_grad=True)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">y2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y2</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">())</span>
 <span class="go">True</span>
 </pre></div>
@@ -2003,8 +2003,8 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.UniTensor.Load">
-<code class="descclassname">Tor10.UniTensor.</code><code class="descname">Load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Load" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.Load">
+<code class="descclassname">tor10.UniTensor.</code><code class="descname">Load</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#Load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.Load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a UniTensor from the file.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -2017,14 +2017,14 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 <dd>UniTensor</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s2">&quot;a.uniT&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s2">&quot;a.uniT&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.UniTensor.Save">
-<code class="descclassname">Tor10.UniTensor.</code><code class="descname">Save</code><span class="sig-paren">(</span><em>a</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/UniTensor.html#Save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.UniTensor.Save" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.UniTensor.Save">
+<code class="descclassname">tor10.UniTensor.</code><code class="descname">Save</code><span class="sig-paren">(</span><em>a</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/UniTensor.html#Save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.UniTensor.Save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a UniTensor to the file</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -2037,8 +2037,8 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">Tor10</span><span class="o">.</span><span class="n">Save</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="s2">&quot;a.uniT&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tor10</span><span class="o">.</span><span class="n">Save</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="s2">&quot;a.uniT&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2053,10 +2053,10 @@ torch.device(“cuda:x”) for put the tensor on GPU with index x</dd>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Network.html" class="btn btn-neutral float-right" title="Tor10.Network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Network.html" class="btn btn-neutral float-right" title="tor10.Network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Bond.html" class="btn btn-neutral" title="Tor10.Bond" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Bond.html" class="btn btn-neutral" title="tor10.Bond" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

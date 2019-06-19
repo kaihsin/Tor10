@@ -26,7 +26,7 @@
     1. Remove the private args in UniTensor.__init__, in place, they are move to private member function __mac() 
     2. Fix UniTensor.__pow__ does not return anything bug. 
     3. Remove unrelated arguments in documentation
-    4. Change the order of functions appears in documentation Tor10.UniTensor
+    4. Change the order of functions appears in documentation tor10.UniTensor
 
     v0.3.4
     1. Fix Svd, Svd_truncate, Qr, Qdr crash bug. Originated from the variable change of v0.3.3a 
@@ -53,6 +53,9 @@
 
     v0.3.9
     1. Change the behaviour of Bonds when initialize a UniTensor. All the bonds will be deepcopy now
+
+    v0.3.10
+    1. Change Tor10 -> tor10 for deployment
 
 ## Release version
     v0.3.9 alpha
@@ -109,39 +112,39 @@
 
 ```python
         #> Multiple mix symmetry: U1 x Z2 x Z4
-        bd_sym_mix = Tor10.Bond(3,qnums=[[-2,0,0],
+        bd_sym_mix = tor10.Bond(3,qnums=[[-2,0,0],
                                          [-1,1,3],
                                          [ 1,0,2]],
-                                 sym_types=[Tor10.Symmetry.U1(),
-                                            Tor10.Symmetry.Zn(2),
-                                            Tor10.Symmetry.Zn(4)],
-                                  Tor10.BD_BRA)
+                                 sym_types=[tor10.Symmetry.U1(),
+                                            tor10.Symmetry.Zn(2),
+                                            tor10.Symmetry.Zn(4)],
+                                  tor10.BD_BRA)
 ``` 
         
     4. Network :
         * See documentation for how to use network.
 
     5. Autograd mechanism:
-        The Tor10 now support the autograd functionality. The Contract, Matmul etc will automatically contruct the gradient flow for UniTensor that has [requires_grad=True]
+        The tor10 now support the autograd functionality. The Contract, Matmul etc will automatically contruct the gradient flow for UniTensor that has [requires_grad=True]
         
         * See documentation for further details
 
 
     6. Easy coordinate with pytorch for Neural-Network:
-        We provide Tor10.nn that can easy cooperate with pytorch.nn.Module to perform neural-network tasks.
+        We provide tor10.nn that can easy cooperate with pytorch.nn.Module to perform neural-network tasks.
 
 ```python
         import torch
-        import Tor10
+        import tor10
         class Model(torch.nn.Module):
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
+                self.P1 = tor10.nn.Parameter(tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1))
+                self.P2 = tor10.nn.Parameter(tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1))
  
             def forward(self,x):
-                y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
+                y = tor10.Matmul(tor10.Matmul(x,self.P1),self.P2)
                 return y
 
         md = Model()

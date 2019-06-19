@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.nn &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.nn &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Tor10.linalg" href="linalg.html" /> 
+    <link rel="prev" title="tor10.linalg" href="linalg.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -79,12 +79,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tor10.nn</a></li>
 </ul>
 
             
@@ -130,7 +130,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Tor10.nn</li>
+      <li>tor10.nn</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -147,11 +147,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-Tor10.nn">
-<span id="tor10-nn"></span><h1>Tor10.nn<a class="headerlink" href="#module-Tor10.nn" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-tor10.nn">
+<span id="tor10-nn"></span><h1>tor10.nn<a class="headerlink" href="#module-tor10.nn" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="Tor10.nn.Linear">
-<em class="property">class </em><code class="descclassname">Tor10.nn.</code><code class="descname">Linear</code><span class="sig-paren">(</span><em>in_features</em>, <em>out_features</em>, <em>bias=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Linear" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.nn.Linear">
+<em class="property">class </em><code class="descclassname">tor10.nn.</code><code class="descname">Linear</code><span class="sig-paren">(</span><em>in_features</em>, <em>out_features</em>, <em>bias=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/nn.html#Linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.nn.Linear" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Applies a linear transformation to the incoming data: <span class="math notranslate nohighlight">\(y = xA^T + b\)</span></p>
 <p>Note that the the input and output UniTensors will have shape:</p>
@@ -177,7 +177,7 @@ are the same shape as the input.</li>
 <dt>Attributes:</dt>
 <dd><dl class="first last docutils">
 <dt>bias:   the learnable bias of the module of shape <span class="math notranslate nohighlight">\((      ext{out\_features})\)</span>.</dt>
-<dd>If <a class="reference internal" href="#Tor10.nn.Linear.bias" title="Tor10.nn.Linear.bias"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bias</span></code></a> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the values are initialized from
+<dd>If <a class="reference internal" href="#tor10.nn.Linear.bias" title="tor10.nn.Linear.bias"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bias</span></code></a> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the values are initialized from
 <span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt{k}, \sqrt{k})\)</span> where
 :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>k =</dd>
 </dl>
@@ -187,8 +187,8 @@ are the same shape as the input.</li>
 <p>rac{1}{     ext{in_features}}`</p>
 <blockquote>
 <div><p>Examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">iput</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iput</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">oput</span> <span class="o">=</span> <span class="n">m</span><span class="p">(</span><span class="n">iput</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">oput</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="go">torch.Size([128, 30])</span>
@@ -196,11 +196,11 @@ are the same shape as the input.</li>
 </div>
 </div></blockquote>
 <dl class="method">
-<dt id="Tor10.nn.Linear.bias">
-<code class="descname">bias</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Linear.bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Linear.bias" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.nn.Linear.bias">
+<code class="descname">bias</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/nn.html#Linear.bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.nn.Linear.bias" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>the learnable bias of the module of shape <span class="math notranslate nohighlight">\((      ext{out\_features})\)</span>.
-If <a class="reference internal" href="#Tor10.nn.Linear.bias" title="Tor10.nn.Linear.bias"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bias</span></code></a> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the values are initialized from
+If <a class="reference internal" href="#tor10.nn.Linear.bias" title="tor10.nn.Linear.bias"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bias</span></code></a> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the values are initialized from
 <span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt{k}, \sqrt{k})\)</span> where
 :math:<a href="#id3"><span class="problematic" id="id4">`</span></a>k =</div></blockquote>
 <p>rac{1}{     ext{in_features}}`</p>
@@ -213,8 +213,8 @@ If <a class="reference internal" href="#Tor10.nn.Linear.bias" title="Tor10.nn.Li
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.nn.Linear.weight">
-<code class="descname">weight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Linear.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Linear.weight" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.nn.Linear.weight">
+<code class="descname">weight</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/nn.html#Linear.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.nn.Linear.weight" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div>Return the learnable weights of the module of shape
 <span class="math notranslate nohighlight">\((        ext{out\_features},     ext{in\_features})\)</span>. The values are
@@ -232,8 +232,8 @@ initialized from <span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.nn.Parameter">
-<code class="descclassname">Tor10.nn.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>data</em>, <em>requires_grad=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/nn.html#Parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.nn.Parameter" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.nn.Parameter">
+<code class="descclassname">tor10.nn.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>data</em>, <em>requires_grad=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/nn.html#Parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.nn.Parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a UniTensor to be considered as a module parameter.</p>
 <p>They have a special property when use with torch.nn.Module. When they are assigned as Module attributes, they are automatically added to the list of its parameter, and appears in Module.parameters. (This is similar as torch.nn.Parameter)</p>
 <dl class="docutils">
@@ -254,11 +254,11 @@ initialized from <span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1">## Customize and register the parameter.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">P1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">P2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Matmul</span><span class="p">(</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">P1</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">P2</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Matmul</span><span class="p">(</span><span class="n">tor10</span><span class="o">.</span><span class="n">Matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">P1</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">P2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">y</span>
 </pre></div>
 </div>
@@ -284,7 +284,7 @@ initialized from <span class="math notranslate nohighlight">\(\mathcal{U}(-\sqrt
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="linalg.html" class="btn btn-neutral" title="Tor10.linalg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="linalg.html" class="btn btn-neutral" title="tor10.linalg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

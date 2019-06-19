@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.Symmetry &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.Symmetry &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tor10.Bond" href="Bond.html" />
+    <link rel="next" title="tor10.Bond" href="Bond.html" />
     <link rel="prev" title="Tor10 Documentation" href="index.html" /> 
 
   
@@ -80,12 +80,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">Tor10.nn</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Tor10.Symmetry</li>
+      <li>tor10.Symmetry</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -149,17 +149,17 @@
            <div itemprop="articleBody">
             
   <div class="section" id="tor10-symmetry">
-<h1>Tor10.Symmetry<a class="headerlink" href="#tor10-symmetry" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-Tor10.Symmetry"></span><dl class="class">
-<dt id="Tor10.Symmetry.U1">
-<em class="property">class </em><code class="descclassname">Tor10.Symmetry.</code><code class="descname">U1</code><a class="reference internal" href="_modules/Tor10/Symmetry.html#U1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Symmetry.U1" title="Permalink to this definition">¶</a></dt>
+<h1>tor10.Symmetry<a class="headerlink" href="#tor10-symmetry" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-tor10.Symmetry"></span><dl class="class">
+<dt id="tor10.Symmetry.U1">
+<em class="property">class </em><code class="descclassname">tor10.Symmetry.</code><code class="descname">U1</code><a class="reference internal" href="_modules/tor10/Symmetry.html#U1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Symmetry.U1" title="Permalink to this definition">¶</a></dt>
 <dd><p>U1 Symmetry class. 
 The U1 symmetry can have quantum number represent as arbitrary unsigned integer.</p>
 <p>Fusion rule for combine two quantum number:</p>
 <blockquote>
 <div>q1 + q2</div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
 <span class="go">BRA     : U1::  +1 +0 +0</span>
@@ -179,15 +179,15 @@ The U1 symmetry can have quantum number represent as arbitrary unsigned integer.
 </dd></dl>
 
 <dl class="class">
-<dt id="Tor10.Symmetry.Zn">
-<em class="property">class </em><code class="descclassname">Tor10.Symmetry.</code><code class="descname">Zn</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Symmetry.html#Zn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Symmetry.Zn" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.Symmetry.Zn">
+<em class="property">class </em><code class="descclassname">tor10.Symmetry.</code><code class="descname">Zn</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Symmetry.html#Zn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Symmetry.Zn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Z(n) Symmetry class. 
 The Z(n) symmetry can have integer quantum number, with n &gt; 1.</p>
 <p>Fusion rule for combine two quantum number:</p>
 <blockquote>
 <div>(q1 + q2)%n</div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">]</span>  <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">]</span>  <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
 <span class="go">BRA     : Z4::  +2 +1 +0</span>
@@ -208,14 +208,14 @@ The Z(n) symmetry can have integer quantum number, with n &gt; 1.</p>
 
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descclassname">Tor10.Symmetry.</code><code class="descname">Zn</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Symmetry.html#Zn"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">tor10.Symmetry.</code><code class="descname">Zn</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Symmetry.html#Zn"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Z(n) Symmetry class. 
 The Z(n) symmetry can have integer quantum number, with n &gt; 1.</p>
 <p>Fusion rule for combine two quantum number:</p>
 <blockquote>
 <div>(q1 + q2)%n</div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">]</span>  <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">]</span>  <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
 <span class="go">BRA     : Z4::  +2 +1 +0</span>
@@ -233,8 +233,8 @@ The Z(n) symmetry can have integer quantum number, with n &gt; 1.</p>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="Tor10.Symmetry.Zn.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Symmetry.html#Zn.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Symmetry.Zn.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.Symmetry.Zn.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Symmetry.html#Zn.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Symmetry.Zn.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -242,14 +242,14 @@ The Z(n) symmetry can have integer quantum number, with n &gt; 1.</p>
 
 <dl class="class">
 <dt>
-<em class="property">class </em><code class="descclassname">Tor10.Symmetry.</code><code class="descname">U1</code><a class="reference internal" href="_modules/Tor10/Symmetry.html#U1"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">tor10.Symmetry.</code><code class="descname">U1</code><a class="reference internal" href="_modules/tor10/Symmetry.html#U1"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>U1 Symmetry class. 
 The U1 symmetry can have quantum number represent as arbitrary unsigned integer.</p>
 <p>Fusion rule for combine two quantum number:</p>
 <blockquote>
 <div>q1 + q2</div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">Tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span> <span class="p">]</span>     <span class="p">],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">tor10</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">,</span> <span class="n">qnums</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">sym_types</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span>
 <span class="go">Dim = 3 |</span>
 <span class="go">BRA     : U1::  +1 +0 +0</span>
@@ -267,8 +267,8 @@ The U1 symmetry can have quantum number represent as arbitrary unsigned integer.
 </pre></div>
 </div>
 <dl class="method">
-<dt id="Tor10.Symmetry.U1.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Symmetry.html#U1.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Symmetry.U1.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.Symmetry.U1.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Symmetry.html#U1.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Symmetry.U1.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -284,7 +284,7 @@ The U1 symmetry can have quantum number represent as arbitrary unsigned integer.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Bond.html" class="btn btn-neutral float-right" title="Tor10.Bond" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Bond.html" class="btn btn-neutral float-right" title="tor10.Bond" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Tor10 Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

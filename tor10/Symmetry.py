@@ -11,8 +11,8 @@ class U1:
             q1 + q2
 
 
-        >>> b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[0],[1 ]     ],sym_types=[Tor10.Symmetry.U1()])
-        >>> b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[-3],[-1]],sym_types=[Tor10.Symmetry.U1()])
+        >>> b1 = tor10.Bond(3,tor10.BD_BRA, qnums=[[0],[0],[1 ]     ],sym_types=[tor10.Symmetry.U1()])
+        >>> b2 = tor10.Bond(4,tor10.BD_BRA, qnums=[[0],[2],[-3],[-1]],sym_types=[tor10.Symmetry.U1()])
         >>> print(b1)
         Dim = 3 |
         BRA     : U1::  +1 +0 +0
@@ -57,8 +57,8 @@ class Zn:
             (q1 + q2)%n
 
         
-        >>> b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[2],[1 ]     ],sym_types=[Tor10.Symmetry.Zn(4)])
-        >>> b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[3],[1]  ],sym_types=[Tor10.Symmetry.Zn(4)])
+        >>> b1 = tor10.Bond(3,tor10.BD_BRA, qnums=[[0],[2],[1 ]     ],sym_types=[tor10.Symmetry.Zn(4)])
+        >>> b2 = tor10.Bond(4,tor10.BD_BRA, qnums=[[0],[2],[3],[1]  ],sym_types=[tor10.Symmetry.Zn(4)])
         >>> print(b1)
         Dim = 3 |
         BRA     : Z4::  +2 +1 +0

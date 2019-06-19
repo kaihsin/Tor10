@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.Network &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.Network &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tor10.linalg" href="linalg.html" />
-    <link rel="prev" title="Tor10.UniTensor" href="UniTensor.html" /> 
+    <link rel="next" title="tor10.linalg" href="linalg.html" />
+    <link rel="prev" title="tor10.UniTensor" href="UniTensor.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -80,12 +80,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Tor10.Network</li>
+      <li>tor10.Network</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -149,13 +149,13 @@
            <div itemprop="articleBody">
             
   <div class="section" id="tor10-network">
-<h1>Tor10.Network<a class="headerlink" href="#tor10-network" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-Tor10.Network"></span><dl class="class">
-<dt id="Tor10.Network.Network">
-<em class="property">class </em><code class="descclassname">Tor10.Network.</code><code class="descname">Network</code><span class="sig-paren">(</span><em>nwfile=None</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network" title="Permalink to this definition">¶</a></dt>
+<h1>tor10.Network<a class="headerlink" href="#tor10-network" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-tor10.Network"></span><dl class="class">
+<dt id="tor10.Network.Network">
+<em class="property">class </em><code class="descclassname">tor10.Network.</code><code class="descname">Network</code><span class="sig-paren">(</span><em>nwfile=None</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Network.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Network.Network" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
-<dt id="Tor10.Network.Network.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>nwfile=None</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.Network.Network.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>nwfile=None</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Network.html#Network.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Network.Network.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor of the Network</p>
 <p>The Network is an object that allow one to create a complex network from a pre-defined Network file. By putting the Tensors into the Network, the user simply call “Network.Launch()” to get the out-come.</p>
 <dl class="docutils">
@@ -194,7 +194,7 @@
 </ol>
 </dd>
 </dl>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Ntwk</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;test.net&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Ntwk</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;test.net&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Ntwk</span><span class="p">)</span>
 <span class="go">==== Network ====</span>
 <span class="go">[x] A : -1 -2 ; 1 2 </span>
@@ -207,8 +207,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.Network.Network.Fromfile">
-<code class="descname">Fromfile</code><span class="sig-paren">(</span><em>ntwrk_file</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.Fromfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.Fromfile" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.Network.Network.Fromfile">
+<code class="descname">Fromfile</code><span class="sig-paren">(</span><em>ntwrk_file</em>, <em>delimiter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Network.html#Network.Fromfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Network.Network.Fromfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the Network file.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -223,8 +223,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.Network.Network.Launch">
-<code class="descname">Launch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.Launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.Launch" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.Network.Network.Launch">
+<code class="descname">Launch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Network.html#Network.Launch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Network.Network.Launch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Launch the Network. When call, it check if there is a well defined Network structure (Network file loaded), if there is “TOUT” tensor for the Network and if all the Tensors the is being defined in the strucutre are set.</p>
 <dl class="docutils">
 <dt>Return:</dt>
@@ -233,8 +233,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="Tor10.Network.Network.Put">
-<code class="descname">Put</code><span class="sig-paren">(</span><em>name</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/Network.html#Network.Put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.Network.Network.Put" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.Network.Network.Put">
+<code class="descname">Put</code><span class="sig-paren">(</span><em>name</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/Network.html#Network.Put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.Network.Network.Put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put the UniTensor into the tensor named [name] in the Network. To use the Network, only untagged tensor can be put into the Network.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -247,11 +247,11 @@
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ntwrk</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ntwrk</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
 <span class="n">ntwrk</span><span class="o">.</span><span class="n">Fromfile</span><span class="p">(</span><span class="s2">&quot;test.net&quot;</span><span class="p">)</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ntwrk</span><span class="p">)</span>
@@ -335,10 +335,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="linalg.html" class="btn btn-neutral float-right" title="Tor10.linalg" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="linalg.html" class="btn btn-neutral float-right" title="tor10.linalg" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="UniTensor.html" class="btn btn-neutral" title="Tor10.UniTensor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="UniTensor.html" class="btn btn-neutral" title="tor10.UniTensor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

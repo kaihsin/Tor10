@@ -95,41 +95,41 @@ class Bond:
 
             Create an simple bond with dimension=4:
 
-            >>> bd_r = Tor10.Bond(3) # this is equivalent as "bd_r = Tor10.Bond(3,Tor10.BD_REG)"
+            >>> bd_r = tor10.Bond(3) # this is equivalent as "bd_r = tor10.Bond(3,tor10.BD_REG)"
             >>> print(bd_r)
             Dim = 3 |
             REG     :
 
             Create a bond with tag: BD_KET (ket-bond) with dimension=3:
 
-            >>> bd_ket = Tor10.Bond(3,Tor10.BD_KET)
+            >>> bd_ket = tor10.Bond(3,tor10.BD_KET)
             >>> print(bd_ket)
             Dim = 3 |
             KET :
 
             Create an ket-bond of dimension=3 with single U1 symmetry, and quantum numbers=[-1,0,1] for each dimension:
 
-            >>> bd_sym_U1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[-1],[0],[1]])
+            >>> bd_sym_U1 = tor10.Bond(3,tor10.BD_KET,qnums=[[-1],[0],[1]])
             >>> print(bd_sym_U1)
             Dim = 3 |
             KET     : U1::  +1 +0 -1
 
             The above example is equivalent to:
 
-            >>> bd_sym_U1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[-1],[0],[1]],sym_types=[Tor10.Symmetry.U1()])
+            >>> bd_sym_U1 = tor10.Bond(3,tor10.BD_KET,qnums=[[-1],[0],[1]],sym_types=[tor10.Symmetry.U1()])
 
             Create an symmetry bra-bond of dimension=3 with single Zn symmetry (n can be arbitrary positive Integer).
 
             1. bra-bond with Z2 symmetry, with quantum numbers=[0,1,0] for each dimension:
 
-            >>> bd_sym_Z2 = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[0]],sym_types=[Tor10.Symmetry.Zn(2)])
+            >>> bd_sym_Z2 = tor10.Bond(3,tor10.BD_BRA,qnums=[[0],[1],[0]],sym_types=[tor10.Symmetry.Zn(2)])
             >>> print(bd_sym_Z2)
             Dim = 3 |
             BRA     : Z2::  +1 +0 +0
 
             2. ket-bond with Z4 symmetry, with quantum numbers=[0,2,3] for each dimension:
 
-            >>> bd_sym_Z4 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[2],[3]],sym_types=[Tor10.Symmetry.Zn(4)])
+            >>> bd_sym_Z4 = tor10.Bond(3,tor10.BD_KET,qnums=[[0],[2],[3]],sym_types=[tor10.Symmetry.Zn(4)])
             >>> print(bd_sym_Z4)
             Dim = 3 |
             KET     : Z4::  +3 +2 +0
@@ -139,7 +139,7 @@ class Bond:
             2nd dimension quantum number = [1 ,-4,0, 0],
             3rd dimension quantum number = [-8,-3,1, 5].
             ::
-               bd_out_mulsym = Tor10.Bond(3,Tor10.BD_KET,qnums=[[-2,-1,0,-1],
+               bd_out_mulsym = tor10.Bond(3,tor10.BD_KET,qnums=[[-2,-1,0,-1],
                                                                 [1 ,-4,0, 0],
                                                                 [-8,-3,1, 5]])
 
@@ -155,12 +155,12 @@ class Bond:
             2nd dimension quantum number = [-1,1,3],
             3rd dimension quantum number = [ 1,0,2].
             ::
-                bd_out_mulsym = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[-2,0,0],
+                bd_out_mulsym = tor10.Bond(3,tor10.BD_BRA,qnums=[[-2,0,0],
                                                                  [-1,1,3],
                                                                  [ 1,0,2]],
-                                             sym_types=[Tor10.Symmetry.U1(),
-                                                        Tor10.Symmetry.Zn(2),
-                                                        Tor10.Symmetry.Zn(4)])
+                                             sym_types=[tor10.Symmetry.U1(),
+                                                        tor10.Symmetry.Zn(2),
+                                                        tor10.Symmetry.Zn(4)])
 
             >>> print(bd_out_mulsym)
             Dim = 3 |
@@ -204,8 +204,8 @@ class Bond:
             For a ket-bond with dim=4, U1 x U1 x U1; there are 3 of U1 symmetry.
             The Bond can be initialize as:
             ::
-                a = Tor10.Bond(4,Tor10.BD_BRA) # create instance
-                a.assign(4,Tor10.BD_KET,qnums=[[ 0, 1, 1],
+                a = tor10.Bond(4,tor10.BD_BRA) # create instance
+                a.assign(4,tor10.BD_KET,qnums=[[ 0, 1, 1],
                                                [-1, 2, 0],
                                                [ 0, 1,-1],
                                                [ 2, 0, 0]])
@@ -216,10 +216,10 @@ class Bond:
             For a bra-bond with dim=3, U1 x Z2 x Z4; there are 3 symmetries.
             The Bond should be initialize as :
             ::
-                b = Tor10.Bond(3,Tor10.BD_BRA)
-                b.assign(3,Tor10.BD_BRA,sym_types=[Tor10.Symmetry.U1(),
-                                                   Tor10.Symmetry.Zn(2),
-                                                   Tor10.Symmetry.Zn(4)],
+                b = tor10.Bond(3,tor10.BD_BRA)
+                b.assign(3,tor10.BD_BRA,sym_types=[tor10.Symmetry.U1(),
+                                                   tor10.Symmetry.Zn(2),
+                                                   tor10.Symmetry.Zn(4)],
                                             qnums=[[-2, 0, 3],
                                                    [-1, 1, 1],
                                                    [ 2, 0, 0]])
@@ -326,11 +326,11 @@ class Bond:
 
         Example:
         ::
-            a = Tor10.Bond(3,Tor10.BD_BRA)
-            b = Tor10.Bond(4,Tor10.BD_KET)
-            c = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[0,1,-1],[1,1,0]])
-            d = Tor10.Bond(2,Tor10.BD_KET,qnums=[[1,0,-1],[1,0,0]])
-            e = Tor10.Bond(2,Tor10.BD_KET,qnums=[[1,0],[1,0]])
+            a = tor10.Bond(3,tor10.BD_BRA)
+            b = tor10.Bond(4,tor10.BD_KET)
+            c = tor10.Bond(2,tor10.BD_BRA,qnums=[[0,1,-1],[1,1,0]])
+            d = tor10.Bond(2,tor10.BD_KET,qnums=[[1,0,-1],[1,0,0]])
+            e = tor10.Bond(2,tor10.BD_KET,qnums=[[1,0],[1,0]])
 
         Combine two non-symmetry bonds:
             >>> a.combine(b)
@@ -512,9 +512,9 @@ class Bond:
 
         example:
         ::
-            bd_x = Tor10.Bond(3,Tor10.BD_BRA)
-            bd_y = Tor10.Bond(4,Tor10.BD_BRA)
-            bd_z = Tor10.Bond(3,Tor10.BD_BRA)
+            bd_x = tor10.Bond(3,tor10.BD_BRA)
+            bd_y = tor10.Bond(4,tor10.BD_BRA)
+            bd_z = tor10.Bond(3,tor10.BD_BRA)
 
         >>> print(bd_x==bd_z)
         True

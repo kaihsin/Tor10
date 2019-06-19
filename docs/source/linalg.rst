@@ -1,5 +1,5 @@
-Tor10.linalg
+tor10.linalg
 ============
-.. automodule:: Tor10.linalg
+.. automodule:: tor10.linalg
     :members:
 

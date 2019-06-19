@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.linalg &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.linalg &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -78,12 +78,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>Tor10.linalg</li>
+      <li>tor10.linalg</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,13 +146,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for Tor10.linalg</h1><div class="highlight"><pre>
+  <h1>Source code for tor10.linalg</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">.UniTensor</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="Hosvd"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Hosvd">[docs]</a><span class="k">def</span> <span class="nf">Hosvd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">order</span><span class="p">,</span><span class="n">bonds_group</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">core</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Hosvd"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Hosvd">[docs]</a><span class="k">def</span> <span class="nf">Hosvd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">order</span><span class="p">,</span><span class="n">bonds_group</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">core</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the higher-order SVD on a UniTensor</span>
 
@@ -178,12 +178,12 @@
 <span class="sd">        if core is False, return a list of unitary tensors.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; x = Tor10.From_torch(torch.arange(0.1,2.5,0.1).reshape(2,3,4).to(torch.float64),labels=[6,7,8],rowrank=1)</span>
+<span class="sd">        &gt;&gt;&gt; x = tor10.From_torch(torch.arange(0.1,2.5,0.1).reshape(2,3,4).to(torch.float64),labels=[6,7,8],rowrank=1)</span>
 <span class="sd">        &gt;&gt;&gt; x.Print_diagram()</span>
 
 <span class="sd">        &gt;&gt;&gt; print(x)</span>
 
-<span class="sd">        &gt;&gt;&gt; factors, core = Tor10.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)</span>
+<span class="sd">        &gt;&gt;&gt; factors, core = tor10.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)</span>
 <span class="sd">        &gt;&gt;&gt; core.Print_diagram()</span>
 
 <span class="sd">        &gt;&gt;&gt; print(len(factors))</span>
@@ -197,7 +197,7 @@
 
 <span class="sd">        &gt;&gt;&gt; rep_x = core</span>
 <span class="sd">        &gt;&gt;&gt; for f in factors:</span>
-<span class="sd">        &gt;&gt;&gt;     rep_x = Tor10.Contract(rep_x,f)</span>
+<span class="sd">        &gt;&gt;&gt;     rep_x = tor10.Contract(rep_x,f)</span>
 <span class="sd">        &gt;&gt;&gt; rep_x.Permute([6,7,8],rowrank=1,by_label=True)</span>
 <span class="sd">        &gt;&gt;&gt; print(rep_x - x)</span>
 
@@ -288,7 +288,7 @@
 
 
 
-<div class="viewcode-block" id="Abs"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Abs">[docs]</a><span class="k">def</span> <span class="nf">Abs</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="Abs"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Abs">[docs]</a><span class="k">def</span> <span class="nf">Abs</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="c1">## v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Take the absolute value for all the elements in the UniTensor</span>
@@ -324,7 +324,7 @@
         <span class="n">tmp</span><span class="o">.</span><span class="n">_mac</span><span class="p">(</span><span class="n">braket</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">braket</span><span class="p">,</span>\
                             <span class="n">torch_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">tmp</span></div>
-<div class="viewcode-block" id="Mean"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Mean">[docs]</a><span class="k">def</span> <span class="nf">Mean</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="Mean"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Mean">[docs]</a><span class="k">def</span> <span class="nf">Mean</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="c1">## v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the mean of all elements in the input non-symmetry UniTensor</span>
@@ -345,7 +345,7 @@
     <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">tmp</span><span class="o">.</span><span class="n">_mac</span><span class="p">(</span><span class="n">torch_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">tmp</span></div>
-<div class="viewcode-block" id="Otimes"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Otimes">[docs]</a><span class="k">def</span> <span class="nf">Otimes</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Otimes"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Otimes">[docs]</a><span class="k">def</span> <span class="nf">Otimes</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform matrix product for two rank-2 tensors.</span>
 
@@ -406,7 +406,7 @@
 
 
 
-<div class="viewcode-block" id="ExpH"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.ExpH">[docs]</a><span class="k">def</span> <span class="nf">ExpH</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="ExpH"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.ExpH">[docs]</a><span class="k">def</span> <span class="nf">ExpH</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="c1"># v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function performs</span>
@@ -469,7 +469,7 @@
 
 
 
-<div class="viewcode-block" id="Qr"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Qr">[docs]</a><span class="k">def</span> <span class="nf">Qr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="Qr"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Qr">[docs]</a><span class="k">def</span> <span class="nf">Qr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="c1"># v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The function performs the qr decomposition</span>
@@ -532,7 +532,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Qr(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Qr can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Qdr"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Qdr">[docs]</a><span class="k">def</span> <span class="nf">Qdr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="Qdr"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Qdr">[docs]</a><span class="k">def</span> <span class="nf">Qdr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="c1"># v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The function performs the qdr decomposition</span>
@@ -603,7 +603,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Qdr(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Qdr can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Svd"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Svd">[docs]</a><span class="k">def</span> <span class="nf">Svd</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="Svd"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Svd">[docs]</a><span class="k">def</span> <span class="nf">Svd</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The function performs the svd</span>
 
@@ -628,7 +628,7 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">        y = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)</span>
 <span class="sd">        y.SetElem([1,1,0,1,</span>
 <span class="sd">                   0,0,0,1,</span>
 <span class="sd">                   1,1,0,0]</span>
@@ -641,7 +641,7 @@
 <span class="sd">            [0., 0., 0., 1.],</span>
 <span class="sd">            [1., 1., 0., 0.]], dtype=torch.float64)</span>
 
-<span class="sd">    &gt;&gt;&gt; u,s,vt = Tor10.linalg.Svd(y)</span>
+<span class="sd">    &gt;&gt;&gt; u,s,vt = tor10.linalg.Svd(y)</span>
 <span class="sd">    &gt;&gt;&gt; print(u)</span>
 <span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
@@ -714,7 +714,7 @@
 
 
 
-<div class="viewcode-block" id="Svd_truncate"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Svd_truncate">[docs]</a><span class="k">def</span> <span class="nf">Svd_truncate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Svd_truncate"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Svd_truncate">[docs]</a><span class="k">def</span> <span class="nf">Svd_truncate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1">#v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond&#39;s dim should be &gt;=2.</span>
@@ -741,7 +741,7 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">        y = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)</span>
 <span class="sd">        y.SetElem([1,1,0,1,</span>
 <span class="sd">                   0,0,0,1,</span>
 <span class="sd">                   1,1,0,0])</span>
@@ -753,7 +753,7 @@
 <span class="sd">            [0., 0., 0., 1.],</span>
 <span class="sd">            [1., 1., 0., 0.]], dtype=torch.float64)</span>
 
-<span class="sd">    &gt;&gt;&gt; u,s,vt = Tor10.linalg.Svd_truncate(y,keepdim=2)</span>
+<span class="sd">    &gt;&gt;&gt; u,s,vt = tor10.linalg.Svd_truncate(y,keepdim=2)</span>
 <span class="sd">    &gt;&gt;&gt; print(u)</span>
 <span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
@@ -826,7 +826,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Svd_truncate(UniTensor,int)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Svd_truncate can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Matmul"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Matmul">[docs]</a><span class="k">def</span> <span class="nf">Matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Matmul"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Matmul">[docs]</a><span class="k">def</span> <span class="nf">Matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs matrix multiplication on the rank-2 UniTensors.</span>
 
@@ -886,7 +886,7 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;_Matmul(a,b)&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] _Matmul can only accept UniTensors for both a &amp; b&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Chain_matmul"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Chain_matmul">[docs]</a><span class="k">def</span> <span class="nf">Chain_matmul</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="Chain_matmul"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Chain_matmul">[docs]</a><span class="k">def</span> <span class="nf">Chain_matmul</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs matrix multiplication on all the UniTensors.</span>
 
@@ -907,12 +907,12 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)</span>
-<span class="sd">        b = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(5)],rowrank=1)</span>
-<span class="sd">        c = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(6)],rowrank=1)</span>
-<span class="sd">        d = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(2)],rowrank=1)</span>
+<span class="sd">        a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">        b = tor10.UniTensor(bonds=[tor10.Bond(4),tor10.Bond(5)],rowrank=1)</span>
+<span class="sd">        c = tor10.UniTensor(bonds=[tor10.Bond(5),tor10.Bond(6)],rowrank=1)</span>
+<span class="sd">        d = tor10.UniTensor(bonds=[tor10.Bond(6),tor10.Bond(2)],rowrank=1)</span>
 
-<span class="sd">    &gt;&gt;&gt; f = Tor10.Chain_matmul(a,b,c,d)</span>
+<span class="sd">    &gt;&gt;&gt; f = tor10.Chain_matmul(a,b,c,d)</span>
 <span class="sd">    &gt;&gt;&gt; f.Print_diagram()</span>
 <span class="sd">    -----------------------</span>
 <span class="sd">    tensor Name : </span>
@@ -963,7 +963,7 @@
 
 
 
-<div class="viewcode-block" id="Inverse"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Inverse">[docs]</a><span class="k">def</span> <span class="nf">Inverse</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="Inverse"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Inverse">[docs]</a><span class="k">def</span> <span class="nf">Inverse</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="c1">#v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function returns the inverse of a rank-2 tensor (matrix).</span>
@@ -1009,7 +1009,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Inverse(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Inverse can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Det"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Det">[docs]</a><span class="k">def</span> <span class="nf">Det</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> 
+<div class="viewcode-block" id="Det"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Det">[docs]</a><span class="k">def</span> <span class="nf">Det</span><span class="p">(</span><span class="n">a</span><span class="p">):</span> 
     <span class="c1">#v0.3 OK</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function returns the determinant a rank-2 tensor.</span>
@@ -1024,11 +1024,11 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)])</span>
+<span class="sd">        a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)])</span>
 <span class="sd">        a.SetElem([4,-3,0,</span>
 <span class="sd">                   2,-1,2,</span>
 <span class="sd">                   1, 5,7])</span>
-<span class="sd">        b = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],is_diag=True)</span>
+<span class="sd">        b = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)],is_diag=True)</span>
 <span class="sd">        b.SetElem([1,2,3])</span>
 
 <span class="sd">    &gt;&gt;&gt; print(a)</span>
@@ -1038,7 +1038,7 @@
 <span class="sd">            [ 2., -1.,  2.],</span>
 <span class="sd">            [ 1.,  5.,  7.]], dtype=torch.float64)</span>
 
-<span class="sd">    &gt;&gt;&gt; out = Tor10.Det(a)</span>
+<span class="sd">    &gt;&gt;&gt; out = tor10.Det(a)</span>
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
 <span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
@@ -1049,7 +1049,7 @@
 <span class="sd">    is_diag    : True</span>
 <span class="sd">    tensor([1., 2., 3.], dtype=torch.float64)</span>
 
-<span class="sd">    &gt;&gt;&gt; out = Tor10.Det(b)</span>
+<span class="sd">    &gt;&gt;&gt; out = tor10.Det(b)</span>
 <span class="sd">    &gt;&gt;&gt; print(out)</span>
 <span class="sd">    Tensor name:</span>
 <span class="sd">    is_diag    : False</span>
@@ -1078,7 +1078,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Det(UniTensor)&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] Det can only accept UniTensor&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Norm"><a class="viewcode-back" href="../../linalg.html#Tor10.linalg.Norm">[docs]</a><span class="k">def</span> <span class="nf">Norm</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="Norm"><a class="viewcode-back" href="../../linalg.html#tor10.linalg.Norm">[docs]</a><span class="k">def</span> <span class="nf">Norm</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the matrix norm of the UniTensor. The input tensor should be untagged. </span>
 
@@ -1107,7 +1107,7 @@
 
         <span class="c1">#tmp = torch.norm(a.Storage)</span>
         <span class="c1">#if len(tmp.shape) != 0:</span>
-        <span class="c1">#    return UniTensor(bonds=[Tor10.Bond(tmp.shape[i]) for i in range(len(tmp.shape))],rowrank=1,torch_tensor=tmp,check=False)</span>
+        <span class="c1">#    return UniTensor(bonds=[tor10.Bond(tmp.shape[i]) for i in range(len(tmp.shape))],rowrank=1,torch_tensor=tmp,check=False)</span>
         <span class="c1">#else:</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[],</span><span class="n">labels</span><span class="o">=</span><span class="p">[],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">_mac</span><span class="p">(</span><span class="n">torch_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="p">))</span>

@@ -114,7 +114,7 @@ class UniTensor:
         Example for how to create a UniTensor:
 
             * create a rank-2 untagged UniTensor (matrix) with shape (3,4):
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)
+            >>> a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)
             >>> a.Print_diagram(bond_info=True)
             -----------------------
             tensor Name : 
@@ -134,7 +134,7 @@ class UniTensor:
             REG     :
 
             * create a rank-3 untagged UniTensor with one bond in row-space and two bonds in col-space, shape (3,4,5) and set labels [-3,4,1] for each bond:
-            >>> c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],rowrank=1,labels=[-3,4,1])
+            >>> c = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4),tor10.Bond(5)],rowrank=1,labels=[-3,4,1])
             >>> c.Print_diagram(bond_info=True)
             tensor Name : 
             tensor Rank : 3
@@ -159,7 +159,7 @@ class UniTensor:
 
 
             * create a rank-0 UniTensor
-            >>> rk0t = Tor10.UniTensor(bonds=[])
+            >>> rk0t = tor10.UniTensor(bonds=[])
             >>> rk0t.Print_diagram()
             -----------------------
             tensor Name : 
@@ -177,8 +177,8 @@ class UniTensor:
             tensor(0., dtype=torch.float64) 
 
             * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)
-            >>> bds  = [Tor10.Bond(2,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_BRA)]
-            >>> o = Tor10.UniTensor(bonds=bds,rowrank=2)
+            >>> bds  = [tor10.Bond(2,tor10.BD_KET),tor10.Bond(3,tor10.BD_KET),tor10.Bond(4,tor10.BD_BRA),tor10.Bond(5,tor10.BD_BRA)]
+            >>> o = tor10.UniTensor(bonds=bds,rowrank=2)
             >>> o.Print_diagram()
             -----------------------
             tensor Name : 
@@ -198,8 +198,8 @@ class UniTensor:
 
 
             * note that if the BRA bond is not in the col-space, or KET bond is not in the row-space, the tensor is in the so called "non-braket_form, which will have a * symbol indicating the mismatch."
-            >>> bd2 = [Tor10.Bond(2,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)]
-            >>> c_mismatch = Tor10.UniTensor(bonds=bd2,rowrank=2)
+            >>> bd2 = [tor10.Bond(2,tor10.BD_KET),tor10.Bond(5,tor10.BD_BRA),tor10.Bond(4,tor10.BD_BRA),tor10.Bond(3,tor10.BD_KET)]
+            >>> c_mismatch = tor10.UniTensor(bonds=bd2,rowrank=2)
             >>> c_mismatch.Print_diagram()
             -----------------------
             tensor Name : 
@@ -219,22 +219,22 @@ class UniTensor:
 
 
             * create a rank-2 UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:
-            >>> d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1,device=torch.device("cuda:0"))
+            >>> d = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1,device=torch.device("cuda:0"))
 
             * create a diagonal 6x6 rank-2 tensor(matrix):
               Note that if is_diag is True, rowrank must be 1.
-            >>> e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],rowrank=1,is_diag=True)
+            >>> e = tor10.UniTensor(bonds=[tor10.Bond(6),tor10.Bond(6)],rowrank=1,is_diag=True)
 
             Note that when is_diag is set to True, the UniTensor should be a square matrix.
 
             * create a rank-3 UniTensor with two bonds in row-space and one bond in col-space, and single precision:
-            >>> f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],rowrank=2,labels=[-3,4,1],dtype=torch.float32)
+            >>> f = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4),tor10.Bond(5)],rowrank=2,labels=[-3,4,1],dtype=torch.float32)
 
             * create a rank-3 UniTensor with U1 symmetry:
-            >>> bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])
-            >>> bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
-            >>> bd_sym_3 = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])
-            >>> symT = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12])
+            >>> bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0],[1],[2]])
+            >>> bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
+            >>> bd_sym_3 = tor10.Bond(5,tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])
+            >>> symT = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12])
             >>> symT.Print_diagram(bond_info=True)
             -----------------------
             tensor Name : 
@@ -533,7 +533,7 @@ class UniTensor:
 
         Example:
 
-            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1,labels=[5,6])
+            >>> g = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1,labels=[5,6])
             >>> g.labels
             [5 6]
 
@@ -566,7 +566,7 @@ class UniTensor:
 
         Example:
 
-            >>> g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1,labels=[5,6])
+            >>> g = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1,labels=[5,6])
             >>> g.labels
             [5 6]
 
@@ -619,7 +619,7 @@ class UniTensor:
 
         Example:
         ::
-            Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1,
+            Sz = tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1,
                               dtype=torch.float64,
                               device=torch.device("cpu"))
             Sz.SetElem([1, 0,
@@ -693,7 +693,7 @@ class UniTensor:
 
         Example:
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],rowrank=1,is_diag=True)
+            >>> a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)],rowrank=1,is_diag=True)
             >>> a.SetElem([1,2,3])
             >>> print(a.is_diag)
             True
@@ -735,7 +735,7 @@ class UniTensor:
 
         Example:
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],rowrank=1,is_diag=True)
+            >>> a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)],rowrank=1,is_diag=True)
             >>> print(a.is_diag)
             True
 
@@ -777,7 +777,7 @@ class UniTensor:
 
             Construct a tensor (default is on cpu)
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)
+            >>> a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)
 
             Set to GPU.
 
@@ -816,7 +816,7 @@ class UniTensor:
 
             Construct a tensor (default is on cpu)
 
-            >>> a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)
+            >>> a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)
 
             Set to GPU.
 
@@ -1651,7 +1651,7 @@ class UniTensor:
     ## This is the same function that behaves as the memberfunction.
     def Svd(self):
         """
-            This is the member function of Svd, see Tor10.linalg.Svd()
+            This is the member function of Svd, see tor10.linalg.Svd()
         """
         if self.is_symm:
             raise Exception("UniTensor.Svd",
@@ -1664,7 +1664,7 @@ class UniTensor:
 
     def Svd_truncate(self,keepdim=None):
         """
-            This is the member function of Svd_truncate, see Tor10.linalg.Svd_truncate()
+            This is the member function of Svd_truncate, see tor10.linalg.Svd_truncate()
         """
         if self.is_symm:
             raise Exception("UniTensor.Svd_truncate",
@@ -1674,7 +1674,7 @@ class UniTensor:
 
     def Norm(self):
         """
-            This is the member function of Norm, see Tor10.linalg.Norm
+            This is the member function of Norm, see tor10.linalg.Norm
         """
         if self.is_symm:
             raise Exception("UniTensor.Norm",
@@ -1684,7 +1684,7 @@ class UniTensor:
 
     def Det(self):
         """
-            This is the member function of Det, see Tor10.linalg.Det
+            This is the member function of Det, see tor10.linalg.Det
         """
         if self.is_symm:
             raise Exception("UniTensor.Det",
@@ -1694,7 +1694,7 @@ class UniTensor:
 
     def Matmul(self, b):
         """
-            This is the member function of Matmul, see Tor10.linalg.Matmul
+            This is the member function of Matmul, see tor10.linalg.Matmul
         """
         if self.is_symm:
             raise Exception("UniTensor.Matmul",
@@ -1858,9 +1858,9 @@ class UniTensor:
 
             1. Combine Bond for an non-symmetric tensor.
 
-            >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])
-            >>> y = Tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])
+            >>> bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]
+            >>> x = tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])
+            >>> y = tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])
             >>> x.Print_diagram()
             tensor Name : 
             tensor Rank : 3
@@ -1929,8 +1929,8 @@ class UniTensor:
             REG     :
 
             
-            >>> z  = Tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])
-            >>> z2 = Tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])
+            >>> z  = tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])
+            >>> z2 = tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])
             >>> z.Print_diagram()
             -----------------------
             tensor Name : 
@@ -2018,7 +2018,7 @@ class UniTensor:
 
         Example:
 
-            >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]
             >>> x = Tt.UniTensor(bonds=bds_x,rowrank=1, labels=[4,3,5])
             >>> print(x.is_contiguous())
             True
@@ -2061,7 +2061,7 @@ class UniTensor:
 
         Example:
 
-            >>> bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
+            >>> bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]
             >>> x = Tt.UniTensor(bonds=bds_x,rowrank=1, labels=[4,3,5])
             >>> print(x.is_contiguous())
             True
@@ -2169,8 +2169,8 @@ class UniTensor:
 
         Example:
 
-            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, rowrank=3,labels=[1,3,5,7,8])
+            >>> bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(4),tor10.Bond(3),tor10.Bond(2)]
+            >>> x = tor10.UniTensor(bonds=bds_x, rowrank=3,labels=[1,3,5,7,8])
             >>> y = copy.deepcopy(x)
             >>> z = copy.deepcopy(x)
             >>> x.Print_diagram()
@@ -2341,8 +2341,8 @@ class UniTensor:
 
         Example:
 
-            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
+            >>> bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]
+            >>> x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
             >>> x.Print_diagram()
             -----------------------
             tensor Name : 
@@ -2433,8 +2433,8 @@ class UniTensor:
     
         Example:
 
-            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
+            >>> bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]
+            >>> x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
             >>> x.Print_diagram()
             -----------------------
             tensor Name : 
@@ -2524,8 +2524,8 @@ class UniTensor:
 
         Example:
 
-            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
+            >>> bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]
+            >>> x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
             >>> x.Print_diagram()
             -----------------------
             tensor Name : 
@@ -2627,8 +2627,8 @@ class UniTensor:
     
         Example:
 
-            >>> bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]
-            >>> x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
+            >>> bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]
+            >>> x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])
             >>> x.Print_diagram()
             -----------------------
             tensor Name : 
@@ -2709,10 +2709,10 @@ class UniTensor:
             qnums_brabonds, qnums_ketbonds:
 
             qnums_brabonds:
-                a Tor10.Bond, the combined bra-bond
+                a tor10.Bond, the combined bra-bond
 
             qnums_ketbonds:
-                a Tor10.Bond, the combined ket-bond.
+                a tor10.Bond, the combined ket-bond.
 
 
         Example:
@@ -2724,17 +2724,17 @@ class UniTensor:
                 ## U1 = {-2,-1,0,1,2}
                 ## U1 = {-1,1}
                 ## U1 = {0,1,2,3}
-                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0, 2, 1, 0],
+                bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0, 2, 1, 0],
                                                             [1, 1,-1, 1],
                                                             [2,-1, 1, 0]])
-                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1, 0,-1, 3],
+                bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1, 0,-1, 3],
                                                             [ 0, 0,-1, 2],
                                                             [ 1, 0, 1, 0],
                                                             [ 2,-2,-1, 1]])
-                bd_sym_3 = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[-4, 3, 0,-1],
+                bd_sym_3 = tor10.Bond(2,tor10.BD_BRA,qnums=[[-4, 3, 0,-1],
                                                             [ 1, 1, -2,3]])
 
-                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)
+                sym_T = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)
             >>> sym_T.Pring_diagram()
             -----------------------
             tensor Name : 
@@ -3062,10 +3062,10 @@ class UniTensor:
         Example:
             * Single Symmetry::
 
-                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])
-                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
-                bd_sym_3 = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[2],[5],[1]])
-                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12],dtype=torch.float64)
+                bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0],[1],[2]])
+                bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
+                bd_sym_3 = tor10.Bond(5,tor10.BD_BRA,qnums=[[4],[2],[2],[5],[1]])
+                sym_T = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12],dtype=torch.float64)
 
             >>> sym_T.Print_diagram()
             -----------------------
@@ -3117,17 +3117,17 @@ class UniTensor:
 
                 ## multiple Qnum:
                 ## U1 x U1 x U1 x U1
-                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0, 2, 1, 0],
+                bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0, 2, 1, 0],
                                                             [1, 1,-1, 1],
                                                             [2,-1, 1, 0]])
-                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1, 0,-1, 3],
+                bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1, 0,-1, 3],
                                                             [ 0, 0,-1, 2],
                                                             [ 1, 0, 1, 0],
                                                             [ 2,-2,-1, 1]])
-                bd_sym_3 = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[-1,-2,-1,2],
+                bd_sym_3 = tor10.Bond(2,tor10.BD_BRA,qnums=[[-1,-2,-1,2],
                                                             [ 1, 1, -2,3]])
 
-                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)
+                sym_T = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)
 
             >>> tqin, tqout = sym_T.GetTotalQnums()
             >>> print(tqin)
@@ -3308,8 +3308,8 @@ class UniTensor:
 
         Example:
         ::
-            bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]
-            x = Tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])
+            bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]
+            x = tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])
 
 
         >>> print(x.requires_grad())
@@ -3351,7 +3351,7 @@ class UniTensor:
 
         Example:
 
-            >>> x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1,requires_grad=True)
+            >>> x = tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1,requires_grad=True)
             >>> print(x)
             Tensor name:
             is_diag    : False
@@ -3365,7 +3365,7 @@ class UniTensor:
             tensor([[16., 16.],
                     [16., 16.]], dtype=torch.float64, grad_fn=<PowBackward0>)
 
-            >>> out = Tor10.Mean(y)
+            >>> out = tor10.Mean(y)
             >>> print(out)
             Tensor name:
             is_diag    : False
@@ -3447,8 +3447,8 @@ def Save(a, filename):
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)
-        Tor10.Save(a,"a.uniT")
+        a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)
+        tor10.Save(a,"a.uniT")
 
     """
     if not isinstance(filename, str):
@@ -3473,7 +3473,7 @@ def Load(filename):
 
     Example:
     ::
-        a = Tor10.Load("a.uniT")
+        a = tor10.Load("a.uniT")
 
     """
     if not isinstance(filename, str):
@@ -3515,8 +3515,8 @@ def Contract(a, b):
 
         Example:
         ::
-            x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], rowrank=2,labels=[6,1,7,8])
-            y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(2),Tor10.Bond(3),Tor10.Bond(6)], rowrank=2,labels=[7,2,10,9])
+            x = tor10.UniTensor(bonds=[tor10.Bond(5),tor10.Bond(2),tor10.Bond(4),tor10.Bond(3)], rowrank=2,labels=[6,1,7,8])
+            y = tor10.UniTensor(bonds=[tor10.Bond(4),tor10.Bond(2),tor10.Bond(3),tor10.Bond(6)], rowrank=2,labels=[7,2,10,9])
 
 
         >>> x.Print_diagram()
@@ -3549,7 +3549,7 @@ def Contract(a, b):
                    \             /     
                     -------------  
 
-        >>> c = Tor10.Contract(x,y)
+        >>> c = tor10.Contract(x,y)
         >>> c.Print_diagram()
         -----------------------
         tensor Name : 
@@ -3567,7 +3567,7 @@ def Contract(a, b):
                    \             /     
                     -------------  
 
-        >>> d = Tor10.Contract(y,x)
+        >>> d = tor10.Contract(y,x)
         >>> d.Print_diagram()
         -----------------------
         tensor Name : 
@@ -3588,16 +3588,16 @@ def Contract(a, b):
 
         Note that you can also contract for UniTensor with symmetry, even when they are not in the bra-ket form. As long as the quantum number on the to-be-contract bonds and the bond type matches (bra can only contract with ket)
         ::
-            bd_sym_1a = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])
-            bd_sym_2a = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
-            bd_sym_3a = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])
+            bd_sym_1a = tor10.Bond(3,tor10.BD_KET,qnums=[[0],[1],[2]])
+            bd_sym_2a = tor10.Bond(4,tor10.BD_KET,qnums=[[-1],[2],[0],[2]])
+            bd_sym_3a = tor10.Bond(5,tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])
 
-            bd_sym_1b = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])
-            bd_sym_2b = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])
-            bd_sym_3b = Tor10.Bond(7,Tor10.BD_KET,qnums=[[1],[3],[-2],[2],[2],[2],[0]])
+            bd_sym_1b = tor10.Bond(3,tor10.BD_BRA,qnums=[[0],[1],[2]])
+            bd_sym_2b = tor10.Bond(4,tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])
+            bd_sym_3b = tor10.Bond(7,tor10.BD_KET,qnums=[[1],[3],[-2],[2],[2],[2],[0]])
 
-            sym_A = Tor10.UniTensor(bonds=[bd_sym_1a,bd_sym_2a,bd_sym_3a],rowrank=2,labels=[10,11,12])
-            sym_B = Tor10.UniTensor(bonds=[bd_sym_2b,bd_sym_1b,bd_sym_3b],rowrank=1,labels=[11,10,7])
+            sym_A = tor10.UniTensor(bonds=[bd_sym_1a,bd_sym_2a,bd_sym_3a],rowrank=2,labels=[10,11,12])
+            sym_B = tor10.UniTensor(bonds=[bd_sym_2b,bd_sym_1b,bd_sym_3b],rowrank=1,labels=[11,10,7])
 
 
         >>> sym_A.Print_diagram()
@@ -3633,8 +3633,8 @@ def Contract(a, b):
                    |             |     
                    ---------------  
 
-        >>> sym_AB = Tor10.Contract(sym_A,sym_B)
-        >>> sym_BA = Tor10.Contract(sym_B,sym_A)
+        >>> sym_AB = tor10.Contract(sym_A,sym_B)
+        >>> sym_BA = tor10.Contract(sym_B,sym_A)
         >>> sym_AB.Print_diagram()
         -----------------------
         tensor Name : 
@@ -4227,7 +4227,7 @@ def From_torch(torch_tensor, rowrank=None, labels=None, is_tag=False):
             Torch.Tensor
 
         rowrank:
-            int, The number of inbond. Note that the first [rowrank] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT
+            int, The number of inbond. Note that the first [rowrank] bonds will be set to tor10.BD_IN, and the remaining bonds will be set to tor10.BD_OUT
 
         labels:
             python list or 1d numpy array, The labels for each bonds. If ignore, the constucted UniTensor will using the default labels for each bond.
@@ -4243,7 +4243,7 @@ def From_torch(torch_tensor, rowrank=None, labels=None, is_tag=False):
                 [1., 1., 1.],
                 [1., 1., 1.]])
 
-        >>> y = Tor10.From_torch(x,rowrank=1,labels=[4,5])
+        >>> y = tor10.From_torch(x,rowrank=1,labels=[4,5])
         >>> y.Print_diagram()
         -----------------------
         tensor Name : 
@@ -4271,7 +4271,7 @@ def From_torch(torch_tensor, rowrank=None, labels=None, is_tag=False):
                 [1., 1., 1., 1.],
                 [1., 1., 1., 1.]], requires_grad=True)
 
-        >>> y2 = Tor10.From_torch(x2,rowrank=1)
+        >>> y2 = tor10.From_torch(x2,rowrank=1)
         >>> print(y2.requires_grad())
         True
 

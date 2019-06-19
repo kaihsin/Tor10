@@ -25,11 +25,11 @@ def Parameter(data,requires_grad=True):
             def __init__(self):
                 super(Model,self).__init__()
                 ## Customize and register the parameter.
-                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
-                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))
+                self.P1 = tor10.nn.Parameter(tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1))
+                self.P2 = tor10.nn.Parameter(tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1))
  
             def forward(self,x):
-                y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)
+                y = tor10.Matmul(tor10.Matmul(x,self.P1),self.P2)
                 return y
 
     >>> md = Model()
@@ -108,8 +108,8 @@ class Linear:
 
     Examples::
 
-        >>> m = Tor10.nn.Linear(20, 30)
-        >>> iput = Tor10.From_torch(torch.randn(128, 20),rowrank=1)
+        >>> m = tor10.nn.Linear(20, 30)
+        >>> iput = tor10.From_torch(torch.randn(128, 20),rowrank=1)
         >>> oput = m(iput)
         >>> print(oput.shape)
         torch.Size([128, 30])
@@ -145,7 +145,7 @@ class Linear:
 
     def forward(self,ipt):
         if not isinstance(ipt,UniTensor):
-            raise TypeError("Tor10.nn.Linear","[ERROR] can only accept UniTensor")
+            raise TypeError("tor10.nn.Linear","[ERROR] can only accept UniTensor")
     
         out = self.tnn(ipt.Storage)
         

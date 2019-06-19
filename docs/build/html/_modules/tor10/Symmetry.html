@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.Symmetry &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.Symmetry &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -78,12 +78,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>Tor10.Symmetry</li>
+      <li>tor10.Symmetry</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,11 +146,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for Tor10.Symmetry</h1><div class="highlight"><pre>
+  <h1>Source code for tor10.Symmetry</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
 <span class="kn">import</span> <span class="nn">torch</span> <span class="k">as</span> <span class="nn">tor</span>
 
-<div class="viewcode-block" id="U1"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.U1">[docs]</a><span class="k">class</span> <span class="nc">U1</span><span class="p">:</span>
+<div class="viewcode-block" id="U1"><a class="viewcode-back" href="../../Symmetry.html#tor10.Symmetry.U1">[docs]</a><span class="k">class</span> <span class="nc">U1</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        U1 Symmetry class. </span>
 <span class="sd">        The U1 symmetry can have quantum number represent as arbitrary unsigned integer.</span>
@@ -160,8 +160,8 @@
 <span class="sd">            q1 + q2</span>
 
 
-<span class="sd">        &gt;&gt;&gt; b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[0],[1 ]     ],sym_types=[Tor10.Symmetry.U1()])</span>
-<span class="sd">        &gt;&gt;&gt; b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[-3],[-1]],sym_types=[Tor10.Symmetry.U1()])</span>
+<span class="sd">        &gt;&gt;&gt; b1 = tor10.Bond(3,tor10.BD_BRA, qnums=[[0],[0],[1 ]     ],sym_types=[tor10.Symmetry.U1()])</span>
+<span class="sd">        &gt;&gt;&gt; b2 = tor10.Bond(4,tor10.BD_BRA, qnums=[[0],[2],[-3],[-1]],sym_types=[tor10.Symmetry.U1()])</span>
 <span class="sd">        &gt;&gt;&gt; print(b1)</span>
 <span class="sd">        Dim = 3 |</span>
 <span class="sd">        BRA     : U1::  +1 +0 +0</span>
@@ -176,7 +176,7 @@
 <span class="sd">        BRA     : U1::  +3 +1 +0 -2 +2 +0 -1 -3 +2 +0 -1 -3</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="U1.__init__"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.U1.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="U1.__init__"><a class="viewcode-back" href="../../Symmetry.html#tor10.Symmetry.U1.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span> </div>
 
     <span class="k">def</span> <span class="nf">CombineRule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
@@ -196,7 +196,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
         
 
-<div class="viewcode-block" id="Zn"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.Zn">[docs]</a><span class="k">class</span> <span class="nc">Zn</span><span class="p">:</span>
+<div class="viewcode-block" id="Zn"><a class="viewcode-back" href="../../Symmetry.html#tor10.Symmetry.Zn">[docs]</a><span class="k">class</span> <span class="nc">Zn</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Z(n) Symmetry class. </span>
 <span class="sd">        The Z(n) symmetry can have integer quantum number, with n &gt; 1.</span>
@@ -206,8 +206,8 @@
 <span class="sd">            (q1 + q2)%n</span>
 
 <span class="sd">        </span>
-<span class="sd">        &gt;&gt;&gt; b1 = Tor10.Bond(3,Tor10.BD_BRA, qnums=[[0],[2],[1 ]     ],sym_types=[Tor10.Symmetry.Zn(4)])</span>
-<span class="sd">        &gt;&gt;&gt; b2 = Tor10.Bond(4,Tor10.BD_BRA, qnums=[[0],[2],[3],[1]  ],sym_types=[Tor10.Symmetry.Zn(4)])</span>
+<span class="sd">        &gt;&gt;&gt; b1 = tor10.Bond(3,tor10.BD_BRA, qnums=[[0],[2],[1 ]     ],sym_types=[tor10.Symmetry.Zn(4)])</span>
+<span class="sd">        &gt;&gt;&gt; b2 = tor10.Bond(4,tor10.BD_BRA, qnums=[[0],[2],[3],[1]  ],sym_types=[tor10.Symmetry.Zn(4)])</span>
 <span class="sd">        &gt;&gt;&gt; print(b1)</span>
 <span class="sd">        Dim = 3 |</span>
 <span class="sd">        BRA     : Z4::  +2 +1 +0</span>
@@ -223,7 +223,7 @@
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Zn.__init__"><a class="viewcode-back" href="../../Symmetry.html#Tor10.Symmetry.Zn.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+<div class="viewcode-block" id="Zn.__init__"><a class="viewcode-back" href="../../Symmetry.html#tor10.Symmetry.Zn.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Symmetry.Zn&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] discrete symmetry Zn must have n &gt;= 2.&quot;</span><span class="p">)</span>
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.linalg &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.linalg &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tor10.nn" href="nn.html" />
-    <link rel="prev" title="Tor10.Network" href="Network.html" /> 
+    <link rel="next" title="tor10.nn" href="nn.html" />
+    <link rel="prev" title="tor10.Network" href="Network.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -80,12 +80,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Network.html">Tor10.Network</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Network.html">tor10.Network</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Tor10.linalg</li>
+      <li>tor10.linalg</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -148,11 +148,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-Tor10.linalg">
-<span id="tor10-linalg"></span><h1>Tor10.linalg<a class="headerlink" href="#module-Tor10.linalg" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-tor10.linalg">
+<span id="tor10-linalg"></span><h1>tor10.linalg<a class="headerlink" href="#module-tor10.linalg" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="Tor10.linalg.Abs">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Abs</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Abs" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Abs">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Abs</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Abs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Abs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take the absolute value for all the elements in the UniTensor
 Args:</p>
 <blockquote>
@@ -168,8 +168,8 @@ Args:</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Chain_matmul">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Chain_matmul</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Chain_matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Chain_matmul" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Chain_matmul">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Chain_matmul</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Chain_matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Chain_matmul" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs matrix multiplication on all the UniTensors.</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(A \cdot B \cdot C \cdot D \cdots\)</span></div></blockquote>
@@ -189,13 +189,13 @@ Args:</p>
 <dd>UniTensor,rank-2 tensor with 1 inbond, 1 outbond, and default labels.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Chain_matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Chain_matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 <span class="go">-----------------------</span>
 <span class="go">tensor Name : </span>
@@ -213,8 +213,8 @@ Args:</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Det">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Det</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Det"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Det" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Det">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Det</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Det"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Det" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the determinant a rank-2 tensor.</p>
 <p><span class="math notranslate nohighlight">\(\det(a)\)</span></p>
 <dl class="docutils">
@@ -228,11 +228,11 @@ Args:</p>
 <dd>UniTensor, 0-rank (constant)</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
 <span class="n">a</span><span class="o">.</span><span class="n">SetElem</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
            <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>
            <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span><span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">b</span><span class="o">.</span><span class="n">SetElem</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -244,7 +244,7 @@ Args:</p>
 <span class="go">        [ 1.,  5.,  7.]], dtype=torch.float64)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Det</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Det</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 <span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
@@ -257,7 +257,7 @@ Args:</p>
 <span class="go">tensor([1., 2., 3.], dtype=torch.float64)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Det</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Det</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 <span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
@@ -267,8 +267,8 @@ Args:</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.ExpH">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">ExpH</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#ExpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.ExpH" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.ExpH">
+<code class="descclassname">tor10.linalg.</code><code class="descname">ExpH</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#ExpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.ExpH" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function performs</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(e^{H}\)</span></div></blockquote>
@@ -287,8 +287,8 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Hosvd">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Hosvd</code><span class="sig-paren">(</span><em>a</em>, <em>order</em>, <em>bonds_group</em>, <em>by_label=False</em>, <em>core=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Hosvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Hosvd" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Hosvd">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Hosvd</code><span class="sig-paren">(</span><em>a</em>, <em>order</em>, <em>bonds_group</em>, <em>by_label=False</em>, <em>core=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Hosvd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Hosvd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the higher-order SVD on a UniTensor</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -310,14 +310,14 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 <p class="last">if core is False, return a list of unitary tensors.</p>
 </dd>
 <dt>Example:</dt>
-<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<dd><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">From_torch</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">factors</span><span class="p">,</span> <span class="n">core</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Hosvd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">bonds_group</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">factors</span><span class="p">,</span> <span class="n">core</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Hosvd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">bonds_group</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">core</span><span class="o">.</span><span class="n">Print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -335,7 +335,7 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </ul>
 <div class="last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rep_x</span> <span class="o">=</span> <span class="n">core</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">factors</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">rep_x</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">rep_x</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">rep_x</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">rep_x</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rep_x</span><span class="o">.</span><span class="n">Permute</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">rep_x</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
 </pre></div>
@@ -345,8 +345,8 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Inverse">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Inverse</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Inverse" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Inverse">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Inverse</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Inverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the inverse of a rank-2 tensor (matrix).</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(a^{-1}\)</span></div></blockquote>
@@ -364,8 +364,8 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Matmul">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Matmul</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Matmul" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Matmul">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Matmul</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Matmul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Matmul" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs matrix multiplication on the rank-2 UniTensors.</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(A \cdot B\)</span></div></blockquote>
@@ -386,8 +386,8 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Mean">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Mean</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Mean" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Mean">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Mean</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Mean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the mean of all elements in the input non-symmetry UniTensor</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -402,8 +402,8 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Norm">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Norm</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Norm" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Norm">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Norm</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Norm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the matrix norm of the UniTensor. The input tensor should be untagged.</p>
 <p>If the given UniTensor is a matrix (rank-2), matrix norm will be calculated. If the given UniTensor is a vector (rank-1), vector norm will be calculated. If the given UniTensor has more than 2 ranks, the vector norm will be appllied to last dimension.</p>
 <dl class="docutils">
@@ -419,8 +419,8 @@ The Intricate computation follows procedure: symeig() -&gt; exp() the singular m
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Otimes">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Otimes</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Otimes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Otimes" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Otimes">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Otimes</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Otimes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Otimes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform matrix product for two rank-2 tensors.</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(a \otimes b\)</span></div></blockquote>
@@ -442,8 +442,8 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Qdr">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Qdr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Qdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Qdr" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Qdr">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Qdr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Qdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Qdr" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function performs the qdr decomposition</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(a = q \cdot d \cdot r\)</span></div></blockquote>
@@ -469,8 +469,8 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Qr">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Qr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Qr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Qr" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Qr">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Qr</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Qr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Qr" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function performs the qr decomposition</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(a = q \cdot r\)</span></div></blockquote>
@@ -487,8 +487,8 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Svd">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Svd</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Svd" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Svd">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Svd</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Svd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Svd" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function performs the svd</p>
 <blockquote>
 <div><span class="math notranslate nohighlight">\(a = u \cdot s \cdot vt\)</span></div></blockquote>
@@ -512,7 +512,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">y</span><span class="o">.</span><span class="n">SetElem</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
            <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
            <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
@@ -526,7 +526,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 <span class="go">        [1., 1., 0., 0.]], dtype=torch.float64)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
 <span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
@@ -553,8 +553,8 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </dd></dl>
 
 <dl class="function">
-<dt id="Tor10.linalg.Svd_truncate">
-<code class="descclassname">Tor10.linalg.</code><code class="descname">Svd_truncate</code><span class="sig-paren">(</span><em>a</em>, <em>keepdim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Tor10/linalg.html#Svd_truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Tor10.linalg.Svd_truncate" title="Permalink to this definition">¶</a></dt>
+<dt id="tor10.linalg.Svd_truncate">
+<code class="descclassname">tor10.linalg.</code><code class="descname">Svd_truncate</code><span class="sig-paren">(</span><em>a</em>, <em>keepdim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tor10/linalg.html#Svd_truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tor10.linalg.Svd_truncate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function performs the svd to input UniTensor, and truncate [truncate] dim from the smallest singular value to the tensor. The UniTensor should be rank-2. each bond’s dim should be &gt;=2.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -577,7 +577,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">Tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="p">[</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">tor10</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">y</span><span class="o">.</span><span class="n">SetElem</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
            <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
            <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
@@ -591,7 +591,7 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
 <span class="go">        [1., 1., 0., 0.]], dtype=torch.float64)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">Tor10</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">keepdim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">tor10</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">keepdim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
 <span class="go">Tensor name:</span>
 <span class="go">is_diag    : False</span>
@@ -625,10 +625,10 @@ If both a and b are diagonal matrix (is_diag=True), the return UniTensor will be
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="nn.html" class="btn btn-neutral float-right" title="Tor10.nn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="nn.html" class="btn btn-neutral float-right" title="tor10.nn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Network.html" class="btn btn-neutral" title="Tor10.Network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Network.html" class="btn btn-neutral" title="tor10.Network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

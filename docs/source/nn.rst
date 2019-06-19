@@ -1,5 +1,5 @@
-Tor10.nn
+tor10.nn
 ============
-.. automodule:: Tor10.nn
+.. automodule:: tor10.nn
     :members:
 

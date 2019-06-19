@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.nn &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.nn &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -78,12 +78,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>Tor10.nn</li>
+      <li>tor10.nn</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,12 +146,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for Tor10.nn</h1><div class="highlight"><pre>
+  <h1>Source code for tor10.nn</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">.UniTensor</span> <span class="k">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../nn.html#Tor10.nn.Parameter">[docs]</a><span class="k">def</span> <span class="nf">Parameter</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../nn.html#tor10.nn.Parameter">[docs]</a><span class="k">def</span> <span class="nf">Parameter</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a UniTensor to be considered as a module parameter. </span>
 
@@ -174,11 +174,11 @@
 <span class="sd">            def __init__(self):</span>
 <span class="sd">                super(Model,self).__init__()</span>
 <span class="sd">                ## Customize and register the parameter.</span>
-<span class="sd">                self.P1 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))</span>
-<span class="sd">                self.P2 = Tor10.nn.Parameter(Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1))</span>
+<span class="sd">                self.P1 = tor10.nn.Parameter(tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1))</span>
+<span class="sd">                self.P2 = tor10.nn.Parameter(tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1))</span>
 <span class="sd"> </span>
 <span class="sd">            def forward(self,x):</span>
-<span class="sd">                y = Tor10.Matmul(Tor10.Matmul(x,self.P1),self.P2)</span>
+<span class="sd">                y = tor10.Matmul(tor10.Matmul(x,self.P1),self.P2)</span>
 <span class="sd">                return y</span>
 
 <span class="sd">    &gt;&gt;&gt; md = Model()</span>
@@ -226,7 +226,7 @@
     <span class="k">return</span> <span class="n">data</span></div>
         
 
-<div class="viewcode-block" id="Linear"><a class="viewcode-back" href="../../nn.html#Tor10.nn.Linear">[docs]</a><span class="k">class</span> <span class="nc">Linear</span><span class="p">:</span>
+<div class="viewcode-block" id="Linear"><a class="viewcode-back" href="../../nn.html#tor10.nn.Linear">[docs]</a><span class="k">class</span> <span class="nc">Linear</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Applies a linear transformation to the incoming data: :math:`y = xA^T + b`</span>
 
@@ -257,8 +257,8 @@
 
 <span class="sd">    Examples::</span>
 
-<span class="sd">        &gt;&gt;&gt; m = Tor10.nn.Linear(20, 30)</span>
-<span class="sd">        &gt;&gt;&gt; iput = Tor10.From_torch(torch.randn(128, 20),rowrank=1)</span>
+<span class="sd">        &gt;&gt;&gt; m = tor10.nn.Linear(20, 30)</span>
+<span class="sd">        &gt;&gt;&gt; iput = tor10.From_torch(torch.randn(128, 20),rowrank=1)</span>
 <span class="sd">        &gt;&gt;&gt; oput = m(iput)</span>
 <span class="sd">        &gt;&gt;&gt; print(oput.shape)</span>
 <span class="sd">        torch.Size([128, 30])</span>
@@ -294,7 +294,7 @@
 
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ipt</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ipt</span><span class="p">,</span><span class="n">UniTensor</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Tor10.nn.Linear&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] can only accept UniTensor&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;tor10.nn.Linear&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] can only accept UniTensor&quot;</span><span class="p">)</span>
     
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="p">(</span><span class="n">ipt</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
         
@@ -306,7 +306,7 @@
         <span class="k">return</span> <span class="s1">&#39;in_features=</span><span class="si">{}</span><span class="s1">, out_features=</span><span class="si">{}</span><span class="s1">, bias=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>\
             <span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">in_features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">out_features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Linear.weight"><a class="viewcode-back" href="../../nn.html#Tor10.nn.Linear.weight">[docs]</a>    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Linear.weight"><a class="viewcode-back" href="../../nn.html#tor10.nn.Linear.weight">[docs]</a>    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the learnable weights of the module of shape</span>
 <span class="sd">        :math:`(\text{out\_features}, \text{in\_features})`. The values are</span>
@@ -320,7 +320,7 @@
         <span class="n">tmp</span><span class="o">.</span><span class="n">_mac</span><span class="p">(</span><span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tnn</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tmp</span></div>
 
-<div class="viewcode-block" id="Linear.bias"><a class="viewcode-back" href="../../nn.html#Tor10.nn.Linear.bias">[docs]</a>    <span class="k">def</span> <span class="nf">bias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Linear.bias"><a class="viewcode-back" href="../../nn.html#tor10.nn.Linear.bias">[docs]</a>    <span class="k">def</span> <span class="nf">bias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        the learnable bias of the module of shape :math:`(\text{out\_features})`.</span>
 <span class="sd">        If :attr:`bias` is ``True``, the values are initialized from</span>
