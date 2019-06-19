@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.Network &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.Network &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -78,12 +78,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>Tor10.Network</li>
+      <li>tor10.Network</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for Tor10.Network</h1><div class="highlight"><pre>
+  <h1>Source code for tor10.Network</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span> 
 <span class="kn">import</span> <span class="nn">copy</span><span class="o">,</span><span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -154,8 +154,8 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">.UniTensor</span> <span class="k">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">:</span>
-<div class="viewcode-block" id="Network.__init__"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nwfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../Network.html#tor10.Network.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">:</span>
+<div class="viewcode-block" id="Network.__init__"><a class="viewcode-back" href="../../Network.html#tor10.Network.Network.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nwfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor of the Network</span>
 
@@ -199,7 +199,7 @@
 <span class="sd">            5. the UniTensors in the Network will contract accroding to: &quot;A&quot; and &quot;B&quot; contract first, then contract with C to form the final output UniTensor.</span>
 
 
-<span class="sd">        &gt;&gt;&gt; Ntwk = Tor10.Network(&quot;test.net&quot;,delimiter=&quot;,&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; Ntwk = tor10.Network(&quot;test.net&quot;,delimiter=&quot;,&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; print(Ntwk)</span>
 <span class="sd">        ==== Network ====</span>
 <span class="sd">        [x] A : -1 -2 ; 1 2 </span>
@@ -219,7 +219,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">instances</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Order</span> <span class="o">=</span> <span class="kc">None</span></div>
         
-<div class="viewcode-block" id="Network.Fromfile"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.Fromfile">[docs]</a>    <span class="k">def</span> <span class="nf">Fromfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ntwrk_file</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.Fromfile"><a class="viewcode-back" href="../../Network.html#tor10.Network.Network.Fromfile">[docs]</a>    <span class="k">def</span> <span class="nf">Fromfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ntwrk_file</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read the Network file.</span>
 <span class="sd">        </span>
@@ -264,12 +264,17 @@
                 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">delimiter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">Inbonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
-                    <span class="n">Outbonds</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">!=</span><span class="mi">2</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">Name</span> <span class="o">!=</span> <span class="s1">&#39;TOUT&#39;</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Network.fromfile&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] syntax error for Network file.&quot;</span><span class="p">);</span>
+                    <span class="n">Inbonds</span><span class="p">,</span> <span class="n">Outbonds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="kc">None</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">Inbonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
-                    <span class="n">Outbonds</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">delimiter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">Inbonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                        <span class="n">Outbonds</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">Inbonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+                        <span class="n">Outbonds</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">delimiter</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
                 <span class="n">tn_shell</span> <span class="o">=</span> <span class="p">[</span><span class="n">Inbonds</span><span class="p">,</span><span class="n">Outbonds</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">Name</span> <span class="o">==</span> <span class="s1">&#39;TOUT&#39;</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -343,7 +348,7 @@
                     <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="n">queue</span>
 
-<div class="viewcode-block" id="Network.Put"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.Put">[docs]</a>    <span class="k">def</span> <span class="nf">Put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">tensor</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.Put"><a class="viewcode-back" href="../../Network.html#tor10.Network.Network.Put">[docs]</a>    <span class="k">def</span> <span class="nf">Put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">tensor</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Put the UniTensor into the tensor named [name] in the Network. To use the Network, only untagged tensor can be put into the Network.</span>
 
@@ -357,11 +362,11 @@
 <span class="sd">            </span>
 <span class="sd">        Example:</span>
 <span class="sd">        ::</span>
-<span class="sd">            ntwrk = Tor10.Network()</span>
+<span class="sd">            ntwrk = tor10.Network()</span>
 <span class="sd">            ntwrk.Fromfile(&quot;test.net&quot;)</span>
-<span class="sd">            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],rowrank=2)</span>
-<span class="sd">            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],rowrank=1)</span>
-<span class="sd">            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">            A = tor10.UniTensor([tor10.Bond(3),tor10.Bond(4),tor10.Bond(3),tor10.Bond(4)],rowrank=2)</span>
+<span class="sd">            B = tor10.UniTensor([tor10.Bond(3),tor10.Bond(2)],rowrank=1)</span>
+<span class="sd">            C = tor10.UniTensor([tor10.Bond(4),tor10.Bond(4)],rowrank=1)</span>
 
 
 <span class="sd">        &gt;&gt;&gt; print(ntwrk)</span>
@@ -526,7 +531,7 @@
  
         <span class="k">return</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-<div class="viewcode-block" id="Network.Launch"><a class="viewcode-back" href="../../Network.html#Tor10.Network.Network.Launch">[docs]</a>    <span class="k">def</span> <span class="nf">Launch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.Launch"><a class="viewcode-back" href="../../Network.html#tor10.Network.Network.Launch">[docs]</a>    <span class="k">def</span> <span class="nf">Launch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Launch the Network. When call, it check if there is a well defined Network structure (Network file loaded), if there is &quot;TOUT&quot; tensor for the Network and if all the Tensors the is being defined in the strucutre are set. </span>
 
@@ -560,16 +565,15 @@
         <span class="k">else</span> <span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__launch_by_order</span><span class="p">()</span>            
 
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">out</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">per_lbl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">per_lbl</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1">## this is temporary, not finished!!!</span>
+            <span class="c1">#print(&quot;Network.Launch is currently under developing.&quot;)</span>
 
- 
-        <span class="n">per_lbl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">per_lbl</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TOUT</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1">## this is temporary, not finished!!!</span>
-        <span class="c1">#print(&quot;Network.Launch is currently under developing.&quot;)</span>
-
-
-
-        <span class="k">return</span> <span class="n">out</span></div></div>
+            <span class="k">return</span> <span class="n">out</span></div></div>
     
 </pre></div>
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tor10.UniTensor &mdash; Tor10 0.1 documentation</title>
+  <title>tor10.UniTensor &mdash; Tor10 0.3 documentation</title>
   
 
   
@@ -78,12 +78,12 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">Tor10.Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">Tor10.Bond</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">Tor10.UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../Network.html">Tor10.Network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">Tor10.linalg</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../nn.html">Tor10.nn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Symmetry.html">tor10.Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Bond.html">tor10.Bond</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UniTensor.html">tor10.UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Network.html">tor10.Network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linalg.html">tor10.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nn.html">tor10.nn</a></li>
 </ul>
 
             
@@ -131,7 +131,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>Tor10.UniTensor</li>
+      <li>tor10.UniTensor</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,7 +146,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for Tor10.UniTensor</h1><div class="highlight"><pre>
+  <h1>Source code for tor10.UniTensor</h1><div class="highlight"><pre>
 <span></span><span class="c1">## [DEBUG] &gt;&gt;&gt; </span>
 <span class="c1">## Note, set this to True to enable debug section</span>
 <span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">False</span>
@@ -178,7 +178,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="UniTensor"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor">[docs]</a><span class="k">class</span> <span class="nc">UniTensor</span><span class="p">:</span>
+<div class="viewcode-block" id="UniTensor"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor">[docs]</a><span class="k">class</span> <span class="nc">UniTensor</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="nf">_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">torch_tensor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">braket</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sym_mappers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -220,7 +220,7 @@
         <span class="k">if</span> <span class="n">torch_tensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch_tensor</span>
 
-<div class="viewcode-block" id="UniTensor.__init__"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">is_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="UniTensor.__init__"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">is_diag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the constructor of UniTensor.</span>
@@ -263,7 +263,7 @@
 <span class="sd">        Example for how to create a UniTensor:</span>
 
 <span class="sd">            * create a rank-2 untagged UniTensor (matrix) with shape (3,4):</span>
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">            &gt;&gt;&gt; a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)</span>
 <span class="sd">            &gt;&gt;&gt; a.Print_diagram(bond_info=True)</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -283,7 +283,7 @@
 <span class="sd">            REG     :</span>
 
 <span class="sd">            * create a rank-3 untagged UniTensor with one bond in row-space and two bonds in col-space, shape (3,4,5) and set labels [-3,4,1] for each bond:</span>
-<span class="sd">            &gt;&gt;&gt; c = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],rowrank=1,labels=[-3,4,1])</span>
+<span class="sd">            &gt;&gt;&gt; c = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4),tor10.Bond(5)],rowrank=1,labels=[-3,4,1])</span>
 <span class="sd">            &gt;&gt;&gt; c.Print_diagram(bond_info=True)</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
@@ -308,7 +308,7 @@
 
 
 <span class="sd">            * create a rank-0 UniTensor</span>
-<span class="sd">            &gt;&gt;&gt; rk0t = Tor10.UniTensor(bonds=[])</span>
+<span class="sd">            &gt;&gt;&gt; rk0t = tor10.UniTensor(bonds=[])</span>
 <span class="sd">            &gt;&gt;&gt; rk0t.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -326,8 +326,8 @@
 <span class="sd">            tensor(0., dtype=torch.float64) </span>
 
 <span class="sd">            * create a rank-3 tagged UniTensor with two bonds in row-space and two bonds in col-space, shape (2,3,4,5)</span>
-<span class="sd">            &gt;&gt;&gt; bds  = [Tor10.Bond(2,Tor10.BD_KET),Tor10.Bond(3,Tor10.BD_KET),Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(5,Tor10.BD_BRA)]</span>
-<span class="sd">            &gt;&gt;&gt; o = Tor10.UniTensor(bonds=bds,rowrank=2)</span>
+<span class="sd">            &gt;&gt;&gt; bds  = [tor10.Bond(2,tor10.BD_KET),tor10.Bond(3,tor10.BD_KET),tor10.Bond(4,tor10.BD_BRA),tor10.Bond(5,tor10.BD_BRA)]</span>
+<span class="sd">            &gt;&gt;&gt; o = tor10.UniTensor(bonds=bds,rowrank=2)</span>
 <span class="sd">            &gt;&gt;&gt; o.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -347,8 +347,8 @@
 
 
 <span class="sd">            * note that if the BRA bond is not in the col-space, or KET bond is not in the row-space, the tensor is in the so called &quot;non-braket_form, which will have a * symbol indicating the mismatch.&quot;</span>
-<span class="sd">            &gt;&gt;&gt; bd2 = [Tor10.Bond(2,Tor10.BD_KET),Tor10.Bond(5,Tor10.BD_BRA),Tor10.Bond(4,Tor10.BD_BRA),Tor10.Bond(3,Tor10.BD_KET)]</span>
-<span class="sd">            &gt;&gt;&gt; c_mismatch = Tor10.UniTensor(bonds=bd2,rowrank=2)</span>
+<span class="sd">            &gt;&gt;&gt; bd2 = [tor10.Bond(2,tor10.BD_KET),tor10.Bond(5,tor10.BD_BRA),tor10.Bond(4,tor10.BD_BRA),tor10.Bond(3,tor10.BD_KET)]</span>
+<span class="sd">            &gt;&gt;&gt; c_mismatch = tor10.UniTensor(bonds=bd2,rowrank=2)</span>
 <span class="sd">            &gt;&gt;&gt; c_mismatch.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -368,22 +368,22 @@
 
 
 <span class="sd">            * create a rank-2 UniTensor with one inbond, one outbond, shape (3,4) on GPU-0:</span>
-<span class="sd">            &gt;&gt;&gt; d = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1,device=torch.device(&quot;cuda:0&quot;))</span>
+<span class="sd">            &gt;&gt;&gt; d = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1,device=torch.device(&quot;cuda:0&quot;))</span>
 
 <span class="sd">            * create a diagonal 6x6 rank-2 tensor(matrix):</span>
 <span class="sd">              Note that if is_diag is True, rowrank must be 1.</span>
-<span class="sd">            &gt;&gt;&gt; e = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(6)],rowrank=1,is_diag=True)</span>
+<span class="sd">            &gt;&gt;&gt; e = tor10.UniTensor(bonds=[tor10.Bond(6),tor10.Bond(6)],rowrank=1,is_diag=True)</span>
 
 <span class="sd">            Note that when is_diag is set to True, the UniTensor should be a square matrix.</span>
 
 <span class="sd">            * create a rank-3 UniTensor with two bonds in row-space and one bond in col-space, and single precision:</span>
-<span class="sd">            &gt;&gt;&gt; f = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(5)],rowrank=2,labels=[-3,4,1],dtype=torch.float32)</span>
+<span class="sd">            &gt;&gt;&gt; f = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4),tor10.Bond(5)],rowrank=2,labels=[-3,4,1],dtype=torch.float32)</span>
 
 <span class="sd">            * create a rank-3 UniTensor with U1 symmetry:</span>
-<span class="sd">            &gt;&gt;&gt; bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])</span>
-<span class="sd">            &gt;&gt;&gt; bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">            &gt;&gt;&gt; bd_sym_3 = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])</span>
-<span class="sd">            &gt;&gt;&gt; symT = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12])</span>
+<span class="sd">            &gt;&gt;&gt; bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0],[1],[2]])</span>
+<span class="sd">            &gt;&gt;&gt; bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">            &gt;&gt;&gt; bd_sym_3 = tor10.Bond(5,tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])</span>
+<span class="sd">            &gt;&gt;&gt; symT = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12])</span>
 <span class="sd">            &gt;&gt;&gt; symT.Print_diagram(bond_info=True)</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -415,7 +415,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="c1">## bonds:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">bonds</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">bonds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bonds</span><span class="p">))])</span>
 
         <span class="c1"># labels: </span>
         <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -638,7 +638,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">is_braket</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="UniTensor.is_braket_form"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.is_braket_form">[docs]</a>    <span class="k">def</span> <span class="nf">is_braket_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.is_braket_form"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.is_braket_form">[docs]</a>    <span class="k">def</span> <span class="nf">is_braket_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Return if the current tensor is in braket_form. It can only be called on a tagged UniTensor (with or without symmetry)</span>
 
@@ -653,7 +653,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_braket</span></div>
 
-<div class="viewcode-block" id="UniTensor.braket_form"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.braket_form">[docs]</a>    <span class="k">def</span> <span class="nf">braket_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.braket_form"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.braket_form">[docs]</a>    <span class="k">def</span> <span class="nf">braket_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Permute the UniTensor to bra-ket form. </span>
 
@@ -670,7 +670,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Permute</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="n">Nin</span><span class="p">,</span> <span class="n">by_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.SetLabel"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.SetLabel">[docs]</a>    <span class="k">def</span> <span class="nf">SetLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newLabel</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.SetLabel"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.SetLabel">[docs]</a>    <span class="k">def</span> <span class="nf">SetLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newLabel</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set a new label for the bond at index :idx:</span>
 
@@ -682,7 +682,7 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1,labels=[5,6])</span>
+<span class="sd">            &gt;&gt;&gt; g = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1,labels=[5,6])</span>
 <span class="sd">            &gt;&gt;&gt; g.labels</span>
 <span class="sd">            [5 6]</span>
 
@@ -705,7 +705,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">newLabel</span></div>
 
-<div class="viewcode-block" id="UniTensor.SetLabels"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.SetLabels">[docs]</a>    <span class="k">def</span> <span class="nf">SetLabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newlabels</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.SetLabels"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.SetLabels">[docs]</a>    <span class="k">def</span> <span class="nf">SetLabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newlabels</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set new labels for all the bonds.</span>
 
@@ -715,7 +715,7 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; g = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1,labels=[5,6])</span>
+<span class="sd">            &gt;&gt;&gt; g = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1,labels=[5,6])</span>
 <span class="sd">            &gt;&gt;&gt; g.labels</span>
 <span class="sd">            [5 6]</span>
 
@@ -739,7 +739,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">newlabels</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.SetName"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.SetName">[docs]</a>    <span class="k">def</span> <span class="nf">SetName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.SetName"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.SetName">[docs]</a>    <span class="k">def</span> <span class="nf">SetName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the name of the UniTensor</span>
 
@@ -756,7 +756,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.SetElem"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.SetElem">[docs]</a>    <span class="k">def</span> <span class="nf">SetElem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.SetElem"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.SetElem">[docs]</a>    <span class="k">def</span> <span class="nf">SetElem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given 1D array of elements, set the elements stored in tensor as the same as the given ones. Note that elem can only be python-list or numpy</span>
 
@@ -768,7 +768,7 @@
 
 <span class="sd">        Example:</span>
 <span class="sd">        ::</span>
-<span class="sd">            Sz = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1,</span>
+<span class="sd">            Sz = tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1,</span>
 <span class="sd">                              dtype=torch.float64,</span>
 <span class="sd">                              device=torch.device(&quot;cpu&quot;))</span>
 <span class="sd">            Sz.SetElem([1, 0,</span>
@@ -801,7 +801,7 @@
         <span class="n">my_device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">raw_elems</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">my_type</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">my_shape</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">my_device</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.SetRowRank"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.SetRowRank">[docs]</a>    <span class="k">def</span> <span class="nf">SetRowRank</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_rowrank</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.SetRowRank"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.SetRowRank">[docs]</a>    <span class="k">def</span> <span class="nf">SetRowRank</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_rowrank</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the RowRank while keep the tensor indices.</span>
 <span class="sd">            </span>
@@ -832,7 +832,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_braket</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.Todense_"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Todense_">[docs]</a>    <span class="k">def</span> <span class="nf">Todense_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Todense_"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Todense_">[docs]</a>    <span class="k">def</span> <span class="nf">Todense_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current UniTensor to dense matrix.</span>
 <span class="sd">            [v0.3+] This only affect on UniTensor with non-symmetry with diag=True.</span>
@@ -842,7 +842,7 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],rowrank=1,is_diag=True)</span>
+<span class="sd">            &gt;&gt;&gt; a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)],rowrank=1,is_diag=True)</span>
 <span class="sd">            &gt;&gt;&gt; a.SetElem([1,2,3])</span>
 <span class="sd">            &gt;&gt;&gt; print(a.is_diag)</span>
 <span class="sd">            True</span>
@@ -873,7 +873,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.Todense"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Todense">[docs]</a>    <span class="k">def</span> <span class="nf">Todense</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Todense"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Todense">[docs]</a>    <span class="k">def</span> <span class="nf">Todense</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a densed version of current UniTensor. This only affect on UniTensor with non-symmetry with is_diag=True.</span>
 <span class="sd">        </span>
@@ -884,7 +884,7 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],rowrank=1,is_diag=True)</span>
+<span class="sd">            &gt;&gt;&gt; a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)],rowrank=1,is_diag=True)</span>
 <span class="sd">            &gt;&gt;&gt; print(a.is_diag)</span>
 <span class="sd">            True</span>
 
@@ -907,7 +907,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.to_"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.to_">[docs]</a>    <span class="k">def</span> <span class="nf">to_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.to_"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.to_">[docs]</a>    <span class="k">def</span> <span class="nf">to_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current UniTensor to device</span>
 
@@ -926,7 +926,7 @@
 
 <span class="sd">            Construct a tensor (default is on cpu)</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">            &gt;&gt;&gt; a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)</span>
 
 <span class="sd">            Set to GPU.</span>
 
@@ -946,7 +946,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.to"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.to"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current UniTensor to device. If device is not the same with current tensor, return a new UniTensor, otherwise return self.</span>
 
@@ -965,7 +965,7 @@
 
 <span class="sd">            Construct a tensor (default is on cpu)</span>
 
-<span class="sd">            &gt;&gt;&gt; a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">            &gt;&gt;&gt; a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)</span>
 
 <span class="sd">            Set to GPU.</span>
 
@@ -989,7 +989,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.Print_diagram"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Print_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">Print_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bond_info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Print_diagram"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Print_diagram">[docs]</a>    <span class="k">def</span> <span class="nf">Print_diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bond_info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the beauty print of the tensor diagram. Including the information for the placeing device</span>
 <span class="sd">        ::</span>
@@ -1153,7 +1153,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">)</span>
 
-<div class="viewcode-block" id="UniTensor.__eq__"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.__eq__"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Compare two UniTensor.</span>
 <span class="sd">            ::</span>
@@ -1262,7 +1262,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="UniTensor.item"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.item">[docs]</a>    <span class="k">def</span> <span class="nf">item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.item"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.item">[docs]</a>    <span class="k">def</span> <span class="nf">item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the python scalar from a UniTensor with one element</span>
 
@@ -1525,7 +1525,7 @@
 
     <span class="s2">&quot;&quot;</span>
 
-<div class="viewcode-block" id="UniTensor.Whole_transpose"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Whole_transpose">[docs]</a>    <span class="k">def</span> <span class="nf">Whole_transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Whole_transpose"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Whole_transpose">[docs]</a>    <span class="k">def</span> <span class="nf">Whole_transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            If the UniTensor is tagged, exchange the bra/ket tags on each bond, and transpose (rowspace and colspace) by referencing to the &quot;rowrank&quot;.</span>
 <span class="sd">            </span>
@@ -1798,9 +1798,9 @@
         <span class="k">return</span> <span class="n">tmp</span>
 
     <span class="c1">## This is the same function that behaves as the memberfunction.</span>
-<div class="viewcode-block" id="UniTensor.Svd"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Svd">[docs]</a>    <span class="k">def</span> <span class="nf">Svd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Svd"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Svd">[docs]</a>    <span class="k">def</span> <span class="nf">Svd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            This is the member function of Svd, see Tor10.linalg.Svd()</span>
+<span class="sd">            This is the member function of Svd, see tor10.linalg.Svd()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_symm</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Svd&quot;</span><span class="p">,</span>
@@ -1811,9 +1811,9 @@
 
         <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">Svd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.Svd_truncate"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Svd_truncate">[docs]</a>    <span class="k">def</span> <span class="nf">Svd_truncate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">keepdim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Svd_truncate"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Svd_truncate">[docs]</a>    <span class="k">def</span> <span class="nf">Svd_truncate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">keepdim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            This is the member function of Svd_truncate, see Tor10.linalg.Svd_truncate()</span>
+<span class="sd">            This is the member function of Svd_truncate, see tor10.linalg.Svd_truncate()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_symm</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Svd_truncate&quot;</span><span class="p">,</span>
@@ -1821,9 +1821,9 @@
 
         <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">keepdim</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.Norm"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Norm">[docs]</a>    <span class="k">def</span> <span class="nf">Norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Norm"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Norm">[docs]</a>    <span class="k">def</span> <span class="nf">Norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            This is the member function of Norm, see Tor10.linalg.Norm</span>
+<span class="sd">            This is the member function of Norm, see tor10.linalg.Norm</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_symm</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Norm&quot;</span><span class="p">,</span>
@@ -1831,9 +1831,9 @@
 
         <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">Norm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.Det"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Det">[docs]</a>    <span class="k">def</span> <span class="nf">Det</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Det"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Det">[docs]</a>    <span class="k">def</span> <span class="nf">Det</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            This is the member function of Det, see Tor10.linalg.Det</span>
+<span class="sd">            This is the member function of Det, see tor10.linalg.Det</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_symm</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Det&quot;</span><span class="p">,</span>
@@ -1841,9 +1841,9 @@
 
         <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">Det</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.Matmul"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Matmul">[docs]</a>    <span class="k">def</span> <span class="nf">Matmul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Matmul"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Matmul">[docs]</a>    <span class="k">def</span> <span class="nf">Matmul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            This is the member function of Matmul, see Tor10.linalg.Matmul</span>
+<span class="sd">            This is the member function of Matmul, see tor10.linalg.Matmul</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_symm</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;UniTensor.Matmul&quot;</span><span class="p">,</span>
@@ -1966,7 +1966,7 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="c1">## Miscellaneous</span>
-<div class="viewcode-block" id="UniTensor.Rand"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Rand">[docs]</a>    <span class="k">def</span> <span class="nf">Rand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Rand"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Rand">[docs]</a>    <span class="k">def</span> <span class="nf">Rand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Randomize the UniTensor.</span>
 
@@ -1981,7 +1981,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.CombineBonds"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.CombineBonds">[docs]</a>    <span class="k">def</span> <span class="nf">CombineBonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_to_combine</span><span class="p">,</span> <span class="n">new_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">permute_back</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.CombineBonds"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.CombineBonds">[docs]</a>    <span class="k">def</span> <span class="nf">CombineBonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_to_combine</span><span class="p">,</span> <span class="n">new_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">permute_back</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">by_label</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function combines the bonds in input UniTensor [a] by the specified labels [label].</span>
 
@@ -2007,9 +2007,9 @@
 
 <span class="sd">            1. Combine Bond for an non-symmetric tensor.</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])</span>
-<span class="sd">            &gt;&gt;&gt; y = Tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; y = tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            tensor Name : </span>
 <span class="sd">            tensor Rank : 3</span>
@@ -2078,8 +2078,8 @@
 <span class="sd">            REG     :</span>
 
 <span class="sd">            </span>
-<span class="sd">            &gt;&gt;&gt; z  = Tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])</span>
-<span class="sd">            &gt;&gt;&gt; z2 = Tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])</span>
+<span class="sd">            &gt;&gt;&gt; z  = tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])</span>
+<span class="sd">            &gt;&gt;&gt; z2 = tor10.UniTensor(bonds=bds_x*2, rowrank=3, labels=[4,3,5,6,7,8])</span>
 <span class="sd">            &gt;&gt;&gt; z.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -2155,7 +2155,7 @@
 
         <span class="n">_CombineBonds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idxs_to_combine</span><span class="p">,</span> <span class="n">new_label</span><span class="p">,</span> <span class="n">permute_back</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.Contiguous_"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Contiguous_">[docs]</a>    <span class="k">def</span> <span class="nf">Contiguous_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Contiguous_"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Contiguous_">[docs]</a>    <span class="k">def</span> <span class="nf">Contiguous_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make the memory to be contiguous. This is similar as pytorch&#39;s contiguous_().</span>
 <span class="sd">        Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called &quot;non-contiguous&quot; tensor.</span>
@@ -2167,7 +2167,7 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]</span>
 <span class="sd">            &gt;&gt;&gt; x = Tt.UniTensor(bonds=bds_x,rowrank=1, labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; print(x.is_contiguous())</span>
 <span class="sd">            True</span>
@@ -2196,7 +2196,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.Contiguous"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Contiguous">[docs]</a>    <span class="k">def</span> <span class="nf">Contiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Contiguous"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Contiguous">[docs]</a>    <span class="k">def</span> <span class="nf">Contiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make the memory to be contiguous. This is similar as pytorch&#39;s contiguous().</span>
 <span class="sd">        Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called &quot;non-contiguous&quot; tensor.</span>
@@ -2210,7 +2210,7 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]</span>
 <span class="sd">            &gt;&gt;&gt; x = Tt.UniTensor(bonds=bds_x,rowrank=1, labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; print(x.is_contiguous())</span>
 <span class="sd">            True</span>
@@ -2282,7 +2282,7 @@
                          <span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">contiguous</span><span class="p">())</span>
                 <span class="k">return</span> <span class="n">tmp</span></div>
 
-<div class="viewcode-block" id="UniTensor.is_contiguous"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.is_contiguous">[docs]</a>    <span class="k">def</span> <span class="nf">is_contiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.is_contiguous"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.is_contiguous">[docs]</a>    <span class="k">def</span> <span class="nf">is_contiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the status of memory contiguous.</span>
 
@@ -2295,7 +2295,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">is_contiguous</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="UniTensor.Permute"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Permute">[docs]</a>    <span class="k">def</span> <span class="nf">Permute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">by_label</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Permute"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Permute">[docs]</a>    <span class="k">def</span> <span class="nf">Permute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapper</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">by_label</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Permute the bonds of the UniTensor.</span>
 <span class="sd">            </span>
@@ -2318,8 +2318,8 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(2)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, rowrank=3,labels=[1,3,5,7,8])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(4),tor10.Bond(3),tor10.Bond(2)]</span>
+<span class="sd">            &gt;&gt;&gt; x = tor10.UniTensor(bonds=bds_x, rowrank=3,labels=[1,3,5,7,8])</span>
 <span class="sd">            &gt;&gt;&gt; y = copy.deepcopy(x)</span>
 <span class="sd">            &gt;&gt;&gt; z = copy.deepcopy(x)</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
@@ -2463,7 +2463,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.Reshape"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Reshape">[docs]</a>    <span class="k">def</span> <span class="nf">Reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Reshape"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Reshape">[docs]</a>    <span class="k">def</span> <span class="nf">Reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a new reshaped UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</span>
 
@@ -2490,8 +2490,8 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -2554,7 +2554,7 @@
 
         <span class="k">return</span> <span class="n">tmp</span></div>
 
-<div class="viewcode-block" id="UniTensor.Reshape_"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.Reshape_">[docs]</a>    <span class="k">def</span> <span class="nf">Reshape_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.Reshape_"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.Reshape_">[docs]</a>    <span class="k">def</span> <span class="nf">Reshape_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inplace version of Reshape. </span>
 <span class="sd">        Reshape UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</span>
@@ -2582,8 +2582,8 @@
 <span class="sd">    </span>
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -2642,7 +2642,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="UniTensor.View"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.View">[docs]</a>    <span class="k">def</span> <span class="nf">View</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.View"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.View">[docs]</a>    <span class="k">def</span> <span class="nf">View</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a new view of UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</span>
 
@@ -2673,8 +2673,8 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -2743,7 +2743,7 @@
 
         <span class="k">return</span> <span class="n">tmp</span></div>
 
-<div class="viewcode-block" id="UniTensor.View_"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.View_">[docs]</a>    <span class="k">def</span> <span class="nf">View_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.View_"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.View_">[docs]</a>    <span class="k">def</span> <span class="nf">View_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dimer</span><span class="p">,</span> <span class="n">rowrank</span><span class="p">,</span> <span class="n">new_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inplace version of View. </span>
 <span class="sd">        View UniTensor into the shape specified as [dimer], with the first [rowrank] Bonds as bra-bond and other bonds as ket-bond.</span>
@@ -2776,8 +2776,8 @@
 <span class="sd">    </span>
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; bds_x = [Tor10.Bond(6),Tor10.Bond(5),Tor10.Bond(3)]</span>
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
+<span class="sd">            &gt;&gt;&gt; bds_x = [tor10.Bond(6),tor10.Bond(5),tor10.Bond(3)]</span>
+<span class="sd">            &gt;&gt;&gt; x = tor10.UniTensor(bonds=bds_x, rowrank=1,labels=[4,3,5])</span>
 <span class="sd">            &gt;&gt;&gt; x.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -2839,7 +2839,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="c1">## Symmetric Tensor function</span>
-<div class="viewcode-block" id="UniTensor.GetTotalQnums"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.GetTotalQnums">[docs]</a>    <span class="k">def</span> <span class="nf">GetTotalQnums</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.GetTotalQnums"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.GetTotalQnums">[docs]</a>    <span class="k">def</span> <span class="nf">GetTotalQnums</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return two combined bond objects that has the information for the total qnums at bra and ket bonds.</span>
 
@@ -2858,10 +2858,10 @@
 <span class="sd">            qnums_brabonds, qnums_ketbonds:</span>
 
 <span class="sd">            qnums_brabonds:</span>
-<span class="sd">                a Tor10.Bond, the combined bra-bond</span>
+<span class="sd">                a tor10.Bond, the combined bra-bond</span>
 
 <span class="sd">            qnums_ketbonds:</span>
-<span class="sd">                a Tor10.Bond, the combined ket-bond.</span>
+<span class="sd">                a tor10.Bond, the combined ket-bond.</span>
 
 
 <span class="sd">        Example:</span>
@@ -2873,17 +2873,17 @@
 <span class="sd">                ## U1 = {-2,-1,0,1,2}</span>
 <span class="sd">                ## U1 = {-1,1}</span>
 <span class="sd">                ## U1 = {0,1,2,3}</span>
-<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0, 2, 1, 0],</span>
 <span class="sd">                                                            [1, 1,-1, 1],</span>
 <span class="sd">                                                            [2,-1, 1, 0]])</span>
-<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1, 0,-1, 3],</span>
 <span class="sd">                                                            [ 0, 0,-1, 2],</span>
 <span class="sd">                                                            [ 1, 0, 1, 0],</span>
 <span class="sd">                                                            [ 2,-2,-1, 1]])</span>
-<span class="sd">                bd_sym_3 = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[-4, 3, 0,-1],</span>
+<span class="sd">                bd_sym_3 = tor10.Bond(2,tor10.BD_BRA,qnums=[[-4, 3, 0,-1],</span>
 <span class="sd">                                                            [ 1, 1, -2,3]])</span>
 
-<span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)</span>
+<span class="sd">                sym_T = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)</span>
 <span class="sd">            &gt;&gt;&gt; sym_T.Pring_diagram()</span>
 <span class="sd">            -----------------------</span>
 <span class="sd">            tensor Name : </span>
@@ -3009,7 +3009,7 @@
 
         <span class="k">return</span> <span class="n">in_all</span><span class="p">,</span> <span class="n">out_all</span></div>
 
-<div class="viewcode-block" id="UniTensor.GetValidQnums"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.GetValidQnums">[docs]</a>    <span class="k">def</span> <span class="nf">GetValidQnums</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_shape</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.GetValidQnums"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.GetValidQnums">[docs]</a>    <span class="k">def</span> <span class="nf">GetValidQnums</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_shape</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Return the quatum number set that has a valid block.</span>
 
@@ -3056,7 +3056,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">comm</span></div>
 
-<div class="viewcode-block" id="UniTensor.PutBlock"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.PutBlock">[docs]</a>    <span class="k">def</span> <span class="nf">PutBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="o">*</span><span class="n">qnum</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.PutBlock"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.PutBlock">[docs]</a>    <span class="k">def</span> <span class="nf">PutBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="o">*</span><span class="n">qnum</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Put the block into the UniTensor. If the UniTensor is symmetry tensor, the block should be specify by the quantum number. </span>
 <span class="sd">       </span>
@@ -3196,7 +3196,7 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">is_set</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.PutBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] No block has qnums:&quot;</span><span class="p">,</span> <span class="n">qnum</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.GetBlock"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.GetBlock">[docs]</a>    <span class="k">def</span> <span class="nf">GetBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">qnum</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.GetBlock"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.GetBlock">[docs]</a>    <span class="k">def</span> <span class="nf">GetBlock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">qnum</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the Block specify by the quantum number(s). If the UniTensor is non-symmetry, return self.</span>
 
@@ -3211,10 +3211,10 @@
 <span class="sd">        Example:</span>
 <span class="sd">            * Single Symmetry::</span>
 
-<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])</span>
-<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">                bd_sym_3 = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[2],[5],[1]])</span>
-<span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12],dtype=torch.float64)</span>
+<span class="sd">                bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0],[1],[2]])</span>
+<span class="sd">                bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">                bd_sym_3 = tor10.Bond(5,tor10.BD_BRA,qnums=[[4],[2],[2],[5],[1]])</span>
+<span class="sd">                sym_T = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[10,11,12],dtype=torch.float64)</span>
 
 <span class="sd">            &gt;&gt;&gt; sym_T.Print_diagram()</span>
 <span class="sd">            -----------------------</span>
@@ -3266,17 +3266,17 @@
 
 <span class="sd">                ## multiple Qnum:</span>
 <span class="sd">                ## U1 x U1 x U1 x U1</span>
-<span class="sd">                bd_sym_1 = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0, 2, 1, 0],</span>
+<span class="sd">                bd_sym_1 = tor10.Bond(3,tor10.BD_KET,qnums=[[0, 2, 1, 0],</span>
 <span class="sd">                                                            [1, 1,-1, 1],</span>
 <span class="sd">                                                            [2,-1, 1, 0]])</span>
-<span class="sd">                bd_sym_2 = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1, 0,-1, 3],</span>
+<span class="sd">                bd_sym_2 = tor10.Bond(4,tor10.BD_KET,qnums=[[-1, 0,-1, 3],</span>
 <span class="sd">                                                            [ 0, 0,-1, 2],</span>
 <span class="sd">                                                            [ 1, 0, 1, 0],</span>
 <span class="sd">                                                            [ 2,-2,-1, 1]])</span>
-<span class="sd">                bd_sym_3 = Tor10.Bond(2,Tor10.BD_BRA,qnums=[[-1,-2,-1,2],</span>
+<span class="sd">                bd_sym_3 = tor10.Bond(2,tor10.BD_BRA,qnums=[[-1,-2,-1,2],</span>
 <span class="sd">                                                            [ 1, 1, -2,3]])</span>
 
-<span class="sd">                sym_T = Tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)</span>
+<span class="sd">                sym_T = tor10.UniTensor(bonds=[bd_sym_1,bd_sym_2,bd_sym_3],rowrank=2,labels=[1,2,3],dtype=torch.float64)</span>
 
 <span class="sd">            &gt;&gt;&gt; tqin, tqout = sym_T.GetTotalQnums()</span>
 <span class="sd">            &gt;&gt;&gt; print(tqin)</span>
@@ -3422,7 +3422,7 @@
                 <span class="c1">## if there is no block with qnum:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;UniTensor.GetBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] No block has qnums:&quot;</span><span class="p">,</span> <span class="n">qnum</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniTensor.torch"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.torch">[docs]</a>    <span class="k">def</span> <span class="nf">torch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.torch"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.torch">[docs]</a>    <span class="k">def</span> <span class="nf">torch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Transform a UniTensor to torch.Tensor. </span>
 
@@ -3443,7 +3443,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span></div>
 
     <span class="c1">## Autograd feature:</span>
-<div class="viewcode-block" id="UniTensor.requires_grad"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.requires_grad">[docs]</a>    <span class="k">def</span> <span class="nf">requires_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_grad</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.requires_grad"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.requires_grad">[docs]</a>    <span class="k">def</span> <span class="nf">requires_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_grad</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The status for the autograd property.</span>
 
@@ -3457,8 +3457,8 @@
 
 <span class="sd">        Example:</span>
 <span class="sd">        ::</span>
-<span class="sd">            bds_x = [Tor10.Bond(5),Tor10.Bond(5),Tor10.Bond(3)]</span>
-<span class="sd">            x = Tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])</span>
+<span class="sd">            bds_x = [tor10.Bond(5),tor10.Bond(5),tor10.Bond(3)]</span>
+<span class="sd">            x = tor10.UniTensor(bonds=bds_x, rowrank=2, labels=[4,3,5])</span>
 
 
 <span class="sd">        &gt;&gt;&gt; print(x.requires_grad())</span>
@@ -3486,7 +3486,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">is_grad</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="UniTensor.grad"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.grad">[docs]</a>    <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.grad"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.grad">[docs]</a>    <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the gradient tensors subject to x where x is the current UniTensor. The return is None by default and becomes a UniTensor the first time a call backward(). The future calls to backward() will accumulate (add) gradient into it.</span>
 
@@ -3500,7 +3500,7 @@
 
 <span class="sd">        Example:</span>
 
-<span class="sd">            &gt;&gt;&gt; x = Tor10.UniTensor(bonds=[Tor10.Bond(2),Tor10.Bond(2)],rowrank=1,requires_grad=True)</span>
+<span class="sd">            &gt;&gt;&gt; x = tor10.UniTensor(bonds=[tor10.Bond(2),tor10.Bond(2)],rowrank=1,requires_grad=True)</span>
 <span class="sd">            &gt;&gt;&gt; print(x)</span>
 <span class="sd">            Tensor name:</span>
 <span class="sd">            is_diag    : False</span>
@@ -3514,7 +3514,7 @@
 <span class="sd">            tensor([[16., 16.],</span>
 <span class="sd">                    [16., 16.]], dtype=torch.float64, grad_fn=&lt;PowBackward0&gt;)</span>
 
-<span class="sd">            &gt;&gt;&gt; out = Tor10.Mean(y)</span>
+<span class="sd">            &gt;&gt;&gt; out = tor10.Mean(y)</span>
 <span class="sd">            &gt;&gt;&gt; print(out)</span>
 <span class="sd">            Tensor name:</span>
 <span class="sd">            is_diag    : False</span>
@@ -3551,7 +3551,7 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">_mac</span><span class="p">(</span><span class="n">torch_tensor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">tmp</span></div>
 
-<div class="viewcode-block" id="UniTensor.backward"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.backward">[docs]</a>    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.backward"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.backward">[docs]</a>    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Backward the gradient flow in the contructed autograd graph. This is the same as torch.Tensor.backward</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3562,7 +3562,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="UniTensor.detach"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.UniTensor.detach">[docs]</a>    <span class="k">def</span> <span class="nf">detach</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniTensor.detach"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.UniTensor.detach">[docs]</a>    <span class="k">def</span> <span class="nf">detach</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Detach the current tensor from the current graph, making it a leaf. This is the same as torch.Tensor.detach_()</span>
 
@@ -3583,7 +3583,7 @@
 <span class="c1">#</span>
 <span class="c1">##############################################################</span>
 <span class="c1">## I/O</span>
-<div class="viewcode-block" id="Save"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Save">[docs]</a><span class="k">def</span> <span class="nf">Save</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="Save"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.Save">[docs]</a><span class="k">def</span> <span class="nf">Save</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save a UniTensor to the file</span>
 
@@ -3596,8 +3596,8 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)</span>
-<span class="sd">        Tor10.Save(a,&quot;a.uniT&quot;)</span>
+<span class="sd">        a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)</span>
+<span class="sd">        tor10.Save(a,&quot;a.uniT&quot;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -3609,7 +3609,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Load"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Load">[docs]</a><span class="k">def</span> <span class="nf">Load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="Load"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.Load">[docs]</a><span class="k">def</span> <span class="nf">Load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a UniTensor from the file.</span>
 
@@ -3622,7 +3622,7 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    ::</span>
-<span class="sd">        a = Tor10.Load(&quot;a.uniT&quot;)</span>
+<span class="sd">        a = tor10.Load(&quot;a.uniT&quot;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -3639,7 +3639,7 @@
     <span class="k">return</span> <span class="n">tmp</span></div>
 
 
-<div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.Contract">[docs]</a><span class="k">def</span> <span class="nf">Contract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="Contract"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.Contract">[docs]</a><span class="k">def</span> <span class="nf">Contract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Contract two tensors with the same labels.</span>
 
@@ -3664,8 +3664,8 @@
 
 <span class="sd">        Example:</span>
 <span class="sd">        ::</span>
-<span class="sd">            x = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(2),Tor10.Bond(4),Tor10.Bond(3)], rowrank=2,labels=[6,1,7,8])</span>
-<span class="sd">            y = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(2),Tor10.Bond(3),Tor10.Bond(6)], rowrank=2,labels=[7,2,10,9])</span>
+<span class="sd">            x = tor10.UniTensor(bonds=[tor10.Bond(5),tor10.Bond(2),tor10.Bond(4),tor10.Bond(3)], rowrank=2,labels=[6,1,7,8])</span>
+<span class="sd">            y = tor10.UniTensor(bonds=[tor10.Bond(4),tor10.Bond(2),tor10.Bond(3),tor10.Bond(6)], rowrank=2,labels=[7,2,10,9])</span>
 
 
 <span class="sd">        &gt;&gt;&gt; x.Print_diagram()</span>
@@ -3698,7 +3698,7 @@
 <span class="sd">                   \             /     </span>
 <span class="sd">                    -------------  </span>
 
-<span class="sd">        &gt;&gt;&gt; c = Tor10.Contract(x,y)</span>
+<span class="sd">        &gt;&gt;&gt; c = tor10.Contract(x,y)</span>
 <span class="sd">        &gt;&gt;&gt; c.Print_diagram()</span>
 <span class="sd">        -----------------------</span>
 <span class="sd">        tensor Name : </span>
@@ -3716,7 +3716,7 @@
 <span class="sd">                   \             /     </span>
 <span class="sd">                    -------------  </span>
 
-<span class="sd">        &gt;&gt;&gt; d = Tor10.Contract(y,x)</span>
+<span class="sd">        &gt;&gt;&gt; d = tor10.Contract(y,x)</span>
 <span class="sd">        &gt;&gt;&gt; d.Print_diagram()</span>
 <span class="sd">        -----------------------</span>
 <span class="sd">        tensor Name : </span>
@@ -3737,16 +3737,16 @@
 
 <span class="sd">        Note that you can also contract for UniTensor with symmetry, even when they are not in the bra-ket form. As long as the quantum number on the to-be-contract bonds and the bond type matches (bra can only contract with ket)</span>
 <span class="sd">        ::</span>
-<span class="sd">            bd_sym_1a = Tor10.Bond(3,Tor10.BD_KET,qnums=[[0],[1],[2]])</span>
-<span class="sd">            bd_sym_2a = Tor10.Bond(4,Tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">            bd_sym_3a = Tor10.Bond(5,Tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])</span>
+<span class="sd">            bd_sym_1a = tor10.Bond(3,tor10.BD_KET,qnums=[[0],[1],[2]])</span>
+<span class="sd">            bd_sym_2a = tor10.Bond(4,tor10.BD_KET,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">            bd_sym_3a = tor10.Bond(5,tor10.BD_BRA,qnums=[[4],[2],[-1],[5],[1]])</span>
 
-<span class="sd">            bd_sym_1b = Tor10.Bond(3,Tor10.BD_BRA,qnums=[[0],[1],[2]])</span>
-<span class="sd">            bd_sym_2b = Tor10.Bond(4,Tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])</span>
-<span class="sd">            bd_sym_3b = Tor10.Bond(7,Tor10.BD_KET,qnums=[[1],[3],[-2],[2],[2],[2],[0]])</span>
+<span class="sd">            bd_sym_1b = tor10.Bond(3,tor10.BD_BRA,qnums=[[0],[1],[2]])</span>
+<span class="sd">            bd_sym_2b = tor10.Bond(4,tor10.BD_BRA,qnums=[[-1],[2],[0],[2]])</span>
+<span class="sd">            bd_sym_3b = tor10.Bond(7,tor10.BD_KET,qnums=[[1],[3],[-2],[2],[2],[2],[0]])</span>
 
-<span class="sd">            sym_A = Tor10.UniTensor(bonds=[bd_sym_1a,bd_sym_2a,bd_sym_3a],rowrank=2,labels=[10,11,12])</span>
-<span class="sd">            sym_B = Tor10.UniTensor(bonds=[bd_sym_2b,bd_sym_1b,bd_sym_3b],rowrank=1,labels=[11,10,7])</span>
+<span class="sd">            sym_A = tor10.UniTensor(bonds=[bd_sym_1a,bd_sym_2a,bd_sym_3a],rowrank=2,labels=[10,11,12])</span>
+<span class="sd">            sym_B = tor10.UniTensor(bonds=[bd_sym_2b,bd_sym_1b,bd_sym_3b],rowrank=1,labels=[11,10,7])</span>
 
 
 <span class="sd">        &gt;&gt;&gt; sym_A.Print_diagram()</span>
@@ -3782,8 +3782,8 @@
 <span class="sd">                   |             |     </span>
 <span class="sd">                   ---------------  </span>
 
-<span class="sd">        &gt;&gt;&gt; sym_AB = Tor10.Contract(sym_A,sym_B)</span>
-<span class="sd">        &gt;&gt;&gt; sym_BA = Tor10.Contract(sym_B,sym_A)</span>
+<span class="sd">        &gt;&gt;&gt; sym_AB = tor10.Contract(sym_A,sym_B)</span>
+<span class="sd">        &gt;&gt;&gt; sym_BA = tor10.Contract(sym_B,sym_A)</span>
 <span class="sd">        &gt;&gt;&gt; sym_AB.Print_diagram()</span>
 <span class="sd">        -----------------------</span>
 <span class="sd">        tensor Name : </span>
@@ -4255,7 +4255,7 @@
                     <span class="n">f_label</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
                     <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">,</span> <span class="n">idxs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
                     <span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">idxs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-
+                    
                     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span> <span class="o">==</span> <span class="n">f_label</span><span class="p">)</span>
                     <span class="n">final_mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">),</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
                     <span class="n">a</span><span class="o">.</span><span class="n">Stoarge</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">final_mapper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
@@ -4263,12 +4263,10 @@
                     <span class="n">a</span><span class="o">.</span><span class="n">rowrank</span> <span class="o">=</span> <span class="n">new_Nin</span>
 
                 <span class="k">else</span><span class="p">:</span>
-
                     <span class="c1">##[Fusion tree] &gt;&gt;&gt;</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idxs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">]])</span>
                     <span class="c1">## &lt;&lt;&lt;</span>
-
                     <span class="k">if</span> <span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="o">.</span><span class="n">rowrank</span><span class="p">:</span>
                         <span class="n">mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idx_no_combine</span><span class="p">,</span> <span class="n">idxs</span><span class="p">])</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
@@ -4283,7 +4281,6 @@
                         <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">mapper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
                             <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">combined_dim</span><span class="p">,</span> <span class="n">no_combine_dims</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span>
-
             <span class="k">else</span><span class="p">:</span>
 
                 <span class="c1">## if the combine are BRA or KET</span>
@@ -4324,7 +4321,7 @@
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idxs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">]])</span>
                     <span class="c1">## &lt;&lt;&lt;</span>
-
+                    
                     <span class="k">if</span> <span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="o">.</span><span class="n">rowrank</span><span class="p">:</span>
                         <span class="n">mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idx_no_combine</span><span class="p">,</span> <span class="n">idxs</span><span class="p">])</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
@@ -4333,6 +4330,7 @@
                         <span class="n">a</span><span class="o">.</span><span class="n">Storage</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">Storage</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="n">mapper</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
                             <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">no_combined_dims</span><span class="p">,</span> <span class="n">combine_dim</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">rowrank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                       
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">mapper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idxs</span><span class="p">,</span> <span class="n">idx_no_combine</span><span class="p">])</span>
                         <span class="n">a</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">a</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">idx_no_combine</span><span class="p">])</span>
@@ -4367,7 +4365,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;_Randomize(UniTensor)&quot;</span><span class="p">,</span> <span class="s2">&quot;[ERROR] _Randomize can only accept UniTensor&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="From_torch"><a class="viewcode-back" href="../../UniTensor.html#Tor10.UniTensor.From_torch">[docs]</a><span class="k">def</span> <span class="nf">From_torch</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_tag</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="From_torch"><a class="viewcode-back" href="../../UniTensor.html#tor10.UniTensor.From_torch">[docs]</a><span class="k">def</span> <span class="nf">From_torch</span><span class="p">(</span><span class="n">torch_tensor</span><span class="p">,</span> <span class="n">rowrank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_tag</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct UniTensor from torch.Tensor.</span>
 
@@ -4378,7 +4376,7 @@
 <span class="sd">            Torch.Tensor</span>
 
 <span class="sd">        rowrank:</span>
-<span class="sd">            int, The number of inbond. Note that the first [rowrank] bonds will be set to Tor10.BD_IN, and the remaining bonds will be set to Tor10.BD_OUT</span>
+<span class="sd">            int, The number of inbond. Note that the first [rowrank] bonds will be set to tor10.BD_IN, and the remaining bonds will be set to tor10.BD_OUT</span>
 
 <span class="sd">        labels:</span>
 <span class="sd">            python list or 1d numpy array, The labels for each bonds. If ignore, the constucted UniTensor will using the default labels for each bond.</span>
@@ -4394,7 +4392,7 @@
 <span class="sd">                [1., 1., 1.],</span>
 <span class="sd">                [1., 1., 1.]])</span>
 
-<span class="sd">        &gt;&gt;&gt; y = Tor10.From_torch(x,rowrank=1,labels=[4,5])</span>
+<span class="sd">        &gt;&gt;&gt; y = tor10.From_torch(x,rowrank=1,labels=[4,5])</span>
 <span class="sd">        &gt;&gt;&gt; y.Print_diagram()</span>
 <span class="sd">        -----------------------</span>
 <span class="sd">        tensor Name : </span>
@@ -4422,7 +4420,7 @@
 <span class="sd">                [1., 1., 1., 1.],</span>
 <span class="sd">                [1., 1., 1., 1.]], requires_grad=True)</span>
 
-<span class="sd">        &gt;&gt;&gt; y2 = Tor10.From_torch(x2,rowrank=1)</span>
+<span class="sd">        &gt;&gt;&gt; y2 = tor10.From_torch(x2,rowrank=1)</span>
 <span class="sd">        &gt;&gt;&gt; print(y2.requires_grad())</span>
 <span class="sd">        True</span>
 

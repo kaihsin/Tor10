@@ -29,12 +29,12 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
         if core is False, return a list of unitary tensors.
 
     Example:
-        >>> x = Tor10.From_torch(torch.arange(0.1,2.5,0.1).reshape(2,3,4).to(torch.float64),labels=[6,7,8],rowrank=1)
+        >>> x = tor10.From_torch(torch.arange(0.1,2.5,0.1).reshape(2,3,4).to(torch.float64),labels=[6,7,8],rowrank=1)
         >>> x.Print_diagram()
 
         >>> print(x)
 
-        >>> factors, core = Tor10.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)
+        >>> factors, core = tor10.Hosvd(x,order=[7,6,8],bonds_group=[2,1],by_label=True)
         >>> core.Print_diagram()
 
         >>> print(len(factors))
@@ -48,7 +48,7 @@ def Hosvd(a,order,bonds_group,by_label=False,core=True):
 
         >>> rep_x = core
         >>> for f in factors:
-        >>>     rep_x = Tor10.Contract(rep_x,f)
+        >>>     rep_x = tor10.Contract(rep_x,f)
         >>> rep_x.Permute([6,7,8],rowrank=1,by_label=True)
         >>> print(rep_x - x)
 
@@ -479,7 +479,7 @@ def Svd(a):
 
     Example:
     ::
-        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)
+        y = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)
         y.SetElem([1,1,0,1,
                    0,0,0,1,
                    1,1,0,0]
@@ -492,7 +492,7 @@ def Svd(a):
             [0., 0., 0., 1.],
             [1., 1., 0., 0.]], dtype=torch.float64)
 
-    >>> u,s,vt = Tor10.linalg.Svd(y)
+    >>> u,s,vt = tor10.linalg.Svd(y)
     >>> print(u)
     Tensor name:
     is_diag    : False
@@ -592,7 +592,7 @@ def Svd_truncate(a, keepdim=None):
 
     Example:
     ::
-        y = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)
+        y = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)
         y.SetElem([1,1,0,1,
                    0,0,0,1,
                    1,1,0,0])
@@ -604,7 +604,7 @@ def Svd_truncate(a, keepdim=None):
             [0., 0., 0., 1.],
             [1., 1., 0., 0.]], dtype=torch.float64)
 
-    >>> u,s,vt = Tor10.linalg.Svd_truncate(y,keepdim=2)
+    >>> u,s,vt = tor10.linalg.Svd_truncate(y,keepdim=2)
     >>> print(u)
     Tensor name:
     is_diag    : False
@@ -758,12 +758,12 @@ def Chain_matmul(*args):
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(4)],rowrank=1)
-        b = Tor10.UniTensor(bonds=[Tor10.Bond(4),Tor10.Bond(5)],rowrank=1)
-        c = Tor10.UniTensor(bonds=[Tor10.Bond(5),Tor10.Bond(6)],rowrank=1)
-        d = Tor10.UniTensor(bonds=[Tor10.Bond(6),Tor10.Bond(2)],rowrank=1)
+        a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(4)],rowrank=1)
+        b = tor10.UniTensor(bonds=[tor10.Bond(4),tor10.Bond(5)],rowrank=1)
+        c = tor10.UniTensor(bonds=[tor10.Bond(5),tor10.Bond(6)],rowrank=1)
+        d = tor10.UniTensor(bonds=[tor10.Bond(6),tor10.Bond(2)],rowrank=1)
 
-    >>> f = Tor10.Chain_matmul(a,b,c,d)
+    >>> f = tor10.Chain_matmul(a,b,c,d)
     >>> f.Print_diagram()
     -----------------------
     tensor Name : 
@@ -875,11 +875,11 @@ def Det(a):
 
     Example:
     ::
-        a = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)])
+        a = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)])
         a.SetElem([4,-3,0,
                    2,-1,2,
                    1, 5,7])
-        b = Tor10.UniTensor(bonds=[Tor10.Bond(3),Tor10.Bond(3)],is_diag=True)
+        b = tor10.UniTensor(bonds=[tor10.Bond(3),tor10.Bond(3)],is_diag=True)
         b.SetElem([1,2,3])
 
     >>> print(a)
@@ -889,7 +889,7 @@ def Det(a):
             [ 2., -1.,  2.],
             [ 1.,  5.,  7.]], dtype=torch.float64)
 
-    >>> out = Tor10.Det(a)
+    >>> out = tor10.Det(a)
     >>> print(out)
     Tensor name:
     is_diag    : False
@@ -900,7 +900,7 @@ def Det(a):
     is_diag    : True
     tensor([1., 2., 3.], dtype=torch.float64)
 
-    >>> out = Tor10.Det(b)
+    >>> out = tor10.Det(b)
     >>> print(out)
     Tensor name:
     is_diag    : False
@@ -958,7 +958,7 @@ def Norm(a):
 
         #tmp = torch.norm(a.Storage)
         #if len(tmp.shape) != 0:
-        #    return UniTensor(bonds=[Tor10.Bond(tmp.shape[i]) for i in range(len(tmp.shape))],rowrank=1,torch_tensor=tmp,check=False)
+        #    return UniTensor(bonds=[tor10.Bond(tmp.shape[i]) for i in range(len(tmp.shape))],rowrank=1,torch_tensor=tmp,check=False)
         #else:
         tmp = UniTensor(bonds=[],labels=[],rowrank=0,check=False)
         tmp._mac(torch_tensor = torch.norm(a.Storage))

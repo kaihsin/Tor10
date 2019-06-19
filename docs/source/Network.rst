@@ -1,9 +1,9 @@
-Tor10.Network
+tor10.Network
 ============
-.. automodule:: Tor10.Network
+.. automodule:: tor10.Network
     :members:
 
-.. autoclass:: Tor10.Network.Network
+.. autoclass:: tor10.Network.Network
     :members:
 
     .. automethod:: __init__

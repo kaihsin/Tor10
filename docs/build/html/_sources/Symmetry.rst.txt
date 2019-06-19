@@ -1,14 +1,14 @@
-Tor10.Symmetry
+tor10.Symmetry
 ============
-.. automodule:: Tor10.Symmetry
+.. automodule:: tor10.Symmetry
     :members:
 
-.. autoclass:: Tor10.Symmetry.Zn
+.. autoclass:: tor10.Symmetry.Zn
     :members:
 
     .. automethod:: __init__
 
-.. autoclass:: Tor10.Symmetry.U1
+.. autoclass:: tor10.Symmetry.U1
     :members:
 
     .. automethod:: __init__

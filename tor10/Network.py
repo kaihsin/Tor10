@@ -50,7 +50,7 @@ class Network:
             5. the UniTensors in the Network will contract accroding to: "A" and "B" contract first, then contract with C to form the final output UniTensor.
 
 
-        >>> Ntwk = Tor10.Network("test.net",delimiter=",")
+        >>> Ntwk = tor10.Network("test.net",delimiter=",")
         >>> print(Ntwk)
         ==== Network ====
         [x] A : -1 -2 ; 1 2 
@@ -213,11 +213,11 @@ class Network:
             
         Example:
         ::
-            ntwrk = Tor10.Network()
+            ntwrk = tor10.Network()
             ntwrk.Fromfile("test.net")
-            A = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(4),Tor10.Bond(3),Tor10.Bond(4)],rowrank=2)
-            B = Tor10.UniTensor([Tor10.Bond(3),Tor10.Bond(2)],rowrank=1)
-            C = Tor10.UniTensor([Tor10.Bond(4),Tor10.Bond(4)],rowrank=1)
+            A = tor10.UniTensor([tor10.Bond(3),tor10.Bond(4),tor10.Bond(3),tor10.Bond(4)],rowrank=2)
+            B = tor10.UniTensor([tor10.Bond(3),tor10.Bond(2)],rowrank=1)
+            C = tor10.UniTensor([tor10.Bond(4),tor10.Bond(4)],rowrank=1)
 
 
         >>> print(ntwrk)
