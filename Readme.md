@@ -72,7 +72,7 @@
 
 ## Documentation:
 
-[https://kaihsinwu.gitlab.io/Tor10](https://kaihsinwu.gitlab.io/Tor10)
+[https://kaihsinwu.gitlab.io/tor10](https://kaihsinwu.gitlab.io/tor10)
 
 ## Code naming principle:
     1) the functions start with "_" are the private function that should not be call directly by user.
