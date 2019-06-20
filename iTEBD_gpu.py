@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-import Tor10 as Tt
+import tor10 as Tt
 import torch as tor
 import copy
 import numpy as np 
