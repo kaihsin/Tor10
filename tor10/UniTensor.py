@@ -41,13 +41,15 @@ class UniTensor:
                         > The torch_tensor should have the same rank as len(label), and with each bond dimensions strictly the same as describe as in bond in self.bonds.
 
             check :
-                This is the internal arguments. It should not be directly use. If False, all the checking across bonds/labels/Storage.shape will be ignore.
+                If False, all the checking across bonds/labels/Storage.shape will be ignore.
 
             braket :
-                This is the internal arguments. It should not be directly use. If set, the braket -1 or +1 indicate the bond are BD_KET or BD_BRA. it is handy for calculate reverse quantum flow / blocks when bra-bond is permute to col-space (unmatched braket)
+                If set, the braket -1 or +1 indicate the bond are BD_KET or BD_BRA.
+                It is handy for calculating reverse quantum flow / blocks when bra-bond is permuted to col-space
+                (unmatched braket)
 
             sym_mappers:
-                This is the internal arguments. It should not be directly use. It is a tuple, use to pass the shallow permute informations / block mapping information.
+                A tuple, used to pass the shallow permute informations / block mapping information.
         """
         if braket is not None:
             self.braket = copy.deepcopy(braket)
@@ -491,7 +493,8 @@ class UniTensor:
 
     def is_braket_form(self):
         """ 
-        Return if the current tensor is in braket_form. It can only be called on a tagged UniTensor (with or without symmetry)
+        Return if the current tensor is in braket_form. It can only be called on a tagged UniTensor
+        (with or without symmetries)
 
         Return:
 
@@ -726,9 +729,9 @@ class UniTensor:
 
     def Todense(self):
         """
-        Return a densed version of current UniTensor. This only affect on UniTensor with non-symmetry with is_diag=True.
+        Return a dense version of current UniTensor. This only affect on non-symmetric UniTensor with is_diag=True.
         
-            [Note] for UniTensor with Symmetry, Todense cannot be called.
+            [Note] for symmetric UniTensor, Todense cannot be called.
 
         Return:
             new UniTensor if current tensor is_diag=True, otherwise return self.
@@ -749,7 +752,7 @@ class UniTensor:
 
         """
         if self.is_symm:
-            raise Exception("UniTensor.Todense()", "[ERROR] cannot transform to dense for UniTensor with symmetry")
+            raise Exception("UniTensor.Todense()", "[ERROR] cannot transform to dense form for symmetric UniTensor")
 
         if self.is_diag:
             out = copy.deepcopy(self)
@@ -799,7 +802,8 @@ class UniTensor:
 
     def to(self, device):
         """
-        Set the current UniTensor to device. If device is not the same with current tensor, return a new UniTensor, otherwise return self.
+        Set the current UniTensor to device. If device is not the same with current tensor, return a new UniTensor,
+        otherwise return self.
 
         Args:
 
@@ -810,7 +814,7 @@ class UniTensor:
 
         Return:
             
-            self if the device if the same as current UniTensor. Otherwise, return a new UniTensor
+            Self if the device is the same as the current UniTensor. Otherwise, return a new UniTensor
 
         Example:
 
@@ -842,13 +846,16 @@ class UniTensor:
 
     def Print_diagram(self, bond_info=False):
         """
-        This is the beauty print of the tensor diagram. Including the information for the placeing device
+        This is the beauty print of the tensor diagram. Including the information of the current device
         ::
-            1.The left hand side is always the in-bonds,representing the row-space when flatten as Matrix; the right hand side is always the Out-bonds, representing the column-space when flatten as Matrix.
-            2.The number attach to the out-side of each leg is the Bond-dimension.
-            3.The number attach to the in-side of each leg is the label.
-            4.if all the bra-bonds are in row-space (in-bonds), and all ket-bonds are in col-space (out-bonds), the tensor is in "braket_form". 
-            5.if one permute bra-bonds that should be in-bonds to out-bonds, this will put the UniTensor in a "non-braket_form". the bond will have a "*" symbol on it. 
+            1.The left hand side is always the in-bonds,representing the row-space when flatten as Matrix;
+            the right hand side is always the Out-bonds, representing the column-space when flatten as Matrix.
+            2.The number attached to the outside of each leg is the Bond-dimension.
+            3.The number attached to the inside of each leg is the label.
+            4.if all the bra-bonds are in row-space (in-bonds), and all ket-bonds are in col-space (out-bonds),
+            the tensor is in "braket_form".
+            5.if one permute bra-bonds that should be in-bonds to out-bonds, this will put the UniTensor in a
+            "non-braket_form". the bond will have a "*" symbol on it.
 
 
         Args:
@@ -1006,7 +1013,7 @@ class UniTensor:
 
     def __eq__(self, rhs):
         """
-            Compare two UniTensor.
+            Compare two UniTensors.
             ::
                 a == b
 
@@ -1851,7 +1858,7 @@ class UniTensor:
                 if new_label is set, the combined bond will have label [new_label]
         
             permuted_back[False]:
-                this state if the combine bond should be permuted back or not. If false, the combined bond will always presented as the first bond.
+                this state if the combine bond should be permuted back or not. If false, the combined bond will always be presented as the first bond.
 
 
         Example:
@@ -2008,10 +2015,14 @@ class UniTensor:
 
     def Contiguous_(self):
         """
-        Make the memory to be contiguous. This is similar as pytorch's contiguous_().
-        Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called "non-contiguous" tensor.
+        Make the memory contiguous. This is similar as pytorch's contiguous_().
+        Because of  Permute does not change the memory layout, after permute, only the shape of UniTensor is changed,
+        the underlying memory layout does not change.
+        This UniTensor under this condition is called "non-contiguous".
         When call the Contiguous_(), the memory will be moved to match the shape of UniTensor.
-        *Note* Normally, it is not nessary to call contiguous. Most of the linalg function implicity will make the UniTensor contiguous. If one calls a function that requires a contiguous tensor, the error will be issue. Then you know you have to put UniTensor.Contiguous() or UniTensor.Contiguous_() there.
+        *Note* Normally, it is not necessary to call contiguous. Most of the linalg function implicitly make the
+        UniTensor contiguous. If one calls a function that requires a contiguous tensor,
+        the error will be raised and you know you have to put UniTensor.Contiguous() or UniTensor.Contiguous_() there.
 
         Return:
             self
@@ -2049,7 +2060,7 @@ class UniTensor:
 
     def Contiguous(self):
         """
-        Make the memory to be contiguous. This is similar as pytorch's contiguous().
+        Make the memory contiguous. This is similar as pytorch's contiguous().
         Because of the Permute does not move the memory, after permute, only the shape of UniTensor is changed, the underlying memory does not change. The UniTensor in this status is called "non-contiguous" tensor.
         When call the Contiguous(), the memory will be moved to match the shape of UniTensor.
         
@@ -2155,7 +2166,8 @@ class UniTensor:
 
         Args:
             mapper:
-                a python list or 1d numpy array with integer type elements that the UniTensor permute accroding to. if by_label=False, the in_mapper will use index as mapper. 
+                a python list or 1d numpy array with integer type elements that the UniTensor permute accordingly.
+                If by_label=False, the in_mapper will use index as mapper.
 
             by_label: [default False]
                 bool, when True, the mapper using the labels. When False, the mapper using the index.
@@ -2862,7 +2874,7 @@ class UniTensor:
 
     def GetValidQnums(self, physical=False, return_shape=False):
         """
-            Return the quatum number set that has a valid block.
+            Return the quantum number set that has a valid block.
 
             Args:
                 
@@ -2892,7 +2904,7 @@ class UniTensor:
             shap = []
             if return_shape:
                 for q in comm:
-                    shap.append(np.array([b_tqin.GetDegenerate(*q), b_tqout.GetDegenerate(*q)]))
+                    shap.append(np.array([b_tqin.GetDegeneracy(*q), b_tqout.GetDegeneracy(*q)]))
                 return comm, np.array(shap)
             else:
                 return comm
@@ -2902,7 +2914,7 @@ class UniTensor:
                 b_tqin, b_tqout = self.GetTotalQnums(physical=False)
                 shap = []
                 for q in comm:
-                    shap.append(np.array([b_tqin.GetDegenerate(*q), b_tqout.GetDegenerate(*q)]))
+                    shap.append(np.array([b_tqin.GetDegeneracy(*q), b_tqout.GetDegeneracy(*q)]))
                 return comm, np.array(shap)
             else:
                 return comm
@@ -2964,7 +2976,7 @@ class UniTensor:
             # raise Exception("Developing")
 
             if len(qnum) != self.bonds[0].nsym:
-                raise ValueError("UniTensor.PutBlock", "[ERROR] The qnumtum numbers not match the number of type.")
+                raise ValueError("UniTensor.PutBlock", "[ERROR] The quantum numbers do not match the number of types.")
 
             ## check contiguous:
             if self._contiguous:
@@ -3404,7 +3416,7 @@ class UniTensor:
 
     def backward(self):
         """
-        Backward the gradient flow in the contructed autograd graph. This is the same as torch.Tensor.backward
+        Backward the gradient flow in the constructed autograd graph. This is the same as torch.Tensor.backward
         """
         if self.is_symm:
             for s in range(len(self.Storage)):

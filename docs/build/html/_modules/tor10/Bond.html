@@ -594,7 +594,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Bond.GetDegenerate"><a class="viewcode-back" href="../../Bond.html#tor10.Bond.Bond.GetDegenerate">[docs]</a>    <span class="k">def</span> <span class="nf">GetDegenerate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">qnums</span><span class="p">):</span>
+<div class="viewcode-block" id="Bond.GetDegeneracy"><a class="viewcode-back" href="../../Bond.html#Tor10.Bond.Bond.GetDegeneracy">[docs]</a>    <span class="k">def</span> <span class="nf">GetDegeneracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">qnums</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Return degenracy of a specify quantum number set. If can only be call on a bond with symmetry.</span>
 <span class="sd">            </span>
@@ -608,7 +608,7 @@
 <span class="sd">                int, degeneracy of the quantum number set</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.GetDegenerate&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] cannot get degenerate from a non-sym bond.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Bond.GetDegeneracy&quot;</span><span class="p">,</span><span class="s2">&quot;[ERROR] cannot get degenerate from a non-sym bond.&quot;</span><span class="p">)</span>
 
         <span class="n">deg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">qnums</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">qnums</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">deg</span></div>

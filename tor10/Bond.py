@@ -446,7 +446,7 @@ class Bond:
         else:
             return np.unique(self.qnums, axis=0)
 
-    def GetDegenerate(self,*qnums):
+    def GetDegeneracy(self, *qnums):
         """
             Return degenracy of a specify quantum number set. If can only be call on a bond with symmetry.
             
@@ -460,7 +460,7 @@ class Bond:
                 int, degeneracy of the quantum number set
         """
         if self.qnums is None:
-            raise TypeError("Bond.GetDegenerate","[ERROR] cannot get degenerate from a non-sym bond.")
+            raise TypeError("Bond.GetDegeneracy","[ERROR] cannot get degenerate from a non-sym bond.")
 
         deg = len(np.argwhere((self.qnums == np.array(qnums).astype(np.int)).all(axis=1)).flatten())
         return deg
@@ -488,7 +488,7 @@ class Bond:
         else:
             raise Exception("[Internal error][Invalid bondType of current Bond.]")
 
-        if not self.qnums is None:
+        if self.qnums is not None:
             for n in range(self.nsym):
                 print(" %s:: " % (str(self.sym_types[n])), end='')
                 for idim in range(len(self.qnums)):

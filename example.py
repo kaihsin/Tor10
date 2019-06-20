@@ -301,8 +301,8 @@ Bn1 = SN.GetBlock(-1)
 print(Bn1)
 
 tqin,tqout=SN.GetTotalQnums()
-print(tqin.GetDegenerate(-1))
-print(tqout.GetDegenerate(-1))
+print(tqin.GetDegeneracy(-1))
+print(tqout.GetDegeneracy(-1))
 
 SN.Permute([0,2,1,3],rowrank=1)
 SN.Print_diagram()
