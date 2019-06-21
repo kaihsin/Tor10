@@ -111,7 +111,12 @@ class TestUniTensorObjects(unittest.TestCase):
             self.assertListEqual(list(qnums[i]),list(qin.qnums[i]))
 
     def test_GetValidQnums(self):
-        pass
+        bd_sym_1 = tor10.Bond(3, tor10.BD_KET, qnums=[[0], [1], [2]])
+        bd_sym_2 = tor10.Bond(4, tor10.BD_KET, qnums=[[-1], [2], [0], [2]])
+        bd_sym_3 = tor10.Bond(5, tor10.BD_BRA, qnums=[[4], [2], [2], [5], [1]])
+        sym_T = tor10.UniTensor(bonds=[bd_sym_1, bd_sym_2, bd_sym_3], rowrank=2, labels=[10, 11, 12])
+        qnums=sym_T.GetValidQnums()
+        self.assertListEqual(list(qnums.flatten()),[1, 2, 4])
 
     def test_PutGetBlock(self):
         bd_sym_1 = tor10.Bond(3, tor10.BD_KET, qnums=[[0], [1], [2]])
