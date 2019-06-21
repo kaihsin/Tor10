@@ -113,11 +113,23 @@ class TestUniTensorObjects(unittest.TestCase):
     def test_GetValidQnums(self):
         pass
 
-    def test_PutBlock(self):
-        pass
+    def test_PutGetBlock(self):
+        bd_sym_1 = tor10.Bond(3, tor10.BD_KET, qnums=[[0], [1], [2]])
+        bd_sym_2 = tor10.Bond(4, tor10.BD_KET, qnums=[[-1], [2], [0], [2]])
+        bd_sym_3 = tor10.Bond(5, tor10.BD_BRA, qnums=[[4], [2], [2], [5], [1]])
 
-    def test_GetBlock(self):
-        pass
+        sym_T= tor10.UniTensor(bonds=[bd_sym_1, bd_sym_2, bd_sym_3], rowrank=2, labels=[10, 11, 12])
+        BN=sym_T.GetBlock(2)
+        self.assertListEqual(list(BN.Storage.flatten()),[0., 0., 0., 0., 0., 0.])
+        self.assertListEqual(list(BN.shape),[3, 2])
+
+
+        BN.SetElem([float(i) for i in range(6)])
+        sym_T.PutBlock(BN,2)
+
+        BN=sym_T.GetBlock(2)
+        self.assertListEqual(list(BN.Storage.flatten()),[0., 1., 2., 3., 4., 5.])
+        self.assertListEqual(list(BN.shape),[3, 2])
 
 if __name__ == "__main__":
     unittest.main()
